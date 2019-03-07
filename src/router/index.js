@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
 // in development-env not use lazy-loading, because lazy-loading too many pages will cause webpack hot update too slow. so only in production use lazy-loading;
 // detail: https://panjiachen.github.io/vue-element-admin-site/#/lazy-loading
 
@@ -22,6 +21,7 @@ import Layout from '../views/layout/Layout'
     breadcrumb: false            if false, the item will hidden in breadcrumb(default is true)
   }
 **/
+// 静态路由表
 export const constantRouterMap = [
   { path: '/login', component: () => import('@/views/login/index'), hidden: true },
   { path: '/404', component: () => import('@/views/404'), hidden: true },
@@ -36,6 +36,10 @@ export const constantRouterMap = [
       component: () => import('@/views/dashboard/index')
     }]
   },
+  { path: '*', redirect: '/404', hidden: true }
+]
+// 动态路由表
+export const asyncRouterMap = [
   {
     path: '/system',
     component: Layout,
@@ -44,183 +48,200 @@ export const constantRouterMap = [
     meta: { title: '系统管理', icon: 'example' },
     children: [
       {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
-        meta: { title: '组织机构管理', icon: 'table' }
+        path: 'organization',
+        name: 'organization',
+        component: () => import('@/views/system/organization'),
+        meta: { title: '组织机构管理', icon: 'table', role: ['admin', 'superAdmin'] }
       },
       {
-        path: 'table1',
-        name: 'Table1',
-        component: () => import('@/views/table/index'),
-        meta: { title: '门店管理', icon: 'table' }
+        path: 'shop',
+        name: 'shop',
+        component: () => import('@/views/system/shop'),
+        meta: { title: '门店管理', icon: 'table', role: ['admin', 'superAdmin'] }
       },
       {
-        path: 'table2',
-        name: 'Table2',
-        component: () => import('@/views/table/index'),
-        meta: { title: '用户管理', icon: 'table' }
+        path: 'user',
+        name: 'user',
+        component: () => import('@/views/system/user'),
+        meta: { title: '用户管理', icon: 'table', role: ['admin', 'superAdmin'] }
       },
       {
-        path: 'table3',
-        name: 'Table3',
-        component: () => import('@/views/table/index'),
-        meta: { title: '角色权限管理', icon: 'table' }
+        path: 'role',
+        name: 'role',
+        component: () => import('@/views/system/role'),
+        meta: { title: '角色权限管理', icon: 'table', role: ['admin', 'superAdmin'] }
       },
       {
-        path: 'table4',
-        name: 'Table4',
-        component: () => import('@/views/table/index'),
-        meta: { title: '开票规则模板', icon: 'table' }
+        path: 'template',
+        name: 'template',
+        component: () => import('@/views/system/template'),
+        meta: { title: '开票规则模板', icon: 'table', role: ['admin', 'superAdmin'] }
       },
       {
-        path: 'table5',
-        name: 'Table5',
-        component: () => import('@/views/table/index'),
-        meta: { title: '购方信息维护', icon: 'table' }
+        path: 'infoMaintenance',
+        name: 'infoMaintenance',
+        component: () => import('@/views/system/infoMaintenance'),
+        meta: { title: '购方信息维护', icon: 'table', role: ['admin', 'superAdmin'] }
       },
       {
-        path: 'table6',
-        name: 'Table6',
-        component: () => import('@/views/table/index'),
-        meta: { title: '税收分类编码管理', icon: 'table' }
+        path: 'codeManagement',
+        name: 'codeManagement',
+        component: () => import('@/views/system/codeManagement'),
+        meta: { title: '税收分类编码管理', icon: 'table', role: ['admin', 'superAdmin'] }
       },
       {
-        path: 'table7',
-        name: 'Table7',
-        component: () => import('@/views/table/index'),
-        meta: { title: '商品信息管理', icon: 'table' }
+        path: 'infoManagement',
+        name: 'infoManagement',
+        component: () => import('@/views/system/infoManagement'),
+        meta: { title: '商品信息管理', icon: 'table', role: ['admin', 'superAdmin'] }
       }
     ]
   },
   {
-    path: '/nested',
+    path: '/order',
     component: Layout,
     redirect: '/nested/menu1',
-    name: 'Nested',
+    name: 'order',
     meta: { title: '订单管理', icon: 'nested' },
     children: [
       {
-        path: 'menu1',
-        component: () => import('@/views/nested/menu1/index'), // Parent router-view
-        name: 'Menu1',
-        meta: { title: '服务类订单管理', icon: 'table' }
+        path: 'service',
+        component: () => import('@/views/order/service'), // Parent router-view
+        name: 'service',
+        meta: { title: '服务类订单管理', icon: 'table', role: ['admin', 'jinxiang'] }
       },
       {
-        path: 'menu2',
-        component: () => import('@/views/nested/menu2/index'),
-        meta: { title: 'POS订单管理', icon: 'table' }
+        path: 'pos',
+        component: () => import('@/views/order/pos'),
+        meta: { title: 'POS订单管理', icon: 'table', role: ['admin', 'jinxiang'] }
       },
       {
-        path: 'menu2',
-        component: () => import('@/views/nested/menu2/index'),
-        meta: { title: '商品类订单管理', icon: 'table' }
+        path: 'commodity',
+        component: () => import('@/views/order/commodity'),
+        meta: { title: '商品类订单管理', icon: 'table', role: ['admin', 'jinxiang'] }
       }
     ]
   },
   {
-    path: '/nested1',
+    path: '/invoice',
     component: Layout,
     redirect: '/nested/menu1',
-    name: 'Nested',
+    name: 'invoice',
     meta: { title: '发票管理', icon: 'nested' },
     children: [
       {
-        path: 'menu1',
-        component: () => import('@/views/nested/menu1/index'), // Parent router-view
-        name: 'Menu1',
-        meta: { title: '待开专票管理', icon: 'table' }
+        path: 'wSpecial',
+        component: () => import('@/views/invoice/wSpecial'), // Parent router-view
+        name: 'wSpecial',
+        meta: { title: '待开专票管理', icon: 'table', role: ['admin', 'jinxiang'] }
       },
       {
-        path: 'menu2',
-        component: () => import('@/views/nested/menu2/index'),
-        meta: { title: '待开普票管理', icon: 'table' }
+        path: 'wOrdinary',
+        component: () => import('@/views/invoice/wOrdinary'),
+        meta: { title: '待开普票管理', icon: 'table', role: ['admin', 'jinxiang'] }
       },
       {
-        path: 'menu2',
-        component: () => import('@/views/nested/menu2/index'),
-        meta: { title: '待开电子发票管理', icon: 'table' }
+        path: 'wElectronic',
+        component: () => import('@/views/invoice/wElectronic'),
+        meta: { title: '待开电子发票管理', icon: 'table', role: ['admin', 'jinxiang'] }
       },
       {
-        path: 'menu2',
-        component: () => import('@/views/nested/menu2/index'),
-        meta: { title: '已开专票管理', icon: 'table' }
+        path: 'oSpecial',
+        component: () => import('@/views/invoice/oSpecial'),
+        meta: { title: '已开专票管理', icon: 'table', role: ['admin', 'jinxiang'] }
       },
       {
-        path: 'menu2',
-        component: () => import('@/views/nested/menu2/index'),
-        meta: { title: '已开普票管理', icon: 'table' }
+        path: 'oOrdinary',
+        component: () => import('@/views/invoice/oOrdinary'),
+        meta: { title: '已开普票管理', icon: 'table', role: ['admin', 'jinxiang'] }
       },
       {
-        path: 'menu2',
-        component: () => import('@/views/nested/menu2/index'),
-        meta: { title: '已开电子发票管理', icon: 'table' }
+        path: 'oElectronic',
+        component: () => import('@/views/invoice/oElectronic'),
+        meta: { title: '已开电子发票管理', icon: 'table', role: ['admin', 'jinxiang'] }
       },
       {
-        path: 'menu2',
-        component: () => import('@/views/nested/menu2/index'),
-        meta: { title: '红字信息表管理', icon: 'table' }
+        path: 'redTable',
+        component: () => import('@/views/invoice/redTable'),
+        meta: { title: '红字信息表管理', icon: 'table', role: ['admin', 'jinxiang'] }
       }
     ]
   },
   {
-    path: '/nested2',
+    path: '/invoiceOpening',
     component: Layout,
     redirect: '/nested/menu1',
-    name: 'Nested',
-    meta: { title: '发票填开', icon: 'nested' }
+    name: 'invoiceOpening',
+    meta: { title: '发票填开', icon: 'nested' },
+    children: [
+      {
+        path: 'special',
+        component: () => import('@/views/invoiceOpening/special'), // Parent router-view
+        name: 'special',
+        meta: { title: '手工填开专票', icon: 'table', role: ['admin', 'jinxiang'] }
+      },
+      {
+        path: 'ordinary',
+        component: () => import('@/views/invoiceOpening/ordinary'),
+        meta: { title: '手工填开普票', icon: 'table', role: ['admin', 'jinxiang'] }
+      },
+      {
+        path: 'electronic',
+        component: () => import('@/views/invoiceOpening/electronic'),
+        meta: { title: '手工填开电子发票', icon: 'table', role: ['admin', 'jinxiang'] }
+      },
+      {
+        path: 'buyFarm',
+        component: () => import('@/views/invoiceOpening/buyFarm'),
+        meta: { title: '手工填开农产品收购', icon: 'table', role: ['admin', 'jinxiang'] }
+      }
+    ]
   },
   {
-    path: '/nested3',
+    path: '/queryStatistics',
     component: Layout,
     redirect: '/nested/menu1',
-    name: 'Nested',
+    name: 'queryStatistics',
     meta: { title: '查询与统计', icon: 'nested' },
     children: [
       {
-        path: 'menu1',
-        component: () => import('@/views/nested/menu1/index'), // Parent router-view
-        name: 'Menu1',
-        meta: { title: '已开发票查询', icon: 'table' }
+        path: 'openInvoice',
+        component: () => import('@/views/queryStatistics/openInvoice'), // Parent router-view
+        name: 'openInvoice',
+        meta: { title: '已开发票查询', icon: 'table', role: ['admin', 'jinxiang'] }
       },
       {
-        path: 'menu2',
-        component: () => import('@/views/nested/menu2/index'),
-        meta: { title: '订单开票信息查询', icon: 'table' }
+        path: 'orderOpenMessage',
+        component: () => import('@/views/queryStatistics/orderOpenMessage'),
+        meta: { title: '订单开票信息查询', icon: 'table', role: ['admin', 'jinxiang'] }
       },
       {
-        path: 'menu2',
-        component: () => import('@/views/nested/menu2/index'),
-        meta: { title: '发票订单信息查询', icon: 'table' }
+        path: 'invoiceOrderMessage',
+        component: () => import('@/views/queryStatistics/invoiceOrderMessage'),
+        meta: { title: '发票订单信息查询', icon: 'table', role: ['admin', 'jinxiang'] }
       }
     ]
   },
   {
-    path: '/nested4',
+    path: '/dataSync',
     component: Layout,
-    redirect: '/nested/menu1',
-    name: 'Nested',
+    redirect: '/dataSync',
+    name: 'dataSync',
     meta: { title: '数据同步', icon: 'nested' },
     children: [
       {
-        path: 'menu1',
-        component: () => import('@/views/nested/menu1/index'), // Parent router-view
-        name: 'Menu1',
-        meta: { title: '任务查询', icon: 'table' }
+        path: 'taskQuery',
+        component: () => import('@/views/dataSync/taskQuery'), // Parent router-view
+        name: 'taskQuery',
+        meta: { title: '任务查询', icon: 'table', role: ['admin', 'jinxiang'] }
       },
       {
-        path: 'menu2',
-        component: () => import('@/views/nested/menu2/index'),
-        meta: { title: '任务设置', icon: 'table' }
-      },
-      {
-        path: 'menu2',
-        component: () => import('@/views/nested/menu2/index'),
-        meta: { title: '发票订单信息查询', icon: 'table' }
+        path: 'taskSettings',
+        component: () => import('@/views/dataSync/taskSettings'),
+        meta: { title: '任务设置', icon: 'table', role: ['admin', 'jinxiang'] }
       }
     ]
-  },
-  { path: '*', redirect: '/404', hidden: true }
+  }
 ]
 
 export default new Router({
