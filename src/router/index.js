@@ -45,55 +45,55 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: '/example/table',
     name: 'Example',
-    meta: { title: '系统管理', icon: 'example' },
+    meta: { title: '系统管理', icon: 'example', roles: ['admin2', 'superAdmin'] },
     children: [
       {
         path: 'organization',
         name: 'organization',
         component: () => import('@/views/system/organization'),
-        meta: { title: '组织机构管理', icon: 'table', role: ['admin', 'superAdmin'] }
+        meta: { title: '组织机构管理', icon: 'table', roles: ['admin1', 'superAdmin'] }
       },
       {
         path: 'shop',
         name: 'shop',
         component: () => import('@/views/system/shop'),
-        meta: { title: '门店管理', icon: 'table', role: ['admin', 'superAdmin'] }
+        meta: { title: '门店管理', icon: 'table', roles: ['admin', 'superAdmin'] }
       },
       {
         path: 'user',
         name: 'user',
         component: () => import('@/views/system/user'),
-        meta: { title: '用户管理', icon: 'table', role: ['admin', 'superAdmin'] }
+        meta: { title: '用户管理', icon: 'table', roles: ['admin', 'superAdmin'] }
       },
       {
         path: 'role',
         name: 'role',
         component: () => import('@/views/system/role'),
-        meta: { title: '角色权限管理', icon: 'table', role: ['admin', 'superAdmin'] }
+        meta: { title: '角色权限管理', icon: 'table', roles: ['admin', 'superAdmin'] }
       },
       {
         path: 'template',
         name: 'template',
         component: () => import('@/views/system/template'),
-        meta: { title: '开票规则模板', icon: 'table', role: ['admin', 'superAdmin'] }
+        meta: { title: '开票规则模板', icon: 'table', roles: ['admin', 'superAdmin'] }
       },
       {
         path: 'infoMaintenance',
         name: 'infoMaintenance',
         component: () => import('@/views/system/infoMaintenance'),
-        meta: { title: '购方信息维护', icon: 'table', role: ['admin', 'superAdmin'] }
+        meta: { title: '购方信息维护', icon: 'table', roles: ['admin', 'superAdmin'] }
       },
       {
         path: 'codeManagement',
         name: 'codeManagement',
         component: () => import('@/views/system/codeManagement'),
-        meta: { title: '税收分类编码管理', icon: 'table', role: ['admin', 'superAdmin'] }
+        meta: { title: '税收分类编码管理', icon: 'table', roles: ['admin', 'superAdmin'] }
       },
       {
         path: 'infoManagement',
         name: 'infoManagement',
         component: () => import('@/views/system/infoManagement'),
-        meta: { title: '商品信息管理', icon: 'table', role: ['admin', 'superAdmin'] }
+        meta: { title: '商品信息管理', icon: 'table', roles: ['admin', 'superAdmin'] }
       }
     ]
   },
@@ -108,17 +108,17 @@ export const asyncRouterMap = [
         path: 'service',
         component: () => import('@/views/order/service'), // Parent router-view
         name: 'service',
-        meta: { title: '服务类订单管理', icon: 'table', role: ['admin', 'jinxiang'] }
+        meta: { title: '服务类订单管理', icon: 'table', roles: ['admin', 'jinxiang'] }
       },
       {
         path: 'pos',
         component: () => import('@/views/order/pos'),
-        meta: { title: 'POS订单管理', icon: 'table', role: ['admin', 'jinxiang'] }
+        meta: { title: 'POS订单管理', icon: 'table', roles: ['admin', 'jinxiang'] }
       },
       {
         path: 'commodity',
         component: () => import('@/views/order/commodity'),
-        meta: { title: '商品类订单管理', icon: 'table', role: ['admin', 'jinxiang'] }
+        meta: { title: '商品类订单管理', icon: 'table', roles: ['admin', 'jinxiang'] }
       }
     ]
   },
@@ -133,37 +133,37 @@ export const asyncRouterMap = [
         path: 'wSpecial',
         component: () => import('@/views/invoice/wSpecial'), // Parent router-view
         name: 'wSpecial',
-        meta: { title: '待开专票管理', icon: 'table', role: ['admin', 'jinxiang'] }
+        meta: { title: '待开专票管理', icon: 'table', roles: ['admin', 'jinxiang'] }
       },
       {
         path: 'wOrdinary',
         component: () => import('@/views/invoice/wOrdinary'),
-        meta: { title: '待开普票管理', icon: 'table', role: ['admin', 'jinxiang'] }
+        meta: { title: '待开普票管理', icon: 'table', roles: ['admin', 'jinxiang'] }
       },
       {
         path: 'wElectronic',
         component: () => import('@/views/invoice/wElectronic'),
-        meta: { title: '待开电子发票管理', icon: 'table', role: ['admin', 'jinxiang'] }
+        meta: { title: '待开电子发票管理', icon: 'table', roles: ['admin', 'jinxiang'] }
       },
       {
         path: 'oSpecial',
         component: () => import('@/views/invoice/oSpecial'),
-        meta: { title: '已开专票管理', icon: 'table', role: ['admin', 'jinxiang'] }
+        meta: { title: '已开专票管理', icon: 'table', roles: ['admin', 'jinxiang'] }
       },
       {
         path: 'oOrdinary',
         component: () => import('@/views/invoice/oOrdinary'),
-        meta: { title: '已开普票管理', icon: 'table', role: ['admin', 'jinxiang'] }
+        meta: { title: '已开普票管理', icon: 'table', roles: ['admin', 'jinxiang'] }
       },
       {
         path: 'oElectronic',
         component: () => import('@/views/invoice/oElectronic'),
-        meta: { title: '已开电子发票管理', icon: 'table', role: ['admin', 'jinxiang'] }
+        meta: { title: '已开电子发票管理', icon: 'table', roles: ['admin', 'jinxiang'] }
       },
       {
         path: 'redTable',
         component: () => import('@/views/invoice/redTable'),
-        meta: { title: '红字信息表管理', icon: 'table', role: ['admin', 'jinxiang'] }
+        meta: { title: '红字信息表管理', icon: 'table', roles: ['admin', 'jinxiang'] }
       }
     ]
   },
@@ -178,22 +178,22 @@ export const asyncRouterMap = [
         path: 'special',
         component: () => import('@/views/invoiceOpening/special'), // Parent router-view
         name: 'special',
-        meta: { title: '手工填开专票', icon: 'table', role: ['admin', 'jinxiang'] }
+        meta: { title: '手工填开专票', icon: 'table', roles: ['admin', 'jinxiang'] }
       },
       {
         path: 'ordinary',
         component: () => import('@/views/invoiceOpening/ordinary'),
-        meta: { title: '手工填开普票', icon: 'table', role: ['admin', 'jinxiang'] }
+        meta: { title: '手工填开普票', icon: 'table', roles: ['admin', 'jinxiang'] }
       },
       {
         path: 'electronic',
         component: () => import('@/views/invoiceOpening/electronic'),
-        meta: { title: '手工填开电子发票', icon: 'table', role: ['admin', 'jinxiang'] }
+        meta: { title: '手工填开电子发票', icon: 'table', roles: ['admin', 'jinxiang'] }
       },
       {
         path: 'buyFarm',
         component: () => import('@/views/invoiceOpening/buyFarm'),
-        meta: { title: '手工填开农产品收购', icon: 'table', role: ['admin', 'jinxiang'] }
+        meta: { title: '手工填开农产品收购', icon: 'table', roles: ['admin', 'jinxiang'] }
       }
     ]
   },
@@ -208,17 +208,17 @@ export const asyncRouterMap = [
         path: 'openInvoice',
         component: () => import('@/views/queryStatistics/openInvoice'), // Parent router-view
         name: 'openInvoice',
-        meta: { title: '已开发票查询', icon: 'table', role: ['admin', 'jinxiang'] }
+        meta: { title: '已开发票查询', icon: 'table', roles: ['admin', 'jinxiang'] }
       },
       {
         path: 'orderOpenMessage',
         component: () => import('@/views/queryStatistics/orderOpenMessage'),
-        meta: { title: '订单开票信息查询', icon: 'table', role: ['admin', 'jinxiang'] }
+        meta: { title: '订单开票信息查询', icon: 'table', roles: ['admin', 'jinxiang'] }
       },
       {
         path: 'invoiceOrderMessage',
         component: () => import('@/views/queryStatistics/invoiceOrderMessage'),
-        meta: { title: '发票订单信息查询', icon: 'table', role: ['admin', 'jinxiang'] }
+        meta: { title: '发票订单信息查询', icon: 'table', roles: ['admin', 'jinxiang'] }
       }
     ]
   },
@@ -233,12 +233,12 @@ export const asyncRouterMap = [
         path: 'taskQuery',
         component: () => import('@/views/dataSync/taskQuery'), // Parent router-view
         name: 'taskQuery',
-        meta: { title: '任务查询', icon: 'table', role: ['admin', 'jinxiang'] }
+        meta: { title: '任务查询', icon: 'table', roles: ['admin', 'jinxiang'] }
       },
       {
         path: 'taskSettings',
         component: () => import('@/views/dataSync/taskSettings'),
-        meta: { title: '任务设置', icon: 'table', role: ['admin', 'jinxiang'] }
+        meta: { title: '任务设置', icon: 'table', roles: ['admin', 'jinxiang'] }
       }
     ]
   }
