@@ -129,7 +129,6 @@ export default {
       })
     },
     refreshSelectedTag(view) {
-      debugger
       this.$store.dispatch('delCachedView', view).then(() => {
         const { fullPath } = view
         this.$nextTick(() => {
