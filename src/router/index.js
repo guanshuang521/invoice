@@ -122,11 +122,13 @@ export const asyncRouterMap = [
       },
       {
         path: 'pos',
+        name: 'pos',
         component: () => import('@/views/order/pos'),
         meta: { title: 'POS订单管理', icon: 'table', roles: ['admin', 'jinxiang'] }
       },
       {
         path: 'commodity',
+        name: 'commodity',
         component: () => import('@/views/order/commodity'),
         meta: { title: '商品类订单管理', icon: 'table', roles: ['admin', 'jinxiang'] }
       }
@@ -141,37 +143,43 @@ export const asyncRouterMap = [
     children: [
       {
         path: 'wSpecial',
-        component: () => import('@/views/invoice/wSpecial'), // Parent router-view
         name: 'wSpecial',
+        component: () => import('@/views/invoice/wSpecial'), // Parent router-view
         meta: { title: '待开专票管理', icon: 'table', roles: ['admin', 'jinxiang'] }
       },
       {
         path: 'wOrdinary',
+        name: 'wOrdinary',
         component: () => import('@/views/invoice/wOrdinary'),
         meta: { title: '待开普票管理', icon: 'table', roles: ['admin', 'jinxiang'] }
       },
       {
         path: 'wElectronic',
+        name: 'wElectronic',
         component: () => import('@/views/invoice/wElectronic'),
         meta: { title: '待开电子发票管理', icon: 'table', roles: ['admin', 'jinxiang'] }
       },
       {
         path: 'oSpecial',
+        name: 'oSpecial',
         component: () => import('@/views/invoice/oSpecial'),
         meta: { title: '已开专票管理', icon: 'table', roles: ['admin', 'jinxiang'] }
       },
       {
         path: 'oOrdinary',
+        name: 'oOrdinary',
         component: () => import('@/views/invoice/oOrdinary'),
         meta: { title: '已开普票管理', icon: 'table', roles: ['admin', 'jinxiang'] }
       },
       {
         path: 'oElectronic',
+        name: 'oElectronic',
         component: () => import('@/views/invoice/oElectronic'),
         meta: { title: '已开电子发票管理', icon: 'table', roles: ['admin', 'jinxiang'] }
       },
       {
         path: 'redTable',
+        name: 'redTable',
         component: () => import('@/views/invoice/redTable'),
         meta: { title: '红字信息表管理', icon: 'table', roles: ['admin', 'jinxiang'] }
       }
@@ -186,22 +194,25 @@ export const asyncRouterMap = [
     children: [
       {
         path: 'special',
-        component: () => import('@/views/invoiceOpening/special'), // Parent router-view
         name: 'special',
+        component: () => import('@/views/invoiceOpening/special'), // Parent router-view
         meta: { title: '手工填开专票', icon: 'table', roles: ['admin', 'jinxiang'] }
       },
       {
         path: 'ordinary',
+        name: 'ordinary',
         component: () => import('@/views/invoiceOpening/ordinary'),
         meta: { title: '手工填开普票', icon: 'table', roles: ['admin', 'jinxiang'] }
       },
       {
         path: 'electronic',
+        name: 'electronic',
         component: () => import('@/views/invoiceOpening/electronic'),
         meta: { title: '手工填开电子发票', icon: 'table', roles: ['admin', 'jinxiang'] }
       },
       {
         path: 'buyFarm',
+        name: 'buyFarm',
         component: () => import('@/views/invoiceOpening/buyFarm'),
         meta: { title: '手工填开农产品收购', icon: 'table', roles: ['admin', 'jinxiang'] }
       }
@@ -216,17 +227,19 @@ export const asyncRouterMap = [
     children: [
       {
         path: 'openInvoice',
-        component: () => import('@/views/queryStatistics/openInvoice'), // Parent router-view
         name: 'openInvoice',
+        component: () => import('@/views/queryStatistics/openInvoice'), // Parent router-view
         meta: { title: '已开发票查询', icon: 'table', roles: ['admin', 'jinxiang'] }
       },
       {
         path: 'orderOpenMessage',
+        name: 'orderOpenMessage',
         component: () => import('@/views/queryStatistics/orderOpenMessage'),
         meta: { title: '订单开票信息查询', icon: 'table', roles: ['admin', 'jinxiang'] }
       },
       {
         path: 'invoiceOrderMessage',
+        name: 'invoiceOrderMessage',
         component: () => import('@/views/queryStatistics/invoiceOrderMessage'),
         meta: { title: '发票订单信息查询', icon: 'table', roles: ['admin', 'jinxiang'] }
       }
@@ -241,12 +254,13 @@ export const asyncRouterMap = [
     children: [
       {
         path: 'taskQuery',
-        component: () => import('@/views/dataSync/taskQuery'), // Parent router-view
         name: 'taskQuery',
+        component: () => import('@/views/dataSync/taskQuery'), // Parent router-view
         meta: { title: '任务查询', icon: 'table', roles: ['admin', 'jinxiang'] }
       },
       {
         path: 'taskSettings',
+        name: 'taskSettings',
         component: () => import('@/views/dataSync/taskSettings'),
         meta: { title: '任务设置', icon: 'table', roles: ['admin', 'jinxiang'] }
       }
