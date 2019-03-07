@@ -35,8 +35,7 @@ export const constantRouterMap = [
       path: 'dashboard',
       component: () => import('@/views/dashboard/index')
     }]
-  },
-  { path: '*', redirect: '/404', hidden: true }
+  }
 ]
 // 动态路由表
 export const asyncRouterMap = [
