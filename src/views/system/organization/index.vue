@@ -38,16 +38,17 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { list } from '@/api/system'
+// import { list } from '@/api/system'
 export default {
   name: 'Dashboard',
   data() {
     return {
       filterText: '',
-      activeName: '',
+      activeName: 'first',
       nodeMaintenanceForm: {
         name: ''
       },
+      // 机构树
       data2: [{
         id: 1,
         label: 'Level one 1',
@@ -101,11 +102,11 @@ export default {
     }
   },
   mounted() {
-    list().then(res => {
-      console.log(res)
-    }).catch(err => {
-      console.log(err)
-    })
+    // list().then(res => {
+    //   console.log(res)
+    // }).catch(err => {
+    //   console.log(err)
+    // })
   },
   methods: {
     filterNode(value, data) {
