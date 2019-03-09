@@ -6,7 +6,9 @@ const user = {
     token: getToken(),
     name: '',
     avatar: '',
-    roles: []
+    roles: [],
+    id: '',
+    isAddRoute: false
   },
 
   mutations: {
@@ -21,6 +23,12 @@ const user = {
     },
     SET_ROLES: (state, roles) => {
       state.roles = roles
+    },
+    SET_ID: (state, id) => {
+      state.id = id
+    },
+    SET_ISADDROUTE: (state, isAddRoute) => {
+      state.isAddRoute = isAddRoute
     }
   },
 
@@ -30,9 +38,9 @@ const user = {
       const username = userInfo.username.trim()
       return new Promise((resolve, reject) => {
         login(username, userInfo.password).then(response => {
-          const data = response.data
+          const data = response
+          commit('SET_ID', data.id)
           setToken(data.token)
-          commit('SET_TOKEN', data.token)
           resolve()
         }).catch(error => {
           reject(error)
@@ -43,15 +51,8 @@ const user = {
     // 获取用户信息
     GetInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
-        getInfo(state.token).then(response => {
-          const data = response.data
-          if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
-            commit('SET_ROLES', data.roles)
-          } else {
-            reject('getInfo: roles must be a non-null array !')
-          }
-          commit('SET_NAME', data.name)
-          commit('SET_AVATAR', data.avatar)
+        getInfo(state.getters.uid).then(response => {
+          // commit('SET_AVATAR', data.avatar)
           resolve(response)
         }).catch(error => {
           reject(error)
@@ -78,6 +79,12 @@ const user = {
       return new Promise(resolve => {
         commit('SET_TOKEN', '')
         removeToken()
+        resolve()
+      })
+    },
+    toggleIsAddRoute({ commit }) {
+      return new Promise(resolve => {
+        commit('SET_ISADDROUTE', true)
         resolve()
       })
     }

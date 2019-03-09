@@ -3,7 +3,7 @@ import apiPath from '@/api/apiUrl'
 
 export function list(username, password) {
   return request({
-    url: apiPath.login.login,
+    url: apiPath.system.organization.list,
     method: 'post',
     data: {
       username,

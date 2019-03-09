@@ -53,7 +53,6 @@ export const asyncRouterMap = [
   {
     path: '/system',
     component: Layout,
-    redirect: '/example/table',
     name: 'Example',
     meta: { title: '系统管理', icon: 'example', roles: ['admin2', 'superAdmin'] },
     children: [

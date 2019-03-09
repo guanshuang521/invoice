@@ -26,3 +26,11 @@ export function logout() {
     method: 'post'
   })
 }
+// 获取有权限的路由
+export function getRoute(id) {
+  return request({
+    url: '/user/getRoute',
+    method: 'post',
+    params: { id }
+  })
+}

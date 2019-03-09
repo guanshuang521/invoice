@@ -5,9 +5,9 @@ const apiPath = {
   login: {
     login: '/user/login'
   },
-  systemManager: {
+  system: {
     organization: {
-      list: '',
+      list: '/rbac/mvc/login',
       add: ''
     },
     store: {
