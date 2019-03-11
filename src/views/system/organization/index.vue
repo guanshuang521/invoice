@@ -20,9 +20,25 @@
           <h4>节点属性面板</h4>
           <el-tabs v-model="activeName" type="border-card" @tab-click="handleClick">
             <el-tab-pane label="节点维护" name="first">
-              <el-form ref="form" :model="nodeMaintenanceForm" label-width="120px">
-                <el-form-item label="组织机构代码">
+              <el-form ref="nodeMaintenanceForm" :model="nodeMaintenanceForm" :rules="nodeMaintenanceRules" label-width="120px">
+                <el-form-item label="组织机构代码" prop="code">
                   <el-input v-model="nodeMaintenanceForm.code"/>
+                </el-form-item>
+                <el-form-item label="组织机构名称" prop="name">
+                  <el-input v-model="nodeMaintenanceForm.name"/>
+                </el-form-item>
+                <el-form-item label="备注" prop="note">
+                  <el-input v-model="nodeMaintenanceForm.note" type="textarea"/>
+                </el-form-item>
+                <el-form-item label="是否是叶节点" prop="isLeafNode">
+                  <el-radio-group v-model="ruleForm.resource">
+                    <el-radio label="线上品牌商赞助"></el-radio>
+                    <el-radio label="线下场地免费"></el-radio>
+                  </el-radio-group>
+                </el-form-item>
+                <el-form-item>
+                  <el-button type="danger" icon="el-icon-delete" @click="submitForm('ruleForm')">删除</el-button>
+                  <el-button type="primary" icon="el-icon-check" @click="resetForm('ruleForm')">保存</el-button>
                 </el-form-item>
               </el-form>
             </el-tab-pane>
@@ -45,8 +61,19 @@ export default {
     return {
       filterText: '',
       activeName: 'first',
+      // 节点维护表单
       nodeMaintenanceForm: {
         name: ''
+      },
+      nodeMaintenanceRules: {
+        code: [
+          { required: true, trigger: 'blur' },
+          { min: 1, max: 500, message: '长度不合法', trigger: 'blur' }
+        ],
+        name: [
+          { required: true, trigger: 'blur' },
+          { min: 1, max: 500, message: '长度不合法', trigger: 'blur' }
+        ]
       },
       // 机构树
       data2: [{
