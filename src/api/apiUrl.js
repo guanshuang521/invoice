@@ -7,8 +7,10 @@ const apiPath = {
   },
   system: {
     organization: {
-      list: '/rbac/mvc/login',
-      add: ''
+      list: '/organization/list',
+      nodeDetail: '/organization/nodeDetail',
+      deleteNode: '/organization/delete',
+      updateNode: '/organization/update'
     },
     store: {
       list: '',
