@@ -26,7 +26,7 @@
       <el-form-item label="传输起止日期" prop="date2">
         <el-col :span="11">
           <el-form-item prop="date1">
-            <el-date-picker v-model="queryConditionsForm.date1" type="date" placeholder="选择日期" style="width: 100%; margin-right:0px;" class="fixedclass"/>
+            <el-date-picker v-model="queryConditionsForm.date1" type="date" placeholder="选择日期" style="width: 100%; margin-right:0px;" />
           </el-form-item>
         </el-col>
         <el-col :span="2" class="line" style="text-align:center;padding-right:10px;">-</el-col>
@@ -37,11 +37,11 @@
         </el-col>
       </el-form-item>
       <el-form-item label="订单状态" prop="region" >
-        <el-select v-model="queryConditionsForm.region" placeholder="请选择" class="fixedclass">
+        <el-select v-model="queryConditionsForm.region" placeholder="请选择">
           <el-option v-for="(item,key) in region" :key="key" :value="item.text"/>
         </el-select>
       </el-form-item>
-      <el-form-item>
+      <el-form-item style="padding-left:100px;">
         <el-button type="primary" @click="onSubmit">查询</el-button>
         <el-button type="primary" @click="reset('queryConditionsForm')">重置</el-button>
       </el-form-item>
@@ -99,6 +99,11 @@ export default {
           message: '查询条件重置成功',
           type: 'success'
         })
+        const arr = [12, 5, 8, 9]
+
+        arr.forEach((item, index) => {
+          console.log(index + ': ' + item) // 0: 12  1: 5  2: 8  3: 9
+        })
       })
     }
   }
@@ -112,7 +117,10 @@ export default {
    .el-col .el-form-item--mini.el-form-item{
       margin-bottom: 0px;
     }
-    .fixedclass .el-input--suffix .el-input__inner{
+    .el-col .el-form-item__content .el-input--suffix .el-input__inner{
+    padding-right: 12px !important;
+  }
+   .el-input--suffix .el-input__inner{
     padding-right: 15px !important;
   }
   }
