@@ -1,7 +1,7 @@
 import Mock from 'mockjs'
 import userAPI from './user'
 import tableAPI from './table'
-import systemAPI from './system'
+import systemAPI from './system/organization'
 
 // Fix an issue with setting withCredentials = true, cross-domain request lost cookies
 // https://github.com/nuysoft/Mock/issues/300

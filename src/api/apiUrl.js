@@ -10,7 +10,8 @@ const apiPath = {
       list: '/organization/list',
       nodeDetail: '/organization/nodeDetail',
       deleteNode: '/organization/delete',
-      updateNode: '/organization/update'
+      updateNode: '/organization/update',
+      addNode: '/organization/add'
     },
     store: {
       list: '',
