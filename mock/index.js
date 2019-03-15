@@ -2,6 +2,7 @@ import Mock from 'mockjs'
 import userAPI from './user'
 import tableAPI from './table'
 import systemAPI from './system/organization'
+import orderOpenMessageAPI from './queryStatistics/orderOpenMessage'
 
 // Fix an issue with setting withCredentials = true, cross-domain request lost cookies
 // https://github.com/nuysoft/Mock/issues/300
@@ -26,4 +27,6 @@ Mock.mock(/\/table\/list/, 'get', tableAPI.list)
 // System
 Mock.mock(/\/organization\/nodeDetail/, 'post', systemAPI.nodeDetail)
 Mock.mock(/\/organization\/list/, 'post', systemAPI.getlist)
+// orderOpenMessage
+Mock.mock(/\/orderOpenMessage\/getTableList/, 'post', orderOpenMessageAPI.getTableList)
 export default Mock
