@@ -1,7 +1,7 @@
 <template>
-  <div class="dashboard-container">
-    <div class="dashboard-text">name:{{ name }}</div>
-    <div class="dashboard-text">roles:<span v-for="role in roles" :key="role">{{ role }}</span></div>
+  <div class="dashboard-container"><!--手工填开专票-->
+    <!--<div class="dashboard-text">name:{{ name }}</div>
+    <div class="dashboard-text">roles:<span v-for="role in roles" :key="role">{{ role }}</span></div>-->
   </div>
 </template>
 
@@ -11,7 +11,15 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'Dashboard',
   computed: {
+    /*
+        ...取出参数对象(mapGetters)中的所有可遍历属性，拷贝到当前对象之中
+        mapGetters 辅助函数仅仅是将 store 中的 getter 映射到局部计算属性
+    */
     ...mapGetters([
+    /*
+        name: state => state.user.name,
+        roles: state => state.user.roles,
+    */
       'name',
       'roles'
     ])
