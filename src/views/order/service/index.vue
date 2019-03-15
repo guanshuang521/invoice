@@ -1,109 +1,105 @@
+<!--
+ * @Description:
+ * @Author: zhangzheng
+ * @LastEditors: zhangzheng
+ * @Date: 2019-03-13 10:10:12
+ * @LastEditTime: 2019-03-15 16:55:54
+ -->
 <template>
   <div class="dashboard-container">
-    <!-- <div class="dashboard-text">name:{{ name }}</div>
-    <div class="dashboard-text">roles:<span v-for="role in roles" :key="role">{{ role }}</span></div>-->
-    <el-form ref="queryConditionsForm" :model="queryConditionsForm" :inline="true" label-width="120px" size="mini" class="demo-form-inline" >
-      <el-form-item label="购方名称">
-        <el-input v-model="queryConditionsForm.name"/>
-      </el-form-item>
-      <el-form-item label="二级供应商编码">
-        <el-input v-model="queryConditionsForm.name"/>
-      </el-form-item>
-      <el-form-item label="费用单据编号">
-        <el-input v-model="queryConditionsForm.name"/>
-      </el-form-item>
-      <el-form-item label="结算单号">
-        <el-input v-model="queryConditionsForm.name"/>
-      </el-form-item>
-      <el-form-item
-        prop="name"
-        label="单据起号">
-        <el-input v-model.number="queryConditionsForm.name"/>
-      </el-form-item>
-      <el-form-item label="单据止号">
-        <el-input v-model="queryConditionsForm.name"/>
-      </el-form-item>
-      <el-form-item label="传输起止日期" prop="date2">
-        <el-col :span="11">
-          <el-form-item prop="date1">
-            <el-date-picker v-model="queryConditionsForm.date1" type="date" placeholder="选择日期" style="width: 100%; margin-right:0px;" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="2" class="line" style="text-align:center;padding-right:10px;">-</el-col>
-        <el-col :span="11">
-          <el-form-item prop="date2">
-            <el-date-picker v-model="queryConditionsForm.date2" type="date" placeholder="选择日期" style="width: 100%;" class="fixedclass"/>
-          </el-form-item>
-        </el-col>
-      </el-form-item>
-      <el-form-item label="订单状态" prop="region" >
-        <el-select v-model="queryConditionsForm.region" placeholder="请选择">
-          <el-option v-for="(item,key) in region" :key="key" :value="item.text"/>
-        </el-select>
-      </el-form-item>
-      <el-form-item style="padding-left:100px;">
-        <el-button type="primary" @click="onSubmit">查询</el-button>
-        <el-button type="primary" @click="reset('queryConditionsForm')">重置</el-button>
-      </el-form-item>
-    </el-form>
+    <search-Form :moudel-type="moudelType" :config="queryConditionsForm" :data.sync="searchConditions"/>
+    <search-Table/>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import SearchForm from '../components/searchForm'
+import SearchTable from '../components/searchTable'
 
 export default {
   name: 'Dashboard',
+  components: { SearchForm, SearchTable },
   data() {
     return {
-      queryConditionsForm: {
-        name: '',
-        region: '',
-        date1: '',
-        date2: ''
+      moudelType: 'server',
+      searchConditions: {
+        buyyerName: '',
+        supplierCode: '',
+        billCode: '',
+        countOrderNum: '',
+        orderStart: '',
+        orderEnd: '',
+        dateStart: '',
+        dateEnd: '',
+        orderState: ''
       },
-      region: [
+      queryConditionsForm: [
         {
-          id: 0,
-          text: '快车'
+          title: '购方名称',
+          code: 'buyyerName'
         },
         {
-          id: 1,
-          text: '专车'
+          title: '二级供应商编码',
+          code: 'supplierCode'
         },
         {
-          id: 2,
-          text: '顺风车'
+          title: '费用单据编号',
+          code: 'billCode'
         },
         {
-          id: 3,
-          text: '出租车'
+          title: '结算单号',
+          code: 'countOrderNum'
+        },
+        {
+          title: '单据起号',
+          code: 'orderStart'
+        },
+        {
+          title: '单据止号',
+          code: 'orderEnd'
+        },
+        {
+          title: '传输起止日期',
+          code1: 'dateStart',
+          code2: 'dateEnd',
+          type: 'datepicker'
+        },
+        {
+          title: '订单状态',
+          code: 'orderState',
+          type: 'select',
+          options: [
+            {
+              id: 0,
+              text: '快车'
+            },
+            {
+              id: 1,
+              text: '专车'
+            },
+            {
+              id: 2,
+              text: '顺风车'
+            },
+            {
+              id: 3,
+              text: '出租车'
+            }
+          ]
         }
       ]
+
     }
   },
   computed: {
     ...mapGetters(['name', 'roles'])
   },
   methods: {
-    onSubmit() {
+    searchSubmit() {
       this.$message({
-        message: '恭喜你，这是一条成功消息',
+        message: '方法查询',
         type: 'success'
-      })
-    },
-    reset(queryConditionsForm) {
-      this.$nextTick(() => {
-        this.$refs[queryConditionsForm].resetFields()
-        this.$message({
-          message: '查询条件重置成功',
-          type: 'success'
-        })
-        const arr = [12, 5, 8, 9]
-
-        arr.forEach((item, index) => {
-          console.log(index + ': ' + item) // 0: 12  1: 5  2: 8  3: 9
-        })
       })
     }
   }
@@ -113,16 +109,7 @@ export default {
 <style rel="stylesheet/scss" lang="scss">
 .dashboard {
   &-container {
-    margin: 10px;
-   .el-col .el-form-item--mini.el-form-item{
-      margin-bottom: 0px;
-    }
-    .el-col .el-form-item__content .el-input--suffix .el-input__inner{
-    padding-right: 12px !important;
-  }
-   .el-input--suffix .el-input__inner{
-    padding-right: 15px !important;
-  }
+    margin: 0px;
   }
   &-text {
     font-size: 30px;
