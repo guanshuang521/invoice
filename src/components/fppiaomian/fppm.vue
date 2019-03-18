@@ -61,8 +61,8 @@
                     <div class="tbT mmqText">密<br>码<br>区</div>
                     <div class="tbT mmqTable"></div>
                 </div>
-                <div class="tablemid">
-                    <ul class="midTitle">
+                <div class="tableLines">
+                    <ul class="linesTitle">
                         <li style="width:5%">行号</li>
                         <li style="width:20%">货物或应税劳务、服务名称</li>
                         <li style="width:8%">规格型号</li>
@@ -74,25 +74,34 @@
                         <li style="width:8%">税额</li>
                         <li style="width:16%">操作</li>
                     </ul>
-                    <div class="midlist">
-                        <ul class="midConten">
-                            <li style="width:5%">1</li>
+                    <div class="linesList">
+                       <!--<tr v-for="(item, index) in lines.length" :model="lines[index]" :key="item.id" :class="lines[index].fphxz === '1' ? 'discount_tr' : ''">-->
+                        <ul class="linesConten" v-for="(item, index) in formdata.lines"  :key="item.id">
+                            <li style="width:5%">{{index + 1}}</li>
                             <li style="width:20%;position: relative;">
-                                <input>
+                                <input v-model="formdata.lines[index].xmmc">
                                 <button class="small_select taxNumSelectBtn" style="top:7px" >···</button>
                             </li>
-                            <li style="width:8%">规格型号</li>
-                            <li style="width:6%">单位</li>
-                            <li style="width:9%"><input></li>
-                            <li style="width:10%"><input></li>
-                            <li style="width:10%"><input></li>
-                            <li style="width:8%">税率</li>
-                            <li style="width:8%">税额</li>
+                            <li style="width:8%">
+                                <input v-model="formdata.lines[index].ggxh" readOnly>
+                            </li>
+                            <li style="width:6%">
+                                <input v-model="formdata.lines[index].dw" readOnly>
+                            </li>
+                            <li style="width:9%"><input v-model="formdata.lines[index].xmsl"></li>
+                            <li style="width:10%"><input v-model="formdata.lines[index].xmdj"></li>
+                            <li style="width:10%"><input v-model="formdata.lines[index].xmje"></li>
+                            <li style="width:8%">
+                                <input v-model="formdata.lines[index].sl" readOnly>
+                            </li>
+                            <li style="width:8%">
+                                <input v-model="formdata.lines[index].se" readOnly>
+                            </li>
                             <li style="width:16%">
                                 <div class="czbtn">
-                                    <a class="addRow"></a>
+                                    <a class="addRow" @click="addBtn"></a>
                                     <!--<a class="ywbmBtn">业务编号</a>-->
-                                    <a class="delRow"></a>
+                                    <a class="delRow" @click="delBtn"></a>
                                 </div>
                             </li>
                         </ul>
@@ -204,8 +213,8 @@ export default {
                 yfp_hm:'',
                 jshj:'',
                 jshjupper:'',
-                hjje:'1',
-                hjse:'2',
+                hjje:'',
+                hjse:'',
                 kce:'',
                 bz:'',
                 hylx:'',
@@ -214,7 +223,34 @@ export default {
                 od_no:'',
                 od_lsh:'',
                 wd_id:'',
-                kpzh:''
+                kpzh:'',
+                lines: [
+                    {
+                      num: '1', // 序号
+                      commodityId: '', // 商品编号
+                      fphxz: '0', // 0 正常行,1折扣行,2被折扣行
+                      yhzcbs: '0',  //优惠政策标识  0：不使用，1：使用
+                      lslbs: '', // 零税率标识，空：非零税率， 1：免税，2：不征收，3 普通零税率
+                      spmc: '', // 商品名称
+                      spbh: '', // 商品编号
+                      spbm: '', // 商品编码
+                      xmmc: '', // 项目名称
+                      zxbm: '', // 自行编码
+                      ggxh: '', // 规格型号
+                      dw: '', // 单位
+                      xmsl: '', // 项目数量
+                      hsxmdj: '', // 含税项目单价
+                      xmdjShow: '', // 前端显示项目单价
+                      xmdj: '', // 不含税项目单价
+                      hsxmje: '', // 含税项目金额
+                      xmjeShow: '', // 前端显示项目金额
+                      xmje: '', // 不含税项目金额
+                      sl: '', // 税率
+                      se: '', // 税额
+                      ywbh: '', // 业务编号
+                      zzstsgl:''  //增值税特殊管理 
+                    }
+                ],
             },
             
             kprq:''
@@ -244,6 +280,47 @@ export default {
     watch:{
     },
     methods: {
+         // 添加一行
+        addBtn() {
+          this.formdata.lines.push(
+            {
+              num: this.formdata.lines.length + 1, // 序号
+              commodityId: '', // 商品编号
+              fphxz: '0', // 0 正常行,1折扣行,2被折扣行
+              yhzcbs: '0',
+              lslbs: '', // 零税率标识，暂时为空
+              spmc: '', // 商品名称
+              spbh: '', // 商品编号
+              spbm: '', // 商品编码
+              xmmc: '', // 项目名称
+              zxbm: '', // 征税编码
+              ggxh: '', // 规格型号
+              dw: '', // 单位
+              xmsl: '', // 项目数量
+              hsxmdj: '', // 含税项目单价
+              xmdjShow: '', // 前端显示项目单价
+              xmdj: '', // 不含税项目单价
+              hsxmje: '', // 含税项目金额
+              xmjeShow: '', // 前端显示项目金额
+              xmje: '', // 不含税项目金额
+              sl: '', // 税率
+              se: '', // 税额
+              ywbh: '' // 业务编号
+            }
+          );
+        },
+        // 删除一行
+        delBtn(index, yphxz) {
+          let _this = this;
+          if (this.formdata.lines.length === 1) {
+            return false;
+          }
+          if (yphxz === '2') {
+            hintFunction(_this.$store, 'warnHint', '该行已添加折扣信息，请先删除此行的折扣信息');
+            return;
+          }
+          this.formdata.lines.splice(index, 1);
+        },
     }
 }
 </script>
@@ -424,14 +501,14 @@ export default {
             height: 100%;
         }
     }
-    .tablemid{
+    .tableLines{
         width: 100%;
         /*height: 140px;*/
         border-left: 1px solid #B2945F;
         border-right: 1px solid #B2945F;
         box-sizing: border-box;
         font-size: 0;
-        .midTitle{
+        .linesTitle{
             width: 100%;
             height: 40px;
             border-bottom: 1px solid #B2945F;
@@ -441,12 +518,12 @@ export default {
                 line-height: 40px;    
             }
         }
-        .midlist{
+        .linesList{
             min-height: 97px;
             max-height: 150px;
             overflow-y: auto;
         }
-        .midConten{
+        .linesConten{
             width: 100%;
             height: 30px;
             border-bottom: 1px solid #B2945F;
