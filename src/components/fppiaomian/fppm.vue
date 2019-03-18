@@ -187,19 +187,22 @@ export default {
     }
 }
 </script>
-<style scoped lang="less">
+<style scoped rel="stylesheet/scss" lang="scss">
     .fppm{
         display: flex;
         overflow: hidden;
         background-color: #fff;
+        height: 100%;
     }
     .edgebg{
         width: 40px;
         height: 100%;
         ul{
             height: 100%;
+            padding: 0;
             padding-top: 17px;
             li{
+                list-style: none;
                 width: 40px;
                 height: 26px;
                 margin: 0 auto 34px;
@@ -219,7 +222,7 @@ export default {
         .small_select{
             width: 20px;
             height: 16px;
-            line-height: 16px;
+            line-height: 14px;
             background: #4DA1FF;
             color: #fff;
             border: none;
@@ -232,6 +235,7 @@ export default {
             right: 5px;
             top: 5px;
             cursor: pointer;
+            font-size: 12px;
         }
     }
     .fpTitle{

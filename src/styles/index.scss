@@ -76,3 +76,59 @@ a:hover {
 .app-container {
   padding: 20px;
 }
+.bluebtn{
+    height: 30px;
+    line-height: 30px;
+    font-size: 14px;
+    margin-right: 10px;
+    padding: 0 12px;
+    display: inline-block;
+    vertical-align: middle;
+    border-radius: 5px!important;
+    -webkit-border-radius: 5px!important;
+    -moz-border-radius: 5px!important;
+    -ms-border-radius: 5px!important;
+    -o-border-radius: 5px!important;
+    color: #fff;
+    background: #4DA1FF;
+    border: none;
+    cursor: pointer;
+}
+.whitebtn{
+    display: inline-block;
+    vertical-align: middle;
+    height:26px!important;
+    line-height: 26px;
+    font-size: 13px;
+    background: #fff;
+    border:1px solid #e0e2e5!important;
+    border-radius:4px;
+    color: #252D3A;
+    padding:0 8px;
+    box-sizing: border-box;
+    margin-right: 10px;
+    cursor:pointer; 
+}
+.whitebtn img{
+    vertical-align: -2px;
+    margin-right: 6px;
+}
+/*.fplist{
+    width: 100%;
+    min-height: 420px;
+    background-color: #fff;
+    padding: 0 20px;
+    box-sizing: border-box;
+}*/
+.required{
+    color: red;
+}
+ul{
+    padding: 0;
+}
+li{
+    list-style: none;
+}
+input,button{
+    outline:none 
+}
