@@ -82,16 +82,16 @@
                   <el-input v-model="codeMaintenanceForm.cardNo"/>
                 </el-form-item>
                 <el-form-item label="专票限额" prop="specialTicketAmount">
-                  <el-input type="number" v-model="codeMaintenanceForm.specialTicketAmount"/>
+                  <el-input v-model="codeMaintenanceForm.specialTicketAmount" type="number"/>
                 </el-form-item>
                 <el-form-item label="普票限额" prop="generalTicketAmount">
-                  <el-input type="number" v-model="codeMaintenanceForm.generalTicketAmount"/>
+                  <el-input v-model="codeMaintenanceForm.generalTicketAmount" type="number"/>
                 </el-form-item>
                 <el-form-item label="电子发票限额" prop="electronicTicketAmount">
-                  <el-input type="number" v-model="codeMaintenanceForm.electronicTicketAmount"/>
+                  <el-input v-model="codeMaintenanceForm.electronicTicketAmount" type="number"/>
                 </el-form-item>
                 <el-form-item label="最大订单数" prop="maxOrderNo">
-                  <el-input type="number" v-model="codeMaintenanceForm.maxOrderNo"/>
+                  <el-input v-model="codeMaintenanceForm.maxOrderNo" type="number"/>
                 </el-form-item>
                 <el-form-item label="地址" prop="address">
                   <el-input v-model="codeMaintenanceForm.address"/>
@@ -113,57 +113,49 @@
                   <el-table-column
                     prop="date"
                     label="终端标识"
-                    width="100">
-                  </el-table-column>
+                    width="100"/>
                   <el-table-column
                     prop="name"
                     label="终端名称"
-                    width="100">
-                  </el-table-column>
+                    width="100"/>
                   <el-table-column
                     prop="province"
                     label="终端地址"
-                    width="100">
-                  </el-table-column>
+                    width="100"/>
                   <el-table-column
                     prop="city"
                     label="终端端口"
-                    width="100">
-                  </el-table-column>
+                    width="100"/>
                   <el-table-column
                     prop="address"
                     label="开票类型"
-                    width="100">
-                  </el-table-column>
+                    width="100"/>
                   <el-table-column
                     prop="zip"
                     label="所属税号"
-                    width="100">
-                  </el-table-column>
+                    width="100"/>
                   <el-table-column
                     prop="zip"
                     label="机器编号"
-                    width="100">
-                  </el-table-column>
+                    width="100"/>
                   <el-table-column
                     fixed="right"
                     label="操作"
                     width="120">
                     <template slot-scope="scope">
-                      <el-button @click="deleteTerminal(scope.row)" type="text" size="small">删除</el-button>
-                      <el-button @click="modifyTerminal(scope.row)" type="text" size="small">修改</el-button>
+                      <el-button type="text" size="small" @click="deleteTerminal(scope.row)">删除</el-button>
+                      <el-button type="text" size="small" @click="modifyTerminal(scope.row)">修改</el-button>
                     </template>
                   </el-table-column>
                 </el-table>
-                <!--<el-pagination-->
-                  <!--@size-change="handleSizeChange"-->
-                  <!--@current-change="handleCurrentChange"-->
-                  <!--:current-page="currentPage4"-->
-                  <!--:page-sizes="[100, 200, 300, 400]"-->
-                  <!--:page-size="100"-->
-                  <!--layout="total, sizes, prev, pager, next, jumper"-->
-                  <!--:total="400">-->
-                <!--</el-pagination>-->
+                <el-pagination
+                  :current-page="currentPage"
+                  :page-sizes="[100, 200, 300, 400]"
+                  :page-size="100"
+                  :total="totalCount"
+                  layout="total, sizes, prev, pager, next, jumper"
+                  @size-change="handleSizeChange"
+                  @current-change="handleCurrentChange"/>
               </template>
             </el-tab-pane>
           </el-tabs>
@@ -171,10 +163,10 @@
       </el-col>
     </el-row>
     <!--创建和编辑终端-->
-    <el-dialog :title="dialogTitle" :visible.sync="dialogVisiblity" width="30%" center custom-class="showPop dialog-wapper pub-min-pop" :lock-scroll="true">
-      <dialog :terminal-info="terminalInfo" :key="terminalInfo.id" ref="dialog"></dialog>
+    <el-dialog :title="dialogTitle" :visible.sync="dialogVisiblity" :lock-scroll="true" width="30%" center custom-class="showPop dialog-wapper pub-min-pop">
+      <dialog ref="dialog" :terminal-info="terminalInfo" :key="terminalInfo.id"/>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="saveTerminal" v-loading.fullscreen.lock="fullscreenLoading">保存</el-button>
+        <el-button v-loading.fullscreen.lock="fullscreenLoading" type="primary" @click="saveTerminal">保存</el-button>
       </span>
     </el-dialog>
   </div>
@@ -185,7 +177,7 @@ import { getNodeList, getNodeDetail, deleteNode, updateNode, addNode } from '@/a
 import dialog from '@/components/system/organization'
 export default {
   name: 'Dashboard',
-  component:{
+  component: {
     dialog
   },
   data() {
@@ -276,7 +268,7 @@ export default {
         telephoneNo: [
           { required: true, message: '请输入电话', trigger: 'blur' },
           { min: 11, max: 11, message: '电话号码长度不正确', trigger: 'blur' },
-          {pattern:/^1[3456789]\d{9}$/,message:'手机号格式不正确',trigger: 'blur'}
+          { pattern: /^1[3456789]\d{9}$/, message: '手机号格式不正确', trigger: 'blur' }
         ]
       },
       // 机构树
@@ -310,7 +302,11 @@ export default {
       // 终端信息
       terminalInfo: {},
       // 加载页面
-      fullscreenLoading: false
+      fullscreenLoading: false,
+      // 当前分页
+      currentPage: 1,
+      // 当前总条数
+      totalCount: 1
     }
   },
   watch: {
@@ -413,7 +409,7 @@ export default {
       })
     },
     // 税号维护提交
-    submitCodeMaintence (data) {
+    submitCodeMaintence(data) {
       this.$refs[data].validate((valid) => {
         if (valid) {
           addNode(this.addNodeForm).then(res => {
@@ -432,7 +428,7 @@ export default {
       })
     },
     // 删除终端
-    deleteTerminal () {
+    deleteTerminal() {
       this.$confirm('确定删除选择数据?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -457,11 +453,11 @@ export default {
       })
     },
     // 修改终端
-    modifyTerminal () {
+    modifyTerminal() {
 
     },
     // 修改终端保存
-    saveTerminal () {
+    saveTerminal() {
 
     },
     handleClick() {
