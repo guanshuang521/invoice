@@ -28,6 +28,11 @@ const apiPath = {
     invoiceModel: {
       list: ''
     }
+  },
+  queryStatistics: {
+    orderOpenMessage: {
+      getTableList: '/orderOpenMessage/getTableList'
+    }
   }
 }
 export default apiPath
