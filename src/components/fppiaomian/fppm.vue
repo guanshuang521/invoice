@@ -19,20 +19,20 @@
         <div class="pm_all">
             <div class="fpTitle">
                 <div class="fpTitleLeft">
-                    <img  v-if="fplx == this.$store.getters.fplx_ele" src="../../assets/common/logo_dian.png">
-                    <img  v-if="fplx == this.$store.getters.fplx_gen" src="../../assets/common/logo_pu.png">
-                    <img  v-if="fplx == this.$store.getters.fplx_spe" src="../../assets/common/logo_zhuan.png">
+                    <img  v-if="formdata.fplx == this.$store.getters.fplx_ele" src="../../assets/common/logo_dian.png">
+                    <img  v-if="formdata.fplx == this.$store.getters.fplx_gen" src="../../assets/common/logo_pu.png">
+                    <img  v-if="formdata.fplx == this.$store.getters.fplx_spe" src="../../assets/common/logo_zhuan.png">
                 </div>
                 <div class="fpTitleCenter">
-                    <div  v-if="fplx == this.$store.getters.fplx_ele" id="titleText">增值税电子发票</div>
-                    <div  v-if="fplx == this.$store.getters.fplx_gen" id="titleText">增值税普通发票</div>
-                    <div  v-if="fplx == this.$store.getters.fplx_spe" id="titleText">增值税专用发票</div>
+                    <div v-if="formdata.fplx == this.$store.getters.fplx_ele" id="titleText">增值税电子发票</div>
+                    <div v-if="formdata.fplx == this.$store.getters.fplx_gen" id="titleText">增值税普通发票</div>
+                    <div v-if="formdata.fplx == this.$store.getters.fplx_spe" id="titleText">增值税专用发票</div>
                 </div>
                 <div class="fpTitleRight">
                     <img src="../../assets/common/no.jpg">
                     <div class="titlekprq">
                         <span class="kprqText">开票日期：</span>
-                        <span class="kprq">2019年03月12日</span>
+                        <span class="kprq">{{kprq}}</span>
                     </div>
                 </div>
             </div>
@@ -42,20 +42,20 @@
                     <div class="tbT gmfTable">
                         <div class="tbmc">
                             <span class="gmftitle">名　　　　称：</span>
-                            <input class="gmfcontent">
+                            <input class="gmfcontent" v-model="formdata.gmf_mc">
                             <button class="small_select customerSelect" type="button">···</button>
                         </div>
                         <div class="tbnsrsbh">
                             <span class="gmftitle">纳税人识别号：</span>
-                            <input class="gmfcontent">
+                            <input class="gmfcontent" v-model="formdata.gmf_nsrsbh">
                         </div>
                         <div class="tbdzdh">
                             <span class="gmftitle">地址  、  电话：</span>
-                            <input class="gmfcontent">
+                            <input class="gmfcontent" v-model="formdata.gmf_dzdh">
                         </div>
                         <div class="tbkhh">
                             <span class="gmftitle">开户行及账号：</span>
-                            <input class="gmfcontent">
+                            <input class="gmfcontent" v-model="formdata.gmf_yhzh">
                         </div>
                     </div>
                     <div class="tbT mmqText">密<br>码<br>区</div>
@@ -91,7 +91,7 @@
                             <li style="width:16%">
                                 <div class="czbtn">
                                     <a class="addRow"></a>
-                                    <a class="ywbmBtn">业务编号</a>
+                                    <!--<a class="ywbmBtn">业务编号</a>-->
                                     <a class="delRow"></a>
                                 </div>
                             </li>
@@ -101,16 +101,17 @@
                 <div class="tablehj">
                     <ul class="hjtop">
                         <li style="width:60%;padding-left: 5px;">合计</li>
-                        <li style="width:18%">￥</li>
-                        <li style="width:20%">￥</li>
+                        <li style="width:18%">￥{{formdata.hjje}}</li>
+                        <li style="width:20%">￥{{formdata.hjse}}</li>
                     </ul>
                     <ul class="hjbottom">
                         <li style="width:20%;" class="hjTitle">价税合计（大写）</li>
                         <li style="width:40%">
                             <img src="../../assets/common/hjdx.png" style="float: left;margin: 4px 3px;">
+                            {{formdata.jshjupper}}
                         </li>
                         <li style="width:10%" class="hjTitle">（小写）</li>
-                        <li style="width:30%">￥</li>
+                        <li style="width:30%">￥{{formdata.jshj}}</li>
                     </ul>
                 </div>
                 <div class="tableBottom">
@@ -118,32 +119,34 @@
                     <div class="tbB xsfTable">
                         <div class="tbmc">
                             <span class="xsftitle">名　　　　称：</span>
-                            <span class="xsfcontent"></span>
+                            <span class="xsfcontent" v-model="formdata.xsf_mc"></span>
                         </div>
                         <div class="tbnsrsbh">
                             <span class="xsftitle">纳税人识别号：</span>
-                            <span class="xsfcontent"></span>
+                            <span class="xsfcontent" v-model="formdata.xsf_nsrsbh"></span>
                         </div>
                         <div class="tbdzdh">
                             <span class="xsftitle">地址  、  电话：</span>
-                            <span class="xsfcontent"></span>
+                            <span class="xsfcontent" v-model="formdata.xsf_dzdh"></span>
                         </div>
                         <div class="tbkhh">
                             <span class="xsftitle">开户行及账号：</span>
-                            <span class="xsfcontent"></span>
+                            <span class="xsfcontent" v-model="formdata.xsf_yhzh"></span>
                         </div>
                     </div>
                     <div class="tbB bzText">备<br><br>注</div>
-                    <div class="tbB bzTable"></div>
+                    <div class="tbB bzTable">
+                        <textarea v-model="formdata.xsf_yhzh"></textarea>
+                    </div>
                 </div>
             </div>
             <div class="fpmsg">
                 <div class="msgText">收款人：</div>
-                <div class="msgCon"></div>
+                <div class="msgCon" v-model="formdata.skr"></div>
                 <div class="msgText">复核人：</div>
-                <div class="msgCon"></div>
+                <div class="msgCon" v-model="formdata.fhr"></div>
                 <div class="msgText"><span class="required">*</span>开票人：</div>
-                <div class="msgCon">管理员</div>
+                <div class="msgCon" v-model="formdata.kpr"></div>
                 <div class="msgText"><span class="required">*</span>销售方：(章)</div>
                 <div class="msgCon"></div>
             </div>
@@ -171,12 +174,50 @@
 </template>
 
 <script>
+import { getDate } from '@/utils/datefilter'
+import { getDx } from '@/utils/dxfilter'
+
 export default {
     name:'fppm',
     props: ['pmfplx'],
     data() {
         return {
-            fplx:this.pmfplx
+            formdata:{
+                fpqqlsh:'',
+                fplx:this.pmfplx,
+                bmb_bbh:'',
+                zsfs:'',
+                xsf_nsrsbh:'',
+                xsf_mc:'',
+                xsf_dzdh:'',
+                xsf_yhzh:'',
+                gmf_nsrsbh:'',
+                gmf_mc:'',
+                gmf_dzdh:'',
+                gmf_yhzh:'',
+                gmf_sjh:'',
+                gmf_dzyx:'',
+                kpr:'',
+                fhr:'',
+                skr:'',
+                yfp_dm:'',
+                yfp_hm:'',
+                jshj:'',
+                jshjupper:'',
+                hjje:'1',
+                hjse:'2',
+                kce:'',
+                bz:'',
+                hylx:'',
+                tspz:'',
+                ent_id:'',
+                od_no:'',
+                od_lsh:'',
+                wd_id:'',
+                kpzh:''
+            },
+            
+            kprq:''
         }
     },
     modules: {
@@ -187,6 +228,18 @@ export default {
     created:function(){
     },
     mounted:function(){
+        this.kprq = getDate(new Date().getTime(),'yyyy年MM月dd日');
+        // 计算所有 明细项 金额、税额 合计
+        if (this.formdata.hjje) {
+            this.formdata.hjje = Number(this.formdata.hjje).toFixed(2);
+        }
+        if (this.formdata.hjse) {
+            this.formdata.hjse = Number(this.formdata.hjse).toFixed(2);
+        }
+        this.formdata.jshj = (Number(this.formdata.hjje)+Number(this.formdata.hjse)).toFixed(2);
+        this.formdata.jshjupper = getDx(this.formdata.jshj)
+        
+        this.$emit('getformdata',this.formdata);
     },
     watch:{
     },
@@ -411,6 +464,7 @@ export default {
                 }
                 .addRow{
                     background: url(../../assets/common/jiabtn.png) no-repeat;
+                    margin-right: 10px;
                 }
                 .delRow{
                     background: url(../../assets/common/jianbtn.png) no-repeat;
@@ -586,5 +640,12 @@ export default {
         p:nth-child(2){
             padding-left: 60px;
         }
+    }
+    textarea{
+        width: 100%;
+        height: 98px;
+        border: 0;
+        resize: none;
+        font-size: 14px;
     }
 </style>

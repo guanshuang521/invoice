@@ -1,32 +1,33 @@
 <template>
-  <div class="dashboard-container">
-    <div class="dashboard-text">name:{{ name }}</div>
-    <div class="dashboard-text">roles:<span v-for="role in roles" :key="role">{{ role }}</span></div>
+  <div class="electronic"><!--手工填开专票 004-->
+    <fppm :pmfplx='fplx'></fppm>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import fppm from 'components/fppiaomian/fppm.vue'
 
 export default {
-  name: 'Dashboard',
+    name: 'electronic',
+    components:{
+        fppm
+    },
+    data(){
+        return{
+            fplx:this.$store.getters.fplx_ele //电票 026
+        }
+    },
   computed: {
-    ...mapGetters([
-      'name',
-      'roles'
-    ])
   }
 }
 </script>
 
-<style rel="stylesheet/scss" lang="scss" scoped>
-.dashboard {
-  &-container {
-    margin: 30px;
-  }
-  &-text {
-    font-size: 30px;
-    line-height: 46px;
-  }
+<style rel="stylesheet/scss" lang="scss" scoped> 
+.electronic{
+    width: 1040px;
+    height: 606px;
+    border: 1px solid #E0E0E0;
+    box-shadow: 0 0 10px #ccc;
+    margin: 20px;
 }
 </style>

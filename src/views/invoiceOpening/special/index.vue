@@ -1,11 +1,15 @@
 <template>
   <div class="special"><!--手工填开专票 004-->
-    <fppm :pmfplx='fplx'></fppm>
+   <form>
+        <button class="bluebtn" @click='kaijuBtn'>确认开具</button>
+        <div class="specialPm">
+            <fppm :pmfplx='fplx' @getformdata='pmformdata'></fppm>
+        </div>
+   </form>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import fppm from 'components/fppiaomian/fppm.vue'
 
 export default {
@@ -15,28 +19,25 @@ export default {
     },
     data(){
         return{
-            fplx:this.$store.getters.fplx_spe //专票 004
+            fplx:this.$store.getters.fplx_spe, //专票 004
+            formlist:{},
         }
     },
-  computed: {
-  }
+    computed: {
+    },
+    methods:{
+        kaijuBtn(){
+            console.log(this.formlist)
+        },
+        pmformdata:function(msg){
+            this.formlist = msg
+        }
+    }
 }
 </script>
 
-<style rel="stylesheet/scss" lang="scss" scoped>
-/*
-.dashboard {
-  &-container {
-    margin: 30px;
-  }
-  &-text {
-    font-size: 30px;
-    line-height: 46px;
-  }
-}
-*/
-    
-.special{
+<style rel="stylesheet/scss" lang="scss" scoped> 
+.specialPm{
     width: 1040px;
     height: 606px;
     border: 1px solid #E0E0E0;
