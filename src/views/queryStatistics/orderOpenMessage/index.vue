@@ -118,105 +118,22 @@
         <!-- <span></span> -->
       </el-pagination>
     </div>
-    <!-- 新增弹窗 -->
-    <el-dialog
-      :visible.sync="dialogVisible"
-      :before-close="handleClose"
-      title="发票信息"
-      width="650px"
-      custom-class="add-customer">
-      <el-table
-        :data="list"
-        element-loading-text="Loading"
-        border
-        fit
-        highlight-current-row>
-      <el-table-column align="center" width="31px">
-        <template slot-scope="scope">
-          {{ scope.$index + 1 }}
-        </template>
-      </el-table-column>
-      <el-table-column label="发票代码" align="center">
-        <template slot-scope="scope">
-          {{ scope.row.customerName }}
-        </template>
-      </el-table-column>
-      <el-table-column label="发票号码" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.customerTaxNumber }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="发票类型" align="center">
-        <template slot-scope="scope">
-          {{ scope.row.address }}
-        </template>
-      </el-table-column>
-      <el-table-column label="金额（不含税）" align="center">
-        <template slot-scope="scope">
-          {{ scope.row.email }}
-        </template>
-      </el-table-column>
-      <el-table-column label="税额" align="center">
-        <template slot-scope="scope">
-          {{ scope.row.contacts }}
-        </template>
-      </el-table-column>
-      <el-table-column label="税价合计" align="center">
-        <template slot-scope="scope">
-          {{ scope.row.contactNumber }}
-        </template>
-      </el-table-column>
-      <el-table-column label="备注" align="center">
-        <template slot-scope="scope">
-          {{ scope.row.phone }}
-        </template>
-      </el-table-column>
-      </el-table>
-    </el-dialog>
-    <!-- 导入弹窗 -->
-    <el-dialog
-      :visible.sync="dialogVisible2"
-      :before-close="handleClose"
-      title="客户基础信息导入"
-      width="650px"
-      custom-class="add-customer">
-      <el-upload
-        ref="upload"
-        :on-preview="handlePreview"
-        :on-remove="handleRemove"
-        :file-list="fileList"
-        :auto-upload="false"
-        accept=".xls,.xlsx"
-        class="upload-demo"
-        action="https://jsonplaceholder.typicode.com/posts/">
-        <div slot="tip" class="el-upload__tip">选择上传文件</div>
-        <el-button slot="trigger" size="small" type="primary">添加文件</el-button>
-        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">开始上传</el-button>
-      </el-upload>
-    </el-dialog>
+    <invoice-order :dialog-visible="dialogVisible"/>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 import { getTableList } from '@/api/queryStatistics/orderOpenMessage'
-
+import invoiceOrder from '@/components/queryStatistics/invoiceOrder'
 export default {
-  name: 'Dashboard',
+  name: 'OrderOpenMessage',
+  components: {
+    invoiceOrder
+  },
   data() {
-    function emailFilter(rule, value, callback) { // 邮箱验证
-      if (value === '') {
-        callback(new Error('邮箱不能为空'))
-      } else {
-        var re = /^[a-z0-9A-Z]+[- | a-z0-9A-Z . _]+@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-z]{2,}$/
-        if (!(re.test(value))) {
-          callback(new Error('邮箱格式有误， 请重新输入'))
-        } else {
-          callback()
-        }
-      }
-    }
     return {
+      value: '',
       options: [{
         value: '01',
         label: '费用单据'
@@ -261,21 +178,7 @@ export default {
         phone: '',
         bank: '',
         bankAccount: ''
-      },
-      rules: {
-        customerName: [
-          { required: true, message: '购方名称不能为空', trigger: 'blur' }
-        ],
-        customerTaxNumber: [
-          { required: true, message: '购方税号不能为空', trigger: 'blur' },
-          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-        ],
-        email: [
-          { required: true, validator: emailFilter, trigger: 'blur' }
-        ]
-      },
-      dialogVisible2: false,
-      fileList: []
+      }
     }
   },
   computed: {

@@ -32,7 +32,7 @@ const apiPath = {
   queryStatistics: {
     orderOpenMessage: {
       getTableList: '/orderOpenMessage/getTableList'
-    },
+    }
   }
 }
 export default apiPath
