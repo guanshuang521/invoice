@@ -1,7 +1,7 @@
 <template>
   <!-- 新增弹窗 -->
   <el-dialog
-    :visible.sync="open"
+    :visible.sync="showDialog"
     :before-close="handleClose"
     title="发票信息"
     width="750px"
@@ -68,6 +68,7 @@
   </el-dialog>
 </template>
 <script type="application/ecmascript">
+import Bus from '@/api/bus'
 export default {
   props: {
     dialogVisible: {
@@ -80,6 +81,7 @@ export default {
       currentPage: 1,
       pageSize: 25,
       total: 1000,
+      showDialog: false,
       list: [
         {
           djsh: '管理员',
@@ -95,11 +97,15 @@ export default {
       ]
     }
   },
-  computed: {
-    open: function() {
-      const opendialog = this.dialogVisible
-      return opendialog
+  watch: {
+    dialogVisible(n, o) {
+      this.showDialog = n
     }
+  },
+  created() {
+    Bus.$on('show-dialog', (data) => {
+      this.showDialog = true
+    })
   },
   methods: {
     handleSelectionChange(val) { // 表格选中数据发生变化
@@ -112,7 +118,9 @@ export default {
       // console.log(`当前页: ${val}`)
     },
     handleClose() { // 关闭弹窗
-      this.open = false
+      this.showDialog = false
+      Bus.$emit('hide-dialog')
+      // this.$emit('changeState', false)
     }
   }
 }

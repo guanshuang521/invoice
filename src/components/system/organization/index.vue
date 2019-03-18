@@ -15,10 +15,10 @@
           <el-radio label="manually">手动执行</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item v-if="userInfo.mode == 'auto'" style="margin-top: 0;margin-bottom: 12px!important;line-height:16px">
+      <el-form-item v-if="userInfo.mode === 'auto'" style="margin-top: 0;margin-bottom: 12px!important;line-height:16px">
         <p style="font-size: 12px;color: #747474;margin: 0">设置预约执行时间，系统自动导入号码，到期后自动执行任务</p>
       </el-form-item>
-      <el-form-item v-if="userInfo.mode == 'manually'" style="margin-top: 0;margin-bottom: 12px!important;line-height:16px">
+      <el-form-item v-if="userInfo.mode === 'manually'" style="margin-top: 0;margin-bottom: 12px!important;line-height:16px">
         <p style="font-size: 12px;color: #747474;margin: 0">任务创建者自己导入号码，需手动启动任务方可执行</p>
       </el-form-item>
       <el-form-item v-if="isStartTimeShow" label="执行时间：" prop="startTime">
@@ -35,7 +35,16 @@
 export default {
   components: {
   },
-  props: ['userInfo', 'gidList'],
+  props: {
+    'userInfo': {
+      type: [Array, Object],
+      required: true
+    },
+    'gidList': {
+      type: [Array, Object],
+      required: true
+    }
+  },
   data() {
     return {
       rules: {
@@ -58,7 +67,7 @@ export default {
       },
       isEditPassword: true,
       rolesInfo: {},
-      isStartTimeShow: this.userInfo.mode == 'auto',
+      isStartTimeShow: this.userInfo.mode === 'auto',
       pickerOptions0: {
         disabledDate(time) {
           return time.getTime() < Date.now() - 8.64e7
@@ -78,7 +87,7 @@ export default {
   },
   watch: {
     mode(newValue, oldValue) {
-      if (newValue == 'auto') {
+      if (newValue === 'auto') {
         this.isStartTimeShow = true
       } else {
         this.isStartTimeShow = false
