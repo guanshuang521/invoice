@@ -19,10 +19,14 @@
         <div class="pm_all">
             <div class="fpTitle">
                 <div class="fpTitleLeft">
-                    <img src="../../assets/common/logo_dian.png">
+                    <img  v-if="fplx == this.$store.getters.fplx_ele" src="../../assets/common/logo_dian.png">
+                    <img  v-if="fplx == this.$store.getters.fplx_gen" src="../../assets/common/logo_pu.png">
+                    <img  v-if="fplx == this.$store.getters.fplx_spe" src="../../assets/common/logo_zhuan.png">
                 </div>
                 <div class="fpTitleCenter">
-                    <div id="titleText">增值税电子发票</div>
+                    <div  v-if="fplx == this.$store.getters.fplx_ele" id="titleText">增值税电子发票</div>
+                    <div  v-if="fplx == this.$store.getters.fplx_gen" id="titleText">增值税普通发票</div>
+                    <div  v-if="fplx == this.$store.getters.fplx_spe" id="titleText">增值税专用发票</div>
                 </div>
                 <div class="fpTitleRight">
                     <img src="../../assets/common/no.jpg">
@@ -169,13 +173,16 @@
 <script>
 export default {
     name:'fppm',
-    props: [],
+    props: ['pmfplx'],
     data() {
         return {
+            fplx:this.pmfplx
         }
     },
     modules: {
         
+    },
+    computed: {
     },
     created:function(){
     },

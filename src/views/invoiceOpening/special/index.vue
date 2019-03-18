@@ -1,8 +1,6 @@
 <template>
-  <div class="special"><!--手工填开专票-->
-    <!--<div class="dashboard-text">name:{{ name }}</div>
-    <div class="dashboard-text">roles:<span v-for="role in roles" :key="role">{{ role }}</span></div>-->
-    <fppm></fppm>
+  <div class="special"><!--手工填开专票 004-->
+    <fppm :pmfplx='fplx'></fppm>
   </div>
 </template>
 
@@ -15,19 +13,12 @@ export default {
     components:{
         fppm
     },
+    data(){
+        return{
+            fplx:this.$store.getters.fplx_spe //专票 004
+        }
+    },
   computed: {
-    /*
-    *    ...取出参数对象(mapGetters)中的所有可遍历属性，拷贝到当前对象之中
-    *    mapGetters 辅助函数仅仅是将 store 中的 getter 映射到局部计算属性
-    */
-    ...mapGetters([
-    /*
-        name: state => state.user.name,
-        roles: state => state.user.roles,
-    */
-      'name',
-      'roles'
-    ])
   }
 }
 </script>
