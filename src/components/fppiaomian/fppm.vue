@@ -80,7 +80,7 @@
                             <li style="width:5%">{{index + 1}}</li>
                             <li style="width:20%;position: relative;">
                                 <input v-model="formdata.lines[index].xmmc">
-                                <button class="small_select taxNumSelectBtn" style="top:7px" >···</button>
+                                <button class="small_select taxNumSelectBtn" style="top:7px" @click="dialogTableVisible = true">···</button>
                             </li>
                             <li style="width:8%">
                                 <input v-model="formdata.lines[index].ggxh" readOnly>
@@ -179,13 +179,27 @@
                 <li></li>
             </ul>
         </div>
+        
+        <!--选择税收编码-->
+        <el-dialog title="选择税收编码" :visible.sync="dialogTableVisible">
+            <div class="dialog_item">
+              <div class="search_item">
+                <div class="search_label">商品税收编码：</div>
+                <input class="search_input" type="text">
+              </div>
+              <div class="search_item">
+                <div class="search_label">商品名称：</div>
+                <input class="search_input" type="text">
+              </div>
+              <div class="bluebtn" @click="getGoodsList">查询</div>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
 <script>
 import { getDate } from '@/utils/datefilter'
 import { getDx } from '@/utils/dxfilter'
-
 export default {
     name:'fppm',
     props: ['pmfplx'],
@@ -253,7 +267,8 @@ export default {
                 ],
             },
             
-            kprq:''
+            kprq:'',
+            dialogTableVisible: false,
         }
     },
     modules: {
@@ -321,6 +336,10 @@ export default {
           }
           this.formdata.lines.splice(index, 1);
         },
+        //查询商品列表
+        getGoodsList(){
+            
+        }
     }
 }
 </script>
@@ -725,4 +744,5 @@ export default {
         resize: none;
         font-size: 14px;
     }
+    
 </style>
