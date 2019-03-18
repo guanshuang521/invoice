@@ -185,11 +185,11 @@
             <div class="dialog_item">
               <div class="search_item">
                 <div class="search_label">商品税收编码：</div>
-                <input class="search_input" type="text">
+                <input class="search_input" type="text" v-model="goods.spssbm">
               </div>
               <div class="search_item">
                 <div class="search_label">商品名称：</div>
-                <input class="search_input" type="text">
+                <input class="search_input" type="text" v-model="goods.spmc">
               </div>
               <div class="bluebtn" @click="getGoodsList">查询</div>
             </div>
@@ -205,6 +205,7 @@ export default {
     props: ['pmfplx'],
     data() {
         return {
+            // 票面form信息
             formdata:{
                 fpqqlsh:'',
                 fplx:this.pmfplx,
@@ -269,6 +270,18 @@ export default {
             
             kprq:'',
             dialogTableVisible: false,
+            // 商品信息
+            goods: {
+                dialogGoodsShow: false, // 选择商品弹框
+                dialogGoodsIndex: '', // 打开第几个商品
+                item: '',
+                totalCount: 0,
+                pageSize: 5,
+                pageNum: 1,
+                spssbm: '',
+                spmc: '',
+                goodsList: []
+            }
         }
     },
     modules: {
@@ -338,7 +351,7 @@ export default {
         },
         //查询商品列表
         getGoodsList(){
-            
+            console.log(this.goods)
         }
     }
 }
