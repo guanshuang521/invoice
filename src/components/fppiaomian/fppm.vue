@@ -214,7 +214,7 @@
                 </ul>
             </div>
             
-             <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="goods.pageSize" :page-sizes="[1, 5, 10, 20,50,100]" :page-size="5" layout="total, sizes, prev, pager, next, jumper" :total="400">
+             <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="goods.pageSize" :page-sizes="[1, 5, 10, 20,50,100]" :page-size="5" layout="total, sizes, prev, pager, next, jumper" :total="goods.totalCount">
             </el-pagination>
             <!--<v-pagination :total-count="goods.totalCount" :page-size="goods.pageSize" :page-num="goods.pageNum" @showNewPageSize="updatePageSize" @currentPage="currentPage"></v-pagination>-->
             <button class="bluebtn">确认</button>
@@ -308,7 +308,8 @@ export default {
                 skfplx: "026",
                 spmc: "",
                 spssbm: "",
-                list: []
+                list: [],
+                totalCount:0,//总条目数
             },
             // 返回的商品信息
             spList:{}
@@ -391,7 +392,10 @@ export default {
                 'spmc': this.goods.spmc
             };
             getSpmcList(requestData).then(res => {
-                this.goods = res.data
+                this.goods.list = res.data.list;
+                this.goods.totalCount = res.data.count;
+                this.goods.pageSize = res.data.pageSize;
+                this.goods.currentPage = res.data.currentPage;
               }).catch(err => {
                 this.$message({
                   message: err,
@@ -399,11 +403,16 @@ export default {
                 })
               })
         },
-        handleSizeChange(val) {
-            console.log(`每页 ${val} 条`);
+        //pageSize 改变
+        handleSizeChange(data) {
+            this.goods.pageSize = data;
+            console.log(`每页 ${data} 条`);
         },
-        handleCurrentChange(val) {
-            console.log(`当前页: ${val}`);
+        //currentPage 改变
+        handleCurrentChange(data) {
+            this.goods.pageNum = data;
+            console.log(`当前页: ${data}`);
+            console.log(this.goods,'当前')
         },
     }
 }
