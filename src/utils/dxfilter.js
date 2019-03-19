@@ -1,4 +1,4 @@
-// 时间戳转换成日期格式
+// 金额转换成大写
 export function  getDx(n) { 
   
         var fraction = ['角', '分'];

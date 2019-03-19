@@ -214,7 +214,7 @@
                 </ul>
             </div>
             
-             <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[1, 5, 10, 20,50,100]" :page-size="5" layout="total, sizes, prev, pager, next, jumper" :total="400">
+             <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="goods.currentPage" :page-sizes="[1, 5, 10, 20,50,100]" :page-size="5" layout="total, sizes, prev, pager, next, jumper" :total="400">
             </el-pagination>
             <!--<v-pagination :total-count="goods.totalCount" :page-size="goods.pageSize" :page-num="goods.pageNum" @showNewPageSize="updatePageSize" @currentPage="currentPage"></v-pagination>-->
             <button class="bluebtn">确认</button>
@@ -226,6 +226,7 @@
 import { getDate } from '@/utils/datefilter'
 import { getDx } from '@/utils/dxfilter'
 import pagination from 'components/pagination/pagination';
+import { getSpmcList} from '@/api/invoiceOpening/opening'
 export default {
     name:'fppm',
     props: ['pmfplx'],
@@ -301,24 +302,18 @@ export default {
             dialogTableVisible: false,
             // 商品信息
             goods: {
-                dialogGoodsShow: false, // 选择商品弹框
+                /*dialogGoodsShow: false, // 选择商品弹框
                 dialogGoodsIndex: '', // 打开第几个商品
                 item: '',
-                totalCount: 0,
+                totalCount: 0,*/
                 pageSize: 5,
-                pageNum: 1,
+                currentPage: 1,//当前页数
+                skfplx:'026',
+                flag:'0',
                 spssbm: '',
                 spmc: '',
-                goodsList: [
-                    {bfxx: "", createId: null, createTime: null, dw: "", ggxh: "", id: 1, jgId: 1, lslbs: " ",spmc: "退票费",spssbm: "3049900000000000000",sl: "0.06"}, 
-                    {bfxx: "", createId: null, createTime: null, dw: "", ggxh: "", id: 2, jgId: 1, lslbs: "2",spmc: "国际逾重行李票",spssbm: "3010301010200000000",sl: "0"}, 
-                    {bfxx: "", createId: null, createTime: null, dw: "", ggxh: "", id: 3, jgId: 1, lslbs: "2",spmc: "国际逾重行李票",spssbm: "3010301010200000000",sl: "0"}, 
-                    {bfxx: "", createId: null, createTime: null, dw: "", ggxh: "", id: 4, jgId: 1, lslbs: "2",spmc: "国际逾重行李票",spssbm: "3010301010200000000",sl: "0"}, 
-                    {bfxx: "", createId: null, createTime: null, dw: "", ggxh: "", id: 5, jgId: 1, lslbs: "2",spmc: "国际逾重行李票",spssbm: "3010301010200000000",sl: "0"}, 
-                    {bfxx: "", createId: null, createTime: null, dw: "", ggxh: "", id: 6, jgId: 1, lslbs: "2",spmc: "国际逾重行李票",spssbm: "3010301010200000000",sl: "0"}
-                ]
+                goodsList: []
             },
-            currentPage: 1, //当前页数
         }
     },
     modules: {
@@ -389,6 +384,14 @@ export default {
         //查询商品列表
         getGoodsList(){
             console.log(this.goods)
+            getSpmcList().then(res => {
+                //this.organTree = res.data
+              }).catch(err => {
+                this.$message({
+                  message: err,
+                  type: 'error'
+                })
+              })
             /*let requestData = {
             'currentPage': this.goods.pageNum,
             'pageSize': '' + this.goods.pageSize,

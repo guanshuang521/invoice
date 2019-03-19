@@ -33,6 +33,13 @@ const apiPath = {
     orderOpenMessage: {
       getTableList: '/orderOpenMessage/getTableList'
     }
-  }
+  },
+    invoiceOpening: {
+        opening: {
+        // 开具
+          gmfGetList: '/mvc/customer/getList',//POST 查询客户信息列表
+          spmcGetList: "rbac/mvc/commodityInfo/getList",//POST 查询商品信息列表
+        }
+    },
 }
 export default apiPath
