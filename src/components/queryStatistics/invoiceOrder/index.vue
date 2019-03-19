@@ -96,9 +96,15 @@ export default {
     }
   },
   computed: {
-    open: function() {
-      const opendialog = this.dialogVisible
-      return opendialog
+    open: {
+      get: function() {
+        const opendialog = this.dialogVisible
+        return opendialog
+      },
+      set: function(val) {
+        this.opendialog = val
+        console.log(val)
+      }
     }
   },
   methods: {
@@ -113,6 +119,7 @@ export default {
     },
     handleClose() { // 关闭弹窗
       this.open = false
+      console.log(this.open)
     }
   }
 }
