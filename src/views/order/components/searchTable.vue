@@ -3,58 +3,81 @@
  * @Author: zhangzheng
  * @LastEditors: zhangzheng
  * @Date: 2019-03-15 09:50:49
- * @LastEditTime: 2019-03-15 14:11:04
+ * @LastEditTime: 2019-03-19 09:33:13
  -->
 <template>
   <div class="searchTable_wrapper">
-    <el-pagination
-      :current-page="currentPage"
-      :page-sizes="[25, 50, 100]"
-      :page-size="25"
-      :total="50"
-      layout="total, sizes, prev, pager, next, jumper"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"/>
-    <span class="demonstration">当前没有记录</span>
+    <el-table
+      :data="tableData3"
+      border
+      tooltip-effect="dark"
+      style="width: 100%"
+      @selection-change="handleSelectionChange">
+      <el-table-column
+        type="selection"
+        width="55"/>
+      <el-table-column
+        label="日期"
+        width="120">
+        <!-- <template scope="scope">{{ scope.row.date }}</template> -->
+      </el-table-column>
+      <el-table-column
+        prop="name"
+        label="姓名"
+        width="120"/>
+      <el-table-column
+        prop="address"
+        label="地址"
+        show-overflow-tooltip/>
+    </el-table>
   </div>
-
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-
 export default {
   name: 'SearchTable',
   data() {
     return {
-      currentPage: 1
+      tableData3: [{
+        date: '2016-05-03',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }, {
+        date: '2016-05-02',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }, {
+        date: '2016-05-04',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }, {
+        date: '2016-05-01',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }, {
+        date: '2016-05-08',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }, {
+        date: '2016-05-06',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }, {
+        date: '2016-05-07',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }],
+      multipleSelection: []
     }
   },
-  computed: {
-    ...mapGetters([
-      'name',
-      'roles'
-    ])
-  },
+
   methods: {
-    handleSizeChange() {
-      console.log(124)
-    },
-    handleCurrentChange() {
-      console.log(1243455678)
+    handleSelectionChange(val) {
+      this.multipleSelection = val
     }
   }
 }
 </script>
-
 <style rel="stylesheet/scss" lang="scss" scoped>
-.dashboard {
-  &-container {
-    margin: 30px;
-  }
-  &-text {
-    font-size: 30px;
-    line-height: 46px;
-  }
-}
+
 </style>

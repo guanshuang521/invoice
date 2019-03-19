@@ -3,12 +3,12 @@
  * @Author: zhangzheng
  * @LastEditors: zhangzheng
  * @Date: 2019-03-13 10:10:12
- * @LastEditTime: 2019-03-15 16:55:54
+ * @LastEditTime: 2019-03-19 09:34:24
  -->
 <template>
   <div class="dashboard-container">
     <search-Form :moudel-type="moudelType" :config="queryConditionsForm" :data.sync="searchConditions"/>
-    <search-Table/>
+    <search-Table :table-data3="tableData3" />
   </div>
 </template>
 
@@ -88,8 +88,37 @@ export default {
             }
           ]
         }
-      ]
-
+      ],
+      tableData3: [{
+        date: '2016-05-03',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }, {
+        date: '2016-05-02',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }, {
+        date: '2016-05-04',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }, {
+        date: '2016-05-01',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }, {
+        date: '2016-05-08',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }, {
+        date: '2016-05-06',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }, {
+        date: '2016-05-07',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }],
+      multipleSelection: []
     }
   },
   computed: {

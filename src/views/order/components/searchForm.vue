@@ -3,7 +3,7 @@
  * @Author: zhangzheng
  * @LastEditors: zhangzheng
  * @Date: 2019-03-15 09:50:29
- * @LastEditTime: 2019-03-15 16:55:59
+ * @LastEditTime: 2019-03-15 17:16:50
  -->
 
 <template>
@@ -15,13 +15,13 @@
         </el-select>
         <el-form-item v-else-if="item.type === 'datepicker'" class="fixedclass">
           <el-col :span="11">
-            <el-form-item prop="dateStart">
+            <el-form-item :prop="item.code1">
               <el-date-picker v-model="data[item.code1]" type="date" value-format="yyyyMMdd" placeholder="请选择日期" style="width: 100%; margin-right:0px;"/>
             </el-form-item>
           </el-col>
           <el-col :span="2" class="line" style="text-align:center;padding-right:10px;">-</el-col>
           <el-col :span="11">
-            <el-form-item prop="dateEnd">
+            <el-form-item :prop="item.code2">
               <el-date-picker v-model="data[item.code2]" value-format="timestamp" type="date" placeholder="请选择日期" style="width: 100%;"/>
             </el-form-item>
           </el-col>
@@ -40,16 +40,22 @@
 // import { mapGetters } from 'vuex'
 /**
  * search条件
- * html使用全局组件： <search-Form v-bind:page="home" v-bind:share-massage="shareMassage" v-bind:other="other" v-bind:isloading="true" v-on:click="close"></search-Form>
+ * html使用全局组件： <search-Form  :moudel-type="moudelType" :config="queryConditionsForm" v-on:click="close"></search-Form>
  * 传入参数：
  * moudelType 字符串 区分不同页面
- * queryConditionsForm 对象格式  表单内容
- * {
- *      content:'text',  描述 可不传
- *      url:''，  图片地址 必传
- * }
- *region 数组类型  订单状态下拉框选项
- *other 对象 其他补充信息，可自行添加
+ * queryConditionsForm: [
+ *      {
+ *         title: '购方名称',   //显示标题
+ *         type：  'select/datepicker/input' 创建类型input可不传
+ *         code: 'value'        //传值 默认值
+ *         code1： ‘value’      //传值  datepicker专用传值
+ *         code2：‘value        //传值  datepicker专用传值
+ *         options: [{   //type为select时用的下拉选项传值
+ *              id: 0,      // value
+ *             text: ''  // label
+ *          }]
+ *       },
+ *
  *补充信息：查询方法在父组件中写命名为searchSubmit
  */
 export default {
@@ -92,7 +98,8 @@ export default {
 <style rel="stylesheet/scss" lang="scss">
 .searchForm {
   &_wrapper {
-    margin: 20px;
+    padding: 20px;
+    border-bottom: 1px solid #999;
     .fixedclass.el-form-item--mini.el-form-item{
       margin-bottom: 0px !important;
       .el-col-11 .el-form-item.el-form-item--mini{
