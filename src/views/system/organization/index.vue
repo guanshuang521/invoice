@@ -461,6 +461,12 @@ export default {
 
     },
     handleClick() {
+    },
+    // 修改每页最大条数
+    handleSizeChange() {
+    },
+    // 更改页数
+    handleCurrentChange() {
     }
   }
 }
