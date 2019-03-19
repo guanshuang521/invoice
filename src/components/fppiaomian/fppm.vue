@@ -217,6 +217,7 @@
              <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[1, 5, 10, 20,50,100]" :page-size="5" layout="total, sizes, prev, pager, next, jumper" :total="400">
             </el-pagination>
             <!--<v-pagination :total-count="goods.totalCount" :page-size="goods.pageSize" :page-num="goods.pageNum" @showNewPageSize="updatePageSize" @currentPage="currentPage"></v-pagination>-->
+            <button class="bluebtn">确认</button>
         </el-dialog>
     </div>
 </template>
@@ -317,7 +318,7 @@ export default {
                     {bfxx: "", createId: null, createTime: null, dw: "", ggxh: "", id: 6, jgId: 1, lslbs: "2",spmc: "国际逾重行李票",spssbm: "3010301010200000000",sl: "0"}
                 ]
             },
-//            currentPage: 1, //当前页数
+            currentPage: 1, //当前页数
         }
     },
     modules: {
@@ -388,29 +389,20 @@ export default {
         //查询商品列表
         getGoodsList(){
             console.log(this.goods)
-            let requestData = {
+            /*let requestData = {
             'currentPage': this.goods.pageNum,
             'pageSize': '' + this.goods.pageSize,
             'flag': 0,
             'skfplx': this.billType,
             'spssbm': this.goods.spssbm,
             'spmc': this.goods.spmc
-          };
+          };*/
         },
         handleSizeChange(val) {
             console.log(`每页 ${val} 条`);
         },
         handleCurrentChange(val) {
             console.log(`当前页: ${val}`);
-        },// 翻页组件修改每页显示条数
-        updatePageSize(data) {
-          this.goods.pageSize = data.page;// 改变了父组件的值
-          this.getGoodsList();
-        },
-        // 改变当前页
-        currentPage(data) {
-          this.goods.pageNum = data;
-          this.getGoodsList();
         },
     }
 }
