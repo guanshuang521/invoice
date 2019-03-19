@@ -10,20 +10,13 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      /*'/rbac':{
-        target: 'http://192.168.2.83:8080', //测试环境
+      '/rbac':{
+        target: 'http://192.168.7.50:59011', //测试环境
         // pathRewrite: {
         //   '^/rbac': '/'
         // },
         changeOrigin: true,
-      },*/
-        '/rbac':{
-            target: 'http://192.168.2.105:59011', //测试环境//目标接口域名
-            pathRewrite: {                //重写接口
-              '^/rbac': '/rbac'      
-            },
-            changeOrigin: true,       //是否跨域
-          },
+      },
     },
 
     // Various Dev Server settings

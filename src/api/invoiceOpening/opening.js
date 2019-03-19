@@ -8,8 +8,8 @@ export function getSpmcList(params) {
   return request({
     url: apiPath.invoiceOpening.opening.spmcGetList,
     method: 'post',
-    data: {
+    data: 
       params
-    }
+    
   })
 }

@@ -202,7 +202,7 @@
                     <div>商品名称</div>
                     <div>税率</div>
                   </li>
-                  <li v-for="(item, index) in goods.goodsList" :key="item.id" @dblclick="dbSelectGoods(item)">
+                  <li v-for="(item, index) in goods.list" :key="item.id" @dblclick="dbSelectGoods(item)">
                     <div>
                       <input type="radio" name="goodsId" v-model="goods.item" :value="item">
                       {{index + 1}}
@@ -214,7 +214,7 @@
                 </ul>
             </div>
             
-             <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="goods.currentPage" :page-sizes="[1, 5, 10, 20,50,100]" :page-size="5" layout="total, sizes, prev, pager, next, jumper" :total="400">
+             <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="goods.pageSize" :page-sizes="[1, 5, 10, 20,50,100]" :page-size="5" layout="total, sizes, prev, pager, next, jumper" :total="400">
             </el-pagination>
             <!--<v-pagination :total-count="goods.totalCount" :page-size="goods.pageSize" :page-num="goods.pageNum" @showNewPageSize="updatePageSize" @currentPage="currentPage"></v-pagination>-->
             <button class="bluebtn">确认</button>
@@ -300,20 +300,18 @@ export default {
             
             kprq:'',
             dialogTableVisible: false,
-            // 商品信息
+            // 查询商品信息
             goods: {
-                /*dialogGoodsShow: false, // 选择商品弹框
-                dialogGoodsIndex: '', // 打开第几个商品
-                item: '',
-                totalCount: 0,*/
+                currentPage: 1,
+                flag: "0",
                 pageSize: 5,
-                currentPage: 1,//当前页数
-                skfplx:'026',
-                flag:'0',
-                spssbm: '',
-                spmc: '',
-                goodsList: []
+                skfplx: "026",
+                spmc: "",
+                spssbm: "",
+                list: []
             },
+            // 返回的商品信息
+            spList:{}
         }
     },
     modules: {
@@ -383,23 +381,23 @@ export default {
         },
         //查询商品列表
         getGoodsList(){
-            console.log(this.goods)
-            getSpmcList().then(res => {
-                //this.organTree = res.data
+            console.log(this.goods.pageSize)
+            let requestData = {
+                'currentPage': '' + this.goods.pageNum,
+                'pageSize': '' + this.goods.pageSize,
+                'flag': 0,
+                'skfplx': this.billType,
+                'spssbm': this.goods.spssbm,
+                'spmc': this.goods.spmc
+            };
+            getSpmcList(requestData).then(res => {
+                this.goods = res.data
               }).catch(err => {
                 this.$message({
                   message: err,
                   type: 'error'
                 })
               })
-            /*let requestData = {
-            'currentPage': this.goods.pageNum,
-            'pageSize': '' + this.goods.pageSize,
-            'flag': 0,
-            'skfplx': this.billType,
-            'spssbm': this.goods.spssbm,
-            'spmc': this.goods.spmc
-          };*/
         },
         handleSizeChange(val) {
             console.log(`每页 ${val} 条`);
