@@ -113,13 +113,6 @@ a:hover {
     vertical-align: -2px;
     margin-right: 6px;
 }
-/*.fplist{
-    width: 100%;
-    min-height: 420px;
-    background-color: #fff;
-    padding: 0 20px;
-    box-sizing: border-box;
-}*/
 .required{
     color: red;
 }
@@ -129,6 +122,6 @@ ul{
 li{
     list-style: none;
 }
-input,button,textarea{
+input,button,textarea,select{
     outline:none 
 }

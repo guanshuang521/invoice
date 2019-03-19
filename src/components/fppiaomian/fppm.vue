@@ -181,7 +181,7 @@
         </div>
         
         <!--选择税收编码-->
-        <el-dialog title="选择税收编码" :visible.sync="dialogTableVisible">
+        <el-dialog title="选择税收编码" :visible.sync="dialogTableVisible" width='800px'>
             <div class="dialog_item">
               <div class="search_item">
                 <div class="search_label">商品税收编码：</div>
@@ -193,6 +193,30 @@
               </div>
               <div class="bluebtn" @click="getGoodsList">查询</div>
             </div>
+            
+            <div class="list-table-container">
+                <ul class="dialog_goodsList_ul">
+                  <li>
+                    <div></div>
+                    <div>商品税收编码</div>
+                    <div>商品名称</div>
+                    <div>税率</div>
+                  </li>
+                  <li v-for="(item, index) in goods.goodsList" :key="item.id" @dblclick="dbSelectGoods(item)">
+                    <div>
+                      <input type="radio" name="goodsId" v-model="goods.item" :value="item">
+                      {{index + 1}}
+                    </div>
+                    <div>{{item.spssbm}}</div>
+                    <div>{{item.spmc}}</div>
+                    <div>{{parseInt(item.sl * 100)}}%</div>
+                  </li>
+                </ul>
+            </div>
+            
+             <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[1, 5, 10, 20,50,100]" :page-size="5" layout="total, sizes, prev, pager, next, jumper" :total="400">
+            </el-pagination>
+            <!--<v-pagination :total-count="goods.totalCount" :page-size="goods.pageSize" :page-num="goods.pageNum" @showNewPageSize="updatePageSize" @currentPage="currentPage"></v-pagination>-->
         </el-dialog>
     </div>
 </template>
@@ -200,9 +224,13 @@
 <script>
 import { getDate } from '@/utils/datefilter'
 import { getDx } from '@/utils/dxfilter'
+import pagination from 'components/pagination/pagination';
 export default {
     name:'fppm',
     props: ['pmfplx'],
+    components: {
+        /*'v-pagination': pagination*/
+    },
     data() {
         return {
             // 票面form信息
@@ -280,8 +308,16 @@ export default {
                 pageNum: 1,
                 spssbm: '',
                 spmc: '',
-                goodsList: []
-            }
+                goodsList: [
+                    {bfxx: "", createId: null, createTime: null, dw: "", ggxh: "", id: 1, jgId: 1, lslbs: " ",spmc: "退票费",spssbm: "3049900000000000000",sl: "0.06"}, 
+                    {bfxx: "", createId: null, createTime: null, dw: "", ggxh: "", id: 2, jgId: 1, lslbs: "2",spmc: "国际逾重行李票",spssbm: "3010301010200000000",sl: "0"}, 
+                    {bfxx: "", createId: null, createTime: null, dw: "", ggxh: "", id: 3, jgId: 1, lslbs: "2",spmc: "国际逾重行李票",spssbm: "3010301010200000000",sl: "0"}, 
+                    {bfxx: "", createId: null, createTime: null, dw: "", ggxh: "", id: 4, jgId: 1, lslbs: "2",spmc: "国际逾重行李票",spssbm: "3010301010200000000",sl: "0"}, 
+                    {bfxx: "", createId: null, createTime: null, dw: "", ggxh: "", id: 5, jgId: 1, lslbs: "2",spmc: "国际逾重行李票",spssbm: "3010301010200000000",sl: "0"}, 
+                    {bfxx: "", createId: null, createTime: null, dw: "", ggxh: "", id: 6, jgId: 1, lslbs: "2",spmc: "国际逾重行李票",spssbm: "3010301010200000000",sl: "0"}
+                ]
+            },
+//            currentPage: 1, //当前页数
         }
     },
     modules: {
@@ -352,7 +388,30 @@ export default {
         //查询商品列表
         getGoodsList(){
             console.log(this.goods)
-        }
+            let requestData = {
+            'currentPage': this.goods.pageNum,
+            'pageSize': '' + this.goods.pageSize,
+            'flag': 0,
+            'skfplx': this.billType,
+            'spssbm': this.goods.spssbm,
+            'spmc': this.goods.spmc
+          };
+        },
+        handleSizeChange(val) {
+            console.log(`每页 ${val} 条`);
+        },
+        handleCurrentChange(val) {
+            console.log(`当前页: ${val}`);
+        },// 翻页组件修改每页显示条数
+        updatePageSize(data) {
+          this.goods.pageSize = data.page;// 改变了父组件的值
+          this.getGoodsList();
+        },
+        // 改变当前页
+        currentPage(data) {
+          this.goods.pageNum = data;
+          this.getGoodsList();
+        },
     }
 }
 </script>
@@ -757,5 +816,41 @@ export default {
         resize: none;
         font-size: 14px;
     }
-    
+    .list-table-container{
+        border-top: 1px solid #ddd;
+        margin-top: 20px;
+        .dialog_goodsList_ul{
+            width: 762px;
+            max-height: 155px;
+            overflow: auto;
+            font-size: 0;
+            li{
+                width: 760px;
+                border: 1px solid #ddd;
+                border-top: none;
+                font-size: 0;
+                display: table;
+                div{
+                    display: table-cell;
+                    vertical-align: middle;
+                    height: auto;
+                    line-height: 18px;
+                    padding: 6px 0;
+                    text-align: center;
+                    white-space: normal;
+                    border-left: 1px solid #ddd;
+                    font-size: 12px;
+                }
+                div:nth-child(1){
+                      width: 50px;
+                      border-left: none;}
+                div:nth-child(2){
+                      width: 310px;}
+                div:nth-child(3){
+                      width: 310px;}
+                div:nth-child(4){
+                    width: 90px;}
+            }
+        }
+    }
 </style>
