@@ -22,7 +22,7 @@ const apiPath = {
       list: ''
     },
     role: {
-      list: ''
+      selectByRole: '/role/selectByRole ' // 角色信息查询
     },
     invoiceModel: {
       list: ''

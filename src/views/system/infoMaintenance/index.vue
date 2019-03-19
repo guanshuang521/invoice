@@ -98,7 +98,7 @@
     <!-- 新增弹窗 -->
     <el-dialog
       :visible.sync="dialogVisible"
-      :before-close="handleClose"
+      :before-close="() => handleClose('form')"
       title="新增购方信息"
       width="650px"
       custom-class="add-customer">
@@ -150,15 +150,15 @@
           <el-input v-model="form.bankAccount"/>
         </el-form-item>
         <el-form-item class="button">
-          <el-button type="primary" @click="addRoleFn">保存</el-button>
-          <el-button type="primary" @click="handleClose">取消</el-button>
+          <el-button type="primary" @click="addCustomerFn('form')">保存</el-button>
+          <el-button type="primary" @click="handleClose('form')">取消</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
     <!-- 导入弹窗 -->
     <el-dialog
       :visible.sync="dialogVisible2"
-      :before-close="handleClose"
+      :before-close="handleClose2"
       title="客户基础信息导入"
       width="650px"
       custom-class="add-customer">
@@ -185,11 +185,23 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'Dashboard',
   data() {
+    function customerTaxNumberFilter(rule, value, callback) { // 购方税号验证
+      if (value === '') {
+        callback(new Error('购方税号不能为空'))
+      } else {
+        var re = /^[A-Za-z\d]+$/
+        if (!(re.test(value)) || !(value.length === 15 || value.length === 18 || value.length === 20)) {
+          callback(new Error('购方税号应由15、18或20个字符组成'))
+        } else {
+          callback()
+        }
+      }
+    }
     function emailFilter(rule, value, callback) { // 邮箱验证
       if (value === '') {
         callback(new Error('邮箱不能为空'))
       } else {
-        var re = /^[a-z0-9A-Z]+[- | a-z0-9A-Z . _]+@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-z]{2,}$/
+        var re = /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,4}$/
         if (!(re.test(value))) {
           callback(new Error('邮箱格式有误， 请重新输入'))
         } else {
@@ -201,7 +213,7 @@ export default {
       list: [
         {
           customerName: '管理员',
-          customerTaxNumber: 1,
+          customerTaxNumber: '1',
           address: '北京市丰台科技园',
           email: 'aerefe@123.com',
           contacts: '管理员',
@@ -210,8 +222,31 @@ export default {
           bank: '北京银行中关村支行',
           bankAccount: '123444321234567876',
           id: 0
+        }, {
+          customerName: '附带v',
+          customerTaxNumber: '5675432345f',
+          address: '北京市丰台科技园',
+          email: 'aerefe@123.com',
+          contacts: '地方',
+          contactNumber: '12433323454',
+          phone: '23543212343',
+          bank: '北京银行中关村支行',
+          bankAccount: '123444321234567876',
+          id: 1
+        }, {
+          customerName: '而VS',
+          customerTaxNumber: '344454566775g',
+          address: '北京市丰台科技园',
+          email: 'aerefe@123.com',
+          contacts: '额度',
+          contactNumber: '12433323454',
+          phone: '23543212343',
+          bank: '北京银行中关村支行',
+          bankAccount: '123444321234567876',
+          id: 2
         }
       ],
+      list0: [], // 临时
       listLoading: false,
       searchs: {
         customerName: '',
@@ -239,8 +274,7 @@ export default {
           { required: true, message: '购方名称不能为空', trigger: 'blur' }
         ],
         customerTaxNumber: [
-          { required: true, message: '购方税号不能为空', trigger: 'blur' },
-          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+          { required: true, validator: customerTaxNumberFilter, trigger: 'blur' }
         ],
         email: [
           { required: true, validator: emailFilter, trigger: 'blur' }
@@ -257,17 +291,30 @@ export default {
     ])
   },
   created() {
-    // this.fetchData()
+    this.fetchData()
   },
   methods: {
     fetchData() { // 获取数据
-      this.listLoading = true
+      // this.listLoading = true
+      this.list0 = JSON.parse(JSON.stringify(this.list))
+      this.total = this.list0.length
       // getList(this.listQuery).then(response => {
       //   this.list = response.data.items
       //   this.listLoading = false
       // })
     },
-    searchFn() {},
+    searchFn() {
+      var arr = []
+      for (var i = 0; i < this.list0.length; i++) {
+        if (this.searchs.customerName && !this.searchs.customerTaxNumber && this.list0[i].customerName.match(this.searchs.customerName) || this.searchs.customerTaxNumber && !this.searchs.customerName && this.list0[i].customerTaxNumber.match(this.searchs.customerTaxNumber) || this.searchs.customerTaxNumber && this.searchs.customerName && this.list0[i].customerTaxNumber === this.searchs.customerTaxNumber && this.list0[i].customerName.match(this.searchs.customerName)) {
+          arr.push(this.list0[i])
+        }
+      }
+      this.list = arr
+      if (!this.searchs.customerName && !this.searchs.customerTaxNumber) {
+        this.list = JSON.parse(JSON.stringify(this.list0))
+      }
+    },
     initSearch() { // 重置
       this.searchs = {
         customerName: '',
@@ -280,10 +327,32 @@ export default {
     addCustomer() {
       this.dialogVisible = true
     },
-    addRoleFn() {
-      this.dialogVisible = false
+    addCustomerFn(form) { // 添加购方信息
+      this.$refs[form].validate((valid) => {
+        if (valid) {
+          this.dialogVisible = false
+          console.log(this.form)
+          var arr = JSON.parse(JSON.stringify(this.form))
+          arr.id = this.list0.length // 假定数据id
+          this.list0.push(arr) // 总数据添加
+          this.list = JSON.parse(JSON.stringify(this.list0)) // 修改显示数据
+          for (var k in this.form) {
+            this.form[k] = ''
+          }
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
     },
     delCustomer() { // 删除数据
+      if (this.checkedList.length === 0) {
+        this.$message({
+          type: 'info',
+          message: '请先选择表格中的数据'
+        })
+        return false
+      }
       this.$confirm('确定要删除选择的数据吗?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
@@ -291,6 +360,14 @@ export default {
         // center: true
       }).then(() => {
         console.log(this.checkedList)
+        for (var i = 0; i < this.checkedList.length; i++) {
+          for (var j = 0; j < this.list0.length; j++) {
+            if (this.checkedList[i].id === this.list0[j].id) {
+              this.list0.splice(j, 1)
+            }
+          }
+        }
+        this.list = JSON.parse(JSON.stringify(this.list0))
         this.$message({
           type: 'success',
           message: '删除成功!'
@@ -314,9 +391,13 @@ export default {
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`)
     },
-    handleClose() { // 关闭弹窗
+    handleClose(formName) { // 关闭弹窗
       this.dialogVisible = false
+      this.$refs[formName].resetFields()
+    },
+    handleClose2() { // 关闭弹窗
       this.dialogVisible2 = false
+      this.fileList = []
     },
     submitUpload() {
       this.$refs.upload.submit()

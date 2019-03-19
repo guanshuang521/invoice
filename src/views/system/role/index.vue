@@ -32,8 +32,9 @@
         @selection-change="handleSelectionChange">
         <el-table-column
           type="selection"
-          align="center"/>
-        <el-table-column align="center">
+          align="center"
+          width="34px"/>
+        <el-table-column align="center" width="31px">
           <template slot-scope="scope">
             {{ scope.$index + 1 }}
           </template>
@@ -48,11 +49,11 @@
             <span>{{ scope.row.sign == 1 && '有效' || scope.row.sign == 0 && '无效' }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="角色类型" align="center">
+        <!-- <el-table-column label="角色类型" align="center">
           <template slot-scope="scope">
             {{ scope.row.roleType }}
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button
@@ -82,11 +83,41 @@
       :before-close="handleClose"
       width="530px"
       custom-class="add-edit-role">
-      <div>
+      <el-form ref="form" :rules="rules" :model="form" label-width="80px">
+        <el-form-item label="角色名称" prop="roleName">
+          <el-input v-model="form.roleName" :disabled="dialogType === 'edit'"/>
+        </el-form-item>
+        <el-form-item label="有效标志" prop="sign">
+          <el-select v-model="form.sign" :disabled="dialogType === 'edit'" placeholder="请选择">
+            <el-option label="有效" value="1"/>
+            <el-option label="无效" value="0"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="菜单权限"/>
+        <el-form-item label="" class="tree-box">
+          <el-tree
+            ref="tree2"
+            :data="treeData"
+            :props="defaultProps"
+            :filter-node-method="filterNode"
+            :default-checked-keys="form.checkTree"
+            class="filter-tree"
+            default-expand-all
+            show-checkbox
+            @check="handleCheck"
+          />
+        </el-form-item>
+        <el-form-item class="button">
+          <el-button v-if="dialogType === 'add'" type="primary" @click="addRoleFn('form')">添加</el-button>
+          <el-button v-if="dialogType === 'edit'" type="primary" @click="editRoleFn('form')">保存</el-button>
+          <el-button type="primary" @click="handleClose('form')">取消</el-button>
+        </el-form-item>
+      </el-form>
+      <!-- <div>
         <span><span class="mark">*</span>角色名称</span>
-        <el-input v-model="newRole.roleName" :disabled="dialogType === 'edit'"/>
+        <el-input v-model="form.roleName" :disabled="dialogType === 'edit'"/>
         <span><span class="mark">*</span>有效标志</span>
-        <el-select v-model="newRole.sign" :disabled="dialogType === 'edit'" placeholder="请选择">
+        <el-select v-model="form.sign" :disabled="dialogType === 'edit'" placeholder="请选择">
           <el-option label="有效" value="1"/>
           <el-option label="无效" value="0"/>
         </el-select>
@@ -104,11 +135,11 @@
             @check-change="handleCheckChange"
           />
         </div>
-      </div>
-      <span slot="footer" class="dialog-footer">
+      </div> -->
+      <!-- <span slot="footer" class="dialog-footer">
         <el-button @click="handleClose">取 消</el-button>
         <el-button type="primary" @click="addRoleFn">确 定</el-button>
-      </span>
+      </span> -->
     </el-dialog>
   </div>
 </template>
@@ -123,11 +154,25 @@ export default {
       list: [
         {
           roleName: '管理员',
-          sign: 1,
+          sign: '1',
           roleType: '管理员',
-          id: 0
+          id: 0,
+          checkTree: []
+        }, {
+          roleName: '对方v',
+          sign: '1',
+          roleType: '认同',
+          id: 1,
+          checkTree: []
+        }, {
+          roleName: '额度',
+          sign: '1',
+          roleType: '如同',
+          id: 2,
+          checkTree: []
         }
       ],
+      list0: [],
       listLoading: false,
       searchs: {
         roleName: '',
@@ -139,10 +184,19 @@ export default {
       total: 1000,
       dialogVisible: false,
       dialogType: '',
-      newRole: {
+      form: {
         roleName: '',
-        sign: 1,
-        roleType: '普通角色'
+        sign: '',
+        roleType: '',
+        checkTree: []
+      },
+      rules: {
+        roleName: [
+          { required: true, message: '角色名称不能为空', trigger: 'blur' }
+        ],
+        sign: [
+          { required: true, message: '有效标志不能为空', trigger: 'blur' }
+        ]
       },
       defaultProps: {
         children: 'children',
@@ -151,10 +205,10 @@ export default {
       treeData: [
         {
           id: 1,
-          label: 'Level one 1',
+          label: '进项管理',
           children: [{
             id: 4,
-            label: 'Level two 1-1',
+            label: '发票采集管理',
             children: [{
               id: 9,
               label: 'Level three 1-1-1'
@@ -194,11 +248,12 @@ export default {
     ])
   },
   created() {
-    // this.fetchData()
+    this.fetchData()
   },
   methods: {
     fetchData() {
-      this.listLoading = true
+      // this.listLoading = true
+      this.list0 = JSON.parse(JSON.stringify(this.list))
       // getList(this.listQuery).then(response => {
       //   this.list = response.data.items
       //   this.listLoading = false
@@ -218,11 +273,54 @@ export default {
       this.dialogVisible = true
       this.dialogType = 'add'
     },
-    addRoleFn() {
-      this.dialogVisible = false
-      this.dialogType = ''
+    addRoleFn(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.dialogVisible = false
+          this.dialogType = ''
+          console.log(this.form)
+          var arr = JSON.parse(JSON.stringify(this.form))
+          arr.id = this.list0.length // 假定数据id
+          this.list0.push(arr) // 总数据添加
+          this.list = JSON.parse(JSON.stringify(this.list0)) // 修改显示数据
+          for (var k in this.form) {
+            this.form[k] = ''
+          }
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    editRoleFn(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.dialogVisible = false
+          this.dialogType = ''
+          console.log(this.form)
+          for (var i = 0; i < this.list0.length; i++) {
+            if (this.list0[i].id === this.form.id) {
+              this.list0.splice(i, 1, this.form)
+            }
+          }
+          this.list = JSON.parse(JSON.stringify(this.list0)) // 修改显示数据
+          for (var k in this.form) {
+            this.form[k] = ''
+          }
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
     },
     delRole() { // 删除数据
+      if (this.checkedList.length === 0) {
+        this.$message({
+          type: 'info',
+          message: '请先选择表格中的数据'
+        })
+        return false
+      }
       this.$confirm('确定要删除选择的数据吗?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
@@ -230,6 +328,14 @@ export default {
         // center: true
       }).then(() => {
         console.log(this.checkedList)
+        for (var i = 0; i < this.checkedList.length; i++) {
+          for (var j = 0; j < this.list0.length; j++) {
+            if (this.checkedList[i].id === this.list0[j].id) {
+              this.list0.splice(j, 1)
+            }
+          }
+        }
+        this.list = JSON.parse(JSON.stringify(this.list0))
         this.$message({
           type: 'success',
           message: '删除成功!'
@@ -241,9 +347,10 @@ export default {
         // });
       })
     },
-    handleEdit() { // 权限分配
+    handleEdit(index, item) { // 权限分配
       this.dialogVisible = true
       this.dialogType = 'edit'
+      this.form = item
     },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`)
@@ -251,15 +358,24 @@ export default {
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`)
     },
-    handleClose() { // 关闭弹窗
+    handleClose(formName) { // 关闭弹窗
       this.dialogVisible = false
       this.dialogType = ''
+      this.$refs[formName].resetFields()
     },
     filterNode(value, data, node) { // 对树节点进行筛选时执行的方法
       return true
     },
-    handleCheckChange(data, checked, indeterminate) {
+    handleCheckChange(data, checked, indeterminate) { // @check-change="handleCheckChange"
       console.log(data, checked, indeterminate)
+    },
+    handleCheck(data, checks) {
+      console.log(data, checks, checks.checkedNodes)
+      var arr = []
+      for (var i = 0; i < checks.checkedNodes.length; i++) {
+        arr.push(checks.checkedNodes[i].id)
+      }
+      this.form.checkTree = arr
     }
   } // ,
   // filters: {
@@ -304,9 +420,9 @@ export default {
     color: red;
   }
   .tree-box {
-    width: 440px;
-    max-height: 222px;
-    overflow: auto;
+    // width: 440px;
+    // max-height: 222px;
+    // overflow: auto;
   }
 }
 </style>
@@ -325,6 +441,26 @@ export default {
   .el-input {
     max-width: 150px;
     // height: 25px;
+  }
+  .el-form:after {
+    content: '';
+    display: block;
+    clear: both;
+  }
+  .el-form-item {
+    float: left;
+    .el-input {
+      max-width: 150px;
+    }
+  }
+  .tree-box .el-form-item__content {
+    margin-left: 20px!important;
+    width: 440px;
+    max-height: 222px;
+    overflow: auto;
+  }
+  .button {
+    margin-bottom: 0;
   }
 }
 </style>
