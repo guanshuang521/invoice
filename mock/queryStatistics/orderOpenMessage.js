@@ -1,11 +1,28 @@
 /**
- * Created by admin on .
+ * Created by wujy .
  */
-const organization = {
-  'node-detail': {
-    name: 'nodeName',
-    nodeType: 'system1'
-  },
+const orderOpenMessage = {
+  'getTableList': [{
+    djsh: '管理员',
+    xfmc: 1,
+    gfmc: '北京市丰台科技园',
+    xfsh: '12433323454',
+    gfsh: '23543212343',
+    je: '北京银行中关村支行',
+    se: '123444321234567876',
+    jshj: 0,
+    ddzt: 0
+  },{
+    djsh: '管理员',
+    xfmc: 1,
+    gfmc: '北京市丰台科技园',
+    xfsh: '12433323454',
+    gfsh: '23543212343',
+    je: '北京银行中关村支行',
+    se: '123444321234567876',
+    jshj: 0,
+    ddzt: 0
+  }],
   'node-tree': [{
     id: 1,
     label: 'Level one 1',
@@ -43,8 +60,8 @@ const organization = {
   }]
 }
 export default {
-  getlist: res => {
-    const info = organization['node-tree']
+  getTableList: res => {
+    const info = orderOpenMessage['getTableList']
     if (info) {
       return {
         code: 20000,
@@ -53,20 +70,7 @@ export default {
     }
     return {
       code: 50008,
-      message: 'Login failed, unable to get user details.'
-    }
-  },
-  nodeDetail: res => {
-    const info = organization['node-detail']
-    if (info) {
-      return {
-        code: 20000,
-        data: info
-      }
-    }
-    return {
-      code: 50008,
-      message: 'Login failed, unable to get user details.'
+      message: '获取失败'
     }
   }
 }
