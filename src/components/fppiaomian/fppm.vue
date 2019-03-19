@@ -214,7 +214,7 @@
                 </ul>
             </div>
             
-             <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="goods.pageSize" :page-sizes="[1, 5, 10, 20,50,100]" :page-size="5" layout="total, sizes, prev, pager, next, jumper" :total="goods.totalCount">
+             <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" @prev-click="prePageChange" @next-click="nextPageChange" :current-page="goods.currentPage" :page-sizes="[1, 5, 10, 20,50,100]" :page-size="goods.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="goods.totalCount">
             </el-pagination>
             <!--<v-pagination :total-count="goods.totalCount" :page-size="goods.pageSize" :page-num="goods.pageNum" @showNewPageSize="updatePageSize" @currentPage="currentPage"></v-pagination>-->
             <button class="bluebtn">确认</button>
@@ -302,17 +302,14 @@ export default {
             dialogTableVisible: false,
             // 查询商品信息
             goods: {
-                currentPage: 1,
-                flag: "0",
-                pageSize: 5,
-                skfplx: "026",
+                currentPage: 1,  //当前页数
+                pageSize: 5,     //每页显示条目个数
+                skfplx: '',
                 spmc: "",
                 spssbm: "",
                 list: [],
                 totalCount:0,//总条目数
             },
-            // 返回的商品信息
-            spList:{}
         }
     },
     modules: {
@@ -382,12 +379,11 @@ export default {
         },
         //查询商品列表
         getGoodsList(){
-            console.log(this.goods.pageSize)
             let requestData = {
                 'currentPage': '' + this.goods.pageNum,
                 'pageSize': '' + this.goods.pageSize,
                 'flag': 0,
-                'skfplx': this.billType,
+                'skfplx': this.pmfplx,
                 'spssbm': this.goods.spssbm,
                 'spmc': this.goods.spmc
             };
@@ -406,14 +402,25 @@ export default {
         //pageSize 改变
         handleSizeChange(data) {
             this.goods.pageSize = data;
-            console.log(`每页 ${data} 条`);
+            this.getGoodsList();
         },
         //currentPage 改变
         handleCurrentChange(data) {
             this.goods.pageNum = data;
-            console.log(`当前页: ${data}`);
-            console.log(this.goods,'当前')
+            this.getGoodsList();
+            
         },
+        //上一页
+        prePageChange(data){
+            this.goods.currentPage = data;
+            this.getGoodsList();
+            console.log(data,'prePageChange')
+        },
+        //下一页
+        nextPageChange(data){
+            this.goods.currentPage = data;
+            this.getGoodsList();
+        }
     }
 }
 </script>
