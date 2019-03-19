@@ -85,9 +85,11 @@ export default {
       }
     },
     handleLogin() {
+      // 点击登录时的方法
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
+          // 校验非空后执行 Login方法
           this.$store.dispatch('Login', this.loginForm).then(() => {
             this.loading = false
             this.$router.push({ path: this.redirect || '/' })
