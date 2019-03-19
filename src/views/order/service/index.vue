@@ -3,24 +3,25 @@
  * @Author: zhangzheng
  * @LastEditors: zhangzheng
  * @Date: 2019-03-13 10:10:12
- * @LastEditTime: 2019-03-19 14:53:53
+ * @LastEditTime: 2019-03-19 17:45:23
  -->
 <template>
   <div class="dashboard-container">
     <search-Form :moudel-type="moudelType" :config="queryConditionsForm" :data.sync="searchConditions"/>
     <search-Table
-      :data-source="dataSource"
+      :data-source="dataSource.list"
       :columns="columns"
       :operation="operation"
-      @handleDelete="handleDelete"/>
+      @handleDelete="handleDelete"
+      @handleSelectionChange="handleSelectionChange"/>
   </div>
 </template>
-
 <script>
 import { mapGetters } from 'vuex'
 import SearchForm from '../components/searchForm'
 import SearchTable from '../components/searchTable'
-
+import { getOrderlist } from '@/api/order'
+import searchconfig from '../components/searchconfig'
 export default {
   name: 'Dashboard',
   components: { SearchForm, SearchTable },
@@ -38,119 +39,48 @@ export default {
         dateEnd: '',
         orderState: ''
       },
-      queryConditionsForm: [
-        {
-          title: '购方名称',
-          code: 'buyyerName'
-        },
-        {
-          title: '二级供应商编码',
-          code: 'supplierCode'
-        },
-        {
-          title: '费用单据编号',
-          code: 'billCode'
-        },
-        {
-          title: '结算单号',
-          code: 'countOrderNum'
-        },
-        {
-          title: '单据起号',
-          code: 'orderStart'
-        },
-        {
-          title: '单据止号',
-          code: 'orderEnd'
-        },
-        {
-          title: '传输起止日期',
-          code1: 'dateStart',
-          code2: 'dateEnd',
-          type: 'datepicker'
-        },
-        {
-          title: '订单状态',
-          code: 'orderState',
-          type: 'select',
-          options: [
-            {
-              id: 0,
-              text: '快车'
-            },
-            {
-              id: 1,
-              text: '专车'
-            },
-            {
-              id: 2,
-              text: '顺风车'
-            },
-            {
-              id: 3,
-              text: '出租车'
-            }
-          ]
-        }
-      ],
-      dataSource: [
-        {
-          createTime: '2016-05-02',
-          username: '8',
-          status: '上海市普陀区金沙江路 1518 弄',
-          deptName: '家'
-        }, {
-          createTime: '2016-05-04',
-          username: '6',
-          status: '上海市普陀区金沙江路 1517 弄',
-          deptName: '公司'
-        }, {
-          createTime: '2016-05-01',
-          username: '3',
-          status: '上海市普陀区金沙江路 1519 弄',
-          deptName: '家'
-        }, {
-          createTime: '2016-05-03',
-          username: '1',
-          status: '上海市普陀区金沙江路 1516 弄',
-          deptName: '公司'
-        }
-      ], // 数据源
+      queryConditionsForm: [],
+      dataSource: {}, // 数据源
       columns: [
         {
           hasSort: true, // <Boolean> 是否排序
           isShow: true, // <Boolean> 是否展示
           prop: 'billCode', // <String>  对应属性名
           label: '单据编号', // <String>   表头标签
-          align: 'center'
+          align: 'center',
+          width: '100'
         },
         {
           hasSort: true, // <Boolean> 是否排序
           isShow: true, // <Boolean> 是否展示
           prop: 'countOrderNum', // <String>  对应属性名
           label: '结算单号', // <String>   表头标签
-          align: 'center'
+          align: 'center',
+          width: '100'
         },
         {
           hasSort: true, // <Boolean> 是否排序
           isShow: true, // <Boolean> 是否展示
           prop: 'datatype', // <String>  对应属性名
           label: '数据类型', // <String>   表头标签
-          align: 'center'
+          align: 'center',
+          width: '100'
         },
         {
           hasSort: true, // <Boolean> 是否排序
           isShow: true, // <Boolean> 是否展示
           prop: 'ordertype', // <String>  对应属性名
           label: '单据类型', // <String>   表头标签
-          align: 'center'
+          align: 'center',
+          width: '100'
         },
         {
           hasSort: true, // <Boolean> 是否排序
           isShow: true, // <Boolean> 是否展示
           prop: 'OrderNum', // <String>  对应属性名
           label: '费用单据编号', // <String>   表头标签
-          align: 'center'
+          align: 'center',
+          width: '100'
         },
         {
           hasSort: true, // <Boolean> 是否排序
@@ -177,63 +107,56 @@ export default {
         {
           hasSort: true, // <Boolean> 是否排序
           isShow: true, // <Boolean> 是否展示
-          prop: 'username', // <String>  对应属性名
-          label: '名字', // <String>   表头标签
-          align: 'center'
-        },
-        {
-          hasSort: true, // <Boolean> 是否排序
-          isShow: true, // <Boolean> 是否展示
-          prop: 'deptName', // <String>  对应属性名
+          prop: 'sjhj', // <String>  对应属性名
           label: '价税合计', // <String>   表头标签
           align: 'center'
         },
         {
           hasSort: true, // <Boolean> 是否排序
           isShow: true, // <Boolean> 是否展示
-          prop: 'status', // <String>  对应属性名
+          prop: 'xfsh', // <String>  对应属性名
           label: '销方税号', // <String>   表头标签
           align: 'center'
         },
         {
           hasSort: true, // <Boolean> 是否排序
           isShow: true, // <Boolean> 是否展示
-          prop: 'status6', // <String>  对应属性名
+          prop: 'gfmc', // <String>  对应属性名
           label: '购方名称', // <String>   表头标签
           align: 'center'
         },
         {
           hasSort: true, // <Boolean> 是否排序
           isShow: true, // <Boolean> 是否展示
-          prop: 'status5', // <String>  对应属性名
+          prop: 'gfsh', // <String>  对应属性名
           label: '购方税号', // <String>   表头标签
           align: 'center'
         },
         {
           hasSort: true, // <Boolean> 是否排序
           isShow: true, // <Boolean> 是否展示
-          prop: 'status4', // <String>  对应属性名
+          prop: 'addtel', // <String>  对应属性名
           label: '购方地址电话', // <String>   表头标签
           align: 'center'
         },
         {
           hasSort: true, // <Boolean> 是否排序
           isShow: true, // <Boolean> 是否展示
-          prop: 'status3', // <String>  对应属性名
+          prop: 'account', // <String>  对应属性名
           label: '购方开户行及账号', // <String>   表头标签
           align: 'center'
         },
         {
           hasSort: true, // <Boolean> 是否排序
           isShow: true, // <Boolean> 是否展示
-          prop: 'status2', // <String>  对应属性名
+          prop: 'transferdate', // <String>  对应属性名
           label: '传输日期', // <String>   表头标签
           align: 'center'
         },
         {
           hasSort: true, // <Boolean> 是否排序
           isShow: true, // <Boolean> 是否展示
-          prop: 'status1', // <String>  对应属性名
+          prop: 'bz', // <String>  对应属性名
           label: '备注', // <String>   表头标签
           align: 'center'
         }
@@ -259,15 +182,35 @@ export default {
   computed: {
     ...mapGetters(['name', 'roles'])
   },
+  mounted() {
+    this.queryConditionsForm = searchconfig.queryConditionsForm
+  },
   methods: {
     searchSubmit() {
-      this.$message({
-        message: '方法查询',
-        type: 'success'
+      getOrderlist().then(res => {
+        console.log(res)
+        this.dataSource = res.data
+      }).catch(err => {
+        this.$message({
+          message: err,
+          type: 'error'
+        })
       })
+      // this.$message({
+      //   message: '方法查询',
+      //   type: 'success'
+      // })
     },
     handleDelete(a, b) {
-
+      console.log(searchconfig)
+    },
+    handleSelectionChange(item) {
+      var idsStr = ''
+      for (var i = 0; i < item.length; i++) {
+        idsStr += item[i]['username'] + ','
+      }
+      console.log(idsStr)
+      console.log(123)
     }
   }
 }

@@ -1,3 +1,10 @@
+/*
+ * @Description:
+ * @Author: zhangzheng
+ * @LastEditors: zhangzheng
+ * @Date: 2019-03-19 09:38:33
+ * @LastEditTime: 2019-03-19 17:02:50
+ */
 /**
  * Created by linzb on 2019/3/1.
  */
@@ -27,6 +34,9 @@ const apiPath = {
     invoiceModel: {
       list: ''
     }
+  },
+  order: {
+    list: '/order/list'
   }
 }
 export default apiPath

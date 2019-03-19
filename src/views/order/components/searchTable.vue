@@ -3,16 +3,14 @@
  * @Author: zhangzheng
  * @LastEditors: zhangzheng
  * @Date: 2019-03-15 09:50:49
- * @LastEditTime: 2019-03-19 14:34:09
+ * @LastEditTime: 2019-03-19 16:24:17
  -->
 <template>
   <div class="searchTable_wrapper">
     <el-table
-      ref="refTable"
-
+      ref="searchTable"
       :data="dataSource"
-      stripe
-      highlight-current-row
+      tooltip-effect="light"
       @selection-change="handleSelectionChange"
       @expand-change="expandChange"
     >
@@ -33,7 +31,9 @@
         :prop="column.prop"
         :label="column.label"
         :align="column.align"
+        :height="20"
         :width="column.width"
+        show-overflow-tooltip
         header-align="center"/>
       <el-table-column label="操作">
         <template slot-scope="scope">
@@ -75,11 +75,7 @@ export default {
   methods: {
     handleSelectionChange(val) {
       this.multipleSelection = val
-      var idsStr = ''
-      for (var i = 0; i < this.multipleSelection.length; i++) {
-        idsStr += this.multipleSelection[i]['username'] + ','
-      }
-      console.log(idsStr)
+      this.$emit('handleSelectionChange', this.multipleSelection)
     },
     expandChange() {
       console.log('wwww')
@@ -96,10 +92,26 @@ export default {
   }
 }
 </script>
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style rel="stylesheet/scss" lang="scss">
 .searchTable {
   &_wrapper {
-     padding: 20px;
+     padding: 0 20px;
+     .el-table__header tr,
+  .el-table__header th {
+    padding: 0;
+    .cell{
+      height: 60px;
+      line-height: 60px;
+    }
+}
+.el-table__body tr,
+  .el-table__body td{
+    padding: 0;
+    .cell{
+      height: 40px;
+      line-height: 40px;
+    }
+}
   }
 }
 </style>
