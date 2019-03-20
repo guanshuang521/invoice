@@ -93,6 +93,7 @@
                             <li style="width:10%"><input v-model="formdata.lines[index].xmje"></li>
                             <li style="width:8%">
                                 <input v-model="formdata.lines[index].sl" readOnly>
+                                 <!--{{dataConversion(formdata.lines[index].sl, globaldata.globaldata.fapiaoSL)}}-->
                             </li>
                             <li style="width:8%">
                                 <input v-model="formdata.lines[index].se" readOnly>
@@ -202,7 +203,7 @@
                     <div>商品名称</div>
                     <div>税率</div>
                   </li>
-                  <li v-for="(item, index) in goods.list" :key="item.id" @dblclick="dbSelectGoods(item)">
+                  <li v-for="(item, index) in goods.list" :key="item.id" @dblclick="dbSelectGoods(item,index)">
                     <div>
                       <input type="radio" name="goodsId" v-model="goods.item" :value="item">
                       {{index + 1}}
@@ -223,10 +224,11 @@
 </template>
 
 <script>
-import { getDate } from '@/utils/datefilter'
-import { getDx } from '@/utils/dxfilter'
+import { getDate,getDx,dataConversion } from '@/utils/filter'
+import { getSpmcList} from '@/api/invoiceOpening/opening';
+import globaldata from '@/utils/filter'
 import pagination from 'components/pagination/pagination';
-import { getSpmcList} from '@/api/invoiceOpening/opening'
+    
 export default {
     name:'fppm',
     props: ['pmfplx'],
@@ -235,6 +237,8 @@ export default {
     },
     data() {
         return {
+            dataConversion:dataConversion,
+            globaldata:globaldata,
             // 票面form信息
             formdata:{
                 fpqqlsh:'',
@@ -299,9 +303,10 @@ export default {
             },
             
             kprq:'',
-            dialogTableVisible: false,
+            dialogTableVisible: false,  //弹窗显示
             // 查询商品信息
             goods: {
+                dialogGoodsIndex: '', // 打开第几个商品
                 currentPage: 1,  //当前页数
                 pageSize: 5,     //每页显示条目个数
                 skfplx: '',
@@ -414,13 +419,23 @@ export default {
         prePageChange(data){
             this.goods.currentPage = data;
             this.getGoodsList();
-            console.log(data,'prePageChange')
         },
         //下一页
         nextPageChange(data){
             this.goods.currentPage = data;
             this.getGoodsList();
-        }
+        },
+        // 双击选择商品
+        dbSelectGoods(item,index) {
+            this.goods.dialogGoodsIndex = index;
+            //console.log(this.formdata.lines[0]["dw"],'this.formdata.lines')
+          this.formdata.lines[index]['xmmc'] = this.formdata.lines[index]['spmc'] = item.spmc;
+          this.formdata.lines[index]['spbm'] = item.spssbm;
+          this.formdata.lines[index]['spbh'] = item.spbh;
+          this.formdata.lines[index]['commodityId'] = item.spmc;
+          this.formdata.lines[index]['sl'] = item.sl;
+          this.dialogTableVisible = false;
+        },
     }
 }
 </script>
