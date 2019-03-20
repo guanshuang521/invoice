@@ -118,7 +118,7 @@
         <!-- <span></span> -->
       </el-pagination>
     </div>
-    <invoice-order :dialog-visible="dialogVisible"/>
+    <invoice-order :dialog-visible="dialogVisible" @changeState="change" />
   </div>
 </template>
 
@@ -126,6 +126,7 @@
 import { mapGetters } from 'vuex'
 import { getTableList } from '@/api/queryStatistics/orderOpenMessage'
 import invoiceOrder from '@/components/queryStatistics/invoiceOrder'
+import Bus from '@/api/bus'
 export default {
   name: 'OrderOpenMessage',
   components: {
@@ -192,8 +193,14 @@ export default {
   created() {
     // this.fetchData()
     this.getTableList()
+    Bus.$on('hide-dialog', (data) => {
+      this.dialogVisible = false
+    })
   },
   methods: {
+    change(a) {
+      this.dialogVisible = false
+    },
     fetchData() { // 获取数据
       this.listLoading = true
       // getList(this.listQuery).then(response => {
@@ -257,7 +264,8 @@ export default {
       console.log(file)
     },
     handleEdit(index, row) {
-      this.dialogVisible = true
+      Bus.$emit('show-dialog')
+      // this.dialogVisible = true
     },
     getTableList() {
       getTableList().then(res => {

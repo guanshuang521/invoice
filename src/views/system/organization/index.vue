@@ -23,7 +23,7 @@
           <h4>节点属性面板</h4>
           <el-tabs v-if="isTreeChecked" v-model="activeName" type="border-card" @tab-click="handleClick">
             <el-tab-pane label="节点维护" name="first">
-              <el-form ref="nodeMaintenanceForm" :model="nodeMaintenanceForm" :rules="nodeMaintenanceRules" label-width="120px">
+              <el-form ref="nodeMaintenanceForm" :model="nodeMaintenanceForm" :rules="nodeMaintenanceRules" label-width="120px" size="mini">
                 <el-form-item label="组织机构代码" prop="code">
                   <el-input v-model="nodeMaintenanceForm.code"/>
                 </el-form-item>
@@ -46,7 +46,7 @@
               </el-form>
             </el-tab-pane>
             <el-tab-pane v-if="currentNodeType === 'system'" label="新增子节点" name="second">
-              <el-form ref="addNodeForm" :model="addNodeForm" :rules="nodeMaintenanceRules" label-width="120px">
+              <el-form ref="addNodeForm" :model="addNodeForm" :rules="nodeMaintenanceRules" label-width="120px" size="mini">
                 <el-form-item label="组织机构代码" prop="code">
                   <el-input v-model="addNodeForm.code"/>
                 </el-form-item>
@@ -68,7 +68,7 @@
               </el-form>
             </el-tab-pane>
             <el-tab-pane v-if="currentNodeType !== 'system'" label="税号维护" name="third">
-              <el-form ref="codeMaintenanceForm" :model="codeMaintenanceForm" :rules="codeMaintenanceRules" label-width="120px">
+              <el-form ref="codeMaintenanceForm" :model="codeMaintenanceForm" :rules="codeMaintenanceRules" label-width="120px" size="mini">
                 <el-form-item label="税号" prop="code">
                   <el-input v-model="codeMaintenanceForm.code"/>
                 </el-form-item>
@@ -148,15 +148,14 @@
                     </template>
                   </el-table-column>
                 </el-table>
-                <!--<el-pagination-->
-                <!--@size-change="handleSizeChange"-->
-                <!--@current-change="handleCurrentChange"-->
-                <!--:current-page="currentPage4"-->
-                <!--:page-sizes="[100, 200, 300, 400]"-->
-                <!--:page-size="100"-->
-                <!--layout="total, sizes, prev, pager, next, jumper"-->
-                <!--:total="400">-->
-                <!--</el-pagination>-->
+                <el-pagination
+                  :current-page="currentPage"
+                  :page-sizes="[100, 200, 300, 400]"
+                  :page-size="100"
+                  :total="totalCount"
+                  layout="total, sizes, prev, pager, next, jumper"
+                  @size-change="handleSizeChange"
+                  @current-change="handleCurrentChange"/>
               </template>
             </el-tab-pane>
           </el-tabs>
@@ -164,10 +163,11 @@
       </el-col>
     </el-row>
     <!--创建和编辑终端-->
-    <el-dialog :title="dialogTitle" :visible.sync="dialogVisiblity" :lock-scroll="true" width="30%" center custom-class="showPop dialog-wapper pub-min-pop">
-      <dialog ref="dialog" :terminal-info="terminalInfo" :key="terminalInfo.id"/>
-      <span slot="footer" class="dialog-footer">
-        <el-button v-loading.fullscreen.lock="fullscreenLoading" type="primary" @click="saveTerminal">保存</el-button>
+    <el-dialog :title="dialogTitle" :visible.sync="dialogVisiblity" :lock-scroll="true" width="40%" custom-class="showPop dialog-wapper pub-min-pop">
+      <dialog-detail ref="dialog" :terminal-info="terminalInfo" :key="terminalInfo.id"/>
+      <span slot="footer" class="dialog-footer" >
+        <el-button v-loading.fullscreen.lock="fullscreenLoading" type="primary" size="mini" @click="saveTerminal">保存</el-button>
+        <el-button v-loading.fullscreen.lock="fullscreenLoading" size="mini" @click="dialogVisiblity = !dialogVisiblity">取消</el-button>
       </span>
     </el-dialog>
   </div>
@@ -175,11 +175,11 @@
 
 <script>
 import { getNodeList, getNodeDetail, deleteNode, updateNode, addNode } from '@/api/system/organization'
-import dialog from '@/components/system/organization'
+import dialogDetail from '@/components/system/organization'
 export default {
   name: 'Dashboard',
-  component: {
-    dialog
+  components: {
+    dialogDetail
   },
   data() {
     return {
@@ -301,9 +301,21 @@ export default {
       // 弹窗是否显示
       dialogVisiblity: false,
       // 终端信息
-      terminalInfo: {},
+      terminalInfo: {
+        sssh: '',
+        zdbz: '',
+        zdmc: '',
+        zddz: '',
+        zddkh: '',
+        jqbh: '',
+        kplx: []
+      },
       // 加载页面
-      fullscreenLoading: false
+      fullscreenLoading: false,
+      // 当前分页
+      currentPage: 1,
+      // 当前总条数
+      totalCount: 1
     }
   },
   watch: {
@@ -451,13 +463,24 @@ export default {
     },
     // 修改终端
     modifyTerminal() {
-
+      this.dialogVisiblity = true
+      this.dialogTitle = '修改终端信息'
     },
     // 修改终端保存
     saveTerminal() {
-
+      this.$refs.dialog.$refs.form.validate((valid) => {
+        if (valid) {
+          console.log(valid)
+        }
+      })
     },
     handleClick() {
+    },
+    // 修改每页最大条数
+    handleSizeChange() {
+    },
+    // 更改页数
+    handleCurrentChange() {
     }
   }
 }
