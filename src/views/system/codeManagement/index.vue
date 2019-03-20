@@ -2,7 +2,7 @@
   <div class="dashboard-container">
     <div class="search-box">
       <el-row>
-        <el-col :span="14">
+        <el-col :span="16">
           <div class="search-item">
             <span>商品分类</span>
             <el-select v-model="searchs.sign" placeholder="请选择" size="small">
@@ -19,7 +19,7 @@
             <el-input v-model="searchs.sphfumc" size="small"/>
           </div>
         </el-col>
-        <el-col :span="7">
+        <el-col :span="8">
           <div class="grid-content bg-purple-light">
             <el-row>
               <el-button type="primary" size="small" @click="searchFn">查询</el-button>
@@ -34,9 +34,9 @@
         <el-col :span="24">
           <div class="grid-content bg-purple-dark">
             <el-row>
-              <el-button type="primary" size="mini">导入</el-button>
-              <el-button type="primary" size="mini">导出</el-button>
-              <el-button type="primary" size="mini">导入摸板下载</el-button>
+              <el-button type="primary" size="mini" @click="importExcel">导入</el-button>
+              <el-button type="primary" size="mini" @click="exportExcel">导出</el-button>
+              <el-button type="primary" size="mini" @click="importExceldownload">导入摸板下载</el-button>
             </el-row>
           </div>
         </el-col>
@@ -99,6 +99,39 @@
         <!-- <span></span> -->
       </el-pagination>
     </div>
+    <!-- 导入弹窗 -->
+    <el-dialog
+      :visible.sync="dialogVisible2"
+      :before-close="handleClose"
+      title="客户基础信息导入"
+      width="350px"
+      custom-class="add-customer">
+      <el-upload
+        ref="upload"
+        :on-preview="handlePreview"
+        :on-remove="handleRemove"
+        :file-list="fileList"
+        :auto-upload="false"
+        accept=".xls,.xlsx"
+        class="upload-demo"
+        action="https://jsonplaceholder.typicode.com/posts/">
+        <div slot="tip" class="el-upload__tip">选择上传文件</div>
+        <el-button slot="trigger" size="mini" type="primary">添加文件</el-button>
+        <el-button style="margin-left: 10px;" size="mini" type="success" @click="submitUpload">开始上传</el-button>
+      </el-upload>
+    </el-dialog>
+    <!--导入模板下载-->
+    <el-dialog
+      :visible.sync="dialogVisible3"
+      :before-close="handleClose"
+      title="税收分类编码导入模板.xlsx"
+      width="30%">
+      <span>税收分类编码导入模板.xlsx</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible3 = false">取 消</el-button>
+        <el-button type="primary" @click="Determineclick">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -136,13 +169,26 @@ export default {
       checkedList: [],
       currentPage: 1,
       pageSize: 25,
-      total: 1000
+      total: 1000,
+      dialogVisible2: false,
+      dialogVisible3: false,
+      fileList: []
     }
   },
   created() {
 
   },
   methods: {
+    searchFn() { // 查询
+      console.log('查询')
+    },
+    initSearch() { // 重置
+      this.searchs = {
+        sign: '',
+        ssbm: '',
+        sphfumc: ''
+      }
+    },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`)
     },
@@ -151,6 +197,32 @@ export default {
     },
     handleSelectionChange(val) { // 表格选中数据发生变化
       this.checkedList = val
+    },
+    importExcel() { // 导入弹框显示
+      this.dialogVisible2 = true
+    },
+    submitUpload() {
+      this.$refs.upload.submit()
+    },
+    importExceldownload() { // 导入摸板下载弹框显示
+      this.dialogVisible3 = true
+    },
+    handleClose() { // 关闭弹窗
+      this.dialogVisible2 = false
+      this.dialogVisible3 = false
+    },
+    exportExcel() {
+      console.log('导出')
+    },
+    handleRemove(file, fileList) {
+      console.log(file, fileList)
+    },
+    handlePreview(file) {
+      console.log(file)
+    },
+    Determineclick() { // 点击确定
+      console.log(6666)
+      this.dialogVisible3 = false
     }
   }
 }
