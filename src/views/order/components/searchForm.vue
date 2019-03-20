@@ -3,7 +3,7 @@
  * @Author: zhangzheng
  * @LastEditors: zhangzheng
  * @Date: 2019-03-15 09:50:29
- * @LastEditTime: 2019-03-15 17:16:50
+ * @LastEditTime: 2019-03-20 16:56:19
  -->
 
 <template>
@@ -56,7 +56,7 @@
  *          }]
  *       },
  *
- *补充信息：查询方法在父组件中写命名为searchSubmit
+ *补充信息：查询方法在父组件中写命名为getList
  */
 export default {
   name: 'SearchForm',
@@ -79,7 +79,7 @@ export default {
   },
   methods: {
     onSubmit() {
-      this.$parent.searchSubmit()
+      this.$parent.getList()
     },
     reset(data) {
       this.$nextTick(() => {

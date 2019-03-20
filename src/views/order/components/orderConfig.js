@@ -3,10 +3,10 @@
  * @Author: zhangzheng
  * @LastEditors: zhangzheng
  * @Date: 2019-03-19 17:11:23
- * @LastEditTime: 2019-03-19 17:44:15
+ * @LastEditTime: 2019-03-20 14:16:15
  */
-const searchconfig = {
-  queryConditionsForm: [
+const orderConfig = {
+  queryConditionsForm: [ // 查询条件
     {
       title: '购方名称',
       code: 'buyyerName'
@@ -61,7 +61,7 @@ const searchconfig = {
       ]
     }
   ],
-  columns: [
+  columns: [ // 表头
     {
       hasSort: true, // <Boolean> 是否排序
       isShow: true, // <Boolean> 是否展示
@@ -114,7 +114,8 @@ const searchconfig = {
       isShow: true, // <Boolean> 是否展示
       prop: 'money', // <String>  对应属性名
       label: '金额（不含税）', // <String>   表头标签
-      align: 'center'
+      align: 'center',
+      width: 120
     },
     {
       hasSort: true, // <Boolean> 是否排序
@@ -122,7 +123,7 @@ const searchconfig = {
       prop: 'se', // <String>  对应属性名
       label: '税额', // <String>   表头标签
       align: 'center',
-      width: 200 // 列宽
+      width: 100// 列宽
     },
     {
       hasSort: true, // <Boolean> 是否排序
@@ -180,7 +181,23 @@ const searchconfig = {
       label: '备注', // <String>   表头标签
       align: 'center'
     }
-  ]
+  ],
+  operation: { // 操作功能
+    label: '操作', // 操作列的行首文字
+    width: '200', // 操作列的宽度
+    className: '', // 操作列的class名
+    data: [ // 操作列数据
+      {
+        label: '删除', // 按钮文字
+        Fun: 'handleDelete', // 点击按钮后触发的父组件事件
+        size: 'mini', // 按钮大小
+        id: '1', // 按钮循环组件的key值
+        classname: 'show', // 按钮的类名
+        type: 'danger' // 按钮的类型
+      }
+    ]
+  }
+
 }
 export default
-searchconfig
+orderConfig

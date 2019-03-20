@@ -3,16 +3,15 @@
  * @Author: zhangzheng
  * @LastEditors: zhangzheng
  * @Date: 2019-03-15 09:50:49
- * @LastEditTime: 2019-03-19 16:24:17
+ * @LastEditTime: 2019-03-20 17:00:48
  -->
 <template>
   <div class="searchTable_wrapper">
     <el-table
       ref="searchTable"
-      :data="dataSource"
+      :data="dataSource.list"
       tooltip-effect="light"
       @selection-change="handleSelectionChange"
-      @expand-change="expandChange"
     >
       <el-table-column
         type="selection"
@@ -46,16 +45,26 @@
             @click.stop="handleOperation(scope.$index, scope.row, item.id)">{{ item.label }}
           </el-button>
         </template>
-    </el-table-column></el-table>
-</div></template>
+      </el-table-column>
+    </el-table>
+    <el-pagination
+      :current-page="dataSource.currentPage"
+      :page-sizes="[5, 10, 20, 50,100]"
+      :page-size="dataSource.pageSize"
+      :total="dataSource.count"
+      layout="total, sizes, prev, pager, next, jumper"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"/>
+  </div>
+</template>
 
 <script>
 export default {
   name: 'SearchTable',
   props: {
     dataSource: { // 表格数据源
-      type: Array,
-      default: () => []
+      type: Object,
+      default: () => {}
     },
     columns: { // 表格的字段展示
       type: Array,
@@ -77,9 +86,6 @@ export default {
       this.multipleSelection = val
       this.$emit('handleSelectionChange', this.multipleSelection)
     },
-    expandChange() {
-      console.log('wwww')
-    },
     handleOperation(a, b, id) {
       const data = this.operation.data
       for (let i = 0; i < data.length; i++) {
@@ -87,8 +93,15 @@ export default {
           this.$emit(data[i].Fun, a, b)
         }
       }
+    },
+    handleSizeChange(val) {
+      this.dataSource.pageSize = val
+      this.$parent.getList()
+    },
+    handleCurrentChange(val) {
+      this.dataSource.currentPage = val
+      this.$parent.getList()
     }
-
   }
 }
 </script>
@@ -103,6 +116,9 @@ export default {
       height: 60px;
       line-height: 60px;
     }
+}
+.el-table__body-wrapper{
+  padding-bottom: 25px;
 }
 .el-table__body tr,
   .el-table__body td{
