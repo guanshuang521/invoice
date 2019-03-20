@@ -2,6 +2,8 @@ import Mock from 'mockjs'
 import userAPI from './user'
 import tableAPI from './table'
 import systemAPI from './system/organization'
+import roleAPI from './system/role'
+import customerAPI from './system/infoMaintenance'
 import orderOpenMessageAPI from './queryStatistics/orderOpenMessage'
 
 // Fix an issue with setting withCredentials = true, cross-domain request lost cookies
@@ -27,6 +29,15 @@ Mock.mock(/\/table\/list/, 'get', tableAPI.list)
 // System
 Mock.mock(/\/organization\/nodeDetail/, 'post', systemAPI.nodeDetail)
 Mock.mock(/\/organization\/list/, 'post', systemAPI.getlist)
+// Role
+Mock.mock(/\/role\/selectByRole/, 'post', roleAPI.selectByRole)
+Mock.mock(/\/role\/deleteRole/, 'post', roleAPI.deleteRole)
+Mock.mock(/\/role\/insertRole/, 'post', roleAPI.insertRole)
+Mock.mock(/\/resource\/selectByResource/, 'post', roleAPI.selectByResource)
+// Customer
+Mock.mock(/\/customer\/selectByCustomer/, 'post', customerAPI.selectByCustomer)
+Mock.mock(/\/customer\/deleteCustomer/, 'post', customerAPI.deleteCustomer)
+Mock.mock(/\/customer\/insertCustomer/, 'post', customerAPI.insertCustomer)
 // orderOpenMessage
 Mock.mock(/\/orderOpenMessage\/getTableList/, 'post', orderOpenMessageAPI.getTableList)
 export default Mock

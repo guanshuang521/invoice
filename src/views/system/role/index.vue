@@ -9,7 +9,7 @@
       </div>
       <div class="search-item">
         <span>有效标志</span>
-        <el-select v-model="searchs.sign" placeholder="请选择">
+        <el-select v-model="searchs.status" placeholder="请选择">
           <el-option label="有效" value="1"/>
           <el-option label="无效" value="0"/>
         </el-select>
@@ -46,12 +46,12 @@
         </el-table-column>
         <el-table-column label="有效标志" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.sign == 1 && '有效' || scope.row.sign == 0 && '无效' }}</span>
+            <span>{{ scope.row.status == 1 && '有效' || scope.row.status == 0 && '无效' }}</span>
           </template>
         </el-table-column>
         <!-- <el-table-column label="角色类型" align="center">
           <template slot-scope="scope">
-            {{ scope.row.roleType }}
+            {{ scope.row.roleCode }}
           </template>
         </el-table-column> -->
         <el-table-column label="操作" align="center">
@@ -80,15 +80,15 @@
     <el-dialog
       :title="dialogType === 'add' && '新增角色' || dialogType === 'edit' && '权限分配' || ''"
       :visible.sync="dialogVisible"
-      :before-close="handleClose"
+      :before-close="() => handleClose('form')"
       width="530px"
       custom-class="add-edit-role">
       <el-form ref="form" :rules="rules" :model="form" label-width="80px">
         <el-form-item label="角色名称" prop="roleName">
           <el-input v-model="form.roleName" :disabled="dialogType === 'edit'"/>
         </el-form-item>
-        <el-form-item label="有效标志" prop="sign">
-          <el-select v-model="form.sign" :disabled="dialogType === 'edit'" placeholder="请选择">
+        <el-form-item label="有效标志" prop="status">
+          <el-select v-model="form.status" :disabled="dialogType === 'edit'" placeholder="请选择">
             <el-option label="有效" value="1"/>
             <el-option label="无效" value="0"/>
           </el-select>
@@ -100,7 +100,7 @@
             :data="treeData"
             :props="defaultProps"
             :filter-node-method="filterNode"
-            :default-checked-keys="form.checkTree"
+            :default-checked-keys="[]"
             class="filter-tree"
             default-expand-all
             show-checkbox
@@ -117,7 +117,7 @@
         <span><span class="mark">*</span>角色名称</span>
         <el-input v-model="form.roleName" :disabled="dialogType === 'edit'"/>
         <span><span class="mark">*</span>有效标志</span>
-        <el-select v-model="form.sign" :disabled="dialogType === 'edit'" placeholder="请选择">
+        <el-select v-model="form.status" :disabled="dialogType === 'edit'" placeholder="请选择">
           <el-option label="有效" value="1"/>
           <el-option label="无效" value="0"/>
         </el-select>
@@ -146,37 +146,38 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { getRoleList, deleteRole, insertRole, selectByResource } from '@/api/system/role'
 
 export default {
   name: 'Dashboard',
   data() {
     return {
-      list: [
+      list: [],
+      list0: [
         {
           roleName: '管理员',
-          sign: '1',
-          roleType: '管理员',
+          status: '1',
+          roleCode: '管理员',
           id: 0,
           checkTree: []
         }, {
           roleName: '对方v',
-          sign: '1',
-          roleType: '认同',
+          status: '1',
+          roleCode: '认同',
           id: 1,
           checkTree: []
         }, {
           roleName: '额度',
-          sign: '1',
-          roleType: '如同',
+          status: '1',
+          roleCode: '如同',
           id: 2,
           checkTree: []
         }
       ],
-      list0: [],
       listLoading: false,
       searchs: {
         roleName: '',
-        sign: ''
+        status: ''
       },
       checkedList: [],
       currentPage: 1,
@@ -186,15 +187,15 @@ export default {
       dialogType: '',
       form: {
         roleName: '',
-        sign: '',
-        roleType: '',
+        status: '',
+        roleCode: '',
         checkTree: []
       },
       rules: {
         roleName: [
           { required: true, message: '角色名称不能为空', trigger: 'blur' }
         ],
-        sign: [
+        status: [
           { required: true, message: '有效标志不能为空', trigger: 'blur' }
         ]
       },
@@ -202,43 +203,7 @@ export default {
         children: 'children',
         label: 'label'
       },
-      treeData: [
-        {
-          id: 1,
-          label: '进项管理',
-          children: [{
-            id: 4,
-            label: '发票采集管理',
-            children: [{
-              id: 9,
-              label: 'Level three 1-1-1'
-            }, {
-              id: 10,
-              label: 'Level three 1-1-2'
-            }]
-          }]
-        }, {
-          id: 2,
-          label: 'Level one 2',
-          children: [{
-            id: 5,
-            label: 'Level two 2-1'
-          }, {
-            id: 6,
-            label: 'Level two 2-2'
-          }]
-        }, {
-          id: 3,
-          label: 'Level one 3',
-          children: [{
-            id: 7,
-            label: 'Level two 3-1'
-          }, {
-            id: 8,
-            label: 'Level two 3-2'
-          }]
-        }
-      ]
+      treeData: []
     }
   },
   computed: {
@@ -252,40 +217,64 @@ export default {
   },
   methods: {
     fetchData() {
-      // this.listLoading = true
-      this.list0 = JSON.parse(JSON.stringify(this.list))
-      // getList(this.listQuery).then(response => {
-      //   this.list = response.data.items
-      //   this.listLoading = false
-      // })
+      this.listLoading = true
+      // this.list0 = JSON.parse(JSON.stringify(this.list))
+      var params = JSON.parse(JSON.stringify(this.searchs))
+      params.pageSize = this.pageSize
+      params.currentPage = this.currentPage
+      getRoleList(params).then(response => {
+        console.log(response)
+        if (response.code === 20000) {
+          this.list = response.data.list
+          this.total = response.data.count
+        }
+        this.listLoading = false
+      })
     },
-    searchFn() {},
+    getResource() {
+      var params = {}
+      selectByResource(params).then(response => {
+        console.log(response)
+        if (response.code === 20000) {
+          this.treeData = response.data.list
+        }
+      })
+    },
+    searchFn() {
+      console.log(this.searchs)
+      this.fetchData()
+    },
     initSearch() {
       this.searchs = {
         roleName: '',
-        sign: ''
+        status: ''
       }
     },
     handleSelectionChange(val) { // 表格选中数据发生变化
-      this.checkedList = val
+      this.checkedList = []
+      for (var i = 0; i < val.length; i++) {
+        this.checkedList.push(val[i].id)
+      }
     },
     addRole() {
+      this.getResource()
       this.dialogVisible = true
       this.dialogType = 'add'
     },
-    addRoleFn(formName) {
+    addRoleFn(formName) { // 添加角色
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.dialogVisible = false
-          this.dialogType = ''
-          console.log(this.form)
-          var arr = JSON.parse(JSON.stringify(this.form))
-          arr.id = this.list0.length // 假定数据id
-          this.list0.push(arr) // 总数据添加
-          this.list = JSON.parse(JSON.stringify(this.list0)) // 修改显示数据
-          for (var k in this.form) {
-            this.form[k] = ''
-          }
+          var params = JSON.parse(JSON.stringify(this.form))
+          insertRole(params).then(response => {
+            if (response.code === 20000) {
+              this.fetchData()
+            }
+            this.dialogVisible = false
+            this.dialogType = ''
+            for (var k in this.form) {
+              this.form[k] = ''
+            }
+          })
         } else {
           console.log('error submit!!')
           return false
@@ -327,18 +316,18 @@ export default {
         // type: 'warning',
         // center: true
       }).then(() => {
-        console.log(this.checkedList)
-        for (var i = 0; i < this.checkedList.length; i++) {
-          for (var j = 0; j < this.list0.length; j++) {
-            if (this.checkedList[i].id === this.list0[j].id) {
-              this.list0.splice(j, 1)
-            }
-          }
+        var params = {
+          ids: this.checkedList
         }
-        this.list = JSON.parse(JSON.stringify(this.list0))
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
+        deleteRole(params).then(response => {
+          console.log(response)
+          if (response.code === 20000) {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+            this.fetchData()
+          }
         })
       }).catch(() => {
         // this.$message({
@@ -348,9 +337,11 @@ export default {
       })
     },
     handleEdit(index, item) { // 权限分配
+      this.getResource()
       this.dialogVisible = true
       this.dialogType = 'edit'
       this.form = item
+      this.form.status = item.status.toString()
     },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`)

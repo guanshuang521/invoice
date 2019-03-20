@@ -3,11 +3,11 @@
     <div class="search-box">
       <div class="search-item">
         <span>客户名称</span>
-        <el-input v-model="searchs.customerName"/>
+        <el-input v-model="searchs.khmc"/>
       </div>
       <div class="search-item">
         <span>客户税号</span>
-        <el-input v-model="searchs.customerTaxNumber"/>
+        <el-input v-model="searchs.khsh"/>
       </div>
       <el-button type="primary" size="small" @click="searchFn">查询</el-button>
       <el-button type="primary" size="small" @click="initSearch">重置</el-button>
@@ -38,47 +38,47 @@
         </el-table-column>
         <el-table-column label="购方名称" align="center">
           <template slot-scope="scope">
-            {{ scope.row.customerName }}
+            {{ scope.row.khmc }}
           </template>
         </el-table-column>
         <el-table-column label="购方税号" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.customerTaxNumber }}</span>
+            <span>{{ scope.row.khsh }}</span>
           </template>
         </el-table-column>
         <el-table-column label="地址" align="center">
           <template slot-scope="scope">
-            {{ scope.row.address }}
+            {{ scope.row.khdz }}
           </template>
         </el-table-column>
         <el-table-column label="邮箱" align="center">
           <template slot-scope="scope">
-            {{ scope.row.email }}
+            {{ scope.row.yx }}
           </template>
         </el-table-column>
         <el-table-column label="联系人员" align="center">
           <template slot-scope="scope">
-            {{ scope.row.contacts }}
+            {{ scope.row.lxry }}
           </template>
         </el-table-column>
         <el-table-column label="联系电话" align="center">
           <template slot-scope="scope">
-            {{ scope.row.contactNumber }}
+            {{ scope.row.lxdh }}
           </template>
         </el-table-column>
         <el-table-column label="移动电话" align="center">
           <template slot-scope="scope">
-            {{ scope.row.phone }}
+            {{ scope.row.sjhm }}
           </template>
         </el-table-column>
         <el-table-column label="开户行" align="center">
           <template slot-scope="scope">
-            {{ scope.row.bank }}
+            {{ scope.row.khh }}
           </template>
         </el-table-column>
         <el-table-column label="银行账号" align="center">
           <template slot-scope="scope">
-            {{ scope.row.bankAccount }}
+            {{ scope.row.yhzh }}
           </template>
         </el-table-column>
       </el-table>
@@ -103,51 +103,51 @@
       width="650px"
       custom-class="add-customer">
       <el-form ref="form" :rules="rules" :model="form" label-width="120px">
-        <el-form-item label="购方名称" prop="customerName">
-          <el-input v-model="form.customerName"/>
+        <el-form-item label="购方名称" prop="khmc">
+          <el-input v-model="form.khmc"/>
         </el-form-item>
-        <el-form-item label="购方税号" prop="customerTaxNumber">
-          <el-input v-model="form.customerTaxNumber"/>
+        <el-form-item label="购方税号" prop="khsh">
+          <el-input v-model="form.khsh"/>
         </el-form-item>
         <el-form-item label="联系人">
-          <el-input v-model="form.contacts"/>
+          <el-input v-model="form.lxry"/>
         </el-form-item>
         <el-form-item label="联系电话">
-          <el-input v-model="form.contactNumber"/>
+          <el-input v-model="form.lxdh"/>
         </el-form-item>
         <el-form-item label="移动电话">
-          <el-input v-model="form.phone"/>
+          <el-input v-model="form.sjhm"/>
         </el-form-item>
-        <el-form-item label="邮箱" prop="email">
-          <el-input v-model="form.email"/>
+        <el-form-item label="邮箱" prop="yx">
+          <el-input v-model="form.yx"/>
         </el-form-item>
         <el-form-item label="地址">
-          <el-select v-model="form.address" placeholder="省">
+          <el-select v-model="form.khdz" placeholder="省">
             <el-option label="北京市" value="北京市"/>
             <el-option label="上海市" value="上海市"/>
           </el-select>
           <span>-</span>
-          <el-select v-model="form.address" placeholder="市">
+          <el-select v-model="form.khdz" placeholder="市">
             <el-option label="北京市" value="北京市"/>
             <el-option label="上海市" value="上海市"/>
           </el-select>
           <span>-</span>
-          <el-select v-model="form.address" placeholder="区">
+          <el-select v-model="form.khdz" placeholder="区">
             <el-option label="北京市" value="北京市"/>
             <el-option label="上海市" value="上海市"/>
           </el-select>
         </el-form-item>
         <el-form-item label="详细地址" class="address">
-          <el-input v-model="form.address"/>
+          <el-input v-model="form.khdz"/>
         </el-form-item>
         <el-form-item label="开户银行">
-          <el-select v-model="form.bank" placeholder="开户银行">
+          <el-select v-model="form.khh" placeholder="开户银行">
             <el-option label="华夏银行" value="华夏银行"/>
             <el-option label="北京银行" value="北京银行"/>
           </el-select>
         </el-form-item>
         <el-form-item label="银行账号">
-          <el-input v-model="form.bankAccount"/>
+          <el-input v-model="form.yhzh"/>
         </el-form-item>
         <el-form-item class="button">
           <el-button type="primary" @click="addCustomerFn('form')">保存</el-button>
@@ -181,11 +181,12 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { getCustomerList, deleteCustomer, insertCustomer } from '@/api/system/infoMaintenance'
 
 export default {
   name: 'Dashboard',
   data() {
-    function customerTaxNumberFilter(rule, value, callback) { // 购方税号验证
+    function khshFilter(rule, value, callback) { // 购方税号验证
       if (value === '') {
         callback(new Error('购方税号不能为空'))
       } else {
@@ -197,7 +198,7 @@ export default {
         }
       }
     }
-    function emailFilter(rule, value, callback) { // 邮箱验证
+    function yxFilter(rule, value, callback) { // 邮箱验证
       if (value === '') {
         callback(new Error('邮箱不能为空'))
       } else {
@@ -212,45 +213,45 @@ export default {
     return {
       list: [
         {
-          customerName: '管理员',
-          customerTaxNumber: '1',
-          address: '北京市丰台科技园',
-          email: 'aerefe@123.com',
-          contacts: '管理员',
-          contactNumber: '12433323454',
-          phone: '23543212343',
-          bank: '北京银行中关村支行',
-          bankAccount: '123444321234567876',
+          khmc: '管理员',
+          khsh: '1',
+          khdz: '北京市丰台科技园',
+          yx: 'aerefe@123.com',
+          lxry: '管理员',
+          lxdh: '12433323454',
+          sjhm: '23543212343',
+          khh: '北京银行中关村支行',
+          yhzh: '123444321234567876',
           id: 0
         }, {
-          customerName: '附带v',
-          customerTaxNumber: '5675432345f',
-          address: '北京市丰台科技园',
-          email: 'aerefe@123.com',
-          contacts: '地方',
-          contactNumber: '12433323454',
-          phone: '23543212343',
-          bank: '北京银行中关村支行',
-          bankAccount: '123444321234567876',
+          khmc: '附带v',
+          khsh: '5675432345f',
+          khdz: '北京市丰台科技园',
+          yx: 'aerefe@123.com',
+          lxry: '地方',
+          lxdh: '12433323454',
+          sjhm: '23543212343',
+          khh: '北京银行中关村支行',
+          yhzh: '123444321234567876',
           id: 1
         }, {
-          customerName: '而VS',
-          customerTaxNumber: '344454566775g',
-          address: '北京市丰台科技园',
-          email: 'aerefe@123.com',
-          contacts: '额度',
-          contactNumber: '12433323454',
-          phone: '23543212343',
-          bank: '北京银行中关村支行',
-          bankAccount: '123444321234567876',
+          khmc: '而VS',
+          khsh: '344454566775g',
+          khdz: '北京市丰台科技园',
+          yx: 'aerefe@123.com',
+          lxry: '额度',
+          lxdh: '12433323454',
+          sjhm: '23543212343',
+          khh: '北京银行中关村支行',
+          yhzh: '123444321234567876',
           id: 2
         }
       ],
       list0: [], // 临时
       listLoading: false,
       searchs: {
-        customerName: '',
-        customerTaxNumber: ''
+        khmc: '',
+        khsh: ''
       },
       checkedList: [],
       currentPage: 1,
@@ -259,25 +260,25 @@ export default {
       dialogVisible: false,
       dialogType: '',
       form: {
-        customerName: '',
-        customerTaxNumber: '',
-        address: '',
-        email: '',
-        contacts: '',
-        contactNumber: '',
-        phone: '',
-        bank: '',
-        bankAccount: ''
+        khmc: '',
+        khsh: '',
+        khdz: '',
+        yx: '',
+        lxry: '',
+        lxdh: '',
+        sjhm: '',
+        khh: '',
+        yhzh: ''
       },
       rules: {
-        customerName: [
+        khmc: [
           { required: true, message: '购方名称不能为空', trigger: 'blur' }
         ],
-        customerTaxNumber: [
-          { required: true, validator: customerTaxNumberFilter, trigger: 'blur' }
+        khsh: [
+          { required: true, validator: khshFilter, trigger: 'blur' }
         ],
-        email: [
-          { required: true, validator: emailFilter, trigger: 'blur' }
+        yx: [
+          { required: true, validator: yxFilter, trigger: 'blur' }
         ]
       },
       dialogVisible2: false,
@@ -295,30 +296,28 @@ export default {
   },
   methods: {
     fetchData() { // 获取数据
-      // this.listLoading = true
+      this.listLoading = true
       this.list0 = JSON.parse(JSON.stringify(this.list))
-      this.total = this.list0.length
-      // getList(this.listQuery).then(response => {
-      //   this.list = response.data.items
-      //   this.listLoading = false
-      // })
+      // this.total = this.list0.length
+      var params = JSON.parse(JSON.stringify(this.searchs))
+      params.pageSize = this.pageSize
+      params.currentPage = this.currentPage
+      getCustomerList(params).then(response => {
+        // console.log(response)
+        if (response.code === 20000) {
+          this.list = response.data.list
+          this.total = response.data.count
+        }
+        this.listLoading = false
+      })
     },
     searchFn() {
-      var arr = []
-      for (var i = 0; i < this.list0.length; i++) {
-        if (this.searchs.customerName && !this.searchs.customerTaxNumber && this.list0[i].customerName.match(this.searchs.customerName) || this.searchs.customerTaxNumber && !this.searchs.customerName && this.list0[i].customerTaxNumber.match(this.searchs.customerTaxNumber) || this.searchs.customerTaxNumber && this.searchs.customerName && this.list0[i].customerTaxNumber === this.searchs.customerTaxNumber && this.list0[i].customerName.match(this.searchs.customerName)) {
-          arr.push(this.list0[i])
-        }
-      }
-      this.list = arr
-      if (!this.searchs.customerName && !this.searchs.customerTaxNumber) {
-        this.list = JSON.parse(JSON.stringify(this.list0))
-      }
+      this.fetchData()
     },
     initSearch() { // 重置
       this.searchs = {
-        customerName: '',
-        customerTaxNumber: ''
+        khmc: '',
+        khsh: ''
       }
     },
     handleSelectionChange(val) { // 表格选中数据发生变化
@@ -330,15 +329,16 @@ export default {
     addCustomerFn(form) { // 添加购方信息
       this.$refs[form].validate((valid) => {
         if (valid) {
-          this.dialogVisible = false
-          console.log(this.form)
-          var arr = JSON.parse(JSON.stringify(this.form))
-          arr.id = this.list0.length // 假定数据id
-          this.list0.push(arr) // 总数据添加
-          this.list = JSON.parse(JSON.stringify(this.list0)) // 修改显示数据
-          for (var k in this.form) {
-            this.form[k] = ''
-          }
+          var params = JSON.parse(JSON.stringify(this.form))
+          insertCustomer(params).then(response => {
+            if (response.code === 20000) {
+              this.fetchData()
+            }
+            this.dialogVisible = false
+            for (var k in this.form) {
+              this.form[k] = ''
+            }
+          })
         } else {
           console.log('error submit!!')
           return false
@@ -360,17 +360,22 @@ export default {
         // center: true
       }).then(() => {
         console.log(this.checkedList)
+        var ids = []
         for (var i = 0; i < this.checkedList.length; i++) {
-          for (var j = 0; j < this.list0.length; j++) {
-            if (this.checkedList[i].id === this.list0[j].id) {
-              this.list0.splice(j, 1)
-            }
-          }
+          ids.push(this.checkedList[i].id)
         }
-        this.list = JSON.parse(JSON.stringify(this.list0))
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
+        var params = {
+          ids
+        }
+        deleteCustomer(params).then(response => {
+          console.log(response)
+          if (response.code === 20000) {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+            this.fetchData()
+          }
         })
       }).catch(() => {
         // this.$message({
