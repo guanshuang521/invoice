@@ -391,11 +391,6 @@ export default {
             message: err.msg
           })
         })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
       })
     },
     // 新增子节点

@@ -43,6 +43,13 @@ const apiPath = {
     orderOpenMessage: {
       getTableList: '/orderOpenMessage/getTableList'
     }
+  },
+  invoice: {
+    wSpecial: {
+      list: 'invoice/search',
+      batchIssue: '/invoice/batchIssue',
+      billSendBack: '/invoice/billSendBack'
+    }
   }
 }
 export default apiPath

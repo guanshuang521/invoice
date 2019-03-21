@@ -4,9 +4,21 @@
 import request from '@/utils/request'
 import apiPath from '@/api/apiUrl'
 
-export function f() {
+export function batchIssue() {
   return request({
-    url: apiPath.system.organization.list,
+    url: apiPath.invoice.wSpecial.batchIssue,
+    method: 'post'
+  })
+}
+export function billSendBack() {
+  return request({
+    url: apiPath.invoice.wSpecial.billSendBack,
+    method: 'post'
+  })
+}
+export function initList() {
+  return request({
+    url: apiPath.invoice.wSpecial.search,
     method: 'post'
   })
 }
