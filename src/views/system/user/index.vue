@@ -57,7 +57,7 @@
           prop="address"
           label="地址"
           width="120">
-        <template slot-scope="scope">{{ scope.row.storeCode }}</template>
+          <template slot-scope="scope">{{ scope.row.storeCode }}</template>
         </el-table-column>
       </el-table>
     </div>

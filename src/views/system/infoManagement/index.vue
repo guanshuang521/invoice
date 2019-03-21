@@ -174,7 +174,7 @@
                 <el-option label="个人所得税" value="个人"/>
               </el-select>
             </el-form-item>
-            <el-form-item label="简码" prop=" " size="small">
+            <el-form-item label="简码" prop="spmcName" size="small">
               <el-input v-model="form.jianma"/>
             </el-form-item>
             <el-form-item label="含税标志">
