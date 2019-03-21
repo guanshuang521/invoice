@@ -1,3 +1,8 @@
+/**
+* @author Wujy
+* @date 2019/3/21
+* @Description:待开普票管理
+*/
 <template>
   <div class="wSpecial-container">
     <div class="filter-container">

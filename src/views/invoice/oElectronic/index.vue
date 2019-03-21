@@ -84,122 +84,122 @@
 </template>
 
 <script>
-  import { batchIssue, billSendBack, initList } from '@/api/invoice/wSpecial'
-  export default {
-    name: 'Dashboard',
-    data() {
-      return {
-        totalCount: 100,
-        placeholder: '请输入',
-        listQuery: {
-          title: '',
-          importance: '',
-          type: '',
-          sort: '',
-          limit: 10,
-          currentPage: 2
-        },
-        calendarTypeOptions: [{ name: '1', key: '1' }],
-        listLoading: false,
-        list: [{ id: 1 }],
-        tableKey: '',
-        dataList: [{
-          orderNo: 1,
-          gfmc: '购方名称',
-          gfsh: '购方税号'
-        }],
-        // 勾选的列表项
-        checkedItems: []
-      }
+import { batchIssue, billSendBack, initList } from '@/api/invoice/wSpecial'
+export default {
+  name: 'Dashboard',
+  data() {
+    return {
+      totalCount: 100,
+      placeholder: '请输入',
+      listQuery: {
+        title: '',
+        importance: '',
+        type: '',
+        sort: '',
+        limit: 10,
+        currentPage: 2
+      },
+      calendarTypeOptions: [{ name: '1', key: '1' }],
+      listLoading: false,
+      list: [{ id: 1 }],
+      tableKey: '',
+      dataList: [{
+        orderNo: 1,
+        gfmc: '购方名称',
+        gfsh: '购方税号'
+      }],
+      // 勾选的列表项
+      checkedItems: []
+    }
+  },
+  methods: {
+    // 发票开具
+    billIssue() {
+      console.log('')
     },
-    methods: {
-      // 发票开具
-      billIssue() {
-        console.log('')
-      },
-      // 批量开具
-      batchIssue() {
-        if (this.checkedItems.length === 0) {
-          this.$message({
-            message: '请至少选择一条数据！',
-            type: 'error'
-          })
-          return
-        }
-        this.$confirm('是否确认批量开具选择预制发票?', '批量开具', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          batchIssue().then(res => {
-            this.$message({
-              type: 'success',
-              message: res.msg
-            })
-          }).catch(err => {
-            this.$message({
-              type: 'error',
-              message: err.msg
-            })
-          })
+    // 批量开具
+    batchIssue() {
+      if (this.checkedItems.length === 0) {
+        this.$message({
+          message: '请至少选择一条数据！',
+          type: 'error'
         })
-      },
-      // 预制发票退回
-      billSendBack() {
-        if (this.checkedItems.length === 0) {
+        return
+      }
+      this.$confirm('是否确认批量开具选择预制发票?', '批量开具', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        batchIssue().then(res => {
           this.$message({
-            message: '请至少选择一条数据！',
-            type: 'error'
+            type: 'success',
+            message: res.msg
           })
-          return
-        }
-        this.$confirm('是否确认回退选择的预制发票？?', '预制发票回退', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          billSendBack().then(res => {
-            this.$message({
-              type: 'success',
-              message: res.msg
-            })
-          }).catch(err => {
-            this.$message({
-              type: 'error',
-              message: err.msg
-            })
-          })
-        })
-      },
-      // 导出
-      exportList() {
-      },
-      // 查询
-      initList() {
-        initList().then(res => {
         }).catch(err => {
           this.$message({
-            message: err,
-            type: 'error'
+            type: 'error',
+            message: err.msg
           })
         })
-      },
-      // 重置
-      handleReset() {
-        this.listQuery.gfmc = ''
-        this.listQuery.ddh = ''
-        this.listQuery.spmc = ''
-        this.initList()
-      },
-      handleSizeChange() {
-      },
-      handleCurrentChange() {},
-      handleSelectionChange(val) {
-        this.checkedItems = val
-        console.log(val)
+      })
+    },
+    // 预制发票退回
+    billSendBack() {
+      if (this.checkedItems.length === 0) {
+        this.$message({
+          message: '请至少选择一条数据！',
+          type: 'error'
+        })
+        return
       }
+      this.$confirm('是否确认回退选择的预制发票？?', '预制发票回退', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        billSendBack().then(res => {
+          this.$message({
+            type: 'success',
+            message: res.msg
+          })
+        }).catch(err => {
+          this.$message({
+            type: 'error',
+            message: err.msg
+          })
+        })
+      })
+    },
+    // 导出
+    exportList() {
+    },
+    // 查询
+    initList() {
+      initList().then(res => {
+      }).catch(err => {
+        this.$message({
+          message: err,
+          type: 'error'
+        })
+      })
+    },
+    // 重置
+    handleReset() {
+      this.listQuery.gfmc = ''
+      this.listQuery.ddh = ''
+      this.listQuery.spmc = ''
+      this.initList()
+    },
+    handleSizeChange() {
+    },
+    handleCurrentChange() {},
+    handleSelectionChange(val) {
+      this.checkedItems = val
+      console.log(val)
     }
   }
+}
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
