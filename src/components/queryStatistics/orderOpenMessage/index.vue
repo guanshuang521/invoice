@@ -1,11 +1,6 @@
 <template>
-  <!-- 新增弹窗 -->
-  <el-dialog
-    :visible.sync="open"
-    :before-close="handleClose"
-    title="发票信息"
-    width="750px"
-    custom-class="add-customer">
+  <div>
+    <!-- 新增弹窗 -->
     <el-table
       :data="list"
       element-loading-text="Loading"
@@ -65,21 +60,18 @@
         <!-- <span></span> -->
       </el-pagination>
     </div>
-  </el-dialog>
+  </div>
 </template>
 <script type="application/ecmascript">
 export default {
   props: {
-    dialogVisible: {
-      type: Boolean,
-      default: false
-    }
   },
   data() {
     return {
       currentPage: 1,
       pageSize: 25,
       total: 1000,
+      showDialog: false,
       list: [
         {
           djsh: '管理员',
@@ -95,17 +87,9 @@ export default {
       ]
     }
   },
-  computed: {
-    open: {
-      get: function() {
-        const opendialog = this.dialogVisible
-        return opendialog
-      },
-      set: function(val) {
-        this.opendialog = val
-        console.log(val)
-      }
-    }
+  watch: {
+  },
+  created() {
   },
   methods: {
     handleSelectionChange(val) { // 表格选中数据发生变化
@@ -118,8 +102,6 @@ export default {
       // console.log(`当前页: ${val}`)
     },
     handleClose() { // 关闭弹窗
-      this.open = false
-      console.log(this.open)
     }
   }
 }

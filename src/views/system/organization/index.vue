@@ -148,15 +148,14 @@
                     </template>
                   </el-table-column>
                 </el-table>
-                <!--<el-pagination-->
-                <!--@size-change="handleSizeChange"-->
-                <!--@current-change="handleCurrentChange"-->
-                <!--:current-page="currentPage4"-->
-                <!--:page-sizes="[100, 200, 300, 400]"-->
-                <!--:page-size="100"-->
-                <!--layout="total, sizes, prev, pager, next, jumper"-->
-                <!--:total="400">-->
-                <!--</el-pagination>-->
+                <el-pagination
+                  :current-page="currentPage"
+                  :page-sizes="[100, 200, 300, 400]"
+                  :page-size="100"
+                  :total="totalCount"
+                  layout="total, sizes, prev, pager, next, jumper"
+                  @size-change="handleSizeChange"
+                  @current-change="handleCurrentChange"/>
               </template>
             </el-tab-pane>
           </el-tabs>
@@ -303,7 +302,11 @@ export default {
       // 终端信息
       terminalInfo: {},
       // 加载页面
-      fullscreenLoading: false
+      fullscreenLoading: false,
+      // 当前分页
+      currentPage: 1,
+      // 当前总条数
+      totalCount: 1
     }
   },
   watch: {
@@ -458,6 +461,12 @@ export default {
 
     },
     handleClick() {
+    },
+    // 修改每页最大条数
+    handleSizeChange() {
+    },
+    // 更改页数
+    handleCurrentChange() {
     }
   }
 }
