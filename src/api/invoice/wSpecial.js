@@ -22,3 +22,9 @@ export function initList() {
     method: 'post'
   })
 }
+export function getBillDetail() {
+  return request({
+    url: apiPath.invoice.wSpecial.billDetail,
+    method: 'post'
+  })
+}

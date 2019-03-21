@@ -1,12 +1,17 @@
+/**
+* @author Linzb
+* @date 2019/3/21
+* @Description: 待开专票管理
+*/
 <template>
   <div class="wSpecial-container">
     <div class="filter-container">
       <label>购方名称</label>
-      <el-input :placeholder="placeholder" v-model="listQuery.gfmc" size="small" style="width: 150px;" class="filter-item" @keyup.enter.native="initList"/>
+      <el-input v-model="listQuery.gfmc" placeholder="请输入" size="small" style="width: 150px;" class="filter-item" @keyup.enter.native="initList"/>
       <label>订单号</label>
-      <el-input :placeholder="placeholder" v-model="listQuery.ddh" size="small" style="width: 150px;" class="filter-item" @keyup.enter.native="initList"/>
+      <el-input v-model="listQuery.ddh" placeholder="请输入" size="small" style="width: 150px;" class="filter-item" @keyup.enter.native="initList"/>
       <label>商品名称</label>
-      <el-input :placeholder="placeholder" v-model="listQuery.spmc" size="small" style="width: 150px;" class="filter-item" @keyup.enter.native="initList"/>
+      <el-input v-model="listQuery.spmc" placeholder="请输入" size="small" style="width: 150px;" class="filter-item" @keyup.enter.native="initList"/>
       <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="initList">查询</el-button>
       <el-button size="small" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleReset">重置</el-button>
     </div>
@@ -43,7 +48,7 @@
         width="300">
         <template slot-scope="scope">
           <el-button type="primary" size="mini">发票预览</el-button>
-          <el-button type="primary" size="mini">发票明细</el-button>
+          <el-button type="primary" size="mini" @click="billDetail">发票明细</el-button>
           <el-button type="primary" size="mini">订单明细</el-button>
         </template>
       </el-table-column>
@@ -57,36 +62,42 @@
       style="margin-top: 20px"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"/>
+    <Bill-detail :show-dialog="showDialog" :table-data="billList" @close-dialog="closeBillDetail"/>
   </div>
 </template>
 
 <script>
-import { batchIssue, billSendBack, initList } from '@/api/invoice/wSpecial'
+import { batchIssue, billSendBack, initList, getBillDetail } from '@/api/invoice/wSpecial'
+import BillDetail from '@/components/invoice/billDetail'
 export default {
   name: 'Dashboard',
+  components: { BillDetail },
   data() {
     return {
+      showDialog: false,
       totalCount: 100,
-      placeholder: '请输入',
+      // 查询条件
       listQuery: {
         title: '',
         importance: '',
         type: '',
         sort: '',
         limit: 10,
-        currentPage: 2
+        currentPage: 1
       },
-      calendarTypeOptions: [{ name: '1', key: '1' }],
+      // 加载动画是否显示
       listLoading: false,
-      list: [{ id: 1 }],
       tableKey: '',
+      // 列表数据
       dataList: [{
         orderNo: 1,
         gfmc: '购方名称',
         gfsh: '购方税号'
       }],
       // 勾选的列表项
-      checkedItems: []
+      checkedItems: [],
+      // 发票明细
+      billList: []
     }
   },
   methods: {
@@ -167,6 +178,21 @@ export default {
       this.listQuery.ddh = ''
       this.listQuery.spmc = ''
       this.initList()
+    },
+    // 发票明细
+    billDetail() {
+      getBillDetail().then(res => {
+        this.showDialog = true
+      }).catch(err => {
+        this.$message({
+          message: err,
+          type: 'error'
+        })
+      })
+    },
+    // 关闭订单明细
+    closeBillDetail(val) {
+      this.showDialog = val
     },
     handleSizeChange() {
     },

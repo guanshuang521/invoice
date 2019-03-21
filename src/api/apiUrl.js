@@ -33,7 +33,18 @@ const apiPath = {
       list: ''
     },
     role: {
-      list: ''
+      selectByRole: '/role/selectByRole ', // 角色信息查询
+      deleteRole: '/role/deleteRole', // 角色信息删除
+      insertRole: '/role/insertRole', // 角色信息新增
+      updateRole: '/role/updateRole' // 角色信息编辑
+    },
+    customer: {
+      selectByCustomer: '/customer/selectByCustomer', // 购方信息查询
+      deleteCustomer: '/customer/deleteCustomer', // 购方信息删除
+      insertCustomer: '/customer/insertCustomer' // 购方信息新增
+    },
+    resource: {
+      selectByResource: '/resource/selectByResource' // 获取菜单列表
     },
     invoiceModel: {
       list: ''
@@ -48,7 +59,8 @@ const apiPath = {
     wSpecial: {
       list: 'invoice/search',
       batchIssue: '/invoice/batchIssue',
-      billSendBack: '/invoice/billSendBack'
+      billSendBack: '/invoice/billSendBack',
+      billDetail: 'invoice/billDetail'
     }
   }
 }
