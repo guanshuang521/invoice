@@ -162,29 +162,29 @@
       <el-form ref="form" :rules="rules" :model="form" label-width="120px">
         <el-row>
           <el-col :span="12">
-            <el-form-item label="商品编码" prop="spbmrName" size="small">
+            <el-form-item label="商品编码" prop="spbm" size="small">
               <el-input v-model="form.spbm"/>
             </el-form-item>
-            <el-form-item label="商品名称" prop="spmcName" size="small">
+            <el-form-item label="商品名称" prop="spmc" size="small">
               <el-input v-model="form.spmc"/>
             </el-form-item>
             <el-form-item label="商品税目">
-              <el-select v-model="form.spsuim" placeholder="请选择" size="small">
+              <el-select v-model="form.spsm" placeholder="请选择" size="small">
                 <el-option label="企业所得税" value="企业"/>
                 <el-option label="个人所得税" value="个人"/>
               </el-select>
             </el-form-item>
-            <el-form-item label="简码" prop="spmcName" size="small">
-              <el-input v-model="form.jianma"/>
+            <el-form-item label="简码" prop="jcode" size="small">
+              <el-input v-model="form.jcode"/>
             </el-form-item>
             <el-form-item label="含税标志">
-              <el-select v-model="form.hsbz" placeholder="请选择" size="small">
+              <el-select v-model="form.hssign" placeholder="请选择" size="small">
                 <el-option label="企业所得税" value="企业"/>
                 <el-option label="个人所得税" value="个人"/>
               </el-select>
             </el-form-item>
             <el-form-item label="零含税标识">
-              <el-select v-model="form.lhsbs" placeholder="请选择" size="small">
+              <el-select v-model="form.lslbs" placeholder="请选择" size="small">
                 <el-option label="企业所得税" value="企业"/>
                 <el-option label="个人所得税" value="个人"/>
               </el-select>
@@ -209,14 +209,14 @@
                 <el-option label="6%" value="0.06"/>
               </el-select>
             </el-form-item>
-            <el-form-item label="规格型号" prop="ggxhName" size="small">
+            <el-form-item label="规格型号" prop="ggxh" size="small">
               <el-input v-model="form.ggxh"/>
             </el-form-item>
-            <el-form-item label="单元(元)" prop="ggxhName" size="small">
-              <el-input v-model="form.jiage"/>
+            <el-form-item label="单元(元)" prop="jiage" size="small">
+              <el-input v-model="form.UnitPrice"/>
             </el-form-item>
-            <el-form-item label="计量单位" prop="ggxhName" size="small">
-              <el-input v-model="form.jildanw"/>
+            <el-form-item label="计量单位" prop="jildanw" size="small">
+              <el-input v-model="form.meteringcom"/>
             </el-form-item>
             <el-form-item label="税收分类名称">
               <el-select v-model="form.ssflmc" placeholder="请选择" size="small">
@@ -224,11 +224,11 @@
                 <el-option label="个人所得税" value="个人"/>
               </el-select>
             </el-form-item>
-            <el-form-item label="税收分类编码" size="small">
+            <el-form-item label="税收分类编码" prop="ssflbm" size="small">
               <el-input v-model="form.ssflbm"/>
             </el-form-item>
             <el-form-item label="是否享受优惠政策">
-              <el-select v-model="form.sfxsyhzc" placeholder="请选择" size="small">
+              <el-select v-model="form.sfxsyh" placeholder="请选择" size="small">
                 <el-option label="企业所得税" value="企业"/>
                 <el-option label="个人所得税" value="个人"/>
               </el-select>
@@ -237,7 +237,7 @@
         </el-row>
         <el-row>
           <el-form-item class="button">
-            <el-button type="primary" @click="dialogVisible = false">确认</el-button>
+            <el-button type="primary" @click="addAdata('form')">确认</el-button>
             <el-button type="primary" @click="dialogVisible = false">取消</el-button>
           </el-form-item>
         </el-row>
@@ -290,49 +290,13 @@
   </div>
 </template>
 <script>
+import { commodictList, AddData } from '@/api/system/infoManagement'
 export default{
   name: 'Dashboard',
   data() {
     return {
       listLoading: false, // loading
-      list: [
-        {
-          spbm: '111',
-          spmc: '安斯里',
-          spsm: '245677',
-          jcode: '421456',
-          ggxh: '76543d',
-          UnitPrice: '10000',
-          meteringcom: '元',
-          hssign: '大萨达',
-          ssflbm: '65432',
-          ssflmc: '987654332',
-          sl: '1.2',
-          lslbs: '零税率标识',
-          mslx: '免税类型',
-          sfxsyh: '是',
-          yhzclx: '优惠政策类型',
-          id: 0
-        },
-        {
-          spbm: '222',
-          spmc: '安斯里',
-          spsm: '4444',
-          jcode: '5555',
-          ggxh: '76543d',
-          UnitPrice: '33333',
-          meteringcom: '元',
-          hssign: '阿萨德',
-          ssflbm: '65432',
-          ssflmc: '987654332',
-          sl: '1.2',
-          lslbs: '零税率标识',
-          mslx: '免税类型',
-          sfxsyh: '否',
-          yhzclx: '优惠政策类型',
-          id: 1
-        }
-      ],
+      list: [],
       searchs: {
         // 商品名称
         commodityName: '',
@@ -350,37 +314,55 @@ export default{
       dialogVisible2: false,
       form: {
         spbm: '',
-        sl: '',
         spmc: '',
+        spsm: '',
+        jcode: '',
         ggxh: '',
-        spsuim: '',
-        jiage: '',
-        jianma: '',
-        jildanw: '',
-        hsbz: '',
-        ssflmc: '',
-        lslbs: '',
+        UnitPrice: '',
+        meteringcom: '',
+        hssign: '',
         ssflbm: '',
+        ssflmc: '',
+        sl: '',
+        lslbs: '',
         mslx: '',
-        sfxsyhzc: '',
-        yhzclx: ''
+        sfxsyh: '',
+        yhzclx: '',
+        id: 0
       },
       form1: {
         ssflmc: '',
         ssflbm: ''
       },
       rules: {
-        spbmrName: [
+        spbm: [
           { required: true, message: '商品编码不能为空', trigger: 'blur' }
         ],
-        spmcName: [
+        spmc: [
           { required: true, message: '商品名称不能为空', trigger: 'blur' }
         ],
-        ggxhName: [
+        ggxh: [
           { required: true, message: '规格型号不能为空', trigger: 'blur' }
+        ],
+        jcode: [
+          { required: true, message: '简码不能为空', trigger: 'blur' }
+        ],
+        UnitPrice: [
+          { required: true, message: '单元不能为空', trigger: 'blur' }
+        ],
+        meteringcom: [
+          { required: true, message: '计量单位不能为空', trigger: 'blur' }
+        ],
+        ssflbm: [
+          { required: true, message: '税收分类编码不能为空', trigger: 'blur' }
         ]
       }
     }
+  },
+  mounted() {
+  },
+  created() {
+    this.gitlist()
   },
   methods: {
     searchFn() {
@@ -391,6 +373,13 @@ export default{
         comcode: ''
       }
     },
+    gitlist() { // 获取数据
+      commodictList().then(res => {
+        if (res.code === '0000') {
+          this.list = res.data
+        }
+      })
+    },
     handleSelectionChange(val) { // 表格选中数据发生变化
       this.checkedList = val
     },
@@ -398,6 +387,7 @@ export default{
       this.dialogVisible = true
       this.dialogType = 'edit'
       console.log(rows)
+      this.form = rows
     },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`)
@@ -409,6 +399,26 @@ export default{
       this.dialogVisible = true
       this.dialogType = 'adds'
       console.log(111)
+    },
+    addAdata(formName) { // 点击添加确定后
+      if (this.dialogType = 'adds') {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            var params = JSON.parse(JSON.stringify(this.form))
+            AddData(params).then(res => {
+              if (res.code === '0000') {
+                console.log(res)
+                this.gitlist()
+             }
+              this.dialogVisible = false
+             this.dialogType = ''
+            })
+          } else {
+            console.log('error!!')
+            return false
+          }
+        })
+      }
     },
     settingClick() { // 设置税收分类编码
       this.dialogVisible1 = true
