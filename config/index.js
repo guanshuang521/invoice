@@ -17,6 +17,13 @@ module.exports = {
         // },
         changeOrigin: true,
       },
+      '/store':{
+        target: 'http://192.168.5.189:8080', //后台api
+        // pathRewrite: {
+        //   '^/rbac': '/'
+        // },
+        changeOrigin: true,
+      },
     },
 
     // Various Dev Server settings

@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-container">
-    <!-- <div class="dashboard-text">name:{{ name }}</div>
-    <div class="dashboard-text">roles:<span v-for="role in roles" :key="role">{{ role }}</span></div> -->
+    <!--<div class="dashboard-text">name:{{ name }}</div>-->
+    <!--<div class="dashboard-text">roles:<span v-for="role in roles" :key="role">{{ role }}</span></div>-->
     <div>
       <el-row>
         <el-col :span="12"><div class="grid-content bg-purple">
@@ -35,7 +35,7 @@
     <div class="table" style="padding:5px;">
       <el-table
         ref="multipleTable"
-        :data="tableData3"
+        :data="list"
         tooltip-effect="dark"
         style="width: 100%"
         @selection-change="handleSelectionChange">
@@ -45,16 +45,20 @@
         <el-table-column
           label="日期"
           width="120">
-          <template slot-scope="scope">{{ scope.row.date }}</template>
+          <!--<template slot-scope="scope">{{ scope.row.date }}</template>-->
         </el-table-column>
         <el-table-column
           prop="name"
           label="姓名"
-          width="120"/>
+          width="120">
+          <template slot-scope="scope">{{ scope.row.storeName }}</template>
+        </el-table-column>
         <el-table-column
           prop="address"
           label="地址"
-          show-overflow-tooltip/>
+          width="120">
+        <template slot-scope="scope">{{ scope.row.storeCode }}</template>
+        </el-table-column>
       </el-table>
     </div>
     <div class="block" style="margin-top:10px;">
@@ -72,6 +76,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { getList } from '@/api/system/shop'
 
 export default {
   name: 'Dashboard',
@@ -95,35 +100,7 @@ export default {
         label: '北京烤鸭'
       }],
       value: '',
-      tableData3: [{
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-08',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-06',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-07',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }],
+      list: [],
       multipleSelection: [],
       currentPage1: 5,
       currentPage2: 5,
@@ -137,7 +114,19 @@ export default {
       'roles'
     ])
   },
+  mounted() {
+    this.getTableList()
+  },
   methods: {
+    // table列表查询
+    getTableList() {
+      getList().then(res => {
+        this.list = res.info
+        console.log(res, 88888)
+      }).catch(err => {
+        console.log(err)
+      })
+    },
     toggleSelection(rows) {
       if (rows) {
         rows.forEach(row => {

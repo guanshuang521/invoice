@@ -27,11 +27,11 @@
         <el-col :span="24">
           <div class="grid-content bg-purple-dark">
             <el-row>
-              <el-button type="primary" size="mini">新增</el-button>
-              <el-button type="primary" size="mini">设置税收分类编码</el-button>
+              <el-button type="primary" size="mini" @click="addClick">新增</el-button>
+              <el-button type="primary" size="mini" @click="settingClick">设置税收分类编码</el-button>
               <el-button type="primary" size="mini">导出数据</el-button>
               <el-button type="primary" size="mini">Excel模板下载</el-button>
-              <el-button type="primary" size="mini">导入Excel</el-button>
+              <el-button type="primary" size="mini" @click="importExcel">导入Excel</el-button>
             </el-row>
           </div>
         </el-col>
@@ -152,6 +152,141 @@
         <!-- <span></span> -->
       </el-pagination>
     </div>
+    <!--新增弹框-->
+    <el-dialog
+      :visible.sync="dialogVisible"
+      :before-close="handleClose"
+      :title="dialogType === 'adds' && '新增' || dialogType === 'edit' && '编辑' || ''"
+      width="650px"
+      custom-class="add-customer">
+      <el-form ref="form" :rules="rules" :model="form" label-width="120px">
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="商品编码" prop="spbmrName" size="small">
+              <el-input v-model="form.spbm"/>
+            </el-form-item>
+            <el-form-item label="商品名称" prop="spmcName" size="small">
+              <el-input v-model="form.spmc"/>
+            </el-form-item>
+            <el-form-item label="商品税目">
+              <el-select v-model="form.spsuim" placeholder="请选择" size="small">
+                <el-option label="企业所得税" value="企业"/>
+                <el-option label="个人所得税" value="个人"/>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="简码" prop=" " size="small">
+              <el-input v-model="form.jianma"/>
+            </el-form-item>
+            <el-form-item label="含税标志">
+              <el-select v-model="form.hsbz" placeholder="请选择" size="small">
+                <el-option label="企业所得税" value="企业"/>
+                <el-option label="个人所得税" value="个人"/>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="零含税标识">
+              <el-select v-model="form.lhsbs" placeholder="请选择" size="small">
+                <el-option label="企业所得税" value="企业"/>
+                <el-option label="个人所得税" value="个人"/>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="免税类型">
+              <el-select v-model="form.mslx" placeholder="请选择" size="small">
+                <el-option label="企业所得税" value="企业"/>
+                <el-option label="个人所得税" value="个人"/>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="优惠政策类型">
+              <el-select v-model="form.yhzclx" placeholder="请选择" size="small">
+                <el-option label="企业所得税" value="企业"/>
+                <el-option label="个人所得税" value="个人"/>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="税率(%)">
+              <el-select v-model="form.sl" placeholder="税率" size="small">
+                <el-option label="5%" value="0.05"/>
+                <el-option label="6%" value="0.06"/>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="规格型号" prop="ggxhName" size="small">
+              <el-input v-model="form.ggxh"/>
+            </el-form-item>
+            <el-form-item label="单元(元)" prop="ggxhName" size="small">
+              <el-input v-model="form.jiage"/>
+            </el-form-item>
+            <el-form-item label="计量单位" prop="ggxhName" size="small">
+              <el-input v-model="form.jildanw"/>
+            </el-form-item>
+            <el-form-item label="税收分类名称">
+              <el-select v-model="form.ssflmc" placeholder="请选择" size="small">
+                <el-option label="企业所得税" value="企业"/>
+                <el-option label="个人所得税" value="个人"/>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="税收分类编码" size="small">
+              <el-input v-model="form.ssflbm"/>
+            </el-form-item>
+            <el-form-item label="是否享受优惠政策">
+              <el-select v-model="form.sfxsyhzc" placeholder="请选择" size="small">
+                <el-option label="企业所得税" value="企业"/>
+                <el-option label="个人所得税" value="个人"/>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-form-item class="button">
+            <el-button type="primary" @click="dialogVisible = false">确认</el-button>
+            <el-button type="primary" @click="dialogVisible = false">取消</el-button>
+          </el-form-item>
+        </el-row>
+      </el-form>
+    </el-dialog>
+    <!--设置税收分类编码-->
+    <el-dialog
+      :visible.sync="dialogVisible1"
+      :before-close="handleClose"
+      title="新增商品税收编码转换"
+      width="650px"
+      custom-class="add-customer">
+      <el-form ref="form1" :rules="rules" :model="form" label-width="120px">
+        <el-form-item label="税收分类名称">
+          <el-select v-model="form.spsuim" placeholder="请选择" size="small">
+            <el-option label="企业所得税" value="企业"/>
+            <el-option label="个人所得税" value="个人"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="税收分类编码" prop="spmcName" size="small">
+          <el-input v-model="form.spmc"/>
+        </el-form-item>
+        <el-form-item class="button">
+          <el-button type="primary" @click="dialogVisible1 = false">保存</el-button>
+          <el-button type="primary" @click="dialogVisible1 = false">取消</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+    <!--导入Excel-->
+    <el-dialog
+      :visible.sync="dialogVisible2"
+      :before-close="handleClose"
+      title="商品税收编码转换文件导入(大小不能超过100k)"
+      width="350px"
+      custom-class="add-customer">
+      <el-upload
+        ref="upload"
+        :on-preview="handlePreview"
+        :on-remove="handleRemove"
+        :file-list="fileList"
+        :auto-upload="false"
+        accept=".xls,.xlsx"
+        class="upload-demo"
+        action="https://jsonplaceholder.typicode.com/posts/">
+        <div slot="tip" class="el-upload__tip">选择上传文件</div>
+        <el-button slot="trigger" size="small" type="primary">添加文件</el-button>
+        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">开始上传</el-button>
+      </el-upload>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -200,14 +335,51 @@ export default{
       ],
       searchs: {
         // 商品名称
-        commodityName: '111',
+        commodityName: '',
         // 商品编码
-        comcode: '222'
+        comcode: ''
       },
       checkedList: [],
       currentPage: 1,
       pageSize: 25,
-      total: 1000
+      total: 1000,
+      dialogType: '',
+      fileList: [],
+      dialogVisible: false,
+      dialogVisible1: false,
+      dialogVisible2: false,
+      form: {
+        spbm: '',
+        sl: '',
+        spmc: '',
+        ggxh: '',
+        spsuim: '',
+        jiage: '',
+        jianma: '',
+        jildanw: '',
+        hsbz: '',
+        ssflmc: '',
+        lslbs: '',
+        ssflbm: '',
+        mslx: '',
+        sfxsyhzc: '',
+        yhzclx: ''
+      },
+      form1: {
+        ssflmc: '',
+        ssflbm: ''
+      },
+      rules: {
+        spbmrName: [
+          { required: true, message: '商品编码不能为空', trigger: 'blur' }
+        ],
+        spmcName: [
+          { required: true, message: '商品名称不能为空', trigger: 'blur' }
+        ],
+        ggxhName: [
+          { required: true, message: '规格型号不能为空', trigger: 'blur' }
+        ]
+      }
     }
   },
   methods: {
@@ -223,6 +395,8 @@ export default{
       this.checkedList = val
     },
     handleEdit(ind, rows) { // 编辑
+      this.dialogVisible = true
+      this.dialogType = 'edit'
       console.log(rows)
     },
     handleSizeChange(val) {
@@ -230,6 +404,31 @@ export default{
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`)
+    },
+    addClick() { // 添加
+      this.dialogVisible = true
+      this.dialogType = 'adds'
+      console.log(111)
+    },
+    settingClick() { // 设置税收分类编码
+      this.dialogVisible1 = true
+    },
+    importExcel() {
+      this.dialogVisible2 = true
+    },
+    handleClose() { // 关闭弹窗
+      this.dialogVisible = false
+      this.dialogVisible1 = false
+      this.dialogVisible2 = false
+    },
+    submitUpload() {
+      this.$refs.upload.submit()
+    },
+    handleRemove(file, fileList) {
+      console.log(file, fileList)
+    },
+    handlePreview(file) {
+      console.log(file)
     }
   }
 }
