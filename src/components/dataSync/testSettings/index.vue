@@ -1,3 +1,8 @@
+/**
+* @author Wujy
+* @date 2019/3/21
+* @Description:任务设置组件
+*/
 <template>
   <div>
     <div class="content" style="overflow: hidden">

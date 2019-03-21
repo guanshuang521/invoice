@@ -1,3 +1,8 @@
+/**
+* @author Wujy
+* @date 2019/3/21
+* @Description:已开发票管理
+*/
 <template>
   <div>
     <img src="static/fapiao.jpg" width="100%" height="100%">

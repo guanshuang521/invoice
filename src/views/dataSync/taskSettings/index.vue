@@ -1,3 +1,8 @@
+/**
+* @author Wujy
+* @date 2019/3/21
+* @Description:任务设置
+*/
 <template>
   <div class="taskSettings-container">
     <el-tabs v-model="activeName">
