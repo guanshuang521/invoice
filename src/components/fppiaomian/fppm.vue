@@ -43,7 +43,7 @@
                         <div class="tbmc">
                             <span class="gmftitle">名　　　　称：</span>
                             <input class="gmfcontent" v-model="formdata.gmf_mc">
-                            <button class="small_select customerSelect" type="button">···</button>
+                            <button class="small_select customerSelect" @click="isgmfmc = true">···</button>
                         </div>
                         <div class="tbnsrsbh">
                             <span class="gmftitle">纳税人识别号：</span>
@@ -80,7 +80,7 @@
                             <li style="width:5%">{{index + 1}}</li>
                             <li style="width:20%;position: relative;">
                                 <input v-model="formdata.lines[index].xmmc">
-                                <button class="small_select taxNumSelectBtn" style="top:7px" @click="dialogTableVisible = true">···</button>
+                                <button class="small_select taxNumSelectBtn" style="top:7px" @click="isgoods = true">···</button>
                             </li>
                             <li style="width:8%">
                                 <input v-model="formdata.lines[index].ggxh" readOnly>
@@ -181,8 +181,87 @@
             </ul>
         </div>
         
-        <!--选择税收编码-->
-        <el-dialog title="选择税收编码" :visible.sync="dialogTableVisible" width='800px'>
+        <!--选择购买方名称dialog-->
+        <el-dialog title="选择购买方名称" :visible.sync="isgmfmc" width='810px' class='gmfmcDialog'>
+            <div class="dialog_item">
+                <div class="search_item">
+                    <div class="search_label">客户编码：</div>
+                    <input class="search_input" type="text" v-model="gmfmcList.khbh">
+                </div>
+                <div class="search_item">
+                    <div class="search_label">客户名称：</div>
+                    <input class="search_input" type="text" v-model="gmfmcList.khmc">
+                </div>
+                <div class="search_item">
+                    <div class="search_label">税号：</div>
+                    <input class="search_input" type="text" v-model="gmfmcList.khsh">
+                </div>
+                <div class="bluebtn" @click="getGmfList">查询</div>
+                <div class="bluebtn" @click="addGmf">新增</div>
+            </div>
+            
+            <div class="list-table-container">
+                <ul class="dialog_goodsList_ul">
+                  <li>
+                    <div></div>
+                    <div>客户名称</div>
+                    <div>客户编码</div>
+                    <div>纳税人识别号</div>
+                  </li>
+                  <li v-for="(item, index) in goods.list" :key="item.id" @dblclick="dbSelectGoods(item,index)">
+                    <div>
+                      <input type="radio" name="goodsId" v-model="goods.item" :value="item">
+                      {{index + 1}}
+                    </div>
+                    <div>{{item.spssbm}}</div>
+                    <div>{{item.spmc}}</div>
+                    <div>{{parseInt(item.sl * 100)}}%</div>
+                  </li>
+                </ul>
+            </div>
+            
+             <el-pagination @size-change="handleSizeChange($event,'isgmfmc')" @current-change="handleCurrentChange($event,'isgmfmc')" @prev-click="prePageChange($event,'isgmfmc')" @next-click="nextPageChange($event,'isgmfmc')" :current-page="goods.currentPage" :page-sizes="[1, 5, 10, 20,50,100]" :page-size="goods.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="goods.totalCount">
+            </el-pagination>
+            <button class="bluebtn">确认</button>
+        </el-dialog>
+        
+        <!--添加客户信息dialog-->
+        <el-dialog title="添加客户信息" :visible.sync="isyhxx">
+            <div class="search_items">
+                <div class="search_item">
+                    <div class="search_label"><span class="required">*</span>客户编号：</div>
+                    <input class="search_input" type="text" v-model="goods.spssbm">
+                </div>
+                <div class="search_item">
+                    <div class="search_label"><span class="required">*</span>客户名称：</div>
+                    <input class="search_input" type="text" v-model="goods.spmc">
+                </div>
+                <div class="search_item">
+                    <div class="search_label">客户税号：</div>
+                    <input class="search_input" type="text" v-model="goods.spssbm">
+                </div>
+                <div class="search_item">
+                    <div class="search_label">地址电话：</div>
+                    <input class="search_input" type="text" v-model="goods.spmc">
+                </div>
+                <div class="search_item">
+                    <div class="search_label">银行账号：</div>
+                    <input class="search_input" type="text" v-model="goods.spssbm">
+                </div>
+                <div class="search_item">
+                    <div class="search_label">备注：</div>
+                    <input class="search_input" type="text" v-model="goods.spmc">
+                </div>
+                
+                <div class="button-box">
+                    <button class="bluebtn">确认</button>
+                    <button class="bluebtn" @click='isyhxx = false'>取消</button>
+                </div>
+            </div>
+        </el-dialog>
+        
+        <!--选择税收编码dialog-->
+        <el-dialog title="选择税收编码" :visible.sync="isgoods" width='800px' class='goodsDialog'>
             <div class="dialog_item">
               <div class="search_item">
                 <div class="search_label">商品税收编码：</div>
@@ -215,10 +294,11 @@
                 </ul>
             </div>
             
-             <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" @prev-click="prePageChange" @next-click="nextPageChange" :current-page="goods.currentPage" :page-sizes="[1, 5, 10, 20,50,100]" :page-size="goods.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="goods.totalCount">
+             <el-pagination @size-change="handleSizeChange($event,'isgoods')" @current-change="handleCurrentChange($event,'isgoods')" @prev-click="prePageChange($event,'isgoods')" @next-click="nextPageChange($event,'isgoods')" :current-page="goods.currentPage" :page-sizes="[1, 5, 10, 20,50,100]" :page-size="goods.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="goods.totalCount">
             </el-pagination>
-            <!--<v-pagination :total-count="goods.totalCount" :page-size="goods.pageSize" :page-num="goods.pageNum" @showNewPageSize="updatePageSize" @currentPage="currentPage"></v-pagination>-->
-            <button class="bluebtn">确认</button>
+            <div class="button-box">
+                <button class="bluebtn">确认</button>
+            </div>
         </el-dialog>
     </div>
 </template>
@@ -303,7 +383,21 @@ export default {
             },
             
             kprq:'',
-            dialogTableVisible: false,  //弹窗显示
+            isgoods: false,  //选择税收编码弹窗显示
+            isgmfmc: false,  //选择购买方名称弹窗显示
+            isyhxx: false,  //添加客户信息弹窗显示
+            // 查询购买方信息
+            gmfmcList: {
+                dialogGoodsIndex: '', // 打开第几个商品
+                currentPage: 1,  //当前页数
+                pageSize: 5,     //每页显示条目个数
+                skfplx: '',
+                khmc: "",
+                khbh: "",
+                khsh: "",
+                list: [],
+                totalCount:0,//总条目数
+            },
             // 查询商品信息
             goods: {
                 dialogGoodsIndex: '', // 打开第几个商品
@@ -404,37 +498,144 @@ export default {
                 })
               })
         },
+        //查询购买方名称列表
+        getGmfList(){
+            //this.isyhxx = true;
+        },
+        //新增购买方用户信息
+        addGmf(){
+            this.isyhxx = true;
+        },
         //pageSize 改变
-        handleSizeChange(data) {
-            this.goods.pageSize = data;
-            this.getGoodsList();
+        /*
+            data: $event只能传递第一个默认参数data
+            type: 所属弹窗
+        */
+        handleSizeChange(data,type) {
+            //选择税收编码dialog
+            if(type == 'isgoods'){
+                this.goods.pageSize = data;
+                this.getGoodsList();  
+            }
+            //选择购买方名称dialog
+            if(type == 'isgmfmc'){
+                this.gmfmcList.pageSize = data;
+                //this.getGmfmcList();  
+            }
         },
         //currentPage 改变
-        handleCurrentChange(data) {
-            this.goods.pageNum = data;
-            this.getGoodsList();
+        /*
+            data: $event只能传递第一个默认参数data
+            type: 所属弹窗
+        */
+        handleCurrentChange(data,type) {
+            //选择税收编码dialog
+            if(type == 'isgoods'){
+                this.goods.pageNum = data;
+                this.getGoodsList();
+            }
+            //选择购买方名称dialog
+            if(type == 'isgmfmc'){
+                this.gmfmcList.pageSize = data;
+                //this.getGmfmcList();  
+            }
             
         },
         //上一页
-        prePageChange(data){
-            this.goods.currentPage = data;
-            this.getGoodsList();
+        /*
+            data: $event只能传递第一个默认参数data
+            type: 所属弹窗
+        */
+        prePageChange(data,type) {
+            //选择税收编码dialog
+            if(type == 'isgoods'){
+                this.goods.currentPage = data;
+                this.getGoodsList();
+            }
+            //选择购买方名称dialog
+            if(type == 'isgmfmc'){
+                this.gmfmcList.pageSize = data;
+                //this.getGmfmcList();  
+            }
         },
         //下一页
-        nextPageChange(data){
-            this.goods.currentPage = data;
-            this.getGoodsList();
+        /*
+            data: $event只能传递第一个默认参数data
+            type: 所属弹窗
+        */
+        nextPageChange(data,type) {
+            //选择税收编码dialog
+            if(type == 'isgoods'){
+                this.goods.currentPage = data;
+                this.getGoodsList();
+            }
+            //选择购买方名称dialog
+            if(type == 'isgmfmc'){
+                this.gmfmcList.pageSize = data;
+                //this.getGmfmcList();  
+            }
         },
         // 双击选择商品
         dbSelectGoods(item,index) {
             this.goods.dialogGoodsIndex = index;
             //console.log(this.formdata.lines[0]["dw"],'this.formdata.lines')
-          this.formdata.lines[index]['xmmc'] = this.formdata.lines[index]['spmc'] = item.spmc;
+          this.formdata.lines[index]['xmmc'] = item.spmc;
           this.formdata.lines[index]['spbm'] = item.spssbm;
           this.formdata.lines[index]['spbh'] = item.spbh;
           this.formdata.lines[index]['commodityId'] = item.spmc;
           this.formdata.lines[index]['sl'] = item.sl;
-          this.dialogTableVisible = false;
+          this.isgoods = false;
+        },
+        // 金额，数量，单价，获得焦点事件
+        inputFocus(event, xmjeShow) {
+          this.inputFocusVal = event.target.value;
+          this.inputFocusMoneyVal = '';
+          if (xmjeShow) {
+            this.inputFocusMoneyVal = event.target.value;
+          }
+        },
+        // 金额，数量，单价，失去焦点事件
+        inputBlur(index, currentInput, event) {
+          let xmsl = this.lines[index].xmsl;
+          let xmdjShow = this.lines[index].xmdjShow;
+          let xmdj = this.lines[index].xmdj;
+          let hsxmdj = this.lines[index].hsxmdj;
+          let xmjeShow = Number(this.lines[index].xmjeShow);
+          let xmje = Number(this.lines[index].xmje);
+          let hsxmje = Number(this.lines[index].hsxmje);
+          let sl = Number(this.lines[index].sl.replace('%', '')) / 100;
+
+          // 调用计算函数（金额，税额）
+          this.calculateMoney(index, xmsl, xmdj, xmdjShow, hsxmdj, xmje, xmjeShow, hsxmje, sl, currentInput);
+
+          // 控制输入0
+          this.lines[index].xmsl = Number(xmsl) === 0 ? '' : xmsl;
+          this.lines[index].xmdjShow = Number(xmdjShow) === 0 ? '' : xmdjShow;
+          this.lines[index].xmjeShow = Number(xmjeShow) === 0 ? '' : xmjeShow;
+        },
+        // 金额，税额计算
+        calculateMoney(index, xmsl, xmdj, xmdjShow, hsxmdj, xmje, xmjeShow, hsxmje, sl, currentInput) {
+          // 金额，税额控制(含税不含税两种情况)
+          // 含税
+          if (String(this.hsbz) === String(this.globalVal.enums_tax)) {
+            // 税额
+            this.lines[index].xmjeShow = this.lines[index].fphxz !== '1' ? Math.abs(xmjeShow) : '-' + Math.abs(xmjeShow);
+            this.lines[index].se = Number(xmjeShow * sl / (1 + sl)).toFixed(2);
+            // 金额
+            this.lines[index].xmje = this.lines[index].fphxz !== '1' ? Number(Math.abs(xmjeShow) - Math.abs(this.lines[index].se)).toFixed(2) : '-' + Number(Math.abs(xmjeShow) - Math.abs(this.lines[index].se)).toFixed(2);
+            this.lines[index].hsxmje = this.lines[index].fphxz !== '1' ? Number(Math.abs(xmjeShow)).toFixed(2) : '-' + Number(Math.abs(xmjeShow)).toFixed(2);
+            this.calculatePrice(index, xmsl, xmdj, xmdjShow, hsxmdj, xmje, xmjeShow, hsxmje, sl, currentInput);
+          }
+          // 不含税
+          /*if (String(this.hsbz) === String(globalVal.enums_noTax)) {
+            // 税额
+            this.lines[index].xmjeShow = this.lines[index].fphxz !== '1' ? Math.abs(xmjeShow) : '-' + Math.abs(xmjeShow);
+            this.lines[index].se = Number(xmjeShow * sl).toFixed(2);
+            // 金额
+            this.lines[index].xmje = this.lines[index].fphxz !== '1' ? Number(Math.abs(xmjeShow)).toFixed(2) : '-' + Number(Math.abs(xmjeShow)).toFixed(2);
+            this.lines[index].hsxmje = this.lines[index].fphxz !== '1' ? Number(Math.abs(xmjeShow) + Math.abs(this.lines[index].se)).toFixed(2) : '-' + Number(Math.abs(xmjeShow) + Math.abs(this.lines[index].se)).toFixed(2);
+            this.calculatePrice(index, xmsl, xmdj, xmdjShow, hsxmdj, xmje, xmjeShow, hsxmje, sl, currentInput);
+          }*/
         },
     }
 }
@@ -841,10 +1042,10 @@ export default {
         font-size: 14px;
     }
     .list-table-container{
-        border-top: 1px solid #ddd;
         margin-top: 20px;
         .dialog_goodsList_ul{
-            width: 762px;
+            width: auto;
+            border-top: 1px solid #ddd;
             max-height: 155px;
             overflow: auto;
             font-size: 0;
@@ -857,6 +1058,7 @@ export default {
                 div{
                     display: table-cell;
                     vertical-align: middle;
+                    min-width: 50px;
                     height: auto;
                     line-height: 18px;
                     padding: 6px 0;
@@ -866,15 +1068,30 @@ export default {
                     font-size: 12px;
                 }
                 div:nth-child(1){
-                      width: 50px;
-                      border-left: none;}
-                div:nth-child(2){
-                      width: 310px;}
-                div:nth-child(3){
-                      width: 310px;}
-                div:nth-child(4){
-                    width: 90px;}
+                    width: 50px;
+                    border-left: none;
+                }
             }
+        }
+    }
+    .goodsDialog{
+        .dialog_goodsList_ul li{
+            div:nth-child(2){
+                  width: 310px;}
+            div:nth-child(3){
+                  width: 310px;}
+            div:nth-child(4){
+                width: 90px;}
+        }
+    }
+    .gmfmcDialog{
+        .dialog_goodsList_ul li{
+            div:nth-child(2){
+                  width: 90px;}
+            div:nth-child(3){
+                  width: 90px;}
+            div:nth-child(4){
+                width: 320px;}
         }
     }
 </style>
