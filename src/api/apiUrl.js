@@ -48,7 +48,8 @@ const apiPath = {
     wSpecial: {
       list: 'invoice/search',
       batchIssue: '/invoice/batchIssue',
-      billSendBack: '/invoice/billSendBack'
+      billSendBack: '/invoice/billSendBack',
+      billDetail: 'invoice/billDetail'
     }
   }
 }

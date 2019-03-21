@@ -3,7 +3,7 @@ import userAPI from './user'
 import tableAPI from './table'
 import systemAPI from './system/organization'
 import orderOpenMessageAPI from './queryStatistics/orderOpenMessage'
-
+import wSpecialAPI from './invoice/wSpecial'
 // Fix an issue with setting withCredentials = true, cross-domain request lost cookies
 // https://github.com/nuysoft/Mock/issues/300
 Mock.XHR.prototype.proxy_send = Mock.XHR.prototype.send
@@ -29,4 +29,6 @@ Mock.mock(/\/organization\/nodeDetail/, 'post', systemAPI.nodeDetail)
 Mock.mock(/\/organization\/list/, 'post', systemAPI.getlist)
 // orderOpenMessage
 Mock.mock(/\/orderOpenMessage\/getTableList/, 'post', orderOpenMessageAPI.getTableList)
+// invoice
+Mock.mock(/\/invoice\/billDetail/, 'post', wSpecialAPI.getBillDetail)
 export default Mock
