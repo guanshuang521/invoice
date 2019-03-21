@@ -167,6 +167,9 @@ export default {
       'roles'
     ])
   },
+  mounted() {
+    this.getTastData()
+  },
   methods: {
     change(a) {
       this.dialogVisible = false
