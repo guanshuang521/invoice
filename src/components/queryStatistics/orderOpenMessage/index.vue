@@ -1,11 +1,6 @@
 <template>
-  <!-- 新增弹窗 -->
-  <el-dialog
-    :visible.sync="showDialog"
-    :before-close="handleClose"
-    title="发票信息"
-    width="750px"
-    custom-class="add-customer">
+  <div>
+    <!-- 新增弹窗 -->
     <el-table
       :data="list"
       element-loading-text="Loading"
@@ -65,16 +60,11 @@
         <!-- <span></span> -->
       </el-pagination>
     </div>
-  </el-dialog>
+  </div>
 </template>
 <script type="application/ecmascript">
-import Bus from '@/api/bus'
 export default {
   props: {
-    dialogVisible: {
-      type: Boolean,
-      default: false
-    }
   },
   data() {
     return {
@@ -98,14 +88,8 @@ export default {
     }
   },
   watch: {
-    dialogVisible(n, o) {
-      this.showDialog = n
-    }
   },
   created() {
-    Bus.$on('show-dialog', (data) => {
-      this.showDialog = true
-    })
   },
   methods: {
     handleSelectionChange(val) { // 表格选中数据发生变化
@@ -118,9 +102,6 @@ export default {
       // console.log(`当前页: ${val}`)
     },
     handleClose() { // 关闭弹窗
-      this.showDialog = false
-      Bus.$emit('hide-dialog')
-      // this.$emit('changeState', false)
     }
   }
 }
