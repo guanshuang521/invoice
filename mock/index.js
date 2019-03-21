@@ -3,12 +3,12 @@
  * @Author: zhangzheng
  * @LastEditors: zhangzheng
  * @Date: 2019-03-19 09:38:33
- * @LastEditTime: 2019-03-21 17:43:41
+ * @LastEditTime: 2019-03-21 17:48:23
  */
 import Mock from 'mockjs'
 import userAPI from './user'
 import tableAPI from './table'
-import systemAPI from './system'
+// import systemAPI from './system'
 import orderListAPI from './orderList'
 
 import systemAPI from './system/organization'
