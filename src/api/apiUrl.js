@@ -1,3 +1,10 @@
+/*
+ * @Description:
+ * @Author: zhangzheng
+ * @LastEditors: zhangzheng
+ * @Date: 2019-03-19 09:38:33
+ * @LastEditTime: 2019-03-21 17:44:27
+ */
 /**
  * Created by linzb on 2019/3/1.
  */
@@ -37,7 +44,18 @@ const apiPath = {
       list: ''
     },
     role: {
-      list: ''
+      selectByRole: '/role/selectByRole ', // 角色信息查询
+      deleteRole: '/role/deleteRole', // 角色信息删除
+      insertRole: '/role/insertRole', // 角色信息新增
+      updateRole: '/role/updateRole' // 角色信息编辑
+    },
+    customer: {
+      selectByCustomer: '/customer/selectByCustomer', // 购方信息查询
+      deleteCustomer: '/customer/deleteCustomer', // 购方信息删除
+      insertCustomer: '/customer/insertCustomer' // 购方信息新增
+    },
+    resource: {
+      selectByResource: '/resource/selectByResource' // 获取菜单列表
     },
     invoiceModel: {
       list: ''
@@ -47,9 +65,20 @@ const apiPath = {
       newAdd: ''
     }
   },
+  order: {
+    list: '/order/list'
+  },
   queryStatistics: {
     orderOpenMessage: {
       getTableList: '/orderOpenMessage/getTableList'
+    }
+  },
+  invoice: {
+    wSpecial: {
+      list: 'invoice/search',
+      batchIssue: '/invoice/batchIssue',
+      billSendBack: '/invoice/billSendBack',
+      billDetail: 'invoice/billDetail'
     }
   }
 }

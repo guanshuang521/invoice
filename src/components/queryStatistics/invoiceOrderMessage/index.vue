@@ -1,11 +1,11 @@
+/**
+* @author Wujy
+* @date 2019/3/21
+* @Description:发票订单信息查询
+*/
 <template>
-  <!-- 新增弹窗 -->
-  <el-dialog
-    :visible.sync="showDialog"
-    :before-close="handleClose"
-    title="发票信息"
-    width="750px"
-    custom-class="add-customer">
+  <div>
+    <!-- 新增弹窗 -->
     <el-table
       :data="list"
       element-loading-text="Loading"
@@ -17,37 +17,37 @@
           {{ scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column label="发票代码" align="center">
+      <el-table-column label="单据编号" align="center">
         <template slot-scope="scope">
           {{ scope.row.customerName }}
         </template>
       </el-table-column>
-      <el-table-column label="发票号码" align="center">
+      <el-table-column label="单据类型" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.customerTaxNumber }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="发票类型" align="center">
+      <el-table-column label="购方名称" align="center">
         <template slot-scope="scope">
           {{ scope.row.address }}
         </template>
       </el-table-column>
-      <el-table-column label="金额（不含税）" align="center">
+      <el-table-column label="购方税号" align="center">
         <template slot-scope="scope">
           {{ scope.row.email }}
         </template>
       </el-table-column>
-      <el-table-column label="税额" align="center">
+      <el-table-column label="金额（不含税）" align="center">
         <template slot-scope="scope">
           {{ scope.row.contacts }}
         </template>
       </el-table-column>
-      <el-table-column label="税价合计" align="center">
+      <el-table-column label="税额" align="center">
         <template slot-scope="scope">
           {{ scope.row.contactNumber }}
         </template>
       </el-table-column>
-      <el-table-column label="备注" align="center">
+      <el-table-column label="价税合计" align="center">
         <template slot-scope="scope">
           {{ scope.row.phone }}
         </template>
@@ -65,16 +65,11 @@
         <!-- <span></span> -->
       </el-pagination>
     </div>
-  </el-dialog>
+  </div>
 </template>
 <script type="application/ecmascript">
-import Bus from '@/api/bus'
 export default {
   props: {
-    dialogVisible: {
-      type: Boolean,
-      default: false
-    }
   },
   data() {
     return {
@@ -98,14 +93,8 @@ export default {
     }
   },
   watch: {
-    dialogVisible(n, o) {
-      this.showDialog = n
-    }
   },
   created() {
-    Bus.$on('show-dialog', (data) => {
-      this.showDialog = true
-    })
   },
   methods: {
     handleSelectionChange(val) { // 表格选中数据发生变化
@@ -118,9 +107,6 @@ export default {
       // console.log(`当前页: ${val}`)
     },
     handleClose() { // 关闭弹窗
-      this.showDialog = false
-      Bus.$emit('hide-dialog')
-      // this.$emit('changeState', false)
     }
   }
 }

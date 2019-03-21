@@ -3,13 +3,13 @@
     <!-- <div class="dashboard-text">name:{{ name }}</div>
     <div class="dashboard-text">roles:<span v-for="role in roles" :key="role">{{ role }}</span></div> -->
     <div class="search-box">
-      <div class="search-item">
+      <div class="search-items">
         <span>角色名称</span>
         <el-input v-model="searchs.roleName"/>
       </div>
-      <div class="search-item">
+      <div class="search-items">
         <span>有效标志</span>
-        <el-select v-model="searchs.sign" placeholder="请选择">
+        <el-select v-model="searchs.status" placeholder="请选择">
           <el-option label="有效" value="1"/>
           <el-option label="无效" value="0"/>
         </el-select>
@@ -32,8 +32,9 @@
         @selection-change="handleSelectionChange">
         <el-table-column
           type="selection"
-          align="center"/>
-        <el-table-column align="center">
+          align="center"
+          width="34px"/>
+        <el-table-column align="center" width="31px">
           <template slot-scope="scope">
             {{ scope.$index + 1 }}
           </template>
@@ -45,14 +46,14 @@
         </el-table-column>
         <el-table-column label="有效标志" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.sign == 1 && '有效' || scope.row.sign == 0 && '无效' }}</span>
+            <span>{{ scope.row.status == 1 && '有效' || scope.row.status == 0 && '无效' }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="角色类型" align="center">
+        <!-- <el-table-column label="角色类型" align="center">
           <template slot-scope="scope">
-            {{ scope.row.roleType }}
+            {{ scope.row.roleCode }}
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button
@@ -79,14 +80,45 @@
     <el-dialog
       :title="dialogType === 'add' && '新增角色' || dialogType === 'edit' && '权限分配' || ''"
       :visible.sync="dialogVisible"
-      :before-close="handleClose"
+      :before-close="() => handleClose('form')"
       width="530px"
       custom-class="add-edit-role">
-      <div>
+      <el-form ref="form" :rules="rules" :model="form" label-width="80px">
+        <el-form-item label="角色名称" prop="roleName">
+          <el-input v-model="form.roleName" :disabled="dialogType === 'edit'"/>
+        </el-form-item>
+        <el-form-item label="有效标志" prop="status">
+          <el-select v-model="form.status" :disabled="dialogType === 'edit'" placeholder="请选择">
+            <el-option label="有效" value="1"/>
+            <el-option label="无效" value="0"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="菜单权限"/>
+        <el-form-item label="" class="tree-box">
+          <el-tree
+            ref="tree2"
+            :data="treeData"
+            :props="defaultProps"
+            :filter-node-method="filterNode"
+            :default-checked-keys="form.resourceId"
+            node-key="id"
+            class="filter-tree"
+            default-expand-all
+            show-checkbox
+            @check="handleCheck"
+          />
+        </el-form-item>
+        <el-form-item class="button">
+          <el-button v-if="dialogType === 'add'" type="primary" @click="addRoleFn('form')">添加</el-button>
+          <el-button v-if="dialogType === 'edit'" type="primary" @click="editRoleFn('form')">保存</el-button>
+          <el-button type="primary" @click="handleClose('form')">取消</el-button>
+        </el-form-item>
+      </el-form>
+      <!-- <div>
         <span><span class="mark">*</span>角色名称</span>
-        <el-input v-model="newRole.roleName" :disabled="dialogType === 'edit'"/>
+        <el-input v-model="form.roleName" :disabled="dialogType === 'edit'"/>
         <span><span class="mark">*</span>有效标志</span>
-        <el-select v-model="newRole.sign" :disabled="dialogType === 'edit'" placeholder="请选择">
+        <el-select v-model="form.status" :disabled="dialogType === 'edit'" placeholder="请选择">
           <el-option label="有效" value="1"/>
           <el-option label="无效" value="0"/>
         </el-select>
@@ -104,34 +136,50 @@
             @check-change="handleCheckChange"
           />
         </div>
-      </div>
-      <span slot="footer" class="dialog-footer">
+      </div> -->
+      <!-- <span slot="footer" class="dialog-footer">
         <el-button @click="handleClose">取 消</el-button>
         <el-button type="primary" @click="addRoleFn">确 定</el-button>
-      </span>
+      </span> -->
     </el-dialog>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import { arrayToTree } from '@/utils/public'
+import { getRoleList, deleteRole, insertRole, updateRole, selectByResource } from '@/api/system/role'
 
 export default {
   name: 'Dashboard',
   data() {
     return {
-      list: [
+      list: [],
+      list0: [
         {
           roleName: '管理员',
-          sign: 1,
-          roleType: '管理员',
-          id: 0
+          status: '1',
+          roleCode: '管理员',
+          id: 0,
+          resourceId: []
+        }, {
+          roleName: '对方v',
+          status: '1',
+          roleCode: '认同',
+          id: 1,
+          resourceId: []
+        }, {
+          roleName: '额度',
+          status: '1',
+          roleCode: '如同',
+          id: 2,
+          resourceId: []
         }
       ],
       listLoading: false,
       searchs: {
         roleName: '',
-        sign: ''
+        status: ''
       },
       checkedList: [],
       currentPage: 1,
@@ -139,52 +187,26 @@ export default {
       total: 1000,
       dialogVisible: false,
       dialogType: '',
-      newRole: {
+      form: {
         roleName: '',
-        sign: 1,
-        roleType: '普通角色'
+        status: '',
+        roleCode: '',
+        resourceId: []
+      },
+      rules: {
+        roleName: [
+          { required: true, message: '角色名称不能为空', trigger: 'blur' }
+        ],
+        status: [
+          { required: true, message: '有效标志不能为空', trigger: 'blur' }
+        ]
       },
       defaultProps: {
         children: 'children',
-        label: 'label'
+        label: 'lable'
       },
-      treeData: [
-        {
-          id: 1,
-          label: 'Level one 1',
-          children: [{
-            id: 4,
-            label: 'Level two 1-1',
-            children: [{
-              id: 9,
-              label: 'Level three 1-1-1'
-            }, {
-              id: 10,
-              label: 'Level three 1-1-2'
-            }]
-          }]
-        }, {
-          id: 2,
-          label: 'Level one 2',
-          children: [{
-            id: 5,
-            label: 'Level two 2-1'
-          }, {
-            id: 6,
-            label: 'Level two 2-2'
-          }]
-        }, {
-          id: 3,
-          label: 'Level one 3',
-          children: [{
-            id: 7,
-            label: 'Level two 3-1'
-          }, {
-            id: 8,
-            label: 'Level two 3-2'
-          }]
-        }
-      ]
+      treeData: [],
+      resourceId: []
     }
   },
   computed: {
@@ -194,45 +216,121 @@ export default {
     ])
   },
   created() {
-    // this.fetchData()
+    this.fetchData()
   },
   methods: {
     fetchData() {
       this.listLoading = true
-      // getList(this.listQuery).then(response => {
-      //   this.list = response.data.items
-      //   this.listLoading = false
-      // })
+      var params = JSON.parse(JSON.stringify(this.searchs))
+      params.pageSize = this.pageSize
+      params.currentPage = this.currentPage
+      getRoleList(params).then(response => {
+        console.log(response)
+        if (response.code === '0000') {
+          this.list = response.data.list
+          this.total = response.data.count
+        }
+        this.listLoading = false
+      })
     },
-    searchFn() {},
+    getResource() {
+      var params = {}
+      selectByResource(params).then(response => {
+        console.log(response)
+        if (response.code === '0000') {
+          this.treeData = arrayToTree(response.data.list)
+          console.log(this.treeData)
+        }
+      })
+    },
+    searchFn() {
+      console.log(this.searchs)
+      this.fetchData()
+    },
     initSearch() {
       this.searchs = {
         roleName: '',
-        sign: ''
+        status: ''
       }
     },
     handleSelectionChange(val) { // 表格选中数据发生变化
-      this.checkedList = val
+      this.checkedList = []
+      for (var i = 0; i < val.length; i++) {
+        this.checkedList.push(val[i].id)
+      }
     },
     addRole() {
+      this.getResource()
       this.dialogVisible = true
       this.dialogType = 'add'
     },
-    addRoleFn() {
-      this.dialogVisible = false
-      this.dialogType = ''
+    addRoleFn(formName) { // 添加角色
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          var params = JSON.parse(JSON.stringify(this.form))
+          params.resourceId = this.resourceId
+          insertRole(params).then(response => {
+            if (response.code === '0000') {
+              this.fetchData()
+            }
+            this.dialogVisible = false
+            this.dialogType = ''
+            this.$refs[formName].resetFields()
+            this.clearForm()
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    editRoleFn(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          var params = JSON.parse(JSON.stringify(this.form))
+          params.resourceId = this.resourceId
+          console.log(params)
+          updateRole(params).then(response => {
+            if (response.code === '0000') {
+              this.fetchData()
+            }
+            this.dialogVisible = false
+            this.dialogType = ''
+            this.$refs[formName].resetFields()
+            this.clearForm()
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
     },
     delRole() { // 删除数据
+      if (this.checkedList.length === 0) {
+        this.$message({
+          type: 'info',
+          message: '请先选择表格中的数据'
+        })
+        return false
+      }
       this.$confirm('确定要删除选择的数据吗?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
         // type: 'warning',
         // center: true
       }).then(() => {
-        console.log(this.checkedList)
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
+        var params = {
+          ids: this.checkedList
+        }
+        deleteRole(params).then(response => {
+          console.log(response)
+          if (response.code === '0000') {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+            this.fetchData()
+          }
         })
       }).catch(() => {
         // this.$message({
@@ -241,9 +339,13 @@ export default {
         // });
       })
     },
-    handleEdit() { // 权限分配
+    handleEdit(index, item) { // 权限分配
+      console.log(item.resourceId)
+      this.getResource()
       this.dialogVisible = true
       this.dialogType = 'edit'
+      this.form = JSON.parse(JSON.stringify(item))
+      this.form.status = item.status.toString()
     },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`)
@@ -251,15 +353,38 @@ export default {
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`)
     },
-    handleClose() { // 关闭弹窗
+    handleClose(formName) { // 关闭弹窗
       this.dialogVisible = false
       this.dialogType = ''
+      this.$refs[formName].resetFields()
+      this.clearForm()
+    },
+    clearForm() {
+      for (var k in this.form) {
+        if (Object.prototype.toString.call(this.form[k]) === '[object String]') {
+          this.form[k] = ''
+        }
+        if (Object.prototype.toString.call(this.form[k]) === '[object Number]') {
+          this.form[k] = 0
+        }
+        if (Object.prototype.toString.call(this.form[k]) === '[object Array]') {
+          this.form[k] = []
+        }
+      }
     },
     filterNode(value, data, node) { // 对树节点进行筛选时执行的方法
       return true
     },
-    handleCheckChange(data, checked, indeterminate) {
+    handleCheckChange(data, checked, indeterminate) { // @check-change="handleCheckChange"
       console.log(data, checked, indeterminate)
+    },
+    handleCheck(data, checks) {
+      console.log(data, checks, checks.checkedNodes)
+      var arr = []
+      for (var i = 0; i < checks.checkedNodes.length; i++) {
+        arr.push(checks.checkedNodes[i].id)
+      }
+      this.resourceId = arr
     }
   } // ,
   // filters: {
@@ -280,7 +405,7 @@ export default {
   &-container {
     margin: 30px;
     .search-box {
-      .search-item {
+      .search-items {
         // float: left;
         display: inline-block;
         span {
@@ -291,6 +416,7 @@ export default {
     .button-box {
       margin-top: 10px;
       margin-bottom: 10px;
+      margin-left: 0;
     }
   }
   &-text {
@@ -304,16 +430,16 @@ export default {
     color: red;
   }
   .tree-box {
-    width: 440px;
-    max-height: 222px;
-    overflow: auto;
+    // width: 440px;
+    // max-height: 222px;
+    // overflow: auto;
   }
 }
 </style>
 <style rel="stylesheet/scss" lang="scss">
 .dashboard-container {
   .search-box {
-    .search-item {
+    .search-items {
       .el-input {
         max-width: 105px;
         // height: 25px;
@@ -325,6 +451,26 @@ export default {
   .el-input {
     max-width: 150px;
     // height: 25px;
+  }
+  .el-form:after {
+    content: '';
+    display: block;
+    clear: both;
+  }
+  .el-form-item {
+    float: left;
+    .el-input {
+      max-width: 150px;
+    }
+  }
+  .tree-box .el-form-item__content {
+    margin-left: 20px!important;
+    width: 440px;
+    max-height: 222px;
+    overflow: auto;
+  }
+  .button {
+    margin-bottom: 0;
   }
 }
 </style>

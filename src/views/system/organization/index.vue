@@ -1,3 +1,8 @@
+/**
+* @author Linzb
+* @date 2019/3/21
+* @Description: 系统管理->组织机构管理
+*/
 <template>
   <div class="organization-container">
     <el-row :gutter="10">
@@ -390,11 +395,6 @@ export default {
             type: 'error',
             message: err.msg
           })
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
         })
       })
     },
