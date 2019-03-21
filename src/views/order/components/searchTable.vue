@@ -3,7 +3,7 @@
  * @Author: zhangzheng
  * @LastEditors: zhangzheng
  * @Date: 2019-03-15 09:50:49
- * @LastEditTime: 2019-03-20 17:00:48
+ * @LastEditTime: 2019-03-21 17:16:57
  -->
 <template>
   <div class="searchTable_wrapper">
@@ -34,7 +34,7 @@
         :width="column.width"
         show-overflow-tooltip
         header-align="center"/>
-      <el-table-column label="操作">
+      <el-table-column v-if="operation.isShow" label="操作">
         <template slot-scope="scope">
           <el-button
             v-for="item in operation.data"
@@ -47,14 +47,19 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination
-      :current-page="dataSource.currentPage"
-      :page-sizes="[5, 10, 20, 50,100]"
-      :page-size="dataSource.pageSize"
-      :total="dataSource.count"
-      layout="total, sizes, prev, pager, next, jumper"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"/>
+    <div class="pagination_box">
+      <el-pagination
+        :current-page="dataSource.currentPage"
+        :page-sizes="[5, 10, 20, 50,100]"
+        :page-size="dataSource.pageSize"
+        :total="dataSource.count"
+        layout="total, sizes, prev, pager, next, jumper"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"/>
+      <span v-show="dataSource.list&&dataSource.list.length>1" class="hjje">合计金额:{{ dataSource.total }}</span>
+      <span v-show="dataSource.list&&dataSource.list.length>1" class="hjse">合计税额:{{ dataSource.total }}</span>
+      <span v-show="dataSource.list&&dataSource.list.length>1" class="jshj">加税合计:{{ dataSource.total }}</span>
+    </div>
   </div>
 </template>
 
@@ -109,7 +114,10 @@ export default {
 .searchTable {
   &_wrapper {
      padding: 0 20px;
-     .el-table__header tr,
+     background-color: #fff;
+     border-top: 1px solid #d8dce5;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12), 0 0 3px 0 rgba(0, 0, 0, 0.04);
+  .el-table__header tr,
   .el-table__header th {
     padding: 0;
     .cell{
@@ -127,6 +135,18 @@ export default {
       height: 40px;
       line-height: 40px;
     }
+}
+.pagination_box{
+display: flex;
+align-items: center;
+.hjje,.hjse,.jshj{
+color: #ff0000;
+padding-left: 20px;
+float: right;
+}
+.hjje{
+  margin-left: 20px;
+}
 }
   }
 }

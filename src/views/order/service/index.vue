@@ -3,11 +3,16 @@
  * @Author: zhangzheng
  * @LastEditors: zhangzheng
  * @Date: 2019-03-13 10:10:12
- * @LastEditTime: 2019-03-20 17:04:14
+ * @LastEditTime: 2019-03-21 17:12:31
  -->
 <template>
   <div class="dashboard-container">
-    <search-Form :moudel-type="moudelType" :config="queryConditionsForm" :data.sync="searchConditions"/>
+    <search-Form :moudel-type="moudelType" :config="queryConditionsForm" :data.sync="searchConditions" :data-source="dataSource"/>
+    <div class="btn_wrapper">
+      <el-button type="primary" icon="el-icon-edit">同一购方订单生成预制发票</el-button>
+      <el-button type="primary" icon="el-icon-circle-check">勾选订单生成预制发票</el-button>
+      <el-button type="primary" icon="el-icon-upload">导出</el-button>
+    </div>
     <search-Table
       :data-source="dataSource"
       :columns="columns"
@@ -40,7 +45,11 @@ export default {
         orderState: ''
       },
       queryConditionsForm: [],
-      dataSource: {}, // 数据源
+      dataSource: {
+        currentPage: 1,
+        count: 0,
+        pageSize: 5
+      }, // 数据源
       columns: [],
       operation: {}
     }
@@ -51,7 +60,7 @@ export default {
   mounted() {
     this.queryConditionsForm = orderConfig.queryConditionsForm
     this.columns = orderConfig.columns
-    this.operation = orderConfig.operation
+    // this.operation = orderConfig.operation
   },
   methods: {
     getList() {
@@ -88,6 +97,9 @@ export default {
 .dashboard {
   &-container {
     margin: 0px;
+    .btn_wrapper{
+      padding: 10px 20px
+    }
   }
   &-text {
     font-size: 30px;

@@ -3,13 +3,14 @@
  * @Author: zhangzheng
  * @LastEditors: zhangzheng
  * @Date: 2019-03-19 16:36:21
- * @LastEditTime: 2019-03-20 16:41:41
+ * @LastEditTime: 2019-03-21 11:37:20
  */
 const Order = {
   Orderlist: {
     count: 54,
     currentPage: 1,
     pageSize: 5,
+    total: '10020.00',
     list: [
       {
         createTime: '2016-05-02',

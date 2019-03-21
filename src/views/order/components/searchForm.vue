@@ -3,13 +3,13 @@
  * @Author: zhangzheng
  * @LastEditors: zhangzheng
  * @Date: 2019-03-15 09:50:29
- * @LastEditTime: 2019-03-20 16:56:19
+ * @LastEditTime: 2019-03-21 17:31:50
  -->
 
 <template>
   <div class="searchForm_wrapper">
     <el-form ref="data" :model="data" :inline="true" label-width="120px" size="mini" class="demo-form-inline" >
-      <el-form-item v-for="item in config" :label="item.title" :key="item.code" :prop="item.code" class="table-header-item">
+      <el-form-item v-for="(item,index) in config" v-show="index<3 || ishow" :label="item.title" :key="item.code" :prop="item.code" class="table-header-item">
         <el-select v-if="item.type === 'select'" v-model="data[item.code]" :placeholder="`请选择${item.title}`">
           <el-option v-for="option in item.options" :key="option.id" :value="option.id" :label="option.text"/>
         </el-select>
@@ -26,11 +26,12 @@
             </el-form-item>
           </el-col>
         </el-form-item>
+        <el-form-item v-else-if="item.type === 'button'" style="padding-left:100px;margin-bottom:0px;">
+          <el-button type="primary" @click="onSubmit">查询</el-button>
+          <el-button type="primary" @click="reset('data')">重置</el-button>
+          <el-button v-show="config.length>3" type="primary" @click="more">{{ moreInfo }}</el-button>
+        </el-form-item>
         <el-input v-else v-model="data[item.code]" :placeholder="`请输入${item.title}`"/>
-      </el-form-item>
-      <el-form-item style="padding-left:100px;">
-        <el-button type="primary" @click="onSubmit">查询</el-button>
-        <el-button type="primary" @click="reset('data')">重置</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -72,6 +73,16 @@ export default {
     data: {
       type: Object,
       default: () => {}
+    },
+    dataSource: { // 表格数据源
+      type: Object,
+      default: () => {}
+    }
+  },
+  data() {
+    return {
+      ishow: false,
+      moreInfo: '更多条件'
     }
   },
   mounted() {
@@ -86,11 +97,18 @@ export default {
         this.$refs[data].resetFields()
         // this.$emit('update:data', Object.assign({}, this._copy))
         // this.onSubmit()
+        this.dataSource.list = []
+        this.dataSource.currentPage = 1
+        this.dataSource.count = 0
         this.$message({
           message: '查询条件重置成功',
           type: 'success'
         })
       })
+    },
+    more() {
+      this.ishow = !this.ishow
+      this.moreInfo = this.ishow ? '收起条件' : '更多条件'
     }
   }
 }
@@ -98,8 +116,10 @@ export default {
 <style rel="stylesheet/scss" lang="scss">
 .searchForm {
   &_wrapper {
-    padding: 20px;
-    border-bottom: 1px solid #999;
+    padding: 20px 20px 0  20px;
+    border-bottom: 1px solid #d8dce5;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12), 0 0 3px 0 rgba(0, 0, 0, 0.04);
+    background-color: #fff;
     .fixedclass.el-form-item--mini.el-form-item{
       margin-bottom: 0px !important;
       .el-col-11 .el-form-item.el-form-item--mini{
