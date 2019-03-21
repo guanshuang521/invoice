@@ -1,11 +1,11 @@
 <template>
   <div class="dashboard-container">
     <div class="search-box">
-      <div class="search-item">
+      <div class="search-items">
         <span>客户名称</span>
         <el-input v-model="searchs.khmc"/>
       </div>
-      <div class="search-item">
+      <div class="search-items">
         <span>客户税号</span>
         <el-input v-model="searchs.khsh"/>
       </div>
@@ -432,7 +432,7 @@ export default {
   &-container {
     margin: 30px;
     .search-box {
-      .search-item {
+      .search-items {
         // float: left;
         display: inline-block;
         span {
@@ -443,6 +443,7 @@ export default {
     .button-box {
       margin-top: 10px;
       margin-bottom: 10px;
+      margin-left: 0;
     }
   }
   &-text {
@@ -454,7 +455,7 @@ export default {
 <style rel="stylesheet/scss" lang="scss">
 .dashboard-container {
   .search-box {
-    .search-item {
+    .search-items {
       .el-input {
         max-width: 105px;
         // height: 25px;

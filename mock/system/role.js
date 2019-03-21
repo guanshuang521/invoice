@@ -13,7 +13,8 @@ var role = {
       orgId: 0,
       roleCode: '管理员',
       roleName: '管理员',
-      status: 1
+      status: 1,
+      resourceId: [10]
     }, {
       createId: 0,
       createTime: 'string',
@@ -27,7 +28,8 @@ var role = {
       orgId: 0,
       roleCode: '认同',
       roleName: '对方v',
-      status: 0
+      status: 0,
+      resourceId: []
     }, {
       createId: 0,
       createTime: 'string',
@@ -41,7 +43,8 @@ var role = {
       orgId: 0,
       roleCode: '如同',
       roleName: '额度',
-      status: 1
+      status: 1,
+      resourceId: []
     }
   ],
   'node-tree': [
@@ -388,12 +391,38 @@ export default {
         orgId: 0,
         roleCode: '管理员',
         roleName: body.roleName,
-        status: Number(body.status)
+        status: Number(body.status),
+        resourceId: body.resourceId
       }
       return {
         code: '0000',
         data: {},
         message: '已新增角色'
+      }
+    }
+    return {
+      code: 50008,
+      message: 'Login failed, unable to get user details.'
+    }
+  },
+  updateRole: res => {
+    const body = JSON.parse(res.body)
+    var info = role['list']
+    console.log(body)
+    if (info) {
+      for (var i = 0; i < info.length; i++) {
+        if (info[i].id === body.id) {
+          for (var k in body) {
+            if (info[i][k]) {
+              info[i][k] = body[k]
+            }
+          }
+        }
+      }
+      return {
+        code: '0000',
+        data: {},
+        message: '已编辑角色'
       }
     }
     return {

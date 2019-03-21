@@ -33,6 +33,7 @@ Mock.mock(/\/organization\/list/, 'post', systemAPI.getlist)
 Mock.mock(/\/role\/selectByRole/, 'post', roleAPI.selectByRole)
 Mock.mock(/\/role\/deleteRole/, 'post', roleAPI.deleteRole)
 Mock.mock(/\/role\/insertRole/, 'post', roleAPI.insertRole)
+Mock.mock(/\/role\/updateRole/, 'post', roleAPI.updateRole)
 Mock.mock(/\/resource\/selectByResource/, 'post', roleAPI.selectByResource)
 // Customer
 Mock.mock(/\/customer\/selectByCustomer/, 'post', customerAPI.selectByCustomer)

@@ -3,11 +3,11 @@
     <!-- <div class="dashboard-text">name:{{ name }}</div>
     <div class="dashboard-text">roles:<span v-for="role in roles" :key="role">{{ role }}</span></div> -->
     <div class="search-box">
-      <div class="search-item">
+      <div class="search-items">
         <span>角色名称</span>
         <el-input v-model="searchs.roleName"/>
       </div>
-      <div class="search-item">
+      <div class="search-items">
         <span>有效标志</span>
         <el-select v-model="searchs.status" placeholder="请选择">
           <el-option label="有效" value="1"/>
@@ -100,7 +100,8 @@
             :data="treeData"
             :props="defaultProps"
             :filter-node-method="filterNode"
-            :default-checked-keys="[]"
+            :default-checked-keys="form.resourceId"
+            node-key="id"
             class="filter-tree"
             default-expand-all
             show-checkbox
@@ -147,7 +148,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { arrayToTree } from '@/utils/public'
-import { getRoleList, deleteRole, insertRole, selectByResource } from '@/api/system/role'
+import { getRoleList, deleteRole, insertRole, updateRole, selectByResource } from '@/api/system/role'
 
 export default {
   name: 'Dashboard',
@@ -160,19 +161,19 @@ export default {
           status: '1',
           roleCode: '管理员',
           id: 0,
-          checkTree: []
+          resourceId: []
         }, {
           roleName: '对方v',
           status: '1',
           roleCode: '认同',
           id: 1,
-          checkTree: []
+          resourceId: []
         }, {
           roleName: '额度',
           status: '1',
           roleCode: '如同',
           id: 2,
-          checkTree: []
+          resourceId: []
         }
       ],
       listLoading: false,
@@ -190,7 +191,7 @@ export default {
         roleName: '',
         status: '',
         roleCode: '',
-        checkTree: []
+        resourceId: []
       },
       rules: {
         roleName: [
@@ -202,9 +203,10 @@ export default {
       },
       defaultProps: {
         children: 'children',
-        label: 'title'
+        label: 'lable'
       },
-      treeData: []
+      treeData: [],
+      resourceId: []
     }
   },
   computed: {
@@ -219,7 +221,6 @@ export default {
   methods: {
     fetchData() {
       this.listLoading = true
-      // this.list0 = JSON.parse(JSON.stringify(this.list))
       var params = JSON.parse(JSON.stringify(this.searchs))
       params.pageSize = this.pageSize
       params.currentPage = this.currentPage
@@ -267,15 +268,15 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           var params = JSON.parse(JSON.stringify(this.form))
+          params.resourceId = this.resourceId
           insertRole(params).then(response => {
             if (response.code === '0000') {
               this.fetchData()
             }
             this.dialogVisible = false
             this.dialogType = ''
-            for (var k in this.form) {
-              this.form[k] = ''
-            }
+            this.$refs[formName].resetFields()
+            this.clearForm()
           })
         } else {
           console.log('error submit!!')
@@ -286,18 +287,18 @@ export default {
     editRoleFn(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.dialogVisible = false
-          this.dialogType = ''
-          console.log(this.form)
-          for (var i = 0; i < this.list0.length; i++) {
-            if (this.list0[i].id === this.form.id) {
-              this.list0.splice(i, 1, this.form)
+          var params = JSON.parse(JSON.stringify(this.form))
+          params.resourceId = this.resourceId
+          console.log(params)
+          updateRole(params).then(response => {
+            if (response.code === '0000') {
+              this.fetchData()
             }
-          }
-          this.list = JSON.parse(JSON.stringify(this.list0)) // 修改显示数据
-          for (var k in this.form) {
-            this.form[k] = ''
-          }
+            this.dialogVisible = false
+            this.dialogType = ''
+            this.$refs[formName].resetFields()
+            this.clearForm()
+          })
         } else {
           console.log('error submit!!')
           return false
@@ -339,10 +340,11 @@ export default {
       })
     },
     handleEdit(index, item) { // 权限分配
+      console.log(item.resourceId)
       this.getResource()
       this.dialogVisible = true
       this.dialogType = 'edit'
-      this.form = item
+      this.form = JSON.parse(JSON.stringify(item))
       this.form.status = item.status.toString()
     },
     handleSizeChange(val) {
@@ -355,6 +357,20 @@ export default {
       this.dialogVisible = false
       this.dialogType = ''
       this.$refs[formName].resetFields()
+      this.clearForm()
+    },
+    clearForm() {
+      for (var k in this.form) {
+        if (Object.prototype.toString.call(this.form[k]) === '[object String]') {
+          this.form[k] = ''
+        }
+        if (Object.prototype.toString.call(this.form[k]) === '[object Number]') {
+          this.form[k] = 0
+        }
+        if (Object.prototype.toString.call(this.form[k]) === '[object Array]') {
+          this.form[k] = []
+        }
+      }
     },
     filterNode(value, data, node) { // 对树节点进行筛选时执行的方法
       return true
@@ -368,7 +384,7 @@ export default {
       for (var i = 0; i < checks.checkedNodes.length; i++) {
         arr.push(checks.checkedNodes[i].id)
       }
-      this.form.checkTree = arr
+      this.resourceId = arr
     }
   } // ,
   // filters: {
@@ -389,7 +405,7 @@ export default {
   &-container {
     margin: 30px;
     .search-box {
-      .search-item {
+      .search-items {
         // float: left;
         display: inline-block;
         span {
@@ -400,6 +416,7 @@ export default {
     .button-box {
       margin-top: 10px;
       margin-bottom: 10px;
+      margin-left: 0;
     }
   }
   &-text {
@@ -422,7 +439,7 @@ export default {
 <style rel="stylesheet/scss" lang="scss">
 .dashboard-container {
   .search-box {
-    .search-item {
+    .search-items {
       .el-input {
         max-width: 105px;
         // height: 25px;
