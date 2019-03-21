@@ -146,6 +146,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { arrayToTree } from '@/utils/public'
 import { getRoleList, deleteRole, insertRole, selectByResource } from '@/api/system/role'
 
 export default {
@@ -201,7 +202,7 @@ export default {
       },
       defaultProps: {
         children: 'children',
-        label: 'label'
+        label: 'title'
       },
       treeData: []
     }
@@ -224,7 +225,7 @@ export default {
       params.currentPage = this.currentPage
       getRoleList(params).then(response => {
         console.log(response)
-        if (response.code === 20000) {
+        if (response.code === '0000') {
           this.list = response.data.list
           this.total = response.data.count
         }
@@ -235,8 +236,9 @@ export default {
       var params = {}
       selectByResource(params).then(response => {
         console.log(response)
-        if (response.code === 20000) {
-          this.treeData = response.data.list
+        if (response.code === '0000') {
+          this.treeData = arrayToTree(response.data.list)
+          console.log(this.treeData)
         }
       })
     },
@@ -266,7 +268,7 @@ export default {
         if (valid) {
           var params = JSON.parse(JSON.stringify(this.form))
           insertRole(params).then(response => {
-            if (response.code === 20000) {
+            if (response.code === '0000') {
               this.fetchData()
             }
             this.dialogVisible = false
@@ -321,7 +323,7 @@ export default {
         }
         deleteRole(params).then(response => {
           console.log(response)
-          if (response.code === 20000) {
+          if (response.code === '0000') {
             this.$message({
               type: 'success',
               message: '删除成功!'

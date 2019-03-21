@@ -82,7 +82,7 @@ export default {
       }
       count = list.length
       return {
-        code: 20000,
+        code: '0000',
         data: {
           count: count,
           currentPage: body.currentPage,
@@ -109,7 +109,7 @@ export default {
         }
       }
       return {
-        code: 20000,
+        code: '0000',
         data: {},
         message: '已成功删除角色'
       }
@@ -151,7 +151,7 @@ export default {
       }
       info.push(obj)
       return {
-        code: 20000,
+        code: '0000',
         data: {}
       }
     }

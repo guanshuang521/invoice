@@ -304,7 +304,7 @@ export default {
       params.currentPage = this.currentPage
       getCustomerList(params).then(response => {
         // console.log(response)
-        if (response.code === 20000) {
+        if (response.code === '0000') {
           this.list = response.data.list
           this.total = response.data.count
         }
@@ -331,7 +331,7 @@ export default {
         if (valid) {
           var params = JSON.parse(JSON.stringify(this.form))
           insertCustomer(params).then(response => {
-            if (response.code === 20000) {
+            if (response.code === '0000') {
               this.fetchData()
             }
             this.dialogVisible = false
@@ -369,7 +369,7 @@ export default {
         }
         deleteCustomer(params).then(response => {
           console.log(response)
-          if (response.code === 20000) {
+          if (response.code === '0000') {
             this.$message({
               type: 'success',
               message: '删除成功!'
