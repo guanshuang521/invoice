@@ -17,12 +17,19 @@ module.exports = {
         // },
         changeOrigin: true,
       },
+      '/store':{
+        target: 'http://192.168.5.189:8080', //后台api
+        // pathRewrite: {
+        //   '^/rbac': '/'
+        // },
+        changeOrigin: true,
+      },
     },
 
     // Various Dev Server settings
     host: '0.0.0.0', // can be overwritten by process.env.HOST
     port: 9528, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
-    autoOpenBrowser: false,
+    autoOpenBrowser: true,
     errorOverlay: true,
     notifyOnErrors: false,
     poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
