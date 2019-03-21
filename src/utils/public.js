@@ -49,8 +49,10 @@ export function arrayToMenu(array) {
   return nodes
 }
 /**
- * 将接口返回的数组结构的数据转化为菜单树
- */
+ * @author Wujy
+ * @date 2019/3/21
+ * @Description: 将接口返回的数组结构的数据转化为菜单树
+*/
 export function arrayToTree(array) {
   const nodes = []
   // 获取顶级节点`

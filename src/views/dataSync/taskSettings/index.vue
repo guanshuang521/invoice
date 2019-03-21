@@ -168,7 +168,7 @@ export default {
     ])
   },
   mounted() {
-    this.getTastData()
+    // this.getTastData()
   },
   methods: {
     change(a) {
