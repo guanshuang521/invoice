@@ -76,3 +76,10 @@ a:hover {
 .app-container {
   padding: 20px;
 }
+////弹窗去掉多余边框
+//.el-dialog__body{
+//  padding: 0!important;
+//}
+.el-form-item__label {
+  font-size: 13px!important;
+}

@@ -1,7 +1,7 @@
 import { constantRouterMap } from '@/router'
 import { getRoute } from '@/api/login'
 import store from '../index'
-import { arrayToTree } from '@/utils/public'
+import { arrayToMenu } from '@/utils/public'
 
 /**
  * 通过meta.role判断是否与当前用户权限匹配
@@ -52,7 +52,7 @@ const permission = {
     GenerateRoutes({ commit }, data) {
       return new Promise((resolve, reject) => {
         getRoute(store.getters.uid).then(res => {
-          const accessedRouters = arrayToTree(res.data)
+          const accessedRouters = arrayToMenu(res.data)
           accessedRouters.concat([{ path: '*', redirect: '/404', hidden: true }])
           commit('SET_ROUTERS', accessedRouters)
           resolve()

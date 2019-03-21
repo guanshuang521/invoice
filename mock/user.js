@@ -276,7 +276,7 @@ export default {
     const data = users['user-info']
     if (data) {
       return {
-        code: 20000,
+        code: '0000',
         data
       }
     }
@@ -289,7 +289,7 @@ export default {
     const info = users['user-info']
     if (info) {
       return {
-        code: 20000,
+        code: '0000',
         data: info
       }
     }
@@ -300,14 +300,14 @@ export default {
   },
   logout: () => {
     return {
-      code: 20000,
+      code: '0000',
       data: 'success'
     }
   },
   getRoute: () => {
     const data = users['admin-token']
     return {
-      code: 20000,
+      code: '0000',
       data: data
     }
   }

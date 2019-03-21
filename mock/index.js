@@ -3,7 +3,7 @@
  * @Author: zhangzheng
  * @LastEditors: zhangzheng
  * @Date: 2019-03-19 09:38:33
- * @LastEditTime: 2019-03-19 17:05:34
+ * @LastEditTime: 2019-03-21 17:43:41
  */
 import Mock from 'mockjs'
 import userAPI from './user'
@@ -11,6 +11,11 @@ import tableAPI from './table'
 import systemAPI from './system'
 import orderListAPI from './orderList'
 
+import systemAPI from './system/organization'
+import roleAPI from './system/role'
+import customerAPI from './system/infoMaintenance'
+import orderOpenMessageAPI from './queryStatistics/orderOpenMessage'
+import wSpecialAPI from './invoice/wSpecial'
 // Fix an issue with setting withCredentials = true, cross-domain request lost cookies
 // https://github.com/nuysoft/Mock/issues/300
 Mock.XHR.prototype.proxy_send = Mock.XHR.prototype.send
@@ -35,4 +40,18 @@ Mock.mock(/\/table\/list/, 'get', tableAPI.list)
 Mock.mock(/\/organization\/nodeDetail/, 'post', systemAPI.nodeDetail)
 Mock.mock(/\/organization\/list/, 'post', systemAPI.getlist)
 Mock.mock(/\/order\/list/, 'post', orderListAPI.getOrderlist)
+// Role
+Mock.mock(/\/role\/selectByRole/, 'post', roleAPI.selectByRole)
+Mock.mock(/\/role\/deleteRole/, 'post', roleAPI.deleteRole)
+Mock.mock(/\/role\/insertRole/, 'post', roleAPI.insertRole)
+Mock.mock(/\/role\/updateRole/, 'post', roleAPI.updateRole)
+Mock.mock(/\/resource\/selectByResource/, 'post', roleAPI.selectByResource)
+// Customer
+Mock.mock(/\/customer\/selectByCustomer/, 'post', customerAPI.selectByCustomer)
+Mock.mock(/\/customer\/deleteCustomer/, 'post', customerAPI.deleteCustomer)
+Mock.mock(/\/customer\/insertCustomer/, 'post', customerAPI.insertCustomer)
+// orderOpenMessage
+Mock.mock(/\/orderOpenMessage\/getTableList/, 'post', orderOpenMessageAPI.getTableList)
+// invoice
+Mock.mock(/\/invoice\/billDetail/, 'post', wSpecialAPI.getBillDetail)
 export default Mock
