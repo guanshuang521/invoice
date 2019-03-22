@@ -3,7 +3,7 @@
  * @Author: zhangzheng
  * @LastEditors: zhangzheng
  * @Date: 2019-03-13 10:10:12
- * @LastEditTime: 2019-03-22 15:10:54
+ * @LastEditTime: 2019-03-22 18:00:33
  -->
 <template>
   <div class="dashboard-container">
@@ -20,7 +20,9 @@
       @handleDelete="handleDelete"
       @handleSelectionChange="handleSelectionChange"/>
     <!--弹框-->
-    <el-dialog v-show="showDeldialog" title="删除" size="small">
+    <el-dialog
+      :visible.sync="showDeldialog"
+      title="删除">
       <span>确定删除选择的数据吗？</span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="showDeldialog = false">取 消</el-button>
