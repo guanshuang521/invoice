@@ -30,6 +30,10 @@ const apiPath = {
     User: {
       list: '/store/selectAll.do'
     },
+    InfoManagement: {
+      list: '/commoditye/selectByCommodity', // 页面加载获取数据
+      newAdd: '/commoditye/insertCommodity' // 添加数据
+    },
     store: {
       list: '',
       add: '',
@@ -55,6 +59,10 @@ const apiPath = {
     },
     invoiceModel: {
       list: ''
+    },
+    infoManagement: {
+      list: '',
+      newAdd: ''
     }
   },
   order: {
