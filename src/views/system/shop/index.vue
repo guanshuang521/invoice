@@ -1,8 +1,15 @@
+/**
+* @author Shangll
+* @date 2019/3/22
+* @Description: 门店管理
+*/
 <template>
-  <div class="dashboard-container">
-    <!--<div class="dashboard-text">name:{{ name }}</div>-->
-    <!--<div class="dashboard-text">roles:<span v-for="role in roles" :key="role">{{ role }}</span></div>-->
-
+  <div
+    v-loading.fullscreen.lock="loading"
+    class="shop-container"
+    element-loading-text="加载中"
+    element-loading-spinner="el-icon-loading"
+    element-loading-background="rgba(0, 0, 0, 0.8)">
     <div style="margin-top:10px;">
       <el-row>
         <el-col :span="24"><div class="grid-content bg-purple-dark">
@@ -14,16 +21,17 @@
         </div></el-col>
       </el-row>
     </div>
-    <div class="table" style="padding:5px;">
+    <div class="table">
       <el-table
         ref="multipleTable"
         :data="list"
         tooltip-effect="dark"
         style="width: 100%"
+        border
         @selection-change="handleSelectionChange">
         <el-table-column
           type="selection"
-          width="55"/>
+          width="35"/>
         <el-table-column
           label="序号"
           width="120">
@@ -76,43 +84,48 @@
     <div class="block" style="margin-top:10px;">
       <el-pagination
         :total="400"
-        :current-page="currentPage4"
+        :current-page="currentPage1"
         :page-sizes="[100, 200, 300, 400]"
         :page-size="100"
         layout="total, sizes, prev, pager, next, jumper"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"/>
     </div>
-    <!--新增弹框-->
+    <!--新增/编辑弹框-->
     <el-dialog
-      :visible.sync="show"
-      :before-close="handleClose"
-      title="新增门店"
-      width="33%">
-      <el-form ref="form" :model="form" label-width="120px">
-        <el-form-item label="门店名称">
+      :visible.sync="showDialog"
+      :title="dialogTitle"
+      width="500px">
+      <el-form ref="store" :model="form" :rules="storeRule" label-width="130px" size="mini">
+        <el-form-item label="门店名称：" prop="storeName">
           <el-input v-model="form.storeName" size="mini"/>
         </el-form-item>
-        <el-form-item label="门店编号">
+        <el-form-item label="门店编号：" prop="storeCode">
           <el-input v-model="form.storeCode" size="mini"/>
         </el-form-item>
-        <el-form-item label="用户名">
+        <el-form-item label="用户名：" prop="userName">
           <el-input v-model="form.userName" size="mini"/>
         </el-form-item>
-        <el-form-item label="密码">
+        <el-form-item label="密码：" prop="userPwd">
           <el-input v-model="form.userPwd" size="mini"/>
         </el-form-item>
-        <el-form-item label="数据类型">
+        <el-form-item label="数据类型：" prop="datasourceType">
           <el-input v-model="form.datasourceType" size="mini"/>
         </el-form-item>
-        <el-form-item label="数据源驱动">
+        <el-form-item label="数据源驱动：" prop="datasourceDrive">
           <el-input v-model="form.datasourceDrive" size="mini"/>
         </el-form-item>
-        <el-form-item label="链接">
+        <el-form-item label="链接：" prop="datasourceLink">
           <el-input v-model="form.datasourceLink" size="mini"/>
         </el-form-item>
-        <el-form-item label="启所属组织机构">
-          <el-input v-model="form.orgId" size="mini"/>
+        <el-form-item label="启所属组织机构：" prop="orgId">
+          <el-select v-model="form.orgId" placeholder="请选择" filterable>
+            <el-option
+              v-for="item in orgIdOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"/>
+          </el-select>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -124,13 +137,56 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import { getList, getNew, editData, deleteData } from '@/api/system/shop'
 
 export default {
   name: 'Shop',
   data() {
     return {
+      // 新增/编辑门店表单校验
+      storeRule: {
+        storeName: [
+          { required: true, message: '请输入门店名称', trigger: 'blur' }
+        ],
+        storeCode: [
+          { required: true, message: '请输入门店代码', trigger: 'blur' }
+        ],
+        userName: [
+          { required: true, message: '请输入用户名', trigger: 'change' }
+        ],
+        userPwd: [
+          { required: true, message: '请输入密码', trigger: 'change' }
+        ],
+        datasourceType: [
+          { required: true, message: '请输入数据源', trigger: 'change' }
+        ],
+        datasourceDrive: [
+          { required: true, message: '请输入数据源驱动', trigger: 'change' }
+        ],
+        datasourceLink: [
+          { required: true, message: '请输入链接', trigger: 'change' }
+        ],
+        orgId: [
+          { required: true, message: '请选择启所属组织机构', trigger: 'change' }
+        ]
+      },
+      // 所属组织机构
+      orgIdOptions: [
+        {
+          label: '北京',
+          value: 1
+        }, {
+          label: '青海',
+          value: 2
+        }
+      ],
+      // 是否显示门店弹窗
+      showDialog: false,
+      // 加载层
+      loading: false,
+      // 弹窗标题
+      dialogTitle: '',
+      // 弹窗类型
       type: '',
       list: [],
       multipleSelection: [],
@@ -144,23 +200,13 @@ export default {
         datasourceLink: '',
         orgId: ''
       },
-      show: false,
       data: '',
       data2: '',
       storeIds: [],
       listData: '',
       Id: '',
-      currentPage1: 5,
-      currentPage2: 5,
-      currentPage3: 5,
-      currentPage4: 4
+      currentPage1: 1
     }
-  },
-  computed: {
-    ...mapGetters([
-      'name',
-      'roles'
-    ])
   },
   mounted() {
     this.getTableList()
@@ -176,61 +222,52 @@ export default {
     },
     // 点击新增/编辑按钮弹框出现
     dialogVisible(type) {
+      this.type = type
       if (type === 'add') {
-        this.type = type
-        this.show = true
+        this.dialogTitle = '新增门店'
+        this.showDialog = true
       } else {
-        this.$message.error('只能选择一条数据')
-        if (this.multipleSelection.length === 1) {
-          for (let i = 0; i < this.multipleSelection.length; i++) {
-            this.listData = this.multipleSelection[0]
-            this.Id = this.listData.id
-          }
-          this.type = type
-          this.show = true
-          this.form.storeName = this.listData.storeName
-          this.form.storeCode = this.listData.storeCode
-          this.form.userName = this.listData.userName
-          this.form.userPwd = this.listData.userPwd
-          this.form.datasourceType = this.listData.datasourceType
-          this.form.datasourceDrive = this.listData.datasourceDrive
-          this.form.datasourceLink = this.listData.datasourceLink
-          this.form.orgId = this.listData.orgId
-          this.data2 = this.form
-          this.data2.id = this.Id
+        this.dialogTitle = '编辑门店'
+        if (this.multipleSelection.length !== 1) {
+          this.$message({
+            message: '请选择一条数据进行操作',
+            type: 'error'
+          })
+          return false
         }
+        this.showDialog = true
       }
     },
     // 新增/编辑数据
     handleSubmit() {
-      if (this.type === 'add') {
-        this.show = false
-        this.data = this.form
-        getNew(this.data).then(res => {
-          this.getTableList()
-        }).catch(err => {
-          console.log(err)
-        })
-      } else {
-        this.show = false
-        editData(this.data2).then(res => {
-          this.getTableList()
-        }).catch(err => {
-          console.log(err)
-        })
-      }
+      this.$refs['store'].validate((valid) => {
+        if (valid) {
+          this.loading = true
+          if (this.type === 'add') {
+            this.data = this.form
+            getNew(this.data).then(res => {
+              this.getTableList()
+              this.show = false
+            }).catch(err => {
+              this.loading = false
+              console.log(err)
+            })
+          } else {
+            this.show = false
+            editData(this.data2).then(res => {
+              this.getTableList()
+              this.show = false
+            }).catch(err => {
+              this.loading = false
+              console.log(err)
+            })
+          }
+        }
+      })
     },
     // 点击弹框中取消和确定弹框消失
     close() {
-      this.show = false
-    },
-    // 新增弹框X号关闭是否关闭弹框
-    handleClose(done) {
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          done()
-        })
-        .catch(_ => {})
+      this.showDialog = false
     },
     // 删除数据
     remove() {
@@ -270,7 +307,7 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-  .dashboard {
+  .shop {
     &-container {
       margin: 30px;
     }

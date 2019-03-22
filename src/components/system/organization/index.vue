@@ -23,7 +23,7 @@
         <el-checkbox-group v-model="terminalInfo.kplx">
           <el-checkbox label="普票" name="pp"/>
           <el-checkbox label="专票" name="zp"/>
-          <el-checkbox label="点票" name="dp"/>
+          <el-checkbox label="电票" name="dp"/>
         </el-checkbox-group>
       </el-form-item>
     </el-form>
