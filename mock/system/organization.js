@@ -47,26 +47,18 @@ export default {
     const info = organization['node-tree']
     if (info) {
       return {
-        code: 20000,
+        code: '0000',
         data: info
       }
-    }
-    return {
-      code: 50008,
-      message: 'Login failed, unable to get user details.'
     }
   },
   nodeDetail: res => {
     const info = organization['node-detail']
     if (info) {
       return {
-        code: 20000,
+        code: '0000',
         data: info
       }
-    }
-    return {
-      code: 50008,
-      message: 'Login failed, unable to get user details.'
     }
   }
 }
