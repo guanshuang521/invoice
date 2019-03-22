@@ -212,10 +212,10 @@
             <el-form-item label="规格型号" prop="ggxh" size="small">
               <el-input v-model="form.ggxh"/>
             </el-form-item>
-            <el-form-item label="单元(元)" prop="jiage" size="small">
+            <el-form-item label="单元(元)" prop="UnitPrice" size="small">
               <el-input v-model="form.UnitPrice"/>
             </el-form-item>
-            <el-form-item label="计量单位" prop="jildanw" size="small">
+            <el-form-item label="计量单位" prop="meteringcom" size="small">
               <el-input v-model="form.meteringcom"/>
             </el-form-item>
             <el-form-item label="税收分类名称">
@@ -252,13 +252,13 @@
       custom-class="add-customer">
       <el-form ref="form1" :rules="rules" :model="form" label-width="120px">
         <el-form-item label="税收分类名称">
-          <el-select v-model="form.spsuim" placeholder="请选择" size="small">
+          <el-select v-model="form1.ssflmc" placeholder="请选择" size="small">
             <el-option label="企业所得税" value="企业"/>
             <el-option label="个人所得税" value="个人"/>
           </el-select>
         </el-form-item>
         <el-form-item label="税收分类编码" prop="spmcName" size="small">
-          <el-input v-model="form.spmc"/>
+          <el-input v-model="form1.ssflbm"/>
         </el-form-item>
         <el-form-item class="button">
           <el-button type="primary" @click="dialogVisible1 = false">保存</el-button>
@@ -290,7 +290,7 @@
   </div>
 </template>
 <script>
-import { commodictList, AddData } from '@/api/system/infoManagement'
+import { commodictList, AddData, updateData } from '@/api/system/infoManagement'
 export default{
   name: 'Dashboard',
   data() {
@@ -373,7 +373,7 @@ export default{
         comcode: ''
       }
     },
-    gitlist() { // 获取数据
+    gitlist() { // 获取数据列表
       commodictList().then(res => {
         if (res.code === '0000') {
           this.list = res.data
@@ -401,7 +401,7 @@ export default{
       console.log(111)
     },
     addAdata(formName) { // 点击添加确定后
-      if (this.dialogType = 'adds') {
+      if (this.dialogType === 'adds') {
         this.$refs[formName].validate((valid) => {
           if (valid) {
             var params = JSON.parse(JSON.stringify(this.form))
@@ -409,9 +409,28 @@ export default{
               if (res.code === '0000') {
                 console.log(res)
                 this.gitlist()
-             }
+              }
               this.dialogVisible = false
-             this.dialogType = ''
+              this.dialogType = ''
+            })
+          } else {
+            console.log('error!!')
+            return false
+          }
+        })
+      }
+      if (this.dialogType === 'edit') { // 点击编辑成功后
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            var params = JSON.parse(JSON.stringify(this.form))
+            updateData(params, params.id).then(res => {
+              if (res.code === '0000') {
+                console.log(res)
+                this.gitlist()
+              }
+              this.dialogVisible = false
+              this.dialogType = ''
+              this.form = {}
             })
           } else {
             console.log('error!!')
@@ -447,23 +466,24 @@ export default{
   .dashboard {
   &-container {
      margin: 30px;
-  .search-box {
-  .search-item {
-  // float: left;
-    display: inline-block;
-  span {
-    font-size: 14px;
-  }
-  }
-  }
-  .button-box {
-    margin-top: 10px;
-    margin-bottom: 10px;
-  }
-  }
-  &-text {
-     font-size: 30px;
-     line-height: 46px;
-   }
+      .search-box {
+        .search-item {
+          float: left;
+          display: inline-block;
+            span {
+              font-size: 14px;
+            }
+          }
+      }
+      .button-box {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        margin-left: 0px;
+      }
+    }
+    &-text {
+       font-size: 30px;
+       line-height: 46px;
+    }
   }
 </style>

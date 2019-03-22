@@ -20,3 +20,15 @@ export function AddData(data) {
     data: data
   })
 }
+// 商品信息添加
+export function updateData(data, id) {
+  console.log(data)
+  return request({
+    url: apiPath.system.InfoManagement.updateda,
+    method: 'post',
+    data: {
+      data,
+      id
+    }
+  })
+}

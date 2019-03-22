@@ -85,7 +85,27 @@ export default {
     console.log(info)
     return {
       code: '0000',
-      data: info
+      data: info,
+      message: '添加成功'
+    }
+  },
+  updateda: res => {
+    let datas = JSON.parse(res.body)
+    let data = datas.data
+    let id = datas.id
+    console.log(data, id)
+    const info = infoManagement['list']
+    if (info) {
+      for(let i = 0; i < info.length; i++) {
+        if (info[i].id == id) {
+          info[i] = data
+        }
+      }
+      return {
+        code: '0000',
+        data: {},
+        message: '已编辑角色'
+      }
     }
   }
 }

@@ -231,24 +231,24 @@ export default {
   .dashboard {
   &-container {
      margin: 30px;
-  .search-box {
-  .search-item {
-  // float: left;
-    display: inline-block;
-    margin-right: 10px;
-  span {
-    font-size: 14px;
-  }
-  }
-  }
-  .button-box {
-    margin-top: 10px;
-    margin-bottom: 10px;
-  }
-  }
-  &-text {
-     font-size: 30px;
-     line-height: 46px;
-   }
+      .search-box {
+        .search-item {
+          float: left;
+          display: inline-block;
+          span {
+            font-size: 14px;
+          }
+        }
+      }
+      .button-box {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        margin-left: 0px;
+      }
+    }
+    &-text {
+       font-size: 30px;
+       line-height: 46px;
+     }
   }
 </style>

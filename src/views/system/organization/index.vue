@@ -4,12 +4,17 @@
 * @Description: 系统管理->组织机构管理
 */
 <template>
-  <div class="organization-container">
+  <div
+    v-loading.fullscreen.lock="loading"
+    class="organization-container"
+    element-loading-text="加载中"
+    element-loading-spinner="el-icon-loading"
+    element-loading-background="rgba(0, 0, 0, 0.8)">>
     <el-row :gutter="10">
       <el-col :span="8">
         <div class="grid-content bg-purple">
           <h4>组织机构</h4>
-          <el-input v-model="filterText" placeholder="请输入关键字"/>
+          <el-input v-model="filterText" placeholder="请输入关键字" size="mini"/>
           <el-tree
             ref="organTree"
             :data="organTree"
@@ -113,6 +118,7 @@
               <template>
                 <el-table
                   :data="codeRelevanceTerminalList"
+                  border
                   style="width: 100%"
                   height="250">
                   <el-table-column
@@ -144,7 +150,6 @@
                     label="机器编号"
                     width="100"/>
                   <el-table-column
-                    fixed="right"
                     label="操作"
                     width="120">
                     <template slot-scope="scope">
@@ -188,6 +193,8 @@ export default {
   },
   data() {
     return {
+      // 遮罩层
+      loading: false,
       // 机构树检索关键字
       filterText: '',
       // 默认展示tab类名
@@ -242,7 +249,7 @@ export default {
           { required: true, message: '请选择是否是叶节点', trigger: 'change' }
         ]
       },
-      //
+      // 税号维护表单校验规则
       codeMaintenanceRules: {
         code: [
           { required: true, message: '请输入税号', trigger: 'blur' }
@@ -334,9 +341,12 @@ export default {
   methods: {
     // 初始化机构树
     initTree() {
+      this.loading = true
       getNodeList().then(res => {
+        this.loading = false
         this.organTree = res.data
       }).catch(err => {
+        this.loading = false
         this.$message({
           message: err,
           type: 'error'
@@ -493,6 +503,9 @@ export default {
       h4{
         padding: 10px;
         background-color: #d9e8fb;
+      }
+      .el-input--mini{
+        width: 200px!important;
       }
     }
     .note{

@@ -32,7 +32,8 @@ const apiPath = {
     },
     InfoManagement: {
       list: '/commoditye/selectByCommodity', // 页面加载获取数据
-      newAdd: '/commoditye/insertCommodity' // 添加数据
+      newAdd: '/commoditye/insertCommodity', // 添加数据
+      updateda: '/commoditye/updateCommodity' // 编辑数据(修改数据)
     },
     store: {
       list: '',
