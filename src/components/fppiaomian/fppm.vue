@@ -230,31 +230,31 @@
             <div class="search_items">
                 <div class="search_item">
                     <div class="search_label"><span class="required">*</span>客户编号：</div>
-                    <input class="search_input" type="text" v-model="goods.spssbm">
+                    <input class="search_input" type="text" v-model="userList.khbh">
                 </div>
                 <div class="search_item">
                     <div class="search_label"><span class="required">*</span>客户名称：</div>
-                    <input class="search_input" type="text" v-model="goods.spmc">
+                    <input class="search_input" type="text" v-model="userList.khmc">
                 </div>
                 <div class="search_item">
                     <div class="search_label">客户税号：</div>
-                    <input class="search_input" type="text" v-model="goods.spssbm">
+                    <input class="search_input" type="text" v-model="userList.khsh">
                 </div>
                 <div class="search_item">
                     <div class="search_label">地址电话：</div>
-                    <input class="search_input" type="text" v-model="goods.spmc">
+                    <input class="search_input" type="text" v-model="userList.dzdh">
                 </div>
                 <div class="search_item">
                     <div class="search_label">银行账号：</div>
-                    <input class="search_input" type="text" v-model="goods.spssbm">
+                    <input class="search_input" type="text" v-model="userList.yhzh">
                 </div>
                 <div class="search_item">
                     <div class="search_label">备注：</div>
-                    <input class="search_input" type="text" v-model="goods.spmc">
+                    <input class="search_input" type="text" v-model="userList.bz">
                 </div>
                 
                 <div class="button-box">
-                    <button class="bluebtn">确认</button>
+                    <button class="bluebtn" @click="addUser">确认</button>
                     <button class="bluebtn" @click='isyhxx = false'>取消</button>
                 </div>
             </div>
@@ -409,6 +409,14 @@ export default {
                 list: [],
                 totalCount:0,//总条目数
             },
+            userList:{
+                bz: "",
+                dzdh: "",
+                khbh: "",
+                khmc: "",
+                khsh: "",
+                yhzh: "",
+            }
         }
     },
     modules: {
@@ -637,6 +645,10 @@ export default {
             this.calculatePrice(index, xmsl, xmdj, xmdjShow, hsxmdj, xmje, xmjeShow, hsxmje, sl, currentInput);
           }*/
         },
+        //添加用户信息
+        addUser(){
+            console.log(this.userList)
+        }
     }
 }
 </script>
