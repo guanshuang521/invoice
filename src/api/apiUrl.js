@@ -1,3 +1,10 @@
+/*
+ * @Description:
+ * @Author: zhangzheng
+ * @LastEditors: zhangzheng
+ * @Date: 2019-03-19 09:38:33
+ * @LastEditTime: 2019-03-21 17:44:27
+ */
 /**
  * Created by linzb on 2019/3/1.
  */
@@ -22,6 +29,10 @@ const apiPath = {
     },
     User: {
       list: '/store/selectAll.do'
+    },
+    InfoManagement: {
+      list: '/commoditye/selectByCommodity', // 页面加载获取数据
+      newAdd: '/commoditye/insertCommodity' // 添加数据
     },
     store: {
       list: '',
@@ -48,7 +59,14 @@ const apiPath = {
     },
     invoiceModel: {
       list: ''
+    },
+    infoManagement: {
+      list: '',
+      newAdd: ''
     }
+  },
+  order: {
+    list: '/order/list'
   },
   queryStatistics: {
     orderOpenMessage: {
