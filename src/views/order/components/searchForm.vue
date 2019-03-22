@@ -3,28 +3,29 @@
  * @Author: zhangzheng
  * @LastEditors: zhangzheng
  * @Date: 2019-03-15 09:50:29
- * @LastEditTime: 2019-03-21 17:31:50
+ * @LastEditTime: 2019-03-22 14:29:52
  -->
 
 <template>
   <div class="searchForm_wrapper">
     <el-form ref="data" :model="data" :inline="true" label-width="120px" size="mini" class="demo-form-inline" >
-      <el-form-item v-for="(item,index) in config" v-show="index<3 || ishow" :label="item.title" :key="item.code" :prop="item.code" class="table-header-item">
+      <el-form-item v-for="(item,index) in config" v-show="index<3 || ishow" :label="item.title" :key="item.code" :prop="item.code" :class="item.type === 'button'||item.type === 'datepicker'?'fixedclass':''" class="table-header-item">
         <el-select v-if="item.type === 'select'" v-model="data[item.code]" :placeholder="`请选择${item.title}`">
           <el-option v-for="option in item.options" :key="option.id" :value="option.id" :label="option.text"/>
         </el-select>
-        <el-form-item v-else-if="item.type === 'datepicker'" class="fixedclass">
-          <el-col :span="11">
-            <el-form-item :prop="item.code1">
-              <el-date-picker v-model="data[item.code1]" type="date" value-format="yyyyMMdd" placeholder="请选择日期" style="width: 100%; margin-right:0px;"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="2" class="line" style="text-align:center;padding-right:10px;">-</el-col>
-          <el-col :span="11">
-            <el-form-item :prop="item.code2">
-              <el-date-picker v-model="data[item.code2]" value-format="timestamp" type="date" placeholder="请选择日期" style="width: 100%;"/>
-            </el-form-item>
-          </el-col>
+        <el-form-item v-else-if="item.type === 'datepicker'" class="fixed_datepicker">
+          <!-- <el-col :span="11"> -->
+          <el-form-item :prop="item.code1">
+            <el-date-picker v-model="data[item.code1]" type="date" value-format="yyyyMMdd" placeholder="请选择日期" style=" margin-right:0px;"/>
+          </el-form-item>
+          <!-- </el-col> -->
+          <span class="datespan">-</span>
+          <!-- <el-col :span="2" class="line" style="text-align:center;padding-right:10px;">-</el-col> -->
+          <!-- <el-col :span="11"> -->
+          <el-form-item :prop="item.code2">
+            <el-date-picker v-model="data[item.code2]" value-format="timestamp" type="date" placeholder="请选择日期"/>
+          </el-form-item>
+          <!-- </el-col> -->
         </el-form-item>
         <el-form-item v-else-if="item.type === 'button'" style="padding-left:100px;margin-bottom:0px;">
           <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -120,18 +121,52 @@ export default {
     border-bottom: 1px solid #d8dce5;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12), 0 0 3px 0 rgba(0, 0, 0, 0.04);
     background-color: #fff;
-    .fixedclass.el-form-item--mini.el-form-item{
-      margin-bottom: 0px !important;
-      .el-col-11 .el-form-item.el-form-item--mini{
+    .demo-form-inline{
+      display: flex;
+      flex-flow: row wrap;
+      .el-form-item--mini.el-form-item{
+      // margin-bottom: 0px !important;
+      // flex: 23%;
+       flex: 0 1 23%;   /* 宽度 */
+        // text-align: center;
+       .el-form-item.el-form-item--mini{
           margin-bottom: 0px !important;
+          margin-right: 0;
+          float: left;
+          .datespan{
+            display: inline-block;
+            width: 20px;
+            text-align: center;
+            float: left;
+          }
+          .el-input__icon{
+            height: auto;
+          }
       }
     }
+    .fixedclass.el-form-item--mini.el-form-item{
+      flex: 50%;
+      display: block;
+      float: right;
+      // padding-right: 150px;
+      }
+      .el-form-item--mini.el-form-item:last-child{
+        flex: auto;
+        display: flex;
+        // text-align: left;
+        float: left;
+        .el-form-item__label{
+          text-align: right;
+        }
+      }
     .el-col .el-form-item__content .el-input--suffix .el-input__inner{
     padding-right: 12px !important;
   }
    .el-input--suffix .el-input__inner{
     padding-right: 15px !important;
   }
+    }
+
   }
 }
 </style>

@@ -3,7 +3,7 @@
  * @Author: zhangzheng
  * @LastEditors: zhangzheng
  * @Date: 2019-03-15 09:50:49
- * @LastEditTime: 2019-03-21 17:16:57
+ * @LastEditTime: 2019-03-22 10:12:14
  -->
 <template>
   <div class="searchTable_wrapper">
@@ -53,7 +53,7 @@
         :page-sizes="[5, 10, 20, 50,100]"
         :page-size="dataSource.pageSize"
         :total="dataSource.count"
-        layout="total, sizes, prev, pager, next, jumper"
+        layout="prev, pager, next, jumper, total, sizes, slot"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"/>
       <span v-show="dataSource.list&&dataSource.list.length>1" class="hjje">合计金额:{{ dataSource.total }}</span>

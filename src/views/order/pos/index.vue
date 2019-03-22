@@ -3,7 +3,7 @@
  * @Author: zhangzheng
  * @LastEditors: zhangzheng
  * @Date: 2019-03-13 10:10:12
- * @LastEditTime: 2019-03-21 17:35:53
+ * @LastEditTime: 2019-03-22 15:10:54
  -->
 <template>
   <div class="dashboard-container">
@@ -19,6 +19,15 @@
       :operation="operation"
       @handleDelete="handleDelete"
       @handleSelectionChange="handleSelectionChange"/>
+    <!--弹框-->
+    <el-dialog v-show="showDeldialog" title="删除" size="small">
+      <span>确定删除选择的数据吗？</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="showDeldialog = false">取 消</el-button>
+        <el-button type="primary" @click="showDeldialog = false">确 定</el-button>
+      </span>
+    </el-dialog>
+
   </div>
 </template>
 <script>
@@ -44,14 +53,15 @@ export default {
         dateEnd: '',
         orderState: ''
       },
-      queryConditionsForm: [],
+      queryConditionsForm: [], // 接受的config的查询条件配置的参数
       dataSource: {
         currentPage: 1,
         count: 0,
         pageSize: 5
       }, // 数据源
-      columns: [],
-      operation: {}
+      columns: [], // 接受的config的配置的参数
+      operation: {}, // 接受的config的操作配置的参数
+      showDeldialog: true
     }
   },
   computed: {

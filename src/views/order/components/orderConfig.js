@@ -3,7 +3,7 @@
  * @Author: zhangzheng
  * @LastEditors: zhangzheng
  * @Date: 2019-03-19 17:11:23
- * @LastEditTime: 2019-03-21 17:32:40
+ * @LastEditTime: 2019-03-22 14:30:26
  */
 const orderConfig = {
   queryConditionsForm: [ // 服务类订单管理查询条件
@@ -25,6 +25,12 @@ const orderConfig = {
     {
       title: '结算单号',
       code: 'countOrderNum'
+    },
+    {
+      title: '传输起止日期',
+      code1: 'dateStart',
+      code2: 'dateEnd',
+      type: 'datepicker'
     },
     {
       title: '单据起号',
@@ -55,12 +61,6 @@ const orderConfig = {
           text: '出租车'
         }
       ]
-    },
-    {
-      title: '传输起止日期',
-      code1: 'dateStart',
-      code2: 'dateEnd',
-      type: 'datepicker'
     }
 
   ],
