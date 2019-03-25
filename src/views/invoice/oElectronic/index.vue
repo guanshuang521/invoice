@@ -6,26 +6,36 @@
 <template>
   <div class="oOpecial-container">
     <div class="filter-container">
-      <label>购方名称</label>
-      <el-input :placeholder="placeholder" v-model="listQuery.gfmc" size="small" style="width: 150px;" class="filter-item" @keyup.enter.native="initList"/>
-      <label>商品名称</label>
-      <el-input :placeholder="placeholder" v-model="listQuery.ddh" size="small" style="width: 150px;" class="filter-item" @keyup.enter.native="initList"/>
-      <label>发票代码</label>
-      <el-input :placeholder="placeholder" v-model="listQuery.spmc" size="small" style="width: 150px;" class="filter-item" @keyup.enter.native="initList"/>
-      <label>发票号码</label>
-      <el-input :placeholder="placeholder" v-model="listQuery.spmc" size="small" style="width: 150px;" class="filter-item" @keyup.enter.native="initList"/>
-      <label>开票日期起</label>
-      <el-input :placeholder="placeholder" v-model="listQuery.spmc" size="small" style="width: 150px;" class="filter-item" @keyup.enter.native="initList"/>
-      <label>开票日期止</label>
-      <el-input :placeholder="placeholder" v-model="listQuery.spmc" size="small" style="width: 150px;" class="filter-item" @keyup.enter.native="initList"/>
-      <label>红冲日期起</label>
-      <el-input :placeholder="placeholder" v-model="listQuery.spmc" size="small" style="width: 150px;" class="filter-item" @keyup.enter.native="initList"/>
-      <label>红冲日期止</label>
-      <el-input :placeholder="placeholder" v-model="listQuery.spmc" size="small" style="width: 150px;" class="filter-item" @keyup.enter.native="initList"/>
-      <label>发票状态</label>
-      <el-input :placeholder="placeholder" v-model="listQuery.spmc" size="small" style="width: 150px;" class="filter-item" @keyup.enter.native="initList"/>
-      <label>税率</label>
-      <el-input :placeholder="placeholder" v-model="listQuery.spmc" size="small" style="width: 150px;" class="filter-item" @keyup.enter.native="initList"/>
+      <el-input :placeholder="placeholder" v-model="listQuery.gfmc" size="small" class="filter-item" @keyup.enter.native="initList">
+        <template slot="prepend">购方名称</template>
+      </el-input>
+      <el-input :placeholder="placeholder" v-model="listQuery.ddh" size="small" class="filter-item" @keyup.enter.native="initList">
+        <template slot="prepend">商品名称</template>
+      </el-input>
+      <el-input :placeholder="placeholder" v-model="listQuery.spmc" size="small" class="filter-item" @keyup.enter.native="initList">
+        <template slot="prepend">发票代码</template>
+      </el-input>
+      <el-input :placeholder="placeholder" v-model="listQuery.spmc" size="small" class="filter-item" @keyup.enter.native="initList">
+        <template slot="prepend">发票号码</template>
+      </el-input>
+      <el-input :placeholder="placeholder" v-model="listQuery.spmc" size="small" class="filter-item" @keyup.enter.native="initList">
+        <template slot="prepend">开票日期起</template>
+      </el-input>
+      <el-input :placeholder="placeholder" v-model="listQuery.spmc" size="small" class="filter-item" @keyup.enter.native="initList">
+        <template slot="prepend">开票日期止</template>
+      </el-input>
+      <el-input :placeholder="placeholder" v-model="listQuery.spmc" size="small" class="filter-item" @keyup.enter.native="initList">
+        <template slot="prepend">红冲日期起</template>
+      </el-input>
+      <el-input :placeholder="placeholder" v-model="listQuery.spmc" size="small" class="filter-item" @keyup.enter.native="initList">
+        <template slot="prepend">红冲日期止</template>
+      </el-input>
+      <el-input :placeholder="placeholder" v-model="listQuery.spmc" size="small" class="filter-item" @keyup.enter.native="initList">
+        <template slot="prepend">发票状态</template>
+      </el-input>
+      <el-input :placeholder="placeholder" v-model="listQuery.spmc" size="small" class="filter-item" @keyup.enter.native="initList">
+        <template slot="prepend">税率</template>
+      </el-input>
       <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="initList">查询</el-button>
       <el-button size="small" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleReset">重置</el-button>
     </div>
@@ -209,6 +219,9 @@ export default {
       .filter-container{
         .filter-item{
           margin: 0 10px 20px 0;
+        }
+        /deep/ .el-input{
+          width: 220px;
         }
       }
       .button-container{
