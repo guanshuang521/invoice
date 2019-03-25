@@ -222,7 +222,9 @@
             
              <el-pagination @size-change="handleSizeChange($event,'isgmfmc')" @current-change="handleCurrentChange($event,'isgmfmc')" @prev-click="prePageChange($event,'isgmfmc')" @next-click="nextPageChange($event,'isgmfmc')" :current-page="goods.currentPage" :page-sizes="[1, 5, 10, 20,50,100]" :page-size="goods.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="goods.totalCount">
             </el-pagination>
-            <button class="bluebtn">确认</button>
+            <div class="dialogbutton-box">
+                <button class="bluebtn">确认</button>
+            </div>
         </el-dialog>
         
         <!--添加客户信息dialog-->
@@ -253,7 +255,7 @@
                     <input class="search_input" type="text" v-model="userList.bz">
                 </div>
                 
-                <div class="button-box">
+                <div class="dialogbutton-box">
                     <button class="bluebtn" @click="addUser">确认</button>
                     <button class="bluebtn" @click='isyhxx = false'>取消</button>
                 </div>
@@ -296,7 +298,7 @@
             
              <el-pagination @size-change="handleSizeChange($event,'isgoods')" @current-change="handleCurrentChange($event,'isgoods')" @prev-click="prePageChange($event,'isgoods')" @next-click="nextPageChange($event,'isgoods')" :current-page="goods.currentPage" :page-sizes="[1, 5, 10, 20,50,100]" :page-size="goods.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="goods.totalCount">
             </el-pagination>
-            <div class="button-box">
+            <div class="dialogbutton-box">
                 <button class="bluebtn">确认</button>
             </div>
         </el-dialog>
@@ -409,6 +411,7 @@ export default {
                 list: [],
                 totalCount:0,//总条目数
             },
+            //用户信息
             userList:{
                 bz: "",
                 dzdh: "",
