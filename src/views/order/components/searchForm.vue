@@ -3,7 +3,7 @@
  * @Author: zhangzheng
  * @LastEditors: zhangzheng
  * @Date: 2019-03-15 09:50:29
- * @LastEditTime: 2019-03-22 14:29:52
+ * @LastEditTime: 2019-03-25 10:36:05
  -->
 
 <template>
@@ -114,7 +114,7 @@ export default {
   }
 }
 </script>
-<style rel="stylesheet/scss" lang="scss">
+<style rel="stylesheet/scss" lang="scss" scoped>
 .searchForm {
   &_wrapper {
     padding: 20px 20px 0  20px;

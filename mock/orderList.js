@@ -3,7 +3,7 @@
  * @Author: zhangzheng
  * @LastEditors: zhangzheng
  * @Date: 2019-03-19 16:36:21
- * @LastEditTime: 2019-03-21 11:37:20
+ * @LastEditTime: 2019-03-25 09:53:06
  */
 const Order = {
   Orderlist: {
@@ -91,7 +91,7 @@ export default {
     const info = Order['Orderlist']
     if (info) {
       return {
-        code: 20000,
+        code: '0000',
         data: info
       }
     }

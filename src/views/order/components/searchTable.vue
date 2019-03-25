@@ -3,7 +3,7 @@
  * @Author: zhangzheng
  * @LastEditors: zhangzheng
  * @Date: 2019-03-15 09:50:49
- * @LastEditTime: 2019-03-22 10:12:14
+ * @LastEditTime: 2019-03-25 10:36:16
  -->
 <template>
   <div class="searchTable_wrapper">
@@ -110,7 +110,7 @@ export default {
   }
 }
 </script>
-<style rel="stylesheet/scss" lang="scss">
+<style rel="stylesheet/scss" lang="scss" scoped>
 .searchTable {
   &_wrapper {
      padding: 0 20px;
