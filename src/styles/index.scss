@@ -76,6 +76,7 @@ a:hover {
 .app-container {
   padding: 20px;
 }
+
 .button-box{
     text-align: center;
 }
@@ -128,3 +129,12 @@ li{
 input,button,textarea,select{
     outline:none 
 }
+
+////弹窗去掉多余边框
+//.el-dialog__body{
+//  padding: 0!important;
+//}
+.el-form-item__label {
+  font-size: 13px!important;
+}
+

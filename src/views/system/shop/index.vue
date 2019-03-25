@@ -1,125 +1,289 @@
+/**
+* @author Shangll
+* @date 2019/3/22
+* @Description: 门店管理
+*/
 <template>
-  <div class="dashboard-container">
-    <div class="dashboard-text">name:{{ name }}</div>
-    <div class="dashboard-text">roles:<span v-for="role in roles" :key="role">{{ role }}</span></div>
-
+  <div
+    v-loading.fullscreen.lock="loading"
+    class="shop-container"
+    element-loading-text="加载中"
+    element-loading-spinner="el-icon-loading"
+    element-loading-background="rgba(0, 0, 0, 0.8)">
     <div style="margin-top:10px;">
       <el-row>
         <el-col :span="24"><div class="grid-content bg-purple-dark">
           <el-row>
-            <el-button type="primary" size="mini">新增</el-button>
-            <el-button type="primary" size="mini">修改</el-button>
-            <el-button type="primary" size="mini">删除</el-button>
+            <el-button type="primary" size="mini" @click="dialogVisible('add')">新增</el-button>
+            <el-button type="primary" size="mini" @click="dialogVisible('edit')">修改</el-button>
+            <el-button type="primary" size="mini" @click="remove">删除</el-button>
           </el-row>
         </div></el-col>
       </el-row>
     </div>
-    <div class="table" style="padding:5px;">
+    <div class="table">
       <el-table
         ref="multipleTable"
-        :data="tableData3"
+        :data="list"
         tooltip-effect="dark"
         style="width: 100%"
+        border
         @selection-change="handleSelectionChange">
         <el-table-column
           type="selection"
-          width="55"/>
+          width="35"/>
         <el-table-column
-          label="日期"
+          label="序号"
           width="120">
-          <template slot-scope="scope">{{ scope.row.date }}</template>
+          <!--<template slot-scope="scope">{{ scope.row.date }}</template>-->
         </el-table-column>
         <el-table-column
-          prop="tableData3.name"
-          label="姓名"
-          width="120"/>
+          prop="storeName"
+          label="门店名称"
+          width="180">
+          <template slot-scope="scope">{{ scope.row.storeName }}</template>
+        </el-table-column>
         <el-table-column
-          prop="tableData3.address"
-          label="地址"
-          show-overflow-tooltip/>
+          prop="storeCode"
+          label="门店号"
+          width="160">
+          <template slot-scope="scope">{{ scope.row.storeCode }}</template>
+        </el-table-column>
+        <el-table-column
+          prop="userName"
+          label="用户名"
+          width="160">
+          <template slot-scope="scope">{{ scope.row.userName }}</template>
+        </el-table-column>
+        <el-table-column
+          prop="userPwd"
+          label="密码"
+          width="160">
+          <template slot-scope="scope">{{ scope.row.userPwd }}</template>
+        </el-table-column>
+        <el-table-column
+          prop="datasourceDrive"
+          label="数据源驱动"
+          width="160">
+          <template slot-scope="scope">{{ scope.row.datasourceDrive }}</template>
+        </el-table-column>
+        <el-table-column
+          prop="datasourceLink"
+          label="数据源链接"
+          width="160">
+          <template slot-scope="scope">{{ scope.row.datasourceLink }}</template>
+        </el-table-column>
+        <el-table-column
+          prop="datasourceType"
+          label="数据类型"
+          width="160">
+          <template slot-scope="scope">{{ scope.row.datasourceType }}</template>
+        </el-table-column>
       </el-table>
     </div>
     <div class="block" style="margin-top:10px;">
       <el-pagination
         :total="400"
-        :current-page="currentPage4"
+        :current-page="currentPage1"
         :page-sizes="[100, 200, 300, 400]"
         :page-size="100"
         layout="total, sizes, prev, pager, next, jumper"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"/>
     </div>
+    <!--新增/编辑弹框-->
+    <el-dialog
+      :visible.sync="showDialog"
+      :title="dialogTitle"
+      width="500px">
+      <el-form ref="store" :model="form" :rules="storeRule" label-width="130px" size="mini">
+        <el-form-item label="门店名称：" prop="storeName">
+          <el-input v-model="form.storeName" size="mini"/>
+        </el-form-item>
+        <el-form-item label="门店编号：" prop="storeCode">
+          <el-input v-model="form.storeCode" size="mini"/>
+        </el-form-item>
+        <el-form-item label="用户名：" prop="userName">
+          <el-input v-model="form.userName" size="mini"/>
+        </el-form-item>
+        <el-form-item label="密码：" prop="userPwd">
+          <el-input v-model="form.userPwd" size="mini"/>
+        </el-form-item>
+        <el-form-item label="数据类型：" prop="datasourceType">
+          <el-input v-model="form.datasourceType" size="mini"/>
+        </el-form-item>
+        <el-form-item label="数据源驱动：" prop="datasourceDrive">
+          <el-input v-model="form.datasourceDrive" size="mini"/>
+        </el-form-item>
+        <el-form-item label="链接：" prop="datasourceLink">
+          <el-input v-model="form.datasourceLink" size="mini"/>
+        </el-form-item>
+        <el-form-item label="启所属组织机构：" prop="orgId">
+          <el-select v-model="form.orgId" placeholder="请选择" filterable>
+            <el-option
+              v-for="item in orgIdOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"/>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="mini" @click="close">取 消</el-button>
+        <el-button size="mini" type="primary" @click="handleSubmit()">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { getList, getNew, editData, deleteData } from '@/api/system/shop'
 
 export default {
   name: 'Shop',
   data() {
     return {
-      input: '',
-      options: [{
-        value: '选项1',
-        label: '黄金糕'
-      }, {
-        value: '选项2',
-        label: '双皮奶'
-      }, {
-        value: '选项3',
-        label: '蚵仔煎'
-      }, {
-        value: '选项4',
-        label: '龙须面'
-      }, {
-        value: '选项5',
-        label: '北京烤鸭'
-      }],
-      value: '',
-      tableData3: [{
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-08',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-06',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-07',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }],
+      // 新增/编辑门店表单校验
+      storeRule: {
+        storeName: [
+          { required: true, message: '请输入门店名称', trigger: 'blur' }
+        ],
+        storeCode: [
+          { required: true, message: '请输入门店代码', trigger: 'blur' }
+        ],
+        userName: [
+          { required: true, message: '请输入用户名', trigger: 'change' }
+        ],
+        userPwd: [
+          { required: true, message: '请输入密码', trigger: 'change' }
+        ],
+        datasourceType: [
+          { required: true, message: '请输入数据源', trigger: 'change' }
+        ],
+        datasourceDrive: [
+          { required: true, message: '请输入数据源驱动', trigger: 'change' }
+        ],
+        datasourceLink: [
+          { required: true, message: '请输入链接', trigger: 'change' }
+        ],
+        orgId: [
+          { required: true, message: '请选择启所属组织机构', trigger: 'change' }
+        ]
+      },
+      // 所属组织机构
+      orgIdOptions: [
+        {
+          label: '北京',
+          value: 1
+        }, {
+          label: '青海',
+          value: 2
+        }
+      ],
+      // 是否显示门店弹窗
+      showDialog: false,
+      // 加载层
+      loading: false,
+      // 弹窗标题
+      dialogTitle: '',
+      // 弹窗类型
+      type: '',
+      list: [],
       multipleSelection: [],
-      currentPage1: 5,
-      currentPage2: 5,
-      currentPage3: 5,
-      currentPage4: 4
+      form: {
+        storeName: '',
+        storeCode: '',
+        userName: '',
+        userPwd: '',
+        datasourceType: '',
+        datasourceDrive: '',
+        datasourceLink: '',
+        orgId: ''
+      },
+      data: '',
+      data2: '',
+      storeIds: [],
+      listData: '',
+      Id: '',
+      currentPage1: 1
     }
   },
-  computed: {
-    ...mapGetters([
-      'name',
-      'roles'
-    ])
+  mounted() {
+    this.getTableList()
   },
   methods: {
+    // table列表查询
+    getTableList() {
+      getList().then(res => {
+        this.list = res.info
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+    // 点击新增/编辑按钮弹框出现
+    dialogVisible(type) {
+      this.type = type
+      if (type === 'add') {
+        this.dialogTitle = '新增门店'
+        this.showDialog = true
+      } else {
+        this.dialogTitle = '编辑门店'
+        if (this.multipleSelection.length !== 1) {
+          this.$message({
+            message: '请选择一条数据进行操作',
+            type: 'error'
+          })
+          return false
+        }
+        this.showDialog = true
+      }
+    },
+    // 新增/编辑数据
+    handleSubmit() {
+      this.$refs['store'].validate((valid) => {
+        if (valid) {
+          this.loading = true
+          if (this.type === 'add') {
+            this.data = this.form
+            getNew(this.data).then(res => {
+              this.getTableList()
+              this.show = false
+            }).catch(err => {
+              this.loading = false
+              console.log(err)
+            })
+          } else {
+            this.show = false
+            editData(this.data2).then(res => {
+              this.getTableList()
+              this.show = false
+            }).catch(err => {
+              this.loading = false
+              console.log(err)
+            })
+          }
+        }
+      })
+    },
+    // 点击弹框中取消和确定弹框消失
+    close() {
+      this.showDialog = false
+    },
+    // 删除数据
+    remove() {
+      if (this.multipleSelection.length < 1) {
+        this.$message.error('至少选择一条数据')
+      } else {
+        for (let i = 0; i < this.multipleSelection.length; i++) {
+          this.storeIds.push(this.multipleSelection[i].id)
+        }
+        deleteData(this.storeIds).then(res => {
+          this.getTableList()
+        }).catch(err => {
+          console.log(err)
+        })
+      }
+    },
     toggleSelection(rows) {
       if (rows) {
         rows.forEach(row => {
@@ -143,7 +307,7 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-  .dashboard {
+  .shop {
     &-container {
       margin: 30px;
     }
@@ -155,5 +319,9 @@ export default {
   .grid-content {
     border-radius: 4px;
     min-height: 36px;
+  }
+  el-dialog el-input {
+    width:300px;
+    margin-bottom:15px;
   }
 </style>

@@ -1,10 +1,20 @@
+/**
+* @author Linzb
+* @date 2019/3/21
+* @Description: 系统管理->组织机构管理
+*/
 <template>
-  <div class="organization-container">
+  <div
+    v-loading.fullscreen.lock="loading"
+    class="organization-container"
+    element-loading-text="加载中"
+    element-loading-spinner="el-icon-loading"
+    element-loading-background="rgba(0, 0, 0, 0.8)">>
     <el-row :gutter="10">
       <el-col :span="8">
         <div class="grid-content bg-purple">
           <h4>组织机构</h4>
-          <el-input v-model="filterText" placeholder="请输入关键字"/>
+          <el-input v-model="filterText" placeholder="请输入关键字" size="mini"/>
           <el-tree
             ref="organTree"
             :data="organTree"
@@ -23,7 +33,7 @@
           <h4>节点属性面板</h4>
           <el-tabs v-if="isTreeChecked" v-model="activeName" type="border-card" @tab-click="handleClick">
             <el-tab-pane label="节点维护" name="first">
-              <el-form ref="nodeMaintenanceForm" :model="nodeMaintenanceForm" :rules="nodeMaintenanceRules" label-width="120px">
+              <el-form ref="nodeMaintenanceForm" :model="nodeMaintenanceForm" :rules="nodeMaintenanceRules" label-width="120px" size="mini">
                 <el-form-item label="组织机构代码" prop="code">
                   <el-input v-model="nodeMaintenanceForm.code"/>
                 </el-form-item>
@@ -46,7 +56,7 @@
               </el-form>
             </el-tab-pane>
             <el-tab-pane v-if="currentNodeType === 'system'" label="新增子节点" name="second">
-              <el-form ref="addNodeForm" :model="addNodeForm" :rules="nodeMaintenanceRules" label-width="120px">
+              <el-form ref="addNodeForm" :model="addNodeForm" :rules="nodeMaintenanceRules" label-width="120px" size="mini">
                 <el-form-item label="组织机构代码" prop="code">
                   <el-input v-model="addNodeForm.code"/>
                 </el-form-item>
@@ -68,7 +78,7 @@
               </el-form>
             </el-tab-pane>
             <el-tab-pane v-if="currentNodeType !== 'system'" label="税号维护" name="third">
-              <el-form ref="codeMaintenanceForm" :model="codeMaintenanceForm" :rules="codeMaintenanceRules" label-width="120px">
+              <el-form ref="codeMaintenanceForm" :model="codeMaintenanceForm" :rules="codeMaintenanceRules" label-width="120px" size="mini">
                 <el-form-item label="税号" prop="code">
                   <el-input v-model="codeMaintenanceForm.code"/>
                 </el-form-item>
@@ -108,6 +118,7 @@
               <template>
                 <el-table
                   :data="codeRelevanceTerminalList"
+                  border
                   style="width: 100%"
                   height="250">
                   <el-table-column
@@ -139,7 +150,6 @@
                     label="机器编号"
                     width="100"/>
                   <el-table-column
-                    fixed="right"
                     label="操作"
                     width="120">
                     <template slot-scope="scope">
@@ -163,10 +173,11 @@
       </el-col>
     </el-row>
     <!--创建和编辑终端-->
-    <el-dialog :title="dialogTitle" :visible.sync="dialogVisiblity" :lock-scroll="true" width="30%" center custom-class="showPop dialog-wapper pub-min-pop">
-      <dialog ref="dialog" :terminal-info="terminalInfo" :key="terminalInfo.id"/>
-      <span slot="footer" class="dialog-footer">
-        <el-button v-loading.fullscreen.lock="fullscreenLoading" type="primary" @click="saveTerminal">保存</el-button>
+    <el-dialog :title="dialogTitle" :visible.sync="dialogVisiblity" :lock-scroll="true" width="40%" custom-class="showPop dialog-wapper pub-min-pop">
+      <dialog-detail ref="dialog" :terminal-info="terminalInfo" :key="terminalInfo.id"/>
+      <span slot="footer" class="dialog-footer" >
+        <el-button v-loading.fullscreen.lock="fullscreenLoading" type="primary" size="mini" @click="saveTerminal">保存</el-button>
+        <el-button v-loading.fullscreen.lock="fullscreenLoading" size="mini" @click="dialogVisiblity = !dialogVisiblity">取消</el-button>
       </span>
     </el-dialog>
   </div>
@@ -174,14 +185,16 @@
 
 <script>
 import { getNodeList, getNodeDetail, deleteNode, updateNode, addNode } from '@/api/system/organization'
-import dialog from '@/components/system/organization'
+import dialogDetail from '@/components/system/organization'
 export default {
   name: 'Dashboard',
-  component: {
-    dialog
+  components: {
+    dialogDetail
   },
   data() {
     return {
+      // 遮罩层
+      loading: false,
       // 机构树检索关键字
       filterText: '',
       // 默认展示tab类名
@@ -236,7 +249,7 @@ export default {
           { required: true, message: '请选择是否是叶节点', trigger: 'change' }
         ]
       },
-      //
+      // 税号维护表单校验规则
       codeMaintenanceRules: {
         code: [
           { required: true, message: '请输入税号', trigger: 'blur' }
@@ -300,7 +313,15 @@ export default {
       // 弹窗是否显示
       dialogVisiblity: false,
       // 终端信息
-      terminalInfo: {},
+      terminalInfo: {
+        sssh: '',
+        zdbz: '',
+        zdmc: '',
+        zddz: '',
+        zddkh: '',
+        jqbh: '',
+        kplx: []
+      },
       // 加载页面
       fullscreenLoading: false,
       // 当前分页
@@ -320,9 +341,12 @@ export default {
   methods: {
     // 初始化机构树
     initTree() {
+      this.loading = true
       getNodeList().then(res => {
+        this.loading = false
         this.organTree = res.data
       }).catch(err => {
+        this.loading = false
         this.$message({
           message: err,
           type: 'error'
@@ -381,11 +405,6 @@ export default {
             type: 'error',
             message: err.msg
           })
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
         })
       })
     },
@@ -454,11 +473,16 @@ export default {
     },
     // 修改终端
     modifyTerminal() {
-
+      this.dialogVisiblity = true
+      this.dialogTitle = '修改终端信息'
     },
     // 修改终端保存
     saveTerminal() {
-
+      this.$refs.dialog.$refs.form.validate((valid) => {
+        if (valid) {
+          console.log(valid)
+        }
+      })
     },
     handleClick() {
     },
@@ -479,6 +503,9 @@ export default {
       h4{
         padding: 10px;
         background-color: #d9e8fb;
+      }
+      .el-input--mini{
+        width: 200px!important;
       }
     }
     .note{

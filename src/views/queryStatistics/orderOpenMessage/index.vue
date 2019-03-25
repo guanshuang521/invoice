@@ -1,3 +1,8 @@
+/**
+ * @author Wujy
+ * @date 2019/3/21
+ * @Description:订单开票信息查询
+*/
 <template>
   <div class="dashboard-container">
     <div class="search-box">
@@ -91,7 +96,27 @@
             {{ scope.row.jshj }}
           </template>
         </el-table-column>
-        <el-table-column label="订单状态" align="center">
+        <el-table-column label="开票时间" align="center">
+          <template slot-scope="scope">
+            {{ scope.row.ddzt }}
+          </template>
+        </el-table-column>
+        <el-table-column label="开票机号" align="center">
+          <template slot-scope="scope">
+            {{ scope.row.je }}
+          </template>
+        </el-table-column>
+        <el-table-column label="清单标志" align="center">
+          <template slot-scope="scope">
+            {{ scope.row.se }}
+          </template>
+        </el-table-column>
+        <el-table-column label="发票状态" align="center">
+          <template slot-scope="scope">
+            {{ scope.row.jshj }}
+          </template>
+        </el-table-column>
+        <el-table-column label="打印状态" align="center">
           <template slot-scope="scope">
             {{ scope.row.ddzt }}
           </template>
@@ -101,7 +126,7 @@
             <el-button
               size="mini"
               type="primary"
-              @click="handleEdit(scope.$index, scope.row)">发票信息</el-button>
+              @click="handleEdit(scope.$index, scope.row)">查看</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -118,19 +143,25 @@
         <!-- <span></span> -->
       </el-pagination>
     </div>
-    <invoice-order :dialog-visible="dialogVisible" @changeState="change" />
+    <el-dialog
+      :visible.sync="dialogVisible"
+      :before-close="handleClose"
+      title="查看"
+      width="750px"
+      custom-class="add-customer">
+      <order-open-message/>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 import { getTableList } from '@/api/queryStatistics/orderOpenMessage'
-import invoiceOrder from '@/components/queryStatistics/invoiceOrder'
-import Bus from '@/api/bus'
+import orderOpenMessage from '@/components/queryStatistics/orderOpenMessage'
 export default {
   name: 'OrderOpenMessage',
   components: {
-    invoiceOrder
+    orderOpenMessage
   },
   data() {
     return {
@@ -193,9 +224,6 @@ export default {
   created() {
     // this.fetchData()
     this.getTableList()
-    Bus.$on('hide-dialog', (data) => {
-      this.dialogVisible = false
-    })
   },
   methods: {
     change(a) {
@@ -264,8 +292,7 @@ export default {
       console.log(file)
     },
     handleEdit(index, row) {
-      Bus.$emit('show-dialog')
-      // this.dialogVisible = true
+      this.dialogVisible = true
     },
     getTableList() {
       getTableList().then(res => {

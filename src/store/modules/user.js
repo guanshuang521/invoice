@@ -22,7 +22,7 @@ const user = {
       state.avatar = avatar
     },
     SET_ROLES: (state, roles) => {
-      state.roles = roles
+      state.roles = roles // 角色
     },
     SET_ID: (state, id) => {
       state.id = id
