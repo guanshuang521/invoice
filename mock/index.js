@@ -15,8 +15,9 @@ import systemAPI from './system/organization'
 import roleAPI from './system/role'
 import customerAPI from './system/infoMaintenance'
 import orderOpenMessageAPI from './queryStatistics/orderOpenMessage'
-
+//开具
 import getListAPI from './invoiceOpening/getlist'
+import getGmfListAPI from './invoiceOpening/getGmflist'
 
 import infoManagementAPI from './system/infoManagement'
 
@@ -64,6 +65,7 @@ Mock.mock(/\/orderOpenMessage\/getTableList/, 'post', orderOpenMessageAPI.getTab
 
 //invoiceOpening 开具
 Mock.mock(/\/commodityInfo\/getList/, 'post', getListAPI.getlist)  //商品列表查询
+Mock.mock(/\/customer\/getList/, 'post', getGmfListAPI.getGmflist)  //购买方用户信息表查询
 
 // invoice
 Mock.mock(/\/invoice\/billDetail/, 'post', wSpecialAPI.getBillDetail)

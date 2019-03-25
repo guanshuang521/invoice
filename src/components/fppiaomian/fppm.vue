@@ -208,14 +208,14 @@
                     <div>客户编码</div>
                     <div>纳税人识别号</div>
                   </li>
-                  <li v-for="(item, index) in goods.list" :key="item.id" @dblclick="dbSelectGoods(item,index)">
+                  <li v-for="(item, index) in gmfmcList.list" :key="item.id" @dblclick="dbSelectUser(item,index)">
                     <div>
-                      <input type="radio" name="goodsId" v-model="goods.item" :value="item">
+                      <input type="radio" name="userId" v-model="gmfmcList.item" :value="item">
                       {{index + 1}}
                     </div>
-                    <div>{{item.spssbm}}</div>
-                    <div>{{item.spmc}}</div>
-                    <div>{{parseInt(item.sl * 100)}}%</div>
+                    <div>{{item.khmc}}</div>
+                    <div>{{item.khbh}}</div>
+                    <div>{{item.gmfmcList}}</div>
                   </li>
                 </ul>
             </div>
@@ -223,7 +223,7 @@
              <el-pagination @size-change="handleSizeChange($event,'isgmfmc')" @current-change="handleCurrentChange($event,'isgmfmc')" @prev-click="prePageChange($event,'isgmfmc')" @next-click="nextPageChange($event,'isgmfmc')" :current-page="goods.currentPage" :page-sizes="[1, 5, 10, 20,50,100]" :page-size="goods.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="goods.totalCount">
             </el-pagination>
             <div class="dialogbutton-box">
-                <button class="bluebtn">确认</button>
+                <button class="bluebtn" @click="selectUser">确认</button>
             </div>
         </el-dialog>
         
@@ -307,7 +307,7 @@
 
 <script>
 import { getDate,getDx,dataConversion } from '@/utils/filter'
-import { getSpmcList} from '@/api/invoiceOpening/opening';
+import { getSpmcList,getGmfList} from '@/api/invoiceOpening/opening';
 import globaldata from '@/utils/filter'
 import pagination from 'components/pagination/pagination';
     
@@ -390,7 +390,8 @@ export default {
             isyhxx: false,  //添加客户信息弹窗显示
             // 查询购买方信息
             gmfmcList: {
-                dialogGoodsIndex: '', // 打开第几个商品
+                //dialogGoodsIndex: '', // 打开第几个商品
+                item:'',
                 currentPage: 1,  //当前页数
                 pageSize: 5,     //每页显示条目个数
                 skfplx: '',
@@ -403,6 +404,7 @@ export default {
             // 查询商品信息
             goods: {
                 dialogGoodsIndex: '', // 打开第几个商品
+                item:'',
                 currentPage: 1,  //当前页数
                 pageSize: 5,     //每页显示条目个数
                 skfplx: '',
@@ -512,6 +514,25 @@ export default {
         //查询购买方名称列表
         getGmfList(){
             //this.isyhxx = true;
+            let requestData = {
+                'currentPage': '' + this.gmfmcList.pageNum,
+                'pageSize': '' + this.gmfmcList.pageSize,
+                'flag': 0,
+                'skfplx': this.pmfplx,
+                'spssbm': this.gmfmcList.spssbm,
+                'spmc': this.gmfmcList.spmc
+            };
+            getGmfList(requestData).then(res => {
+                this.gmfmcList.list = res.data.list;
+                this.gmfmcList.totalCount = res.data.count;
+                this.gmfmcList.pageSize = res.data.pageSize;
+                this.gmfmcList.currentPage = res.data.currentPage;
+              }).catch(err => {
+                this.$message({
+                  message: err,
+                  type: 'error'
+                })
+              })
         },
         //新增购买方用户信息
         addGmf(){
@@ -596,6 +617,21 @@ export default {
           this.formdata.lines[index]['commodityId'] = item.spmc;
           this.formdata.lines[index]['sl'] = item.sl;
           this.isgoods = false;
+        }, 
+        // 双击选择用户
+        dbSelectUser(item,index) {
+            this.formdata['gmf_nsrsbh'] = item.khsh;
+            this.formdata['gmf_mc'] = item.khmc;
+            this.formdata['gmf_dzdh'] = item.dzdh;
+            this.formdata['gmf_yhzh'] = item.yhzh;
+            this.isgmfmc = false;
+        },
+        selectUser() {
+            /*this.formdata['gmf_nsrsbh'] = item.khsh;
+            this.formdata['gmf_mc'] = item.khmc;
+            this.formdata['gmf_dzdh'] = item.dzdh;
+            this.formdata['gmf_yhzh'] = item.yhzh;*/
+            this.isgmfmc = false;
         },
         // 金额，数量，单价，获得焦点事件
         inputFocus(event, xmjeShow) {
@@ -651,6 +687,7 @@ export default {
         //添加用户信息
         addUser(){
             console.log(this.userList)
+            this.isyhxx = false;
         }
     }
 }

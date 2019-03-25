@@ -78,7 +78,7 @@ const apiPath = {
     invoiceOpening: {
         opening: {
         // 开具
-          gmfGetList: '/mvc/customer/getList',//POST 查询客户信息列表
+          gmfGetList: 'rbac/mvc/customer/getList',//POST 查询客户信息列表
           spmcGetList: "rbac/mvc/commodityInfo/getList",//POST 查询商品信息列表
         }
     },
