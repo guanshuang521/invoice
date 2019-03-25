@@ -2,7 +2,7 @@
   <div class="dashboard-container">
     <div class="search-box">
       <el-row>
-        <el-col :span="9">
+        <el-col :span="18">
           <div class="search-item">
             <span>商品名称: </span>
             <el-input v-model="searchs.commodityName" size="small"/>
@@ -12,7 +12,7 @@
             <el-input v-model="searchs.comcode" size="small"/>
           </div>
         </el-col>
-        <el-col :span="9">
+        <el-col :span="6">
           <div class="grid-content bg-purple-light">
             <el-row>
               <el-button type="primary" size="small" @click="searchFn">查询</el-button>

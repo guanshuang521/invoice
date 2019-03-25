@@ -9,7 +9,7 @@
     class="organization-container"
     element-loading-text="加载中"
     element-loading-spinner="el-icon-loading"
-    element-loading-background="rgba(0, 0, 0, 0.8)">>
+    element-loading-background="rgba(0, 0, 0, 0.8)">
     <el-row :gutter="10">
       <el-col :span="8">
         <div class="grid-content bg-purple">
