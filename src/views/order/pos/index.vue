@@ -3,7 +3,7 @@
  * @Author: zhangzheng
  * @LastEditors: zhangzheng
  * @Date: 2019-03-13 10:10:12
- * @LastEditTime: 2019-03-22 18:00:33
+ * @LastEditTime: 2019-03-25 09:48:50
  -->
 <template>
   <div class="dashboard-container">
@@ -19,17 +19,6 @@
       :operation="operation"
       @handleDelete="handleDelete"
       @handleSelectionChange="handleSelectionChange"/>
-    <!--弹框-->
-    <el-dialog
-      :visible.sync="showDeldialog"
-      title="删除">
-      <span>确定删除选择的数据吗？</span>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="showDeldialog = false">取 消</el-button>
-        <el-button type="primary" @click="showDeldialog = false">确 定</el-button>
-      </span>
-    </el-dialog>
-
   </div>
 </template>
 <script>
@@ -62,8 +51,7 @@ export default {
         pageSize: 5
       }, // 数据源
       columns: [], // 接受的config的配置的参数
-      operation: {}, // 接受的config的操作配置的参数
-      showDeldialog: true
+      operation: {} // 接受的config的操作配置的参数
     }
   },
   computed: {
@@ -92,7 +80,22 @@ export default {
       })
     },
     handleDelete(a, b) {
-      console.log(orderConfig)
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+      // }
     },
     handleSelectionChange(item) {
       var idsStr = ''
