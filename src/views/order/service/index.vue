@@ -3,7 +3,7 @@
  * @Author: zhangzheng
  * @LastEditors: zhangzheng
  * @Date: 2019-03-13 10:10:12
- * @LastEditTime: 2019-03-21 17:12:31
+ * @LastEditTime: 2019-03-25 10:50:12
  -->
 <template>
   <div class="dashboard-container">
@@ -93,7 +93,7 @@ export default {
 }
 </script>
 
-<style rel="stylesheet/scss" lang="scss">
+<style rel="stylesheet/scss" lang="scss" scoped>
 .dashboard {
   &-container {
     margin: 0px;
