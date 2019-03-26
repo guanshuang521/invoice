@@ -23,8 +23,8 @@
       </el-form>
     </div>
     <div class="button-container">
-      <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="addUser">新增</el-button>
-      <el-button size="small" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="deleteUser">删除</el-button>
+      <el-button size="mini" class="filter-item" type="primary" icon="el-icon-search" @click="addUser">新增</el-button>
+      <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="deleteUser">删除</el-button>
     </div>
     <div class="table-container">
       <el-table
@@ -278,15 +278,21 @@ export default {
         })
         return
       }
-      deleteUser(this.checkedList).then(res => {
-        this.$message({
-          type: 'success',
-          message: res.msg
-        })
-      }).catch(err => {
-        this.$message({
-          type: 'error',
-          message: err.msg
+      this.$confirm('确定删除选择数据?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteUser(this.checkedList).then(res => {
+          this.$message({
+            type: 'success',
+            message: res.msg
+          })
+        }).catch(err => {
+          this.$message({
+            type: 'error',
+            message: err.msg
+          })
         })
       })
     },
