@@ -4,80 +4,54 @@
  * @Description:已开发票查询
 */
 <template>
-  <div class="dashboard-container">
-    <div class="search-box">
-      <div class="search-item">
-        <span>购方名称</span>
-        <el-input v-model="searchs.customerName"/>
-      </div>
-      <div class="search-item">
-        <span>商品名称</span>
-        <el-input v-model="searchs.customerTaxNumber"/>
-      </div>
-      <div class="search-item">
-        <span>发票代码</span>
-        <el-input v-model="searchs.customerTaxNumber"/>
-      </div>
-      <div class="search-item">
-        <span>发票号码</span>
-        <el-input v-model="searchs.customerTaxNumber"/>
-      </div>
-      <div class="search-item">
-        <span>发票类型</span>
-        <el-select v-model="value" placeholder="请选择">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"/>
-        </el-select>
-      </div>
-      <div class="search-item">
-        <span>发票状态</span>
-        <el-select v-model="value" placeholder="请选择">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"/>
-        </el-select>
-      </div>
-      <div class="search-item">
-        <span>打印状态</span>
-        <el-select v-model="value" placeholder="请选择">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"/>
-        </el-select>
-      </div>
-      <div class="search-item">
-        <span>税率</span>
-        <el-select v-model="value" placeholder="请选择">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"/>
-        </el-select>
-      </div>
-      <div class="search-item">
-        <span>开票日期起</span>
-        <el-input v-model="searchs.customerName"/>
-      </div>
-      <div class="search-item">
-        <span>开票日期止</span>
-        <el-input v-model="searchs.customerTaxNumber"/>
-      </div>
-      <div class="search-item">
-        <span>开票日期起</span>
-        <el-input v-model="searchs.customerTaxNumber"/>
-      </div>
-      <div class="search-item">
-        <span>开票日期止</span>
-        <el-input v-model="searchs.customerTaxNumber"/>
-      </div>
+  <div class="openInvoice-container">
+    <div class="filter-container">
+      <el-input v-model="searchs.customerName" placeholder="请输入" size="small" class="filter-item">
+        <template slot="prepend">购方名称</template>
+      </el-input>
+      <el-input v-model="searchs.customerTaxNumber" placeholder="请输入" size="small" class="filter-item">
+        <template slot="prepend">商品名称</template>
+      </el-input>
+      <el-input v-model="searchs.customerTaxNumber" placeholder="请输入" size="small" class="filter-item">
+        <template slot="prepend">发票代码</template>
+      </el-input>
+      <el-input v-model="searchs.customerTaxNumber" placeholder="请输入" size="small" class="filter-item">
+        <template slot="prepend">发票号码</template>
+      </el-input>
+      <el-select v-model="value" placeholder="发票类型" size="small" class="filter-item">
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"/>
+      </el-select>
+      <el-select v-model="value" placeholder="发票状态" size="small" class="filter-item">
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"/>
+      </el-select>
+      <el-select v-model="value" placeholder="打印状态" size="small" class="filter-item">
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"/>
+      </el-select>
+      <el-select v-model="value" placeholder="税率" size="small" class="filter-item">
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"/>
+      </el-select>
+      <el-input v-model="searchs.customerName" size="small" class="filter-item">
+        <template slot="prepend">开票日期起</template>
+      </el-input>
+      <el-input v-model="searchs.customerTaxNumber" size="small" class="filter-item">
+        <template slot="prepend">开票日期止</template>
+      </el-input>
       <el-button type="primary" size="small" @click="searchFn">查询</el-button>
       <el-button type="primary" size="small" @click="initSearch">重置</el-button>
     </div>
@@ -360,42 +334,20 @@ export default {
     }
   }
 </style>
-<style rel="stylesheet/scss" lang="scss">
-  .dashboard-container {
-    .search-box {
-      .search-item {
-        .el-input {
-          max-width: 105px;
-          // height: 25px;
+<style rel="stylesheet/scss" lang="scss" scoped>
+  .openInvoice{
+    &-container {
+      margin: 30px;
+      .filter-container{
+        .filter-item{
+          margin: 0 10px 20px 0;
+        }
+        /deep/ .el-input{
+          width: 220px;
         }
       }
-    }
-  }
-  .add-customer {
-    .el-form:after {
-      content: '';
-      display: block;
-      clear: both;
-    }
-    .el-form-item {
-      float: left;
-      .el-input {
-        max-width: 150px;
-        // height: 25px;
-      }
-      &.address .el-input {
-        width: 450px;
-        max-width: 450px;
-      }
-      &.button {
-        width: 610px;
-        .el-form-item__content {
-          margin-left: 0!important;
-          text-align: center;
-          .el-button+.el-button {
-            margin-left: 50px;
-          }
-        }
+      .button-container{
+        margin-bottom: 20px;
       }
     }
   }

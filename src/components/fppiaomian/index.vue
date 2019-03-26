@@ -129,19 +129,19 @@
           <div class="tbB xsfTable">
             <div class="tbmc">
               <span class="xsftitle">名称：</span>
-              <span v-html="formdata.xsf_mc" class="xsfcontent"/>
+              <span class="xsfcontent" v-html="formdata.xsf_mc"/>
             </div>
             <div class="tbnsrsbh">
               <span class="xsftitle">纳税人识别号：</span>
-              <span v-html="formdata.xsf_nsrsbh" class="xsfcontent"/>
+              <span class="xsfcontent" v-html="formdata.xsf_nsrsbh"/>
             </div>
             <div class="tbdzdh">
               <span class="xsftitle">地址  、  电话：</span>
-              <span v-html="formdata.xsf_dzdh" class="xsfcontent"/>
+              <span class="xsfcontent" v-html="formdata.xsf_dzdh"/>
             </div>
             <div class="tbkhh">
               <span class="xsftitle">开户行及账号：</span>
-              <span v-html="formdata.xsf_yhzh" class="xsfcontent"/>
+              <span class="xsfcontent" v-html="formdata.xsf_yhzh"/>
             </div>
           </div>
           <div class="tbB bzText">备<br><br>注</div>
@@ -152,11 +152,11 @@
       </div>
       <div class="fpmsg">
         <div class="msgText">收款人：</div>
-        <div v-html="formdata.skr" class="msgCon"/>
+        <div class="msgCon" v-html="formdata.skr"/>
         <div class="msgText">复核人：</div>
-        <div v-html="formdata.fhr" class="msgCon"/>
+        <div class="msgCon" v-html="formdata.fhr"/>
         <div class="msgText"><span class="required">*</span>开票人：</div>
-        <div v-html="formdata.kpr" class="msgCon"/>
+        <div class="msgCon" v-html="formdata.kpr"/>
         <div class="msgText"><span class="required">*</span>销售方：(章)</div>
         <div class="msgCon"/>
       </div>
@@ -482,12 +482,13 @@ export default {
     },
     // 删除一行
     delBtn(index, yphxz) {
-      const _this = this
+      // const _this = this
       if (this.formdata.lines.length === 1) {
         return false
       }
       if (yphxz === '2') {
-        hintFunction(_this.$store, 'warnHint', '该行已添加折扣信息，请先删除此行的折扣信息')
+        // hintFunction(_this.$store, 'warnHint', '该行已添加折扣信息，请先删除此行的折扣信息')
+        // todo this.$message
         return
       }
       this.formdata.lines.splice(index, 1)
@@ -548,12 +549,12 @@ export default {
         */
     handleSizeChange(data, type) {
       // 选择税收编码dialog
-      if (type == 'isgoods') {
+      if (type === 'isgoods') {
         this.goods.pageSize = data
         this.getGoodsList()
       }
       // 选择购买方名称dialog
-      if (type == 'isgmfmc') {
+      if (type === 'isgmfmc') {
         this.gmfmcList.pageSize = data
         // this.getGmfmcList();
       }
@@ -565,12 +566,12 @@ export default {
         */
     handleCurrentChange(data, type) {
       // 选择税收编码dialog
-      if (type == 'isgoods') {
+      if (type === 'isgoods') {
         this.goods.pageNum = data
         this.getGoodsList()
       }
       // 选择购买方名称dialog
-      if (type == 'isgmfmc') {
+      if (type === 'isgmfmc') {
         this.gmfmcList.pageSize = data
         // this.getGmfmcList();
       }
@@ -582,12 +583,12 @@ export default {
         */
     prePageChange(data, type) {
       // 选择税收编码dialog
-      if (type == 'isgoods') {
+      if (type === 'isgoods') {
         this.goods.currentPage = data
         this.getGoodsList()
       }
       // 选择购买方名称dialog
-      if (type == 'isgmfmc') {
+      if (type === 'isgmfmc') {
         this.gmfmcList.pageSize = data
         // this.getGmfmcList();
       }
@@ -599,12 +600,12 @@ export default {
         */
     nextPageChange(data, type) {
       // 选择税收编码dialog
-      if (type == 'isgoods') {
+      if (type === 'isgoods') {
         this.goods.currentPage = data
         this.getGoodsList()
       }
       // 选择购买方名称dialog
-      if (type == 'isgmfmc') {
+      if (type === 'isgmfmc') {
         this.gmfmcList.pageSize = data
         // this.getGmfmcList();
       }

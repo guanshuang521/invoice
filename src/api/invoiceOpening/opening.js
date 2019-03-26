@@ -8,9 +8,9 @@ export function getSpmcList(params) {
   return request({
     url: apiPath.invoiceOpening.opening.spmcGetList,
     method: 'post',
-    data: 
+    data:
       params
-    
+
   })
 }
 // 购买方信息查询列表
@@ -18,8 +18,8 @@ export function getGmfList(params) {
   return request({
     url: apiPath.invoiceOpening.opening.gmfGetList,
     method: 'post',
-    data: 
+    data:
       params
-    
+
   })
 }
