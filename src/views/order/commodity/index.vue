@@ -3,14 +3,14 @@
  * @Author: zhangzheng
  * @LastEditors: zhangzheng
  * @Date: 2019-03-13 10:10:12
- * @LastEditTime: 2019-03-25 10:36:31
+ * @LastEditTime: 2019-03-25 17:52:50
  -->
 <template>
   <div class="dashboard-container">
     <search-Form :moudel-type="moudelType" :config="queryConditionsForm" :data.sync="searchConditions" :data-source="dataSource"/>
     <div class="btn_wrapper">
-      <el-button type="primary" icon="el-icon-edit">同一购方订单生成预制发票</el-button>
-      <el-button type="primary" icon="el-icon-circle-check">勾选订单生成预制发票</el-button>
+      <el-button type="primary" icon="el-icon-edit" @click="showInvoiceDialog">同一购方订单生成预制发票</el-button>
+      <el-button type="primary" icon="el-icon-circle-check" @click="showInvoiceDialog">勾选订单生成预制发票</el-button>
       <el-button type="primary" icon="el-icon-upload">导出</el-button>
     </div>
     <search-Table
@@ -19,6 +19,11 @@
       :operation="operation"
       @handleDelete="handleDelete"
       @handleSelectionChange="handleSelectionChange"/>
+    <Invoicedialog
+      :moudel-type="moudelType"
+      :ishow="showDialog"
+      @makeInvoicePre="makeInvoicePre"
+      @hideDialog="hideDialog"/>
   </div>
 </template>
 <script>
@@ -27,9 +32,10 @@ import SearchForm from '../components/searchForm'
 import SearchTable from '../components/searchTable'
 import { getOrderlist } from '@/api/order'
 import orderConfig from '../components/orderConfig'
+import Invoicedialog from '../components/invoiceDialog'
 export default {
   name: 'Dashboard',
-  components: { SearchForm, SearchTable },
+  components: { SearchForm, SearchTable, Invoicedialog },
   data() {
     return {
       moudelType: 'server',
@@ -51,7 +57,8 @@ export default {
         pageSize: 5
       }, // 数据源
       columns: [],
-      operation: {}
+      operation: {},
+      showDialog: false
     }
   },
   computed: {
@@ -90,8 +97,21 @@ export default {
         idsStr += item[i]['username'] + ','
       }
       console.log(idsStr)
+    },
+    makeInvoicePre(formName) {
+      console.log(formName)
+    },
+    // 显示预制发票弹出框
+    showInvoiceDialog() {
+      this.showDialog = true
+    },
+    // 关闭预制发票弹出框
+    hideDialog() {
+      this.showDialog = false
     }
   }
+  // 生成预制发票
+
 }
 </script>
 

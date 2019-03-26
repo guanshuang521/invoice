@@ -3,14 +3,14 @@
  * @Author: zhangzheng
  * @LastEditors: zhangzheng
  * @Date: 2019-03-13 10:10:12
- * @LastEditTime: 2019-03-25 15:33:44
+ * @LastEditTime: 2019-03-25 17:37:23
  -->
 <template>
   <div class="dashboard-container">
     <search-Form :moudel-type="moudelType" :config="queryConditionsForm" :data.sync="searchConditions" :data-source="dataSource"/>
     <div class="btn_wrapper">
       <el-button type="primary" icon="el-icon-edit" @click="orderDownload">订单下载</el-button>
-      <el-button type="primary" icon="el-icon-circle-check">勾选生成预制发票</el-button>
+      <el-button type="primary" icon="el-icon-circle-check" @click="showInvoiceDialog">勾选生成预制发票</el-button>
       <el-button type="primary" icon="el-icon-upload">导出</el-button>
     </div>
     <search-Table
@@ -30,7 +30,11 @@
         <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
       </div>
     </el-dialog> -->
-    <Invoicedialog/>
+    <Invoicedialog
+      :moudel-type="moudelType"
+      :ishow="showDialog"
+      @makeInvoicePre="makeInvoicePre"
+      @hideDialog="hideDialog"/>
   </div>
 </template>
 <script>
@@ -46,7 +50,7 @@ export default {
   components: { SearchForm, SearchTable, Invoicedialog },
   data() {
     return {
-      moudelType: 'server',
+      moudelType: 'pos',
       searchConditions: {
         buyyerName: '',
         supplierCode: '',
@@ -66,7 +70,7 @@ export default {
       }, // 数据源
       columns: [], // 接受的config的配置的参数
       operation: {}, // 接受的config的操作配置的参数
-      dialogFormVisible: true
+      showDialog: false
     //   dynamicValidateForm: {
     //     domains: [{
     //       value: ''
@@ -155,18 +159,18 @@ export default {
           message: '已取消删除'
         })
       })
+    },
+    // 生成预制发票
+    makeInvoicePre(formName) {
+      console.log(formName)
+    },
+    showInvoiceDialog() {
+      this.showDialog = true
+      console.log(this.showDialog)
+    },
+    hideDialog() {
+      this.showDialog = false
     }
-    // submitForm(formName) {
-    //   this.$refs[formName].validate((valid) => {
-    //     if (valid) {
-    //       alert('submit!')
-    //     } else {
-    //       console.log('error submit!!')
-    //       return false
-    //     }
-    //   })
-    // }
-
   }
 }
 </script>
