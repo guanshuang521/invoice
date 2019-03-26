@@ -42,8 +42,8 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="addTemplate(templateForm)">确 定</el-button>
+          <el-button size="mini" @click="dialogFormVisible = false">取 消</el-button>
+          <el-button type="primary" size="mini" @click="addTemplate(templateForm)">确 定</el-button>
         </div>
       </el-dialog>
       <!--删除弹框-->
@@ -54,8 +54,8 @@
         width="30%">
         <span>确定要删除选择的数据吗？</span>
         <span slot="footer" class="dialog-footer">
-          <el-button @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="templateDelete">确 定</el-button>
+          <el-button size="mini" @click="dialogVisible = false">取 消</el-button>
+          <el-button type="primary" size="mini" @click="templateDelete">确 定</el-button>
         </span>
       </el-dialog>
     </el-row>
