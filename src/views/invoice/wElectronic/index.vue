@@ -6,12 +6,15 @@
 <template>
   <div class="wSpecial-container">
     <div class="filter-container">
-      <label>购方名称</label>
-      <el-input :placeholder="placeholder" v-model="listQuery.gfmc" size="small" style="width: 150px;" class="filter-item" @keyup.enter.native="initList"/>
-      <label>订单号</label>
-      <el-input :placeholder="placeholder" v-model="listQuery.ddh" size="small" style="width: 150px;" class="filter-item" @keyup.enter.native="initList"/>
-      <label>商品名称</label>
-      <el-input :placeholder="placeholder" v-model="listQuery.spmc" size="small" style="width: 150px;" class="filter-item" @keyup.enter.native="initList"/>
+      <el-input :placeholder="placeholder" v-model="listQuery.gfmc" size="small" style="width: 200px;" class="filter-item" @keyup.enter.native="initList">
+        <template slot="prepend">购方名称</template>
+      </el-input>
+      <el-input :placeholder="placeholder" v-model="listQuery.ddh" size="small" style="width: 200px;" class="filter-item" @keyup.enter.native="initList">
+        <template slot="prepend">订单号</template>
+      </el-input>
+      <el-input :placeholder="placeholder" v-model="listQuery.spmc" size="small" style="width: 200px;" class="filter-item" @keyup.enter.native="initList">
+        <template slot="prepend">商品名称</template>
+      </el-input>
       <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="initList">查询</el-button>
       <el-button size="small" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleReset">重置</el-button>
     </div>
