@@ -27,8 +27,11 @@ const apiPath = {
       deletedata: '/store/deleteTicketList.do'
       // addNode: '/organization/add'
     },
-    User: {
-      list: '/store/selectAll.do'
+    user: {
+      list: '/store/selectAll.do', // 获取用户列表
+      save: '/system/user/save.do', // 用户保存
+      delete: '/system/user/delete.do', // 删除用户
+      detail: '/system/user/detail.do' // 获取用户详情
     },
     InfoManagement: {
       list: '/commoditye/selectByCommodity', // 页面加载获取数据
@@ -40,9 +43,6 @@ const apiPath = {
       add: '',
       edit: '',
       delete: ''
-    },
-    user: {
-      list: ''
     },
     role: {
       selectByRole: '/role/selectByRole ', // 角色信息查询

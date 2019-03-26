@@ -18,18 +18,30 @@
       <el-input :placeholder="placeholder" v-model="listQuery.spmc" size="small" class="filter-item" @keyup.enter.native="initList">
         <template slot="prepend">发票号码</template>
       </el-input>
-      <el-input :placeholder="placeholder" v-model="listQuery.spmc" size="small" class="filter-item" @keyup.enter.native="initList">
-        <template slot="prepend">开票日期起</template>
-      </el-input>
-      <el-input :placeholder="placeholder" v-model="listQuery.spmc" size="small" class="filter-item" @keyup.enter.native="initList">
-        <template slot="prepend">开票日期止</template>
-      </el-input>
-      <el-input :placeholder="placeholder" v-model="listQuery.spmc" size="small" class="filter-item" @keyup.enter.native="initList">
-        <template slot="prepend">作废日期起</template>
-      </el-input>
-      <el-input :placeholder="placeholder" v-model="listQuery.spmc" size="small" class="filter-item" @keyup.enter.native="initList">
-        <template slot="prepend">作废日期止</template>
-      </el-input>
+      <el-date-picker
+        v-model="listQuery.spmc"
+        type="date"
+        size="small"
+        class="filter-item"
+        placeholder="开票日期起"/>
+      <el-date-picker
+        v-model="listQuery.spmc"
+        type="date"
+        size="small"
+        class="filter-item"
+        placeholder="开票日期止"/>
+      <el-date-picker
+        v-model="listQuery.spmc"
+        type="date"
+        size="small"
+        class="filter-item"
+        placeholder="作废日期起"/>
+      <el-date-picker
+        v-model="listQuery.spmc"
+        type="date"
+        size="small"
+        class="filter-item"
+        placeholder="作废日期止"/>
       <el-input :placeholder="placeholder" v-model="listQuery.spmc" size="small" class="filter-item" @keyup.enter.native="initList">
         <template slot="prepend">发票状态</template>
       </el-input>

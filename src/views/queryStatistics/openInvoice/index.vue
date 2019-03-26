@@ -46,12 +46,18 @@
           :label="item.label"
           :value="item.value"/>
       </el-select>
-      <el-input v-model="searchs.customerName" size="small" class="filter-item">
-        <template slot="prepend">开票日期起</template>
-      </el-input>
-      <el-input v-model="searchs.customerTaxNumber" size="small" class="filter-item">
-        <template slot="prepend">开票日期止</template>
-      </el-input>
+      <el-date-picker
+        v-model="searchs.customerTaxNumber"
+        type="date"
+        size="small"
+        class="filter-item"
+        placeholder="开票日期起"/>
+      <el-date-picker
+        v-model="searchs.customerTaxNumber"
+        type="date"
+        size="small"
+        class="filter-item"
+        placeholder="开票日期止"/>
       <el-button type="primary" size="small" @click="searchFn">查询</el-button>
       <el-button type="primary" size="small" @click="initSearch">重置</el-button>
     </div>
