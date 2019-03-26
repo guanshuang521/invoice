@@ -4,7 +4,7 @@
 const organization = {
   'node-detail': {
     name: 'nodeName',
-    nodeType: 'system'
+    nodeType: 'system1'
   },
   'node-tree': [{
     id: 1,
@@ -47,26 +47,18 @@ export default {
     const info = organization['node-tree']
     if (info) {
       return {
-        code: 20000,
+        code: '0000',
         data: info
       }
-    }
-    return {
-      code: 50008,
-      message: 'Login failed, unable to get user details.'
     }
   },
   nodeDetail: res => {
     const info = organization['node-detail']
     if (info) {
       return {
-        code: 20000,
+        code: '0000',
         data: info
       }
-    }
-    return {
-      code: 50008,
-      message: 'Login failed, unable to get user details.'
     }
   }
 }

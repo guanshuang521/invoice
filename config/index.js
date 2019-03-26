@@ -11,7 +11,14 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/rbac':{
-        target: 'http://192.168.2.83:8080', //测试环境
+        target: 'http://192.168.7.50:59011', //测试环境
+        // pathRewrite: {
+        //   '^/rbac': '/'
+        // },
+        changeOrigin: true,
+      },
+      '/store':{
+        target: 'http://192.168.5.189:8080', //后台api
         // pathRewrite: {
         //   '^/rbac': '/'
         // },

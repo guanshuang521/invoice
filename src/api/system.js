@@ -39,3 +39,11 @@ export function updateNode(data) {
     data: data
   })
 }
+// 新增子节点
+export function addNode(data) {
+  return request({
+    url: apiPath.system.organization.addNode,
+    method: 'post',
+    data: data
+  })
+}

@@ -1,32 +1,47 @@
 <template>
-  <div class="dashboard-container">
-    <div class="dashboard-text">name:{{ name }}</div>
-    <div class="dashboard-text">roles:<span v-for="role in roles" :key="role">{{ role }}</span></div>
+  <div class="special"><!--手工填开专票 004-->
+    <form>
+      <button class="bluebtn" @click="kaijuBtn">确认开具</button>
+      <div class="specialPm">
+        <fppm :pmfplx="fplx" @getformdata="pmformdata"/>
+      </div>
+    </form>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import fppm from '@/components/fppiaomian/index'
 
 export default {
-  name: 'Dashboard',
+  name: 'Special',
+  components: {
+    fppm
+  },
+  data() {
+    return {
+      fplx: this.$store.getters.fplx_spe, // 专票 004
+      formlist: {}
+    }
+  },
   computed: {
-    ...mapGetters([
-      'name',
-      'roles'
-    ])
+  },
+  methods: {
+    kaijuBtn() {
+      console.log(this.formlist)
+    },
+    pmformdata: function(msg) {
+      this.formlist = msg
+    }
   }
 }
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-.dashboard {
-  &-container {
-    margin: 30px;
-  }
-  &-text {
-    font-size: 30px;
-    line-height: 46px;
-  }
+.specialPm{
+    width: 1040px;
+    height: 606px;
+    border: 1px solid #E0E0E0;
+    box-shadow: 0 0 10px #ccc;
+    margin: 20px;
 }
 </style>

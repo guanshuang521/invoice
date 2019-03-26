@@ -24,9 +24,7 @@
         </span>
       </el-form-item>
       <el-form-item>
-        <el-button :loading="loading" type="primary" style="width:100%;" @click.native.prevent="handleLogin">
-          Sign in
-        </el-button>
+        <el-button :loading="loading" type="primary" style="width:100%;" @click.native.prevent="handleLogin">登录</el-button>
       </el-form-item>
       <div class="tips">
         <!--<span style="margin-right:20px;">username: admin</span>-->
@@ -87,9 +85,11 @@ export default {
       }
     },
     handleLogin() {
+      // 点击登录时的方法
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
+          // 校验非空后执行 Login方法
           this.$store.dispatch('Login', this.loginForm).then(() => {
             this.loading = false
             this.$router.push({ path: this.redirect || '/' })
