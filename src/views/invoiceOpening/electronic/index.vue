@@ -1,28 +1,28 @@
 <template>
   <div class="electronic"><!--手工填开专票 004-->
-    <fppm :pmfplx='fplx'></fppm>
+    <fppm :pmfplx="fplx"/>
   </div>
 </template>
 
 <script>
-import fppm from 'components/fppiaomian/fppm.vue'
+import fppm from '@/components/fppiaomian/index'
 
 export default {
-    name: 'electronic',
-    components:{
-        fppm
-    },
-    data(){
-        return{
-            fplx:this.$store.getters.fplx_ele //电票 026
-        }
-    },
+  name: 'Electronic',
+  components: {
+    fppm
+  },
+  data() {
+    return {
+      fplx: this.$store.getters.fplx_ele // 电票 026
+    }
+  },
   computed: {
   }
 }
 </script>
 
-<style rel="stylesheet/scss" lang="scss" scoped> 
+<style rel="stylesheet/scss" lang="scss" scoped>
 .electronic{
     width: 1040px;
     height: 606px;

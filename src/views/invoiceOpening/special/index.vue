@@ -1,42 +1,42 @@
 <template>
   <div class="special"><!--手工填开专票 004-->
-   <form>
-        <button class="bluebtn" @click='kaijuBtn'>确认开具</button>
-        <div class="specialPm">
-            <fppm :pmfplx='fplx' @getformdata='pmformdata'></fppm>
-        </div>
-   </form>
+    <form>
+      <button class="bluebtn" @click="kaijuBtn">确认开具</button>
+      <div class="specialPm">
+        <fppm :pmfplx="fplx" @getformdata="pmformdata"/>
+      </div>
+    </form>
   </div>
 </template>
 
 <script>
-import fppm from 'components/fppiaomian/fppm.vue'
+import fppm from '@/components/fppiaomian/index'
 
 export default {
-    name: 'special',
-    components:{
-        fppm
-    },
-    data(){
-        return{
-            fplx:this.$store.getters.fplx_spe, //专票 004
-            formlist:{},
-        }
-    },
-    computed: {
-    },
-    methods:{
-        kaijuBtn(){
-            console.log(this.formlist)
-        },
-        pmformdata:function(msg){
-            this.formlist = msg
-        }
+  name: 'Special',
+  components: {
+    fppm
+  },
+  data() {
+    return {
+      fplx: this.$store.getters.fplx_spe, // 专票 004
+      formlist: {}
     }
+  },
+  computed: {
+  },
+  methods: {
+    kaijuBtn() {
+      console.log(this.formlist)
+    },
+    pmformdata: function(msg) {
+      this.formlist = msg
+    }
+  }
 }
 </script>
 
-<style rel="stylesheet/scss" lang="scss" scoped> 
+<style rel="stylesheet/scss" lang="scss" scoped>
 .specialPm{
     width: 1040px;
     height: 606px;
