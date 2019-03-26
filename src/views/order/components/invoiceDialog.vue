@@ -3,12 +3,12 @@
  * @Author: zhangzheng
  * @LastEditors: zhangzheng
  * @Date: 2019-03-13 10:10:12
- * @LastEditTime: 2019-03-25 18:01:12
+ * @LastEditTime: 2019-03-26 11:10:07
  -->
 <template>
   <div class="invoice_dialog">
     <el-dialog :visible.sync="ishow" :before-close="hideDialog" title="预制发票">
-      <el-form ref="dynamicValidateForm" :rules="rules" :model="dynamicValidateForm" label-width="120px">
+      <el-form ref="dynamicValidateForm" :rules="rules" :model="dynamicValidateForm" label-width="110px">
         <el-form-item label="选择订单数">
           <el-input disabled="disabled"/>
         </el-form-item>

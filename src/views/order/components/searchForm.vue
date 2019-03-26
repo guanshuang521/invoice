@@ -3,12 +3,12 @@
  * @Author: zhangzheng
  * @LastEditors: zhangzheng
  * @Date: 2019-03-15 09:50:29
- * @LastEditTime: 2019-03-25 10:36:05
+ * @LastEditTime: 2019-03-26 11:10:41
  -->
 
 <template>
   <div class="searchForm_wrapper">
-    <el-form ref="data" :model="data" :inline="true" label-width="120px" size="mini" class="demo-form-inline" >
+    <el-form ref="data" :model="data" :inline="true" label-width="110px" size="mini" class="demo-form-inline" >
       <el-form-item v-for="(item,index) in config" v-show="index<3 || ishow" :label="item.title" :key="item.code" :prop="item.code" :class="item.type === 'button'||item.type === 'datepicker'?'fixedclass':''" class="table-header-item">
         <el-select v-if="item.type === 'select'" v-model="data[item.code]" :placeholder="`请选择${item.title}`">
           <el-option v-for="option in item.options" :key="option.id" :value="option.id" :label="option.text"/>
