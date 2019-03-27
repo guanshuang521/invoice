@@ -1,49 +1,49 @@
 <template>
   <div class="dashboard-container">
     <el-row>
-      <el-button type="primary" class="dashboard-button" @click="dialogFormVisible = true">新增</el-button>
-      <el-button type="primary" class="dashboard-button" @click="dialogVisible = true">删除</el-button>
+      <el-button type="primary" size="mini" class="dashboard-button" @click="dialogFormVisible = true">新增</el-button>
+      <el-button type="primary" size="mini" class="dashboard-button" @click="dialogVisible = true">删除</el-button>
       <!--新增规则弹框-->
       <el-dialog :visible.sync="dialogFormVisible" title="新增规则" width="55%">
-        <el-form>
-          <el-form-item :label-width="formLabelWidth" label="模板名称" class="dashboard-selectBox">
-            <el-input v-model="ruleName "/>
+        <el-form :model="templateForm" :ref="templateForm" :rules="rules">
+          <el-form-item :label-width="formLabelWidth" label="模板名称" class="dashboard-selectBox" prop="ruleName">
+            <el-input v-model="templateForm.ruleName "/>
           </el-form-item>
           <el-form-item :label-width="formLabelWidth" label="按相同大类合并" class="dashboard-selectBox">
-            <el-radio v-model="classBig" label="1">是</el-radio>
-            <el-radio v-model="classBig" label="2">否</el-radio>
+            <el-radio v-model="templateForm.classBig" label="1">是</el-radio>
+            <el-radio v-model="templateForm.classBig" label="2">否</el-radio>
           </el-form-item>
           <el-form-item :label-width="formLabelWidth" label="按相同税率合并" class="dashboard-selectBox">
-            <el-radio v-model="rate " label="1">是</el-radio>
-            <el-radio v-model="rate " label="2">否</el-radio>
+            <el-radio v-model="templateForm.rate " label="1">是</el-radio>
+            <el-radio v-model="templateForm.rate " label="2">否</el-radio>
           </el-form-item>
           <el-form-item :label-width="formLabelWidth" label="按相同品名合并" class="dashboard-selectBox">
-            <el-radio v-model="commodity" label="1">是</el-radio>
-            <el-radio v-model="commodity" label="2">否</el-radio>
+            <el-radio v-model="templateForm.commodity" label="1">是</el-radio>
+            <el-radio v-model="templateForm.commodity" label="2">否</el-radio>
           </el-form-item>
           <el-form-item :label-width="formLabelWidth" label="正负合并" class="dashboard-selectBox">
-            <el-radio v-model="plusMinus" label="1">是</el-radio>
-            <el-radio v-model="plusMinus" label="2">否</el-radio>
+            <el-radio v-model="templateForm.plusMinus" label="1">是</el-radio>
+            <el-radio v-model="templateForm.plusMinus" label="2">否</el-radio>
           </el-form-item>
           <el-form-item :label-width="formLabelWidth" label="按相同单价合并" class="dashboard-selectBox">
-            <el-radio v-model="price " label="1">是</el-radio>
-            <el-radio v-model="price " label="2">否</el-radio>
+            <el-radio v-model="templateForm.price " label="1">是</el-radio>
+            <el-radio v-model="templateForm.price " label="2">否</el-radio>
           </el-form-item>
           <el-form-item :label-width="formLabelWidth" label="清单标识" class="dashboard-selectBox">
-            <el-radio v-model="listSign " label="1">带清单</el-radio>
-            <el-radio v-model="listSign " label="2">无清单</el-radio>
+            <el-radio v-model="templateForm.listSign " label="1">带清单</el-radio>
+            <el-radio v-model="templateForm.listSign " label="2">无清单</el-radio>
           </el-form-item>
           <el-form-item :label-width="formLabelWidth" label="发票明细限制行数" class="dashboard-selectBox" >
-            <el-input v-model="invoiceLine" />
+            <el-input v-model="templateForm.invoiceLine" />
           </el-form-item>
           <el-form-item :label-width="formLabelWidth" label="启用状态" class="dashboard-selectBox">
-            <el-radio v-model="status " label="1">启用</el-radio>
-            <el-radio v-model="status " label="2">停用</el-radio>
+            <el-radio v-model="templateForm.status " label="1">启用</el-radio>
+            <el-radio v-model="templateForm.status " label="2">停用</el-radio>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+          <el-button size="mini" @click="dialogFormVisible = false">取 消</el-button>
+          <el-button type="primary" size="mini" @click="addTemplate(templateForm)">确 定</el-button>
         </div>
       </el-dialog>
       <!--删除弹框-->
@@ -54,8 +54,8 @@
         width="30%">
         <span>确定要删除选择的数据吗？</span>
         <span slot="footer" class="dialog-footer">
-          <el-button @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="templateDelete">确 定</el-button>
+          <el-button size="mini" @click="dialogVisible = false">取 消</el-button>
+          <el-button type="primary" size="mini" @click="templateDelete">确 定</el-button>
         </span>
       </el-dialog>
     </el-row>
@@ -132,6 +132,17 @@ export default {
   data() {
     return {
       currentPage4: 4,
+      templateForm: {
+        ruleName: '',
+        classBig: '1',
+        rate: '1',
+        commodity: '1',
+        plusMinus: '1',
+        price: '1',
+        listSign: '1',
+        invoiceLine: '',
+        status: '1'
+      },
       tableData3: [{
         date: '2016-05-03',
         name: '王小虎',
@@ -173,16 +184,13 @@ export default {
       dialogFormVisible: false,
       invoiceLine: '',
       formLabelWidth: '127px',
-      radio: '1',
       dialogVisible: false,
-      classBig: '1',
-      commodity: '1',
-      ruleName: '',
-      rate: '1',
-      price: '1',
-      plusMinus: '1',
-      listSign: '1',
-      status: '1'
+      rules: {
+        ruleName: [
+          { required: true, message: '请输入模板名称', trigger: 'blur' },
+          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+        ]
+      }
     }
   },
   computed: {
@@ -211,6 +219,16 @@ export default {
     },
     templateDelete() {
       this.dialogVisible = false
+    },
+    addTemplate(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.dialogFormVisible = false
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
     }
   }
 }
@@ -225,7 +243,6 @@ export default {
     display: inline-block;
     float: left;
     margin-left: 20px;
-    padding: 10px;
   }
   &-selectBox{
     width: 320px;
