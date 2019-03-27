@@ -19,7 +19,8 @@ export function arrayToMenu(array) {
         component: Layout,
         name: row.name,
         meta: { title: row.title, icon: row.name },
-        id: row.id
+        id: row.id,
+        redirect: 'noredirect'
       })
     }
   }

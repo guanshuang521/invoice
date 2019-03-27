@@ -10,16 +10,10 @@
     element-loading-text="加载中"
     element-loading-spinner="el-icon-loading"
     element-loading-background="rgba(0, 0, 0, 0.8)">
-    <div style="margin-top:10px;">
-      <el-row>
-        <el-col :span="24"><div class="grid-content bg-purple-dark">
-          <el-row>
-            <el-button type="primary" size="mini" @click="dialogVisible('add')">新增</el-button>
-            <el-button type="primary" size="mini" @click="dialogVisible('edit')">修改</el-button>
-            <el-button type="primary" size="mini" @click="remove">删除</el-button>
-          </el-row>
-        </div></el-col>
-      </el-row>
+    <div class="button-container">
+      <el-button type="primary" icon="el-icon-search" size="mini" @click="dialogVisible('add')">新增</el-button>
+      <el-button type="primary" icon="el-icon-search" size="mini" @click="dialogVisible('edit')">修改</el-button>
+      <el-button type="primary" icon="el-icon-search" size="mini" @click="remove">删除</el-button>
     </div>
     <div class="table">
       <el-table
@@ -31,51 +25,60 @@
         @selection-change="handleSelectionChange">
         <el-table-column
           type="selection"
+          align="center"
           width="35"/>
         <el-table-column
           label="序号"
+          align="center"
           width="120">
           <!--<template slot-scope="scope">{{ scope.row.date }}</template>-->
         </el-table-column>
         <el-table-column
           prop="storeName"
           label="门店名称"
+          align="center"
           width="180">
           <template slot-scope="scope">{{ scope.row.storeName }}</template>
         </el-table-column>
         <el-table-column
           prop="storeCode"
           label="门店号"
+          align="center"
           width="160">
           <template slot-scope="scope">{{ scope.row.storeCode }}</template>
         </el-table-column>
         <el-table-column
           prop="userName"
           label="用户名"
+          align="center"
           width="160">
           <template slot-scope="scope">{{ scope.row.userName }}</template>
         </el-table-column>
         <el-table-column
           prop="userPwd"
           label="密码"
+          align="center"
           width="160">
           <template slot-scope="scope">{{ scope.row.userPwd }}</template>
         </el-table-column>
         <el-table-column
           prop="datasourceDrive"
           label="数据源驱动"
+          align="center"
           width="160">
           <template slot-scope="scope">{{ scope.row.datasourceDrive }}</template>
         </el-table-column>
         <el-table-column
           prop="datasourceLink"
           label="数据源链接"
+          align="center"
           width="160">
           <template slot-scope="scope">{{ scope.row.datasourceLink }}</template>
         </el-table-column>
         <el-table-column
           prop="datasourceType"
           label="数据类型"
+          align="center"
           width="160">
           <template slot-scope="scope">{{ scope.row.datasourceType }}</template>
         </el-table-column>
@@ -310,18 +313,13 @@ export default {
   .shop {
     &-container {
       margin: 30px;
+      .button-container{
+        margin-bottom: 20px;
+      }
     }
     &-text {
       font-size: 30px;
       line-height: 46px;
     }
-  }
-  .grid-content {
-    border-radius: 4px;
-    min-height: 36px;
-  }
-  el-dialog el-input {
-    width:300px;
-    margin-bottom:15px;
   }
 </style>
