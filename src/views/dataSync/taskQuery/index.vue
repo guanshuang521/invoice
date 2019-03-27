@@ -4,31 +4,44 @@
  * @Description:任务查询
 */
 <template>
-  <div class="dashboard-container">
-    <div class="search-box">
-      <div class="search-item">
-        <span>数据类型</span>
-        <el-input v-model="searchs.customerName"/>
-      </div>
-      <div class="search-item">
-        <span>同步状态</span>
-        <el-input v-model="searchs.customerTaxNumber"/>
-      </div>
-      <div class="search-item">
-        <span>同步日期起</span>
-        <el-input v-model="searchs.customerTaxNumber"/>
-      </div>
-      <div class="search-item">
-        <span>同步日期止</span>
-        <el-input v-model="searchs.customerTaxNumber"/>
-      </div>
-      <el-button type="primary" size="small" @click="searchFn">查询</el-button>
-      <el-button type="primary" size="small" @click="initSearch">重置</el-button>
+  <div class="taskQuery-container">
+    <div class="filter-container">
+      <el-form :inline="true" :model="searchParams" class="demo-form-inline">
+        <el-form-item label="数据类型">
+          <el-input v-model="searchParams.userName" placeholder="请输入" size="small"/>
+        </el-form-item>
+        <el-form-item label="同步状态">
+          <el-select v-model="searchParams.role" placeholder="请选择" size="small">
+            <el-option label="角色1" value="shanghai"/>
+            <el-option label="角色2" value="beijing"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="开票日期起">
+          <el-date-picker
+            v-model="listQuery.spmc"
+            type="date"
+            size="small"
+            class="filter-item"
+            placeholder="开票日期起"/>
+        </el-form-item>
+        <el-form-item label="开票日期止">
+          <el-date-picker
+            v-model="listQuery.spmc"
+            type="date"
+            size="small"
+            class="filter-item"
+            placeholder="开票日期止"/>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" size="small" @click="initTable">查询</el-button>
+          <el-button type="primary" size="small" @click="reset">重置</el-button>
+        </el-form-item>
+      </el-form>
     </div>
-    <div class="button-box">
-      <el-button type="primary" size="mini" @click="importExcel">导出</el-button>
+    <div class="button-container">
+      <el-button size="small" type="primary" @click="importExcel">导出</el-button>
     </div>
-    <div class="table-box">
+    <div class="table-container">
       <el-table
         v-loading="listLoading"
         :data="list"
@@ -113,6 +126,20 @@ export default {
   data() {
     return {
       value: '',
+      listQuery: {
+        title: '',
+        importance: '',
+        type: '',
+        sort: '',
+        limit: 10,
+        currentPage: 2
+      },
+      searchParams: {
+        userName: '',
+        role: '',
+        currentPage: 1,
+        pageSize: 10
+      },
       options: [{
         value: '01',
         label: '费用单据'
@@ -183,8 +210,8 @@ export default {
       //   this.listLoading = false
       // })
     },
-    searchFn() {},
-    initSearch() { // 重置
+    initTable() {},
+    reset() { // 重置
       this.searchs = {
         customerName: '',
         customerTaxNumber: ''
@@ -251,68 +278,27 @@ export default {
   }
 }
 </script>
-
-<style rel="stylesheet/scss" lang="scss" scoped>
-  .dashboard {
-    &-container {
-      margin: 30px;
-      .search-box {
-        .search-item {
-          // float: left;
-          display: inline-block;
-          span {
-            font-size: 14px;
-          }
-        }
-      }
-      .button-box {
-        margin-top: 10px;
-        margin-bottom: 10px;
-      }
-    }
-    &-text {
-      font-size: 30px;
-      line-height: 46px;
-    }
-  }
-</style>
 <style rel="stylesheet/scss" lang="scss">
-  .dashboard-container {
-    .search-box {
-      .search-item {
-        .el-input {
-          max-width: 105px;
-          // height: 25px;
-        }
-      }
+.taskQuery {
+  &-container{
+    margin: 30px;
+    .filter-item{
+      margin: 0 10px 20px 0;
+    }
+    .authTree{
+      border: 1px solid #eeeeee;
+      width: 454px;
+      max-height: 200px;
+      overflow-y: scroll;
+    }
+    .button-container{
+      margin-bottom: 20px;
     }
   }
-  .add-customer {
-    .el-form:after {
-      content: '';
-      display: block;
-      clear: both;
-    }
-    .el-form-item {
-      float: left;
-      .el-input {
-        max-width: 150px;
-        // height: 25px;
-      }
-      &.address .el-input {
-        width: 450px;
-        max-width: 450px;
-      }
-      &.button {
-        width: 610px;
-        .el-form-item__content {
-          margin-left: 0!important;
-          text-align: center;
-          .el-button+.el-button {
-            margin-left: 50px;
-          }
-        }
-      }
-    }
-  }
+
+}
+.grid-content {
+  border-radius: 4px;
+  min-height: 36px;
+}
 </style>
