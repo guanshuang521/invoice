@@ -156,21 +156,15 @@ export default {
   .redTable {
     &-container{
       margin: 30px;
-      .filter-item{
-        margin: 0 10px 20px 0;
+      .filter-container{
+        margin-bottom: 20px;
       }
-      .authTree{
-        border: 1px solid #eeeeee;
-        width: 454px;
-        max-height: 200px;
-        overflow-y: scroll;
+      .button-container{
+        margin-bottom: 20px;
       }
       /deep/ .el-dialog__footer{
         text-align: center;
       }
-    }
-    .button-container{
-      margin-bottom: 20px;
     }
   }
 </style>

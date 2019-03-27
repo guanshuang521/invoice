@@ -6,38 +6,62 @@
 <template>
   <div class="oOpecial-container">
     <div class="filter-container">
-      <el-input :placeholder="placeholder" v-model="listQuery.gfmc" size="small" class="filter-item" @keyup.enter.native="initList">
-        <template slot="prepend">购方名称</template>
-      </el-input>
-      <el-input :placeholder="placeholder" v-model="listQuery.ddh" size="small" class="filter-item" @keyup.enter.native="initList">
-        <template slot="prepend">商品名称</template>
-      </el-input>
-      <el-input :placeholder="placeholder" v-model="listQuery.spmc" size="small" class="filter-item" @keyup.enter.native="initList">
-        <template slot="prepend">发票代码</template>
-      </el-input>
-      <el-input :placeholder="placeholder" v-model="listQuery.spmc" size="small" class="filter-item" @keyup.enter.native="initList">
-        <template slot="prepend">发票号码</template>
-      </el-input>
-      <el-input :placeholder="placeholder" v-model="listQuery.spmc" size="small" class="filter-item" @keyup.enter.native="initList">
-        <template slot="prepend">开票日期起</template>
-      </el-input>
-      <el-input :placeholder="placeholder" v-model="listQuery.spmc" size="small" class="filter-item" @keyup.enter.native="initList">
-        <template slot="prepend">开票日期止</template>
-      </el-input>
-      <el-input :placeholder="placeholder" v-model="listQuery.spmc" size="small" class="filter-item" @keyup.enter.native="initList">
-        <template slot="prepend">红冲日期起</template>
-      </el-input>
-      <el-input :placeholder="placeholder" v-model="listQuery.spmc" size="small" class="filter-item" @keyup.enter.native="initList">
-        <template slot="prepend">红冲日期止</template>
-      </el-input>
-      <el-input :placeholder="placeholder" v-model="listQuery.spmc" size="small" class="filter-item" @keyup.enter.native="initList">
-        <template slot="prepend">发票状态</template>
-      </el-input>
-      <el-input :placeholder="placeholder" v-model="listQuery.spmc" size="small" class="filter-item" @keyup.enter.native="initList">
-        <template slot="prepend">税率</template>
-      </el-input>
-      <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="initList">查询</el-button>
-      <el-button size="small" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleReset">重置</el-button>
+      <el-form :inline="true" :model="searchParams" class="demo-form-inline">
+        <el-form-item label="购方名称">
+          <el-input v-model="listQuery.gfmc" placeholder="请输入" size="small"/>
+        </el-form-item>
+        <el-form-item label="商品名称">
+          <el-input v-model="listQuery.gfmc" placeholder="请输入" size="small"/>
+        </el-form-item>
+        <el-form-item label="发票代码">
+          <el-input v-model="listQuery.gfmc" placeholder="请输入" size="small"/>
+        </el-form-item>
+        <el-form-item label="发票号码">
+          <el-input v-model="listQuery.gfmc" placeholder="请输入" size="small"/>
+        </el-form-item>
+        <el-form-item label="开票日期起">
+          <el-date-picker
+            v-model="listQuery.spmc"
+            type="date"
+            size="small"
+            class="filter-item"
+            placeholder="请选择"/>
+        </el-form-item>
+        <el-form-item label="开票日期止">
+          <el-date-picker
+            v-model="listQuery.spmc"
+            type="date"
+            size="small"
+            class="filter-item"
+            placeholder="请选择"/>
+        </el-form-item>
+        <el-form-item label="红冲日期起">
+          <el-date-picker
+            v-model="listQuery.spmc"
+            type="date"
+            size="small"
+            class="filter-item"
+            placeholder="请选择"/>
+        </el-form-item>
+        <el-form-item label="红冲日期起">
+          <el-date-picker
+            v-model="listQuery.spmc"
+            type="date"
+            size="small"
+            class="filter-item"
+            placeholder="请选择"/>
+        </el-form-item>
+        <el-form-item label="发票状态">
+          <el-input v-model="listQuery.gfmc" placeholder="请输入" size="small"/>
+        </el-form-item>
+        <el-form-item label="税率">
+          <el-input v-model="listQuery.gfmc" placeholder="请输入" size="small"/>
+        </el-form-item>
+        <el-form-item>
+          <el-button size="small" type="primary" icon="el-icon-search" @click="initList">查询</el-button>
+          <el-button size="small" style="margin-left: 10px" type="primary" icon="el-icon-edit" @click="handleReset">重置</el-button>
+        </el-form-item>
+      </el-form>
     </div>
     <div class="button-container">
       <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="billIssue">发票找回</el-button>
@@ -45,51 +69,53 @@
       <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="billSendBack">数据回传</el-button>
       <el-button size="small" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="exportList">发票认证</el-button>
     </div>
-    <el-table
-      v-loading="listLoading"
-      :key="tableKey"
-      :data="dataList"
-      border
-      fit
-      highlight-current-row
-      @selection-change="handleSelectionChange">
-      style="width: 100%;">
-      <el-table-column type="selection" width="35"/>
-      <el-table-column label="发票代码" prop="orderNo" align="center"/>
-      <el-table-column label="发票号码" prop="gfmc" align="center"/>
-      <el-table-column label="发票类型" prop="gfsh" align="center"/>
-      <el-table-column label="购方名称" prop="fplx" align="center"/>
-      <el-table-column label="购方税号" prop="je" align="center"/>
-      <el-table-column label="金额（不含税）" prop="sl" align="center"/>
-      <el-table-column label="税率" prop="se" align="center"/>
-      <el-table-column label="税额" prop="jshj" align="center"/>
-      <el-table-column label="价税合计" prop="kpzt" align="center"/>
-      <el-table-column label="开票时间" prop="kpts" align="center"/>
-      <el-table-column label="开票机号" prop="sl" align="center"/>
-      <el-table-column label="清单标志" prop="se" align="center"/>
-      <el-table-column label="发票状态" prop="jshj" align="center"/>
-      <el-table-column label="打印状态" prop="kpzt" align="center"/>
-      <el-table-column
-        align="center"
-        fixed="right"
-        label="操作"
-        width="300">
-        <template slot-scope="scope">
-          <el-button type="primary" size="mini">查看</el-button>
-          <el-button type="primary" size="mini">作废重开</el-button>
-          <el-button type="primary" size="mini">红冲发票</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <el-pagination
-      :current-page="listQuery.currentPage"
-      :page-sizes="[100, 200, 300, 400]"
-      :page-size="100"
-      :total="totalCount"
-      layout="total, sizes, prev, pager, next, jumper"
-      style="margin-top: 20px"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"/>
+    <div class="table-container">
+      <el-table
+        v-loading="listLoading"
+        :key="tableKey"
+        :data="dataList"
+        border
+        fit
+        highlight-current-row
+        @selection-change="handleSelectionChange">
+        style="width: 100%;">
+        <el-table-column type="selection" width="35"/>
+        <el-table-column label="发票代码" prop="orderNo" align="center"/>
+        <el-table-column label="发票号码" prop="gfmc" align="center"/>
+        <el-table-column label="发票类型" prop="gfsh" align="center"/>
+        <el-table-column label="购方名称" prop="fplx" align="center"/>
+        <el-table-column label="购方税号" prop="je" align="center"/>
+        <el-table-column label="金额（不含税）" prop="sl" align="center"/>
+        <el-table-column label="税率" prop="se" align="center"/>
+        <el-table-column label="税额" prop="jshj" align="center"/>
+        <el-table-column label="价税合计" prop="kpzt" align="center"/>
+        <el-table-column label="开票时间" prop="kpts" align="center"/>
+        <el-table-column label="开票机号" prop="sl" align="center"/>
+        <el-table-column label="清单标志" prop="se" align="center"/>
+        <el-table-column label="发票状态" prop="jshj" align="center"/>
+        <el-table-column label="打印状态" prop="kpzt" align="center"/>
+        <el-table-column
+          align="center"
+          fixed="right"
+          label="操作"
+          width="300">
+          <template slot-scope="scope">
+            <el-button type="primary" size="mini">查看</el-button>
+            <el-button type="primary" size="mini">作废重开</el-button>
+            <el-button type="primary" size="mini">红冲发票</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-pagination
+        :current-page="listQuery.currentPage"
+        :page-sizes="[100, 200, 300, 400]"
+        :page-size="100"
+        :total="totalCount"
+        layout="total, sizes, prev, pager, next, jumper"
+        style="margin-top: 20px"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"/>
+    </div>
   </div>
 </template>
 
@@ -214,23 +240,14 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
   .oOpecial {
-    &-container {
+    &-container{
       margin: 30px;
       .filter-container{
-        .filter-item{
-          margin: 0 10px 20px 0;
-        }
-        /deep/ .el-input{
-          width: 220px;
-        }
+        margin-bottom: 20px;
       }
       .button-container{
         margin-bottom: 20px;
       }
-    }
-    &-text {
-      font-size: 30px;
-      line-height: 46px;
     }
   }
 </style>

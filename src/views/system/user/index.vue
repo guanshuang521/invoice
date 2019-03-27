@@ -346,8 +346,11 @@ export default {
 .user {
   &-container{
     margin: 30px;
-    .filter-item{
-      margin: 0 10px 20px 0;
+    .filter-container{
+      margin-bottom: 20px;
+    }
+    .button-container{
+      margin-bottom: 20px;
     }
     .authTree{
       border: 1px solid #eeeeee;
@@ -355,9 +358,6 @@ export default {
       max-height: 200px;
       overflow-y: scroll;
     }
-  }
-  .button-container{
-    margin-bottom: 20px;
   }
 }
 </style>
