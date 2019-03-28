@@ -47,3 +47,19 @@ export function addNode(data) {
     data: data
   })
 }
+// 获取终端列表
+export function terminalList(data) {
+  return request({
+    url: apiPath.system.organization.terminalList,
+    method: 'post',
+    data: data
+  })
+}
+// 删除终端
+export function deleteTerminal(data) {
+  return request({
+    url: apiPath.system.organization.deleteTerminal,
+    method: 'post',
+    data: data
+  })
+}

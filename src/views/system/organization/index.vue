@@ -17,6 +17,7 @@
           <el-input v-model="filterText" placeholder="请输入关键字" size="mini"/>
           <el-tree
             ref="organTree"
+            key="id"
             :data="organTree"
             :props="defaultProps"
             :filter-node-method="filterNode"
@@ -31,19 +32,19 @@
       <el-col :span="16">
         <div class="grid-content bg-purple">
           <h4>节点属性面板</h4>
-          <el-tabs v-if="isTreeChecked" :key="tabKey" v-model="activeName" type="border-card" @tab-click="handleClick">
-            <el-tab-pane ref="first" label="节点维护">
+          <el-tabs v-if="isTreeChecked" v-model="activeName" type="border-card" @tab-click="handleClick">
+            <el-tab-pane name="first" label="节点维护">
               <el-form ref="nodeMaintenanceForm" :model="nodeMaintenanceForm" :rules="nodeMaintenanceRules" label-width="120px" size="mini">
-                <el-form-item label="组织机构代码" prop="code">
+                <el-form-item label="组织机构代码" prop="orgCode">
                   <el-input v-model="nodeMaintenanceForm.orgCode"/>
                 </el-form-item>
-                <el-form-item label="组织机构名称" prop="name">
+                <el-form-item label="组织机构名称" prop="orgName">
                   <el-input v-model="nodeMaintenanceForm.orgName"/>
                 </el-form-item>
-                <el-form-item label="备注" prop="note">
+                <el-form-item label="备注" prop="remark">
                   <el-input v-model="nodeMaintenanceForm.remark" classs="note" type="textarea"/>
                 </el-form-item>
-                <el-form-item label="是否是叶节点" prop="isLeafNode">
+                <el-form-item label="是否是叶节点" prop="type">
                   <el-radio-group v-model="nodeMaintenanceForm.type">
                     <el-radio label="1">组织节点</el-radio>
                     <el-radio label="2">税号节点</el-radio>
@@ -55,18 +56,18 @@
                 </el-form-item>
               </el-form>
             </el-tab-pane>
-            <el-tab-pane v-if="currentNodeType === 1" ref="second" label="新增子节点">
+            <el-tab-pane v-if="currentNodeType === 1" name="second" label="新增子节点">
               <el-form ref="addNodeForm" :model="addNodeForm" :rules="nodeMaintenanceRules" label-width="120px" size="mini">
-                <el-form-item label="组织机构代码" prop="code">
+                <el-form-item label="组织机构代码" prop="orgCode">
                   <el-input v-model="addNodeForm.orgCode"/>
                 </el-form-item>
-                <el-form-item label="组织机构名称" prop="name">
+                <el-form-item label="组织机构名称" prop="orgName">
                   <el-input v-model="addNodeForm.orgName"/>
                 </el-form-item>
-                <el-form-item label="备注" prop="note">
+                <el-form-item label="备注" prop="remark">
                   <el-input v-model="addNodeForm.remark" classs="note" type="textarea"/>
                 </el-form-item>
-                <el-form-item label="是否是叶节点" prop="isLeafNode">
+                <el-form-item label="是否是叶节点" prop="type">
                   <el-radio-group v-model="addNodeForm.type">
                     <el-radio label="1">组织节点</el-radio>
                     <el-radio label="2">税号节点</el-radio>
@@ -77,44 +78,44 @@
                 </el-form-item>
               </el-form>
             </el-tab-pane>
-            <el-tab-pane v-if="currentNodeType === 2" ref="third" label="税号维护">
+            <el-tab-pane v-if="currentNodeType === 2" name="third" label="税号维护">
               <el-form ref="codeMaintenanceForm" :model="codeMaintenanceForm" :rules="codeMaintenanceRules" label-width="120px" size="mini">
-                <el-form-item label="税号" prop="code">
+                <el-form-item label="税号" prop="taxNum">
                   <el-input v-model="codeMaintenanceForm.taxNum"/>
                 </el-form-item>
-                <el-form-item label="单位名称" prop="unitName">
+                <el-form-item label="单位名称" prop="coName">
                   <el-input v-model="codeMaintenanceForm.coName"/>
                 </el-form-item>
-                <el-form-item label="开户银行" prop="unitName">
+                <el-form-item label="开户银行" prop="bankName">
                   <el-input v-model="codeMaintenanceForm.bankName"/>
                 </el-form-item>
-                <el-form-item label="银行账号" prop="cardNo">
+                <el-form-item label="银行账号" prop="bankCode">
                   <el-input v-model="codeMaintenanceForm.bankCode"/>
                 </el-form-item>
-                <el-form-item label="专票限额" prop="specialTicketAmount">
+                <el-form-item label="专票限额" prop="expertLimit">
                   <el-input v-model="codeMaintenanceForm.expertLimit" type="number"/>
                 </el-form-item>
-                <el-form-item label="普票限额" prop="generalTicketAmount">
+                <el-form-item label="普票限额" prop="generalLimit">
                   <el-input v-model="codeMaintenanceForm.generalLimit" type="number"/>
                 </el-form-item>
-                <el-form-item label="电子发票限额" prop="electronicTicketAmount">
+                <el-form-item label="电子发票限额" prop="electricityLimit">
                   <el-input v-model="codeMaintenanceForm.electricityLimit" type="number"/>
                 </el-form-item>
-                <el-form-item label="最大订单数" prop="maxOrderNo">
+                <el-form-item label="最大订单数" prop="maxOrderNum">
                   <el-input v-model="codeMaintenanceForm.maxOrderNum" type="number"/>
                 </el-form-item>
-                <el-form-item label="地址" prop="address">
+                <el-form-item label="地址" prop="coAddr">
                   <el-input v-model="codeMaintenanceForm.coAddr"/>
                 </el-form-item>
-                <el-form-item label="电话" prop="telephoneNo">
+                <el-form-item label="电话" prop="coPhone">
                   <el-input v-model="codeMaintenanceForm.coPhone"/>
                 </el-form-item>
                 <el-form-item>
-                  <el-button type="primary" icon="el-icon-check" @click="submitCodeMaintence('addNodeForm')">保存</el-button>
+                  <el-button type="primary" icon="el-icon-check" @click="submitCodeMaintence('codeMaintenanceForm')">保存</el-button>
                 </el-form-item>
               </el-form>
             </el-tab-pane>
-            <el-tab-pane v-if="currentNodeType === 2" ref="fourth" label="税号关联终端">
+            <el-tab-pane v-if="currentNodeType === 2" name="fourth" label="税号关联终端">
               <template>
                 <el-table
                   :data="codeRelevanceTerminalList"
@@ -122,31 +123,31 @@
                   style="width: 100%"
                   height="250">
                   <el-table-column
-                    prop="date"
+                    prop="terminalMark"
                     label="终端标识"
                     width="100"/>
                   <el-table-column
-                    prop="name"
+                    prop="terminalName"
                     label="终端名称"
                     width="100"/>
                   <el-table-column
-                    prop="province"
+                    prop="terminalIp"
                     label="终端地址"
                     width="100"/>
                   <el-table-column
-                    prop="city"
+                    prop="terminalPort"
                     label="终端端口"
                     width="100"/>
                   <el-table-column
-                    prop="address"
+                    prop="invoiceType"
                     label="开票类型"
                     width="100"/>
                   <el-table-column
-                    prop="zip"
+                    prop="taxNum"
                     label="所属税号"
                     width="100"/>
                   <el-table-column
-                    prop="zip"
+                    prop="machineCode"
                     label="机器编号"
                     width="100"/>
                   <el-table-column
@@ -184,7 +185,7 @@
 </template>
 
 <script>
-import { getNodeList, deleteNode, updateNode, addNode } from '@/api/system/organization'
+import { getNodeList, deleteNode, updateNode, addNode, terminalList, deleteTerminal } from '@/api/system/organization'
 import dialogDetail from '@/components/system/organization'
 import { arrayToTree } from '@/utils/public'
 export default {
@@ -194,7 +195,6 @@ export default {
   },
   data() {
     return {
-      tabKey: '',
       // 遮罩层
       loading: false,
       // 机构树检索关键字
@@ -252,34 +252,34 @@ export default {
       },
       // 税号维护表单校验规则
       codeMaintenanceRules: {
-        code: [
+        taxNum: [
           { required: true, message: '请输入税号', trigger: 'blur' }
         ],
-        unitName: [
+        coName: [
           { required: true, message: '请输入单位名称', trigger: 'blur' }
         ],
         bankName: [
           { required: true, message: '请输入开户银行', trigger: 'blur' }
         ],
-        cardNo: [
+        bankCode: [
           { required: true, message: '请输入银行账号', trigger: 'blur' }
         ],
-        specialTicketAmount: [
+        expertLimit: [
           { required: true, message: '请输入专票限额', trigger: 'blur' }
         ],
-        generalTicketAmount: [
+        generalLimit: [
           { required: true, message: '请输入普票限额', trigger: 'blur' }
         ],
-        electronicTicketAmount: [
+        electricityLimit: [
           { required: true, message: '请输入电子发票限额', trigger: 'blur' }
         ],
-        maxOrderNo: [
+        maxOrderNum: [
           { required: true, message: '请输入最大订单数', trigger: 'blur' }
         ],
-        address: [
+        coAddr: [
           { required: true, message: '请输入地址', trigger: 'blur' }
         ],
-        telephoneNo: [
+        coPhone: [
           { required: true, message: '请输入电话', trigger: 'blur' },
           { min: 11, max: 11, message: '电话号码长度不正确', trigger: 'blur' },
           { pattern: /^1[3456789]\d{9}$/, message: '手机号格式不正确', trigger: 'blur' }
@@ -288,23 +288,8 @@ export default {
       // 机构树
       organTree: [],
       // 税号关联终端
-      codeRelevanceTerminalList: [
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-02',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }
-      ],
+      codeRelevanceTerminalList: [],
+      // 组织树显示节点名的字段
       defaultProps: {
         children: 'children',
         label: 'label'
@@ -330,12 +315,22 @@ export default {
       // 当前总条数
       totalCount: 1,
       // 当前所有节点的数组
-      nodeList: ''
+      nodeList: '',
+      // 当前选中节点详细信息
+      currentNodeDetail: {},
+      // 税号关联终端列表查询参数
+      terminalQueryParams: {
+        currentPage: 1,
+        pageSize: 10
+      }
     }
   },
   watch: {
     filterText(val) {
       this.$refs.organTree.filter(val)
+    },
+    nodeList(newVal, oldVal) {
+      console.log(newVal)
     }
   },
   mounted() {
@@ -366,7 +361,7 @@ export default {
     showTabs() {
       this.nodeList.forEach((item) => {
         if (item.id === this.$refs.organTree.getCurrentNode().id) {
-          this.tabKey = this.$refs.organTree.getCurrentNode().id
+          this.currentNodeDetail = item
           this.currentNodeType = item.type
           this.isTreeChecked = true
           this.nodeMaintenanceForm = {
@@ -387,6 +382,9 @@ export default {
             coAddr: item.coAddr,
             coPhone: item.coPhone
           }
+          // this.$nextTick(function() {
+          //   document.getElementById('tab-0').click()
+          // })
         }
       })
     },
@@ -419,15 +417,16 @@ export default {
         type: 'warning'
       }).then(() => {
         deleteNode(this.$refs.organTree.getCurrentNode().id).then(res => {
+          console.log(res)
           this.$message({
             type: 'success',
-            message: res.msg
+            message: res.message
           })
           this.initTree()
         }).catch(err => {
           this.$message({
             type: 'error',
-            message: err.msg
+            message: err.message
           })
         })
       })
@@ -441,7 +440,7 @@ export default {
           addNode(args).then(res => {
             this.$refs[data].resetFields()
             this.$message({
-              message: res.data.msg,
+              message: res.message,
               type: 'success'
             })
             this.initTree()
@@ -455,32 +454,50 @@ export default {
       })
     },
     // 税号维护提交
+    getTerminal() {
+      const args = this.terminalQueryParams
+      args.orgId = this.currentNodeDetail.orgCode
+      terminalList(args).then(res => {
+        console.log(res)
+        this.codeRelevanceTerminalList = res.data.list
+      }).catch(err => {
+        console.log(err)
+      })
+    },
     submitCodeMaintence(data) {
       this.$refs[data].validate((valid) => {
         if (valid) {
-          addNode(this.addNodeForm).then(res => {
+          const args = this.codeMaintenanceForm
+          args.id = this.$refs.organTree.getCurrentNode().id
+          args.orgCode = this.currentNodeDetail.orgCode
+          this.loading = true
+          updateNode(args).then(res => {
             this.$refs[data].resetFields()
             this.$message({
-              message: res.data.msg,
+              message: res.message,
               type: 'success'
             })
+            this.initTree()
+            this.loading = false
+            this.isTreeChecked = false
           }).catch(err => {
             this.$message({
               message: err,
               type: 'error'
             })
+            this.loading = false
           })
         }
       })
     },
     // 删除终端
-    deleteTerminal() {
+    deleteTerminal(data) {
       this.$confirm('确定删除选择数据?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        deleteNode().then(res => {
+        deleteTerminal({ id: data.id }).then(res => {
           this.$message({
             type: 'success',
             message: res.msg
@@ -488,7 +505,7 @@ export default {
         }).catch(err => {
           this.$message({
             type: 'error',
-            message: err.msg
+            message: err
           })
         })
       }).catch(() => {
@@ -511,7 +528,11 @@ export default {
         }
       })
     },
-    handleClick() {
+    handleClick(node) {
+      console.log(node)
+      if (node.name === 'fourth') {
+        this.getTerminal()
+      }
     },
     // 修改每页最大条数
     handleSizeChange() {

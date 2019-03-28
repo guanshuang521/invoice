@@ -18,7 +18,9 @@ const apiPath = {
       // nodeDetail: '/organization/nodeDetail',
       deleteNode: '/organization/deleteOrganization',
       updateNode: '/organization/updateOrganization',
-      addNode: '/organization/insertOrganization'
+      addNode: '/organization/insertOrganization',
+      terminalList: '/terminal/selectByTerminal',
+      deleteTerminal: '/terminal/deleteTerminal'
     },
     shop: {
       list: '/store/selectAll.do',
