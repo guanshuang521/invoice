@@ -533,7 +533,7 @@ export default {
     const info = getsplist
     if (info) {
       return {
-        code: 20000,
+        code: '0000',
         data: info,
         message: "返回数据成功"
       }
