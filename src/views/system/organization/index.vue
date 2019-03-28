@@ -387,7 +387,6 @@ export default {
             coAddr: item.coAddr,
             coPhone: item.coPhone
           }
-          this.$refs.first.classList.add('is-active')
         }
       })
     },
