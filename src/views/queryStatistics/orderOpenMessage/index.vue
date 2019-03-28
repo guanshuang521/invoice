@@ -4,41 +4,38 @@
  * @Description:订单开票信息查询
 */
 <template>
-  <div class="dashboard-container">
-    <div class="search-box">
-      <div class="search-item">
-        <span>销方名称</span>
-        <el-input v-model="searchs.customerName"/>
-      </div>
-      <div class="search-item">
-        <span>购方名称</span>
-        <el-input v-model="searchs.customerTaxNumber"/>
-      </div>
-      <div class="search-item">
-        <span>单据类型</span>
-        <el-select v-model="value" placeholder="请选择">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"/>
-        </el-select>
-      </div>
-      <div class="search-item">
-        <span>单据起号</span>
-        <el-input v-model="searchs.customerTaxNumber"/>
-      </div>
-      <div class="search-item">
-        <span>单据止号</span>
-        <el-input v-model="searchs.customerTaxNumber"/>
-      </div>
-      <el-button type="primary" size="small" @click="searchFn">查询</el-button>
-      <el-button type="primary" size="small" @click="initSearch">重置</el-button>
+  <div class="orderOpen-container">
+    <div class="filter-container">
+      <el-form :inline="true" :model="searchParams" class="demo-form-inline">
+        <el-form-item label="销方名称">
+          <el-input v-model="searchParams.userName" placeholder="请输入" size="small"/>
+        </el-form-item>
+        <el-form-item label="购方名称">
+          <el-input v-model="searchParams.userName" placeholder="请输入" size="small"/>
+        </el-form-item>
+        <el-form-item label="发票代码">
+          <el-input v-model="searchParams.userName" placeholder="请输入" size="small"/>
+        </el-form-item>
+        <el-form-item label="发票号码">
+          <el-input v-model="searchParams.userName" placeholder="请输入" size="small"/>
+        </el-form-item>
+        <el-form-item label="发票类型">
+          <el-select v-model="searchParams.role" placeholder="请选择" size="small">
+            <el-option label="增值税专用发票" value="shanghai"/>
+            <el-option label="增值税普通发票" value="beijing"/>
+            <el-option label="增值税电子发票" value="dianzi"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" size="small" @click="initTable">查询</el-button>
+          <el-button type="primary" size="small" @click="reset">重置</el-button>
+        </el-form-item>
+      </el-form>
     </div>
-    <div class="button-box">
+    <div class="button-container">
       <el-button type="primary" size="mini" @click="importExcel">导入Excel</el-button>
     </div>
-    <div class="table-box">
+    <div class="table-container">
       <el-table
         v-loading="listLoading"
         :data="list"
@@ -176,6 +173,25 @@ export default {
         value: '03',
         label: '开票号'
       }],
+      searchParams: {
+        userName: '',
+        role: '',
+        currentPage: 1,
+        pageSize: 10
+      },
+      listQuery: [
+        {
+          djsh: '管理员',
+          xfmc: 1,
+          gfmc: '北京市丰台科技园',
+          xfsh: '12433323454',
+          gfsh: '23543212343',
+          je: '北京银行中关村支行',
+          se: '123444321234567876',
+          jshj: 0,
+          ddzt: 0
+        }
+      ],
       list: [
         {
           djsh: '管理员',
@@ -236,8 +252,8 @@ export default {
       //   this.listLoading = false
       // })
     },
-    searchFn() {},
-    initSearch() { // 重置
+    initTable() {},
+    reset() { // 重置
       this.searchs = {
         customerName: '',
         customerTaxNumber: ''
@@ -306,7 +322,7 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-  .dashboard {
+  .orderOpen {
     &-container {
       margin: 30px;
       .search-box {
@@ -318,8 +334,8 @@ export default {
           }
         }
       }
-      .button-box {
-        margin-top: 10px;
+      .button-container {
+        /*margin-top: 10px;*/
         margin-bottom: 10px;
       }
     }

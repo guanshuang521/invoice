@@ -32,7 +32,7 @@
         </div>
       </el-tab-pane>
       <el-tab-pane label="定时同步" name="second">
-        <div class="button-box">
+        <div class="button-container">
           <el-button type="primary" size="mini" @click="importExcel">新增</el-button>
         </div>
         <el-table
@@ -98,13 +98,53 @@
         </el-table>
       </el-tab-pane>
     </el-tabs>
-    <el-dialog
-      :visible.sync="dialogVisible"
-      :before-close="handleClose"
-      title="订单信息"
-      width="750px"
-      custom-class="add-customer">
-      <test-settings/>
+    <el-dialog :title="dialogVisible" :visible.sync="dialogVisible" :lock-scroll="true" width="640px" custom-class="showPop dialog-wapper pub-min-pop">
+      <el-form ref="userForm" :inline="true" :model="userInfo" :rules="userRules" class="form" label-width="100px" size="mini">
+        <el-form-item label="数据类型：" prop="status" >
+          <el-select v-model="userInfo.status" placeholder="请选择" style="width: 170px">
+            <el-option label="商品类订单" value="shanghai"/>
+            <el-option label="服务类订单" value="beijing"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="数据源系统：" prop="status" >
+          <el-select v-model="userInfo.status" placeholder="请选择" style="width: 170px">
+            <el-option label="EBS系统" value="shanghai"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="开票日期起">
+          <el-date-picker
+            v-model="listQuery.spmc"
+            type="date"
+            size="small"
+            class="filter-item"
+            placeholder="开票日期起"/>
+        </el-form-item>
+        <el-form-item label="开票日期止">
+          <el-date-picker
+            v-model="listQuery.spmc"
+            type="date"
+            size="small"
+            class="filter-item"
+            placeholder="开票日期止"/>
+        </el-form-item>
+        <el-form-item label="同步频率：" prop="status" >
+          <el-select v-model="userInfo.status" placeholder="请选择" style="width: 170px">
+            <el-option label="30分钟" value="Thirty"/>
+            <el-option label="60分钟" value="Sixty"/>
+            <el-option label="1天" value="Day"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="启用状态：" prop="status" >
+          <el-select v-model="userInfo.status" placeholder="请选择" style="width: 170px">
+            <el-option label="启用" value="Thirty"/>
+            <el-option label="禁用" value="Sixty"/>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer" >
+        <el-button type="primary" size="mini" @click="save">保存</el-button>
+        <el-button size="mini" @click="dialogVisible = !dialogVisible">取消</el-button>
+      </span>
     </el-dialog>
   </div>
 </template>
@@ -142,6 +182,25 @@ export default {
           ddzt: 0
         }
       ],
+      listQuery: {
+        title: '',
+        importance: '',
+        type: '',
+        sort: '',
+        limit: 10,
+        currentPage: 2
+      },
+      userRules: {
+        account: [
+          { required: true, message: '请输入账号', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' }
+        ],
+        userName: [
+          { required: true, message: '请输入用户名', trigger: 'blur' }
+        ]
+      },
       listLoading: false,
       searchs: {
         customerName: '',
@@ -163,7 +222,19 @@ export default {
         phone: '',
         bank: '',
         bankAccount: ''
-      }
+      },
+      userInfo: {
+        account: '',
+        password: '',
+        userName: '',
+        role: '',
+        receiver: '',
+        checker: '',
+        organization: '',
+        status: '',
+        terminalCode: '',
+        auth: ''
+      },
     }
   },
   computed: {
@@ -244,6 +315,9 @@ export default {
     handleEdit(index, row) {
       this.dialogVisible = true
     },
+    save() {
+
+    },
     getTableList() {
       getTableList().then(res => {
         if (res.code === 20000) {
@@ -271,6 +345,9 @@ export default {
         }
       }
     }
+    .button-container{
+      margin-bottom: 20px;
+    }
   }
 }
 .el-dialog .search-item span{
@@ -280,9 +357,9 @@ export default {
   text-align: center;
   line-height: 35px;
 }
-.el-dialog .el-input{
-  width: 140px;
-  height: 35px;
+.el-dialog .el-date-editor--date{
+  width: 170px;
+  height: 15px;
 }
 .search-item{
   float: left;

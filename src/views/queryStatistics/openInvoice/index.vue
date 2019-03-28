@@ -6,65 +6,91 @@
 <template>
   <div class="openInvoice-container">
     <div class="filter-container">
-      <el-input v-model="searchs.customerName" placeholder="请输入" size="small" class="filter-item">
-        <template slot="prepend">购方名称</template>
-      </el-input>
-      <el-input v-model="searchs.customerTaxNumber" placeholder="请输入" size="small" class="filter-item">
-        <template slot="prepend">商品名称</template>
-      </el-input>
-      <el-input v-model="searchs.customerTaxNumber" placeholder="请输入" size="small" class="filter-item">
-        <template slot="prepend">发票代码</template>
-      </el-input>
-      <el-input v-model="searchs.customerTaxNumber" placeholder="请输入" size="small" class="filter-item">
-        <template slot="prepend">发票号码</template>
-      </el-input>
-      <el-select v-model="value" placeholder="发票类型" size="small" class="filter-item">
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"/>
-      </el-select>
-      <el-select v-model="value" placeholder="发票状态" size="small" class="filter-item">
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"/>
-      </el-select>
-      <el-select v-model="value" placeholder="打印状态" size="small" class="filter-item">
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"/>
-      </el-select>
-      <el-select v-model="value" placeholder="税率" size="small" class="filter-item">
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"/>
-      </el-select>
-      <el-date-picker
-        v-model="searchs.customerTaxNumber"
-        type="date"
-        size="small"
-        class="filter-item"
-        placeholder="开票日期起"/>
-      <el-date-picker
-        v-model="searchs.customerTaxNumber"
-        type="date"
-        size="small"
-        class="filter-item"
-        placeholder="开票日期止"/>
-      <el-button type="primary" size="small" @click="searchFn">查询</el-button>
-      <el-button type="primary" size="small" @click="initSearch">重置</el-button>
+      <el-form :inline="true" :model="searchParams" class="demo-form-inline">
+        <el-form-item label="购方名称">
+          <el-input v-model="searchParams.userName" placeholder="请输入" size="small"/>
+        </el-form-item>
+        <el-form-item label="商品名称">
+          <el-input v-model="searchParams.userName" placeholder="请输入" size="small"/>
+        </el-form-item>
+        <el-form-item label="发票代码">
+          <el-input v-model="searchParams.userName" placeholder="请输入" size="small"/>
+        </el-form-item>
+        <el-form-item label="发票号码">
+          <el-input v-model="searchParams.userName" placeholder="请输入" size="small"/>
+        </el-form-item>
+        <el-form-item label="发票类型">
+          <el-select v-model="searchParams.role" placeholder="请选择" size="small">
+            <el-option label="增值税专用发票" value="shanghai"/>
+            <el-option label="增值税普通发票" value="beijing"/>
+            <el-option label="增值税电子发票" value="dianzi"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="发票状态">
+          <el-select v-model="searchParams.role" placeholder="请选择" size="small">
+            <el-option label="正常" value="shanghai"/>
+            <el-option label="作废" value="beijing"/>
+            <el-option label="红冲" value="dianzi"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="打印状态">
+          <el-select v-model="searchParams.role" placeholder="请选择" size="small">
+            <el-option label="未打印" value="shanghai"/>
+            <el-option label="已打印" value="beijing"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="税率">
+          <el-select v-model="searchParams.role" placeholder="请选择" size="small">
+            <el-option label="3%" value="shanghai"/>
+            <el-option label="6%" value="beijing"/>
+            <el-option label="10%" value="dianzi"/>
+            <el-option label="11%" value="shanghai"/>
+            <el-option label="16%" value="beijing"/>
+            <el-option label="17%" value="dianzi"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="开票日期起">
+          <el-date-picker
+            v-model="listQuery.spmc"
+            type="date"
+            size="small"
+            class="filter-item"
+            placeholder="开票日期起"/>
+        </el-form-item>
+        <el-form-item label="开票日期止">
+          <el-date-picker
+            v-model="listQuery.spmc"
+            type="date"
+            size="small"
+            class="filter-item"
+            placeholder="开票日期止"/>
+        </el-form-item>
+        <el-form-item label="开票日期起">
+          <el-date-picker
+            v-model="listQuery.spmc"
+            type="date"
+            size="small"
+            class="filter-item"
+            placeholder="开票日期起"/>
+        </el-form-item>
+        <el-form-item label="作废日期止">
+          <el-date-picker
+            v-model="listQuery.spmc"
+            type="date"
+            size="small"
+            class="filter-item"
+            placeholder="作废日期止"/>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" size="small" @click="initTable">查询</el-button>
+          <el-button type="primary" size="small" @click="reset">重置</el-button>
+        </el-form-item>
+      </el-form>
     </div>
-    <div class="button-box">
+    <div class="button-container">
       <el-button type="primary" size="mini" @click="importExcel">导入Excel</el-button>
     </div>
-    <div class="table-box">
+    <div class="table-container">
       <el-table
         v-loading="listLoading"
         :data="list"
@@ -177,6 +203,12 @@ export default {
   data() {
     return {
       value: '',
+      searchParams: {
+        userName: '',
+        role: '',
+        currentPage: 1,
+        pageSize: 10
+      },
       options: [{
         value: '01',
         label: '费用单据'
@@ -187,6 +219,19 @@ export default {
         value: '03',
         label: '开票号'
       }],
+      listQuery: [
+        {
+          djsh: '管理员',
+          xfmc: 1,
+          gfmc: '北京市丰台科技园',
+          xfsh: '12433323454',
+          gfsh: '23543212343',
+          je: '北京银行中关村支行',
+          se: '123444321234567876',
+          jshj: 0,
+          ddzt: 0
+        }
+      ],
       list: [
         {
           djsh: '管理员',
@@ -247,8 +292,8 @@ export default {
       //   this.listLoading = false
       // })
     },
-    searchFn() {},
-    initSearch() { // 重置
+    initTable() {},
+    reset() { // 重置
       this.searchs = {
         customerName: '',
         customerTaxNumber: ''
