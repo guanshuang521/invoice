@@ -1,43 +1,32 @@
+/**
+* @author Dongyt
+* @date 2019/3/27
+* @Description: 商品信息管理
+*/
 <template>
-  <div class="dashboard-container">
-    <div class="search-box">
-      <el-row>
-        <el-col :span="18">
-          <div class="search-item">
-            <span>商品名称: </span>
-            <el-input v-model="searchs.commodityName" size="small"/>
-          </div>
-          <div class="search-item">
-            <span>商品编码: </span>
-            <el-input v-model="searchs.comcode" size="small"/>
-          </div>
-        </el-col>
-        <el-col :span="6">
-          <div class="grid-content bg-purple-light">
-            <el-row>
-              <el-button type="primary" size="small" @click="searchFn">查询</el-button>
-              <el-button type="primary" size="small" @click="initSearch">重置</el-button>
-            </el-row>
-          </div>
-        </el-col>
-      </el-row>
+  <div class="infoManagement-container">
+    <div class="filter-container">
+      <el-form :inline="true" :model="searchParams" class="demo-form-inline">
+        <el-form-item label="商品名称">
+          <el-input v-model="searchParams.commodityName" placeholder="请输入" size="small"/>
+        </el-form-item>
+        <el-form-item label="商品编码">
+          <el-input v-model="searchParams.comcode" placeholder="请输入" size="small"/>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" size="small" @click="searchFn">查询</el-button>
+          <el-button type="primary" size="small" @click="initSearch">重置</el-button>
+        </el-form-item>
+      </el-form>
     </div>
-    <div class="button-box">
-      <el-row>
-        <el-col :span="24">
-          <div class="grid-content bg-purple-dark">
-            <el-row>
-              <el-button type="primary" size="mini" @click="addClick">新增</el-button>
-              <el-button type="primary" size="mini" @click="settingClick">设置税收分类编码</el-button>
-              <el-button type="primary" size="mini">导出数据</el-button>
-              <el-button type="primary" size="mini">Excel模板下载</el-button>
-              <el-button type="primary" size="mini" @click="importExcel">导入Excel</el-button>
-            </el-row>
-          </div>
-        </el-col>
-      </el-row>
+    <div class="button-container">
+      <el-button type="primary" size="mini" @click="addClick">新增</el-button>
+      <el-button type="primary" size="mini" @click="settingClick">设置税收分类编码</el-button>
+      <el-button type="primary" size="mini">导出数据</el-button>
+      <el-button type="primary" size="mini">Excel模板下载</el-button>
+      <el-button type="primary" size="mini" @click="importExcel">导入Excel</el-button>
     </div>
-    <div class="table-box">
+    <div class="table-container">
       <el-table
         v-loading="listLoading"
         :data="list"
@@ -139,14 +128,13 @@
           </template>
         </el-table-column>
       </el-table>
-    </div>
-    <div class="page-box">
       <el-pagination
         :current-page="currentPage"
         :page-sizes="[25, 50, 100]"
         :page-size="pageSize"
         :total="total"
         layout="prev, pager, next, jumper, total, sizes, slot"
+        style="margin-top: 20px"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange">
         <!-- <span></span> -->
@@ -297,7 +285,7 @@ export default{
     return {
       listLoading: false, // loading
       list: [],
-      searchs: {
+      searchParams: {
         // 商品名称
         commodityName: '',
         // 商品编码
@@ -463,27 +451,21 @@ export default{
 }
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
-  .dashboard {
-  &-container {
-     margin: 30px;
-      .search-box {
-        .search-item {
-          float: left;
-          display: inline-block;
-            span {
-              font-size: 14px;
-            }
-          }
+  .infoManagement {
+    &-container {
+      margin: 30px;
+      .filter-container {
+        margin-bottom: 20px;
       }
-      .button-box {
-        margin-top: 10px;
-        margin-bottom: 10px;
-        margin-left: 0px;
+      .button-container {
+        margin-bottom: 20px;
       }
-    }
-    &-text {
-       font-size: 30px;
-       line-height: 46px;
+      .authTree {
+        border: 1px solid #eeeeee;
+        width: 454px;
+        max-height: 200px;
+        overflow-y: scroll;
+      }
     }
   }
 </style>

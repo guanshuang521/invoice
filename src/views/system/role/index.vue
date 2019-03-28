@@ -1,27 +1,32 @@
+/**
+* @author Liuq
+* @date 2019/3/27
+* @Description: 角色权限管理
+*/
 <template>
-  <div class="dashboard-container">
-    <!-- <div class="dashboard-text">name:{{ name }}</div>
-    <div class="dashboard-text">roles:<span v-for="role in roles" :key="role">{{ role }}</span></div> -->
-    <div class="search-box">
-      <div class="search-items">
-        <span>角色名称</span>
-        <el-input v-model="searchs.roleName"/>
-      </div>
-      <div class="search-items">
-        <span>有效标志</span>
-        <el-select v-model="searchs.status" placeholder="请选择">
-          <el-option label="有效" value="1"/>
-          <el-option label="无效" value="0"/>
-        </el-select>
-      </div>
-      <el-button type="primary" size="small" @click="searchFn">查询</el-button>
-      <el-button type="primary" size="small" @click="initSearch">重置</el-button>
+  <div class="role-container">
+    <div class="filter-container">
+      <el-form :inline="true" :model="searchParams" class="demo-form-inline">
+        <el-form-item label="角色名称">
+          <el-input v-model="searchParams.roleName" placeholder="请输入" size="small"/>
+        </el-form-item>
+        <el-form-item label="有效标志">
+          <el-select v-model="searchParams.status" placeholder="请选择" size="small">
+            <el-option label="有效" value="1"/>
+            <el-option label="无效" value="0"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" size="small" @click="searchFn">查询</el-button>
+          <el-button type="primary" size="small" @click="initSearch">重置</el-button>
+        </el-form-item>
+      </el-form>
     </div>
-    <div class="button-box">
+    <div class="button-container">
       <el-button type="primary" size="mini" @click="addRole">新增</el-button>
       <el-button type="primary" size="mini" @click="delRole">删除</el-button>
     </div>
-    <div class="table-box">
+    <div class="table-container">
       <el-table
         v-loading="listLoading"
         :data="list"
@@ -34,26 +39,12 @@
           type="selection"
           align="center"
           width="34px"/>
-        <el-table-column align="center" width="31px">
-          <template slot-scope="scope">
-            {{ scope.$index + 1 }}
-          </template>
-        </el-table-column>
-        <el-table-column label="角色名称" align="center">
-          <template slot-scope="scope">
-            {{ scope.row.roleName }}
-          </template>
-        </el-table-column>
+        <el-table-column label="角色名称" prop="roleName" align="center"/>
         <el-table-column label="有效标志" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.status == 1 && '有效' || scope.row.status == 0 && '无效' }}</span>
           </template>
         </el-table-column>
-        <!-- <el-table-column label="角色类型" align="center">
-          <template slot-scope="scope">
-            {{ scope.row.roleCode }}
-          </template>
-        </el-table-column> -->
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button
@@ -63,13 +54,12 @@
           </template>
         </el-table-column>
       </el-table>
-    </div>
-    <div class="page-box">
       <el-pagination
         :current-page="currentPage"
         :page-sizes="[25, 50, 100]"
         :page-size="pageSize"
         :total="total"
+        style="margin-top: 20px"
         layout="prev, pager, next, jumper, total, sizes, slot"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange">
@@ -83,9 +73,9 @@
       :before-close="() => handleClose('form')"
       width="530px"
       custom-class="add-edit-role">
-      <el-form ref="form" :rules="rules" :model="form" label-width="80px">
+      <el-form ref="form" :rules="rules" :model="form" label-width="80px" size="mini">
         <el-form-item label="角色名称" prop="roleName">
-          <el-input v-model="form.roleName" :disabled="dialogType === 'edit'"/>
+          <el-input v-model="form.roleName" :disabled="dialogType === 'edit'" placeholder="请输入"/>
         </el-form-item>
         <el-form-item label="有效标志" prop="status">
           <el-select v-model="form.status" :disabled="dialogType === 'edit'" placeholder="请选择">
@@ -93,20 +83,21 @@
             <el-option label="无效" value="0"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="菜单权限"/>
-        <el-form-item label="" class="tree-box">
-          <el-tree
-            ref="tree2"
-            :data="treeData"
-            :props="defaultProps"
-            :filter-node-method="filterNode"
-            :default-checked-keys="form.resourceId"
-            node-key="id"
-            class="filter-tree"
-            default-expand-all
-            show-checkbox
-            @check="handleCheck"
-          />
+        <el-form-item label="菜单权限">
+          <div class="tree-container">
+            <el-tree
+              ref="tree2"
+              :data="treeData"
+              :props="defaultProps"
+              :filter-node-method="filterNode"
+              :default-checked-keys="form.resourceId"
+              node-key="id"
+              class="filter-tree"
+              default-expand-all
+              show-checkbox
+              @check="handleCheck"
+            />
+          </div>
         </el-form-item>
         <el-form-item class="button">
           <el-button v-if="dialogType === 'add'" type="primary" @click="addRoleFn('form')">添加</el-button>
@@ -114,44 +105,16 @@
           <el-button type="primary" @click="handleClose('form')">取消</el-button>
         </el-form-item>
       </el-form>
-      <!-- <div>
-        <span><span class="mark">*</span>角色名称</span>
-        <el-input v-model="form.roleName" :disabled="dialogType === 'edit'"/>
-        <span><span class="mark">*</span>有效标志</span>
-        <el-select v-model="form.status" :disabled="dialogType === 'edit'" placeholder="请选择">
-          <el-option label="有效" value="1"/>
-          <el-option label="无效" value="0"/>
-        </el-select>
-        <br>
-        <span>菜单权限</span>
-        <div class="tree-box">
-          <el-tree
-            ref="tree2"
-            :data="treeData"
-            :props="defaultProps"
-            :filter-node-method="filterNode"
-            class="filter-tree"
-            default-expand-all
-            show-checkbox
-            @check-change="handleCheckChange"
-          />
-        </div>
-      </div> -->
-      <!-- <span slot="footer" class="dialog-footer">
-        <el-button @click="handleClose">取 消</el-button>
-        <el-button type="primary" @click="addRoleFn">确 定</el-button>
-      </span> -->
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import { arrayToTree } from '@/utils/public'
 import { getRoleList, deleteRole, insertRole, updateRole, selectByResource } from '@/api/system/role'
 
 export default {
-  name: 'Dashboard',
+  name: 'Role',
   data() {
     return {
       list: [],
@@ -177,7 +140,7 @@ export default {
         }
       ],
       listLoading: false,
-      searchs: {
+      searchParams: {
         roleName: '',
         status: ''
       },
@@ -209,23 +172,16 @@ export default {
       resourceId: []
     }
   },
-  computed: {
-    ...mapGetters([
-      'name',
-      'roles'
-    ])
-  },
   created() {
     this.fetchData()
   },
   methods: {
     fetchData() {
       this.listLoading = true
-      var params = JSON.parse(JSON.stringify(this.searchs))
+      var params = JSON.parse(JSON.stringify(this.searchParams))
       params.pageSize = this.pageSize
       params.currentPage = this.currentPage
       getRoleList(params).then(response => {
-        console.log(response)
         if (response.code === '0000') {
           this.list = response.data.list
           this.total = response.data.count
@@ -236,15 +192,12 @@ export default {
     getResource() {
       var params = {}
       selectByResource(params).then(response => {
-        console.log(response)
         if (response.code === '0000') {
           this.treeData = arrayToTree(response.data.list)
-          console.log(this.treeData)
         }
       })
     },
     searchFn() {
-      console.log(this.searchs)
       this.fetchData()
     },
     initSearch() {
@@ -278,9 +231,6 @@ export default {
             this.$refs[formName].resetFields()
             this.clearForm()
           })
-        } else {
-          console.log('error submit!!')
-          return false
         }
       })
     },
@@ -289,7 +239,6 @@ export default {
         if (valid) {
           var params = JSON.parse(JSON.stringify(this.form))
           params.resourceId = this.resourceId
-          console.log(params)
           updateRole(params).then(response => {
             if (response.code === '0000') {
               this.fetchData()
@@ -299,9 +248,6 @@ export default {
             this.$refs[formName].resetFields()
             this.clearForm()
           })
-        } else {
-          console.log('error submit!!')
-          return false
         }
       })
     },
@@ -316,14 +262,11 @@ export default {
       this.$confirm('确定要删除选择的数据吗?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
-        // type: 'warning',
-        // center: true
       }).then(() => {
         var params = {
           ids: this.checkedList
         }
         deleteRole(params).then(response => {
-          console.log(response)
           if (response.code === '0000') {
             this.$message({
               type: 'success',
@@ -332,15 +275,9 @@ export default {
             this.fetchData()
           }
         })
-      }).catch(() => {
-        // this.$message({
-        //   type: 'info',
-        //   message: '已取消删除'
-        // });
       })
     },
     handleEdit(index, item) { // 权限分配
-      console.log(item.resourceId)
       this.getResource()
       this.dialogVisible = true
       this.dialogType = 'edit'
@@ -379,98 +316,32 @@ export default {
       console.log(data, checked, indeterminate)
     },
     handleCheck(data, checks) {
-      console.log(data, checks, checks.checkedNodes)
       var arr = []
       for (var i = 0; i < checks.checkedNodes.length; i++) {
         arr.push(checks.checkedNodes[i].id)
       }
       this.resourceId = arr
     }
-  } // ,
-  // filters: {
-  //   statusFilter(status) {
-  //     const statusMap = {
-  //       published: 'success',
-  //       draft: 'gray',
-  //       deleted: 'danger'
-  //     }
-  //     return statusMap[status]
-  //   }
-  // }
+  }
 }
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-.dashboard {
-  &-container {
-    margin: 30px;
-    .search-box {
-      .search-items {
-        // float: left;
-        display: inline-block;
-        span {
-          font-size: 14px;
-        }
+  .role {
+    &-container{
+      margin: 30px;
+      .filter-container{
+        margin-bottom: 20px;
       }
-    }
-    .button-box {
-      margin-top: 10px;
-      margin-bottom: 10px;
-      margin-left: 0;
-    }
-  }
-  &-text {
-    font-size: 30px;
-    line-height: 46px;
-  }
-}
-.add-edit-role {
-  height: 407px;
-  .mark {
-    color: red;
-  }
-  .tree-box {
-    // width: 440px;
-    // max-height: 222px;
-    // overflow: auto;
-  }
-}
-</style>
-<style rel="stylesheet/scss" lang="scss">
-.dashboard-container {
-  .search-box {
-    .search-items {
-      .el-input {
-        max-width: 105px;
-        // height: 25px;
+      .button-container{
+        margin-bottom: 20px;
+      }
+      .tree-container{
+        border: 1px solid #eeeeee;
+        width: 454px;
+        max-height: 200px;
+        overflow-y: scroll;
       }
     }
   }
-}
-.add-edit-role {
-  .el-input {
-    max-width: 150px;
-    // height: 25px;
-  }
-  .el-form:after {
-    content: '';
-    display: block;
-    clear: both;
-  }
-  .el-form-item {
-    float: left;
-    .el-input {
-      max-width: 150px;
-    }
-  }
-  .tree-box .el-form-item__content {
-    margin-left: 20px!important;
-    width: 440px;
-    max-height: 222px;
-    overflow: auto;
-  }
-  .button {
-    margin-bottom: 0;
-  }
-}
 </style>

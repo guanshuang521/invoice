@@ -14,11 +14,11 @@ const apiPath = {
   },
   system: {
     organization: {
-      list: '/organization/list',
-      nodeDetail: '/organization/nodeDetail',
-      deleteNode: '/organization/delete',
-      updateNode: '/organization/update',
-      addNode: '/organization/add'
+      list: '/organization/selectOrganizationsList',
+      // nodeDetail: '/organization/nodeDetail',
+      deleteNode: '/organization/deleteOrganization',
+      updateNode: '/organization/updateOrganization',
+      addNode: '/organization/insertOrganization'
     },
     shop: {
       list: '/store/selectAll.do',

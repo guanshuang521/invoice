@@ -4,33 +4,30 @@
 import request from '@/utils/request'
 import apiPath from '@/api/apiUrl'
 // 获取节点列表
-export function getNodeList(username, password) {
+export function getNodeList() {
   return request({
     url: apiPath.system.organization.list,
     method: 'post',
-    data: {
-      username,
-      password
-    }
+    data: {}
   })
 }
 // 获取节点详情
-export function getNodeDetail(nodeId) {
-  return request({
-    url: apiPath.system.organization.nodeDetail,
-    method: 'post',
-    data: {
-      nodeId
-    }
-  })
-}
+// export function getNodeDetail(nodeId) {
+//   return request({
+//     url: apiPath.system.organization.nodeDetail,
+//     method: 'post',
+//     data: {
+//       nodeId
+//     }
+//   })
+// }
 // 删除节点
 export function deleteNode(nodeId) {
   return request({
     url: apiPath.system.organization.deleteNode,
     method: 'post',
     data: {
-      nodeId
+      id: nodeId
     }
   })
 }

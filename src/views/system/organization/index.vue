@@ -31,22 +31,22 @@
       <el-col :span="16">
         <div class="grid-content bg-purple">
           <h4>节点属性面板</h4>
-          <el-tabs v-if="isTreeChecked" v-model="activeName" type="border-card" @tab-click="handleClick">
-            <el-tab-pane label="节点维护" name="first">
+          <el-tabs v-if="isTreeChecked" :key="tabKey" v-model="activeName" type="border-card" @tab-click="handleClick">
+            <el-tab-pane ref="first" label="节点维护">
               <el-form ref="nodeMaintenanceForm" :model="nodeMaintenanceForm" :rules="nodeMaintenanceRules" label-width="120px" size="mini">
                 <el-form-item label="组织机构代码" prop="code">
-                  <el-input v-model="nodeMaintenanceForm.code"/>
+                  <el-input v-model="nodeMaintenanceForm.orgCode"/>
                 </el-form-item>
                 <el-form-item label="组织机构名称" prop="name">
-                  <el-input v-model="nodeMaintenanceForm.name"/>
+                  <el-input v-model="nodeMaintenanceForm.orgName"/>
                 </el-form-item>
                 <el-form-item label="备注" prop="note">
-                  <el-input v-model="nodeMaintenanceForm.note" classs="note" type="textarea"/>
+                  <el-input v-model="nodeMaintenanceForm.remark" classs="note" type="textarea"/>
                 </el-form-item>
                 <el-form-item label="是否是叶节点" prop="isLeafNode">
-                  <el-radio-group v-model="nodeMaintenanceForm.isLeafNode">
-                    <el-radio label="system">组织节点</el-radio>
-                    <el-radio label="taxCode">税号节点</el-radio>
+                  <el-radio-group v-model="nodeMaintenanceForm.type">
+                    <el-radio label="1">组织节点</el-radio>
+                    <el-radio label="2">税号节点</el-radio>
                   </el-radio-group>
                 </el-form-item>
                 <el-form-item>
@@ -55,21 +55,21 @@
                 </el-form-item>
               </el-form>
             </el-tab-pane>
-            <el-tab-pane v-if="currentNodeType === 'system'" label="新增子节点" name="second">
+            <el-tab-pane v-if="currentNodeType === 1" ref="second" label="新增子节点">
               <el-form ref="addNodeForm" :model="addNodeForm" :rules="nodeMaintenanceRules" label-width="120px" size="mini">
                 <el-form-item label="组织机构代码" prop="code">
-                  <el-input v-model="addNodeForm.code"/>
+                  <el-input v-model="addNodeForm.orgCode"/>
                 </el-form-item>
                 <el-form-item label="组织机构名称" prop="name">
-                  <el-input v-model="addNodeForm.name"/>
+                  <el-input v-model="addNodeForm.orgName"/>
                 </el-form-item>
                 <el-form-item label="备注" prop="note">
-                  <el-input v-model="addNodeForm.note" classs="note" type="textarea"/>
+                  <el-input v-model="addNodeForm.remark" classs="note" type="textarea"/>
                 </el-form-item>
                 <el-form-item label="是否是叶节点" prop="isLeafNode">
-                  <el-radio-group v-model="addNodeForm.isLeafNode">
-                    <el-radio label="system">组织节点</el-radio>
-                    <el-radio label="taxCode">税号节点</el-radio>
+                  <el-radio-group v-model="addNodeForm.type">
+                    <el-radio label="1">组织节点</el-radio>
+                    <el-radio label="2">税号节点</el-radio>
                   </el-radio-group>
                 </el-form-item>
                 <el-form-item>
@@ -77,44 +77,44 @@
                 </el-form-item>
               </el-form>
             </el-tab-pane>
-            <el-tab-pane v-if="currentNodeType !== 'system'" label="税号维护" name="third">
+            <el-tab-pane v-if="currentNodeType === 2" ref="third" label="税号维护">
               <el-form ref="codeMaintenanceForm" :model="codeMaintenanceForm" :rules="codeMaintenanceRules" label-width="120px" size="mini">
                 <el-form-item label="税号" prop="code">
-                  <el-input v-model="codeMaintenanceForm.code"/>
+                  <el-input v-model="codeMaintenanceForm.taxNum"/>
                 </el-form-item>
                 <el-form-item label="单位名称" prop="unitName">
-                  <el-input v-model="codeMaintenanceForm.unitName"/>
+                  <el-input v-model="codeMaintenanceForm.coName"/>
                 </el-form-item>
                 <el-form-item label="开户银行" prop="unitName">
-                  <el-input v-model="codeMaintenanceForm.unitName"/>
+                  <el-input v-model="codeMaintenanceForm.bankName"/>
                 </el-form-item>
                 <el-form-item label="银行账号" prop="cardNo">
-                  <el-input v-model="codeMaintenanceForm.cardNo"/>
+                  <el-input v-model="codeMaintenanceForm.bankCode"/>
                 </el-form-item>
                 <el-form-item label="专票限额" prop="specialTicketAmount">
-                  <el-input v-model="codeMaintenanceForm.specialTicketAmount" type="number"/>
+                  <el-input v-model="codeMaintenanceForm.expertLimit" type="number"/>
                 </el-form-item>
                 <el-form-item label="普票限额" prop="generalTicketAmount">
-                  <el-input v-model="codeMaintenanceForm.generalTicketAmount" type="number"/>
+                  <el-input v-model="codeMaintenanceForm.generalLimit" type="number"/>
                 </el-form-item>
                 <el-form-item label="电子发票限额" prop="electronicTicketAmount">
-                  <el-input v-model="codeMaintenanceForm.electronicTicketAmount" type="number"/>
+                  <el-input v-model="codeMaintenanceForm.electricityLimit" type="number"/>
                 </el-form-item>
                 <el-form-item label="最大订单数" prop="maxOrderNo">
-                  <el-input v-model="codeMaintenanceForm.maxOrderNo" type="number"/>
+                  <el-input v-model="codeMaintenanceForm.maxOrderNum" type="number"/>
                 </el-form-item>
                 <el-form-item label="地址" prop="address">
-                  <el-input v-model="codeMaintenanceForm.address"/>
+                  <el-input v-model="codeMaintenanceForm.coAddr"/>
                 </el-form-item>
                 <el-form-item label="电话" prop="telephoneNo">
-                  <el-input v-model="codeMaintenanceForm.telephoneNo"/>
+                  <el-input v-model="codeMaintenanceForm.coPhone"/>
                 </el-form-item>
                 <el-form-item>
                   <el-button type="primary" icon="el-icon-check" @click="submitCodeMaintence('addNodeForm')">保存</el-button>
                 </el-form-item>
               </el-form>
             </el-tab-pane>
-            <el-tab-pane v-if="currentNodeType !== 'system'" label="税号关联终端" name="fourth">
+            <el-tab-pane v-if="currentNodeType === 2" ref="fourth" label="税号关联终端">
               <template>
                 <el-table
                   :data="codeRelevanceTerminalList"
@@ -184,8 +184,9 @@
 </template>
 
 <script>
-import { getNodeList, getNodeDetail, deleteNode, updateNode, addNode } from '@/api/system/organization'
+import { getNodeList, deleteNode, updateNode, addNode } from '@/api/system/organization'
 import dialogDetail from '@/components/system/organization'
+import { arrayToTree } from '@/utils/public'
 export default {
   name: 'Dashboard',
   components: {
@@ -193,6 +194,7 @@ export default {
   },
   data() {
     return {
+      tabKey: '',
       // 遮罩层
       loading: false,
       // 机构树检索关键字
@@ -211,41 +213,40 @@ export default {
       currentNodeID: '',
       // 节点维护表单
       nodeMaintenanceForm: {
-        code: '',
-        name: '',
-        note: '',
-        isLeafNode: ''
+        orgCode: '',
+        orgName: '',
+        remark: '',
+        type: ''
       },
       // 新增子节点表单
       addNodeForm: {
-        code: '',
-        name: '',
-        note: '',
-        date: '',
-        isLeafNode: ''
+        orgCode: '',
+        orgName: '',
+        remark: '',
+        type: ''
       },
       // 税号维护表单
       codeMaintenanceForm: {
-        code: '',
-        unitName: '',
+        taxNum: '',
+        coName: '',
         bankName: '',
-        cardNo: '',
-        specialTicketAmount: '',
-        generalTicketAmount: '',
-        electronicTicketAmount: '',
-        maxOrderNo: '',
-        address: '',
-        telephoneNo: ''
+        bankCode: '',
+        expertLimit: '',
+        generalLimit: '',
+        electricityLimit: '',
+        maxOrderNum: '',
+        coAddr: '',
+        coPhone: ''
       },
       // 节点维护表单校验规则
       nodeMaintenanceRules: {
-        code: [
+        orgCode: [
           { required: true, message: '请输入组织机构代码', trigger: 'blur' }
         ],
-        name: [
+        orgName: [
           { required: true, message: '请输入组织机构名称', trigger: 'blur' }
         ],
-        isLeafNode: [
+        type: [
           { required: true, message: '请选择是否是叶节点', trigger: 'change' }
         ]
       },
@@ -327,7 +328,9 @@ export default {
       // 当前分页
       currentPage: 1,
       // 当前总条数
-      totalCount: 1
+      totalCount: 1,
+      // 当前所有节点的数组
+      nodeList: ''
     }
   },
   watch: {
@@ -344,7 +347,8 @@ export default {
       this.loading = true
       getNodeList().then(res => {
         this.loading = false
-        this.organTree = res.data
+        this.nodeList = res.data.list
+        this.organTree = arrayToTree(res.data.list)
       }).catch(err => {
         this.loading = false
         this.$message({
@@ -360,25 +364,45 @@ export default {
     },
     // 点击机构展示对应的机构详情
     showTabs() {
-      getNodeDetail().then(res => {
-        this.currentNodeType = res.data.nodeType
-        this.isTreeChecked = true
-      }).catch(err => {
-        this.$message({
-          message: err,
-          type: 'error'
-        })
+      this.nodeList.forEach((item) => {
+        if (item.id === this.$refs.organTree.getCurrentNode().id) {
+          this.tabKey = this.$refs.organTree.getCurrentNode().id
+          this.currentNodeType = item.type
+          this.isTreeChecked = true
+          this.nodeMaintenanceForm = {
+            orgCode: item.orgCode,
+            orgName: item.orgName,
+            remark: item.remark,
+            type: item.type.toString()
+          }
+          this.codeMaintenanceForm = {
+            taxNum: item.taxNum,
+            coName: item.coName,
+            bankName: item.bankName,
+            bankCode: item.bankCode,
+            expertLimit: item.expertLimit,
+            generalLimit: item.generalLimit,
+            electricityLimit: item.electricityLimit,
+            maxOrderNum: item.maxOrderNum,
+            coAddr: item.coAddr,
+            coPhone: item.coPhone
+          }
+          this.$refs.first.classList.add('is-active')
+        }
       })
     },
     // 更新机构
     updateForm(data) {
       this.$refs[data].validate((valid) => {
         if (valid) {
-          updateNode(this.nodeMaintenanceForm).then(res => {
+          const args = Object.assign({}, this.nodeMaintenanceForm)
+          args.id = this.$refs.organTree.getCurrentNode().id
+          updateNode(args).then(res => {
             this.$message({
               message: res.data.msg,
               type: 'success'
             })
+            this.initTree()
           }).catch(err => {
             this.$message({
               message: err,
@@ -395,11 +419,12 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        deleteNode().then(res => {
+        deleteNode(this.$refs.organTree.getCurrentNode().id).then(res => {
           this.$message({
             type: 'success',
             message: res.msg
           })
+          this.initTree()
         }).catch(err => {
           this.$message({
             type: 'error',
@@ -412,12 +437,15 @@ export default {
     addNode(data) {
       this.$refs[data].validate((valid) => {
         if (valid) {
-          addNode(this.addNodeForm).then(res => {
+          const args = Object.assign({}, this.addNodeForm)
+          args.fid = this.$refs.organTree.getCurrentNode().id
+          addNode(args).then(res => {
             this.$refs[data].resetFields()
             this.$message({
               message: res.data.msg,
               type: 'success'
             })
+            this.initTree()
           }).catch(err => {
             this.$message({
               message: err,
