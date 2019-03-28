@@ -3,7 +3,7 @@
  * @Author: zhangzheng
  * @LastEditors: zhangzheng
  * @Date: 2019-03-19 17:11:23
- * @LastEditTime: 2019-03-22 14:30:26
+ * @LastEditTime: 2019-03-28 16:36:54
  */
 const orderConfig = {
   queryConditionsForm: [ // 服务类订单管理查询条件

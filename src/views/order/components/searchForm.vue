@@ -3,7 +3,7 @@
  * @Author: zhangzheng
  * @LastEditors: zhangzheng
  * @Date: 2019-03-15 09:50:29
- * @LastEditTime: 2019-03-26 11:10:41
+ * @LastEditTime: 2019-03-28 16:42:27
  -->
 
 <template>
@@ -159,14 +159,11 @@ export default {
           text-align: right;
         }
       }
-    .el-col .el-form-item__content .el-input--suffix .el-input__inner{
-    padding-right: 12px !important;
-  }
-   .el-input--suffix .el-input__inner{
-    padding-right: 15px !important;
-  }
     }
 
   }
+}
+.searchForm_wrapper /deep/ .el-input--suffix .el-input__inner{
+            padding-right: 15px !important;
 }
 </style>
