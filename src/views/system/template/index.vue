@@ -4,7 +4,7 @@
       <el-button type="primary" size="mini" class="dashboard-button" @click="dialogFormVisible = true">新增</el-button>
       <el-button type="primary" size="mini" class="dashboard-button" @click="dialogVisible = true">删除</el-button>
       <!--新增规则弹框-->
-      <el-dialog :visible.sync="dialogFormVisible" title="新增规则" width="55%">
+      <el-dialog :visible.sync="dialogFormVisible" title="新增规则" width="720px">
         <el-form :model="templateForm" :ref="templateForm" :rules="rules">
           <el-form-item :label-width="formLabelWidth" label="模板名称" class="dashboard-selectBox" prop="ruleName">
             <el-input v-model="templateForm.ruleName "/>
