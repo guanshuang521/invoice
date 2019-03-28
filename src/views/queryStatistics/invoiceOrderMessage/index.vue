@@ -336,7 +336,7 @@ export default {
   }
 </style>
 <style rel="stylesheet/scss" lang="scss">
-  .dashboard-container {
+  .invoiceOrder-container {
     .search-box {
       .search-item {
         .el-input {

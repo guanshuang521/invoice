@@ -1,26 +1,18 @@
 <template>
-  <div class="dashboard-container">
-    <div class="search-box">
-      <el-row>
-        <el-col :span="18">
-          <div class="search-item">
-            <span>商品名称: </span>
-            <el-input v-model="searchs.commodityName" size="small"/>
-          </div>
-          <div class="search-item">
-            <span>商品编码: </span>
-            <el-input v-model="searchs.comcode" size="small"/>
-          </div>
-        </el-col>
-        <el-col :span="6">
-          <div class="grid-content bg-purple-light">
-            <el-row>
-              <el-button type="primary" size="small" @click="searchFn">查询</el-button>
-              <el-button type="primary" size="small" @click="initSearch">重置</el-button>
-            </el-row>
-          </div>
-        </el-col>
-      </el-row>
+  <div class="infoManagement-container">
+    <div class="filter-container">
+      <el-form :inline="true" :model="searchParams" class="demo-form-inline">
+        <el-form-item label="商品名称">
+          <el-input v-model="searchParams.userName" placeholder="请输入" size="small"/>
+        </el-form-item>
+        <el-form-item label="商品编码">
+          <el-input v-model="searchParams.userName" placeholder="请输入" size="small"/>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" size="small" @click="initTable">查询</el-button>
+          <el-button type="primary" size="small" @click="reset">重置</el-button>
+        </el-form-item>
+      </el-form>
     </div>
     <div class="button-box">
       <el-row>
@@ -297,11 +289,11 @@ export default{
     return {
       listLoading: false, // loading
       list: [],
-      searchs: {
-        // 商品名称
-        commodityName: '',
-        // 商品编码
-        comcode: ''
+      searchParams: {
+        userName: '',
+        role: '',
+        currentPage: 1,
+        pageSize: 10
       },
       checkedList: [],
       currentPage: 1,
@@ -367,11 +359,22 @@ export default{
   methods: {
     searchFn() {
     },
-    initSearch() {
-      this.searchs = {
-        commodityName: '',
-        comcode: ''
+    // table列表查询
+    initTable() {
+      commodictList(this.searchParams).then(res => {
+        this.list = res.info
+        console.log(res, 88888)
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+    // table重置
+    reset() {
+      this.searchParams = {
+        userName: '',
+        role: ''
       }
+      this.initTable()
     },
     gitlist() { // 获取数据列表
       commodictList().then(res => {
@@ -463,7 +466,7 @@ export default{
 }
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
-  .dashboard {
+.infoManagement {
   &-container {
      margin: 30px;
       .search-box {
