@@ -33,13 +33,10 @@ service.interceptors.response.use(
      * code为非20000是抛错 可结合自己业务进行修改
      */
     const res = response.data
+    if (!res.code) {
+      return res
+    }
     if (res.code !== '0000') {
-      Message({
-        message: res.message,
-        type: 'error',
-        duration: 5 * 1000
-      })
-
       // 50008:非法的token; 50012:其他客户端登录了;  50014:Token 过期了;
       if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
         MessageBox.confirm(
@@ -56,7 +53,7 @@ service.interceptors.response.use(
           })
         })
       }
-      return Promise.reject('error')
+      return Promise.reject(res.message)
     } else {
       return response.data
     }

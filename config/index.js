@@ -31,6 +31,10 @@ module.exports = {
         // },
         changeOrigin: true,
       },
+      '/organization':{
+        target: 'http://192.168.4.128:8080', //后台api
+        changeOrigin: true,
+      }
     },
 
     // Various Dev Server settings

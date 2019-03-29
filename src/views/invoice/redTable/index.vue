@@ -46,18 +46,59 @@
           type="selection"
           width="55"/>
         <el-table-column
-          label="日期"
-          width="120">
-          <template slot-scope="scope">{{ scope.row.date }}</template>
-        </el-table-column>
-        <el-table-column
           prop="name"
-          label="姓名"
+          label="申请单号"
           width="120"/>
         <el-table-column
-          prop="address"
-          label="地址"
-          show-overflow-tooltip/>
+          prop="name"
+          label="红字信息表编号"
+          width="120"/>
+        <el-table-column
+          prop="name"
+          label="信息表状态"
+          width="120"/>
+        <el-table-column
+          prop="name"
+          label="填开日期"
+          width="120"/>
+        <el-table-column
+          prop="name"
+          label="发票代码"
+          width="120"/>
+        <el-table-column
+          prop="name"
+          label="发票号码"
+          width="120"/>
+        <el-table-column
+          prop="name"
+          label="金额（不含税）"
+          width="120"/>
+        <el-table-column
+          prop="name"
+          label="税额"
+          width="120"/>
+        <el-table-column
+          prop="name"
+          label="价税合计"
+          width="120"/>
+        <el-table-column
+          prop="name"
+          label="购方名称"
+          width="120"/>
+        <el-table-column
+          prop="name"
+          label="销方名称"
+          width="120"/>
+        <el-table-column
+          fixed="right"
+          label="操作"
+          width="150">
+          <template slot-scope="scope">
+            <el-button type="text" size="small" @click="handleClick(scope.row)">查看</el-button>
+            <el-button type="text" size="small">上传</el-button>
+            <el-button type="text" size="small">编辑</el-button>
+          </template>
+        </el-table-column>
       </el-table>
       <el-pagination
         :current-page = "currentPage"
@@ -123,6 +164,10 @@ export default {
       // }).catch(err => {
       //   console.log(err)
       // })
+    },
+    // 查看
+    handleClick(row) {
+      console.log(row)
     },
     // table重置
     reset() {

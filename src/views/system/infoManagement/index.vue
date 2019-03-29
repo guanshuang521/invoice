@@ -1,35 +1,32 @@
+/**
+* @author Dongyt
+* @date 2019/3/27
+* @Description: 商品信息管理
+*/
 <template>
   <div class="infoManagement-container">
     <div class="filter-container">
       <el-form :inline="true" :model="searchParams" class="demo-form-inline">
         <el-form-item label="商品名称">
-          <el-input v-model="searchParams.userName" placeholder="请输入" size="small"/>
+          <el-input v-model="searchParams.spmc" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="商品编码">
-          <el-input v-model="searchParams.userName" placeholder="请输入" size="small"/>
+          <el-input v-model="searchParams.spbm" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" size="small" @click="initTable">查询</el-button>
-          <el-button type="primary" size="small" @click="reset">重置</el-button>
+          <el-button type="primary" size="small" @click="searchFn">查询</el-button>
+          <el-button type="primary" size="small" @click="initSearch">重置</el-button>
         </el-form-item>
       </el-form>
     </div>
-    <div class="button-box">
-      <el-row>
-        <el-col :span="24">
-          <div class="grid-content bg-purple-dark">
-            <el-row>
-              <el-button type="primary" size="mini" @click="addClick">新增</el-button>
-              <el-button type="primary" size="mini" @click="settingClick">设置税收分类编码</el-button>
-              <el-button type="primary" size="mini">导出数据</el-button>
-              <el-button type="primary" size="mini">Excel模板下载</el-button>
-              <el-button type="primary" size="mini" @click="importExcel">导入Excel</el-button>
-            </el-row>
-          </div>
-        </el-col>
-      </el-row>
+    <div class="button-container">
+      <el-button type="primary" size="mini" @click="addClick">新增</el-button>
+      <el-button type="primary" size="mini" @click="settingClick">设置税收分类编码</el-button>
+      <el-button type="primary" size="mini" @click="exportData">导出数据</el-button>
+      <el-button type="primary" size="mini" @click="exportModle">Excel模板下载</el-button>
+      <el-button type="primary" size="mini" @click="importExcel">导入Excel</el-button>
     </div>
-    <div class="table-box">
+    <div class="table-container">
       <el-table
         v-loading="listLoading"
         :data="list"
@@ -89,12 +86,12 @@
         </el-table-column>
         <el-table-column label="税收分类编码" align="center">
           <template slot-scope="scope">
-            {{ scope.row.ssflbm }}
+            {{ scope.row.shflbm }}
           </template>
         </el-table-column>
         <el-table-column label="税收分类名称" align="center">
           <template slot-scope="scope">
-            {{ scope.row.ssflmc }}
+            {{ scope.row.shflmc }}
           </template>
         </el-table-column>
         <el-table-column label="税率" align="center">
@@ -131,14 +128,13 @@
           </template>
         </el-table-column>
       </el-table>
-    </div>
-    <div class="page-box">
       <el-pagination
         :current-page="currentPage"
         :page-sizes="[25, 50, 100]"
         :page-size="pageSize"
         :total="total"
         layout="prev, pager, next, jumper, total, sizes, slot"
+        style="margin-top: 20px"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange">
         <!-- <span></span> -->
@@ -211,13 +207,13 @@
               <el-input v-model="form.meteringcom"/>
             </el-form-item>
             <el-form-item label="税收分类名称">
-              <el-select v-model="form.ssflmc" placeholder="请选择" size="small">
+              <el-select v-model="form.shflmc" placeholder="请选择" size="small">
                 <el-option label="企业所得税" value="企业"/>
                 <el-option label="个人所得税" value="个人"/>
               </el-select>
             </el-form-item>
-            <el-form-item label="税收分类编码" prop="ssflbm" size="small">
-              <el-input v-model="form.ssflbm"/>
+            <el-form-item label="税收分类编码" prop="shflbm" size="small">
+              <el-input v-model="form.shflbm"/>
             </el-form-item>
             <el-form-item label="是否享受优惠政策">
               <el-select v-model="form.sfxsyh" placeholder="请选择" size="small">
@@ -244,13 +240,13 @@
       custom-class="add-customer">
       <el-form ref="form1" :rules="rules" :model="form" label-width="120px">
         <el-form-item label="税收分类名称">
-          <el-select v-model="form1.ssflmc" placeholder="请选择" size="small">
+          <el-select v-model="form1.shflmc" placeholder="请选择" size="small">
             <el-option label="企业所得税" value="企业"/>
             <el-option label="个人所得税" value="个人"/>
           </el-select>
         </el-form-item>
         <el-form-item label="税收分类编码" prop="spmcName" size="small">
-          <el-input v-model="form1.ssflbm"/>
+          <el-input v-model="form1.shflbm"/>
         </el-form-item>
         <el-form-item class="button">
           <el-button type="primary" @click="dialogVisible1 = false">保存</el-button>
@@ -271,9 +267,11 @@
         :on-remove="handleRemove"
         :file-list="fileList"
         :auto-upload="false"
+        :on-error="uploadError"
+        :on-success="uploadSuccess"
+        :action="uploadPath()"
         accept=".xls,.xlsx"
-        class="upload-demo"
-        action="https://jsonplaceholder.typicode.com/posts/">
+        class="upload-demo">
         <div slot="tip" class="el-upload__tip">选择上传文件</div>
         <el-button slot="trigger" size="small" type="primary">添加文件</el-button>
         <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">开始上传</el-button>
@@ -282,18 +280,19 @@
   </div>
 </template>
 <script>
-import { commodictList, AddData, updateData } from '@/api/system/infoManagement'
+import { commodictList, AddData, updateData, exportData, importExcel, exportModle } from '@/api/system/infoManagement'
+import apiPath from '@/api/apiUrl'
 export default{
-  name: 'Dashboard',
+  name: 'InfoManagement',
   data() {
     return {
       listLoading: false, // loading
       list: [],
       searchParams: {
-        userName: '',
-        role: '',
-        currentPage: 1,
-        pageSize: 10
+        // 商品名称
+        spmc: '',
+        // 商品编码
+        spbm: ''
       },
       checkedList: [],
       currentPage: 1,
@@ -313,8 +312,8 @@ export default{
         UnitPrice: '',
         meteringcom: '',
         hssign: '',
-        ssflbm: '',
-        ssflmc: '',
+        shflbm: '',
+        shflmc: '',
         sl: '',
         lslbs: '',
         mslx: '',
@@ -323,8 +322,8 @@ export default{
         id: 0
       },
       form1: {
-        ssflmc: '',
-        ssflbm: ''
+        shflmc: '',
+        shflbm: ''
       },
       rules: {
         spbm: [
@@ -345,7 +344,7 @@ export default{
         meteringcom: [
           { required: true, message: '计量单位不能为空', trigger: 'blur' }
         ],
-        ssflbm: [
+        shflbm: [
           { required: true, message: '税收分类编码不能为空', trigger: 'blur' }
         ]
       }
@@ -358,28 +357,18 @@ export default{
   },
   methods: {
     searchFn() {
+      this.gitlist()
     },
-    // table列表查询
-    initTable() {
-      commodictList(this.searchParams).then(res => {
-        this.list = res.info
-        console.log(res, 88888)
-      }).catch(err => {
-        console.log(err)
-      })
-    },
-    // table重置
-    reset() {
+    initSearch() {
       this.searchParams = {
-        userName: '',
-        role: ''
+        spmc: '',
+        spbm: ''
       }
-      this.initTable()
     },
     gitlist() { // 获取数据列表
-      commodictList().then(res => {
+      commodictList(this.searchParams).then(res => {
         if (res.code === '0000') {
-          this.list = res.data
+          this.list = res.data.list
         }
       })
     },
@@ -398,10 +387,16 @@ export default{
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`)
     },
+    exportData() { // 导出数据
+      const url = apiPath.system.InfoManagement.exportData + '?spbm=' + this.searchParams.spbm + '&spmc=' + this.searchParams.spmc
+      window.open(url)
+    },
+    exportModle() { // 导出模板
+      window.open(apiPath.system.InfoManagement.exportModle)
+    },
     addClick() { // 添加
       this.dialogVisible = true
       this.dialogType = 'adds'
-      console.log(111)
     },
     addAdata(formName) { // 点击添加确定后
       if (this.dialogType === 'adds') {
@@ -409,12 +404,18 @@ export default{
           if (valid) {
             var params = JSON.parse(JSON.stringify(this.form))
             AddData(params).then(res => {
-              if (res.code === '0000') {
-                console.log(res)
-                this.gitlist()
-              }
+              this.$message({
+                message: res.message,
+                type: 'success'
+              })
+              this.gitlist()
               this.dialogVisible = false
               this.dialogType = ''
+            }).catch(e => {
+              this.$message({
+                message: e,
+                type: 'error'
+              })
             })
           } else {
             console.log('error!!')
@@ -445,7 +446,7 @@ export default{
     settingClick() { // 设置税收分类编码
       this.dialogVisible1 = true
     },
-    importExcel() {
+    importExcel() { // 导入Excel表格
       this.dialogVisible2 = true
     },
     handleClose() { // 关闭弹窗
@@ -453,40 +454,47 @@ export default{
       this.dialogVisible1 = false
       this.dialogVisible2 = false
     },
-    submitUpload() {
+    submitUpload() { // 开始上传按钮
       this.$refs.upload.submit()
     },
-    handleRemove(file, fileList) {
+    uploadSuccess(res, file, fileList) { // 上传成功后的回调
+      this.$message({
+        message: res.message,
+        type: res.code === '0000' ? 'success' : 'error'
+      })
+      res.code === '0000' ? this.dialogVisible2 = false : this.$refs.upload.clearFiles()
+    },
+    uploadError(response, file, fileList) { // 上传错误
+      console.log('上传失败，请重试！')
+    },
+    uploadPath() { // 上传地址
+      return apiPath.system.InfoManagement.importExcel
+    },
+    handleRemove(file, fileList) { // 文件列表移除文件时的钩子
       console.log(file, fileList)
     },
-    handlePreview(file) {
+    handlePreview(file) { // 点击文件列表中已上传的文件时的钩子
       console.log(file)
     }
   }
 }
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
-.infoManagement {
-  &-container {
-     margin: 30px;
-      .search-box {
-        .search-item {
-          float: left;
-          display: inline-block;
-            span {
-              font-size: 14px;
-            }
-          }
+  .infoManagement {
+    &-container {
+      margin: 30px;
+      .filter-container {
+        margin-bottom: 20px;
       }
-      .button-box {
-        margin-top: 10px;
-        margin-bottom: 10px;
-        margin-left: 0px;
+      .button-container {
+        margin-bottom: 20px;
       }
-    }
-    &-text {
-       font-size: 30px;
-       line-height: 46px;
+      .authTree {
+        border: 1px solid #eeeeee;
+        width: 454px;
+        max-height: 200px;
+        overflow-y: scroll;
+      }
     }
   }
 </style>

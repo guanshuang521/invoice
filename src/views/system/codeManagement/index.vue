@@ -1,48 +1,36 @@
+/**
+* @author Dongyt
+* @date 2019/3/27
+* @Description: 税收分类编码管理
+*/
 <template>
-  <div class="dashboard-container">
-    <div class="search-box">
-      <el-row>
-        <el-col :span="16">
-          <div class="search-item">
-            <span>商品分类</span>
-            <el-select v-model="searchs.sign" placeholder="请选择" size="small">
-              <el-option label="已开具" value="1"/>
-              <el-option label="未开具" value="0"/>
-            </el-select>
-          </div>
-          <div class="search-item">
-            <span>税收编码: </span>
-            <el-input v-model="searchs.ssbm" size="small"/>
-          </div>
-          <div class="search-item">
-            <span>商品或服务名称: </span>
-            <el-input v-model="searchs.sphfumc" size="small"/>
-          </div>
-        </el-col>
-        <el-col :span="8">
-          <div class="grid-content bg-purple-light">
-            <el-row>
-              <el-button type="primary" size="small" @click="searchFn">查询</el-button>
-              <el-button type="primary" size="small" @click="initSearch">重置</el-button>
-            </el-row>
-          </div>
-        </el-col>
-      </el-row>
+  <div class="codeManagement-container">
+    <div class="filter-container">
+      <el-form :inline="true" :model="searchParams" class="demo-form-inline">
+        <el-form-item label="商品分类">
+          <el-select v-model="searchParams.sign" placeholder="请选择" size="small">
+            <el-option label="已开具" value="1"/>
+            <el-option label="未开具" value="0"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="税收编码">
+          <el-input v-model="searchParams.ssbm" placeholder="请输入" size="small"/>
+        </el-form-item>
+        <el-form-item label="商品或服务名称">
+          <el-input v-model="searchParams.sphfumc" placeholder="请输入" size="small"/>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" size="small" @click="searchFn">查询</el-button>
+          <el-button type="primary" size="small" @click="initSearch">重置</el-button>
+        </el-form-item>
+      </el-form>
     </div>
-    <div class="button-box">
-      <el-row>
-        <el-col :span="24">
-          <div class="grid-content bg-purple-dark">
-            <el-row>
-              <el-button type="primary" size="mini" @click="importExcel">导入</el-button>
-              <el-button type="primary" size="mini" @click="exportExcel">导出</el-button>
-              <el-button type="primary" size="mini" @click="importExceldownload">导入摸板下载</el-button>
-            </el-row>
-          </div>
-        </el-col>
-      </el-row>
+    <div class="button-container">
+      <el-button type="primary" size="mini" @click="importExcel">导入</el-button>
+      <el-button type="primary" size="mini" @click="exportExcel">导出</el-button>
+      <el-button type="primary" size="mini" @click="importExceldownload">导入摸板下载</el-button>
     </div>
-    <div class="table-box">
+    <div class="table-container">
       <el-table
         v-loading="listLoading"
         :data="list"
@@ -86,14 +74,13 @@
           </template>
         </el-table-column>
       </el-table>
-    </div>
-    <div class="page-box">
       <el-pagination
         :current-page="currentPage"
         :page-sizes="[25, 50, 100]"
         :page-size="pageSize"
         :total="total"
         layout="prev, pager, next, jumper, total, sizes, slot"
+        style="margin-top: 20px"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange">
         <!-- <span></span> -->
@@ -139,7 +126,7 @@
 export default {
   data() {
     return {
-      searchs: {
+      searchParams: {
         // 商品分类
         sign: '',
         // 税收编码
@@ -228,27 +215,21 @@ export default {
 }
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
-  .dashboard {
-  &-container {
-     margin: 30px;
-      .search-box {
-        .search-item {
-          float: left;
-          display: inline-block;
-          span {
-            font-size: 14px;
-          }
-        }
+  .codeManagement {
+    &-container {
+      margin: 30px;
+      .filter-container {
+        margin-bottom: 20px;
       }
-      .button-box {
-        margin-top: 10px;
-        margin-bottom: 10px;
-        margin-left: 0px;
+      .button-container {
+        margin-bottom: 20px;
+      }
+      .authTree {
+        border: 1px solid #eeeeee;
+        width: 454px;
+        max-height: 200px;
+        overflow-y: scroll;
       }
     }
-    &-text {
-       font-size: 30px;
-       line-height: 46px;
-     }
   }
 </style>

@@ -14,11 +14,11 @@ const apiPath = {
   },
   system: {
     organization: {
-      list: '/organization/list',
-      nodeDetail: '/organization/nodeDetail',
-      deleteNode: '/organization/delete',
-      updateNode: '/organization/update',
-      addNode: '/organization/add'
+      list: '/organization/selectOrganizationsList',
+      // nodeDetail: '/organization/nodeDetail',
+      deleteNode: '/organization/deleteOrganization',
+      updateNode: '/organization/updateOrganization',
+      addNode: '/organization/insertOrganization'
     },
     shop: {
       list: '/store/selectAll.do',
@@ -34,9 +34,12 @@ const apiPath = {
       detail: '/system/user/detail.do' // 获取用户详情
     },
     InfoManagement: {
-      list: '/commoditye/selectCommoditysList', // 页面加载获取数据
+      list: '/commoditye/selectByCommodity', // 页面加载获取数据
       newAdd: '/commoditye/insertCommodity', // 添加数据
-      updateda: '/commoditye/updateCommodity' // 编辑数据(修改数据)
+      updateda: '/commoditye/updateCommodity', // 编辑数据(修改数据)
+      exportModle: '/commoditye/downloadCommodityExcel', // 下载模板
+      exportData: '/commoditye/exportCommodityExcel', // 导出数据
+      importExcel: '/commoditye/importCommodityExcel' // 导入Excel
     },
     store: {
       list: '',

@@ -59,9 +59,9 @@ export function arrayToTree(array) {
   // 获取顶级节点`
   for (let i = 0; i < array.length; i++) {
     const row = array[i]
-    if (!exists(array, row.parentId)) {
+    if (!exists(array, row.fid)) {
       nodes.push({
-        lable: row.title,
+        label: row.orgName,
         id: row.id
       })
     }
@@ -72,9 +72,9 @@ export function arrayToTree(array) {
     // 获取子节点
     for (let i = 0; i < array.length; i++) {
       const row = array[i]
-      if (row.parentId === node.id) {
+      if (row.parentId === node.id || row.fid === node.id) {
         const child = {
-          lable: row.title,
+          label: row.orgName,
           id: row.id
         }
         if (node.children) {

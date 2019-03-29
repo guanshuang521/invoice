@@ -45,9 +45,8 @@ Mock.mock(/\/user\/getRoute/, 'post', userAPI.getRoute)
 Mock.mock(/\/table\/list/, 'get', tableAPI.list)
 // System
 Mock.mock(/\/organization\/nodeDetail/, 'post', systemAPI.nodeDetail)
-Mock.mock(/\/organization\/list/, 'post', systemAPI.getlist)
-Mock.mock(/\/commoditye\/selectByCommodity/, 'post', infoManagementAPI.getlist) // 商品信息维护获取数据
-Mock.mock(/\/commoditye\/insertCommodity/, 'post', infoManagementAPI.newAdd) // 商品信息维护添加数据
+// Mock.mock(/\/commoditye\/selectByCommodity/, 'post', infoManagementAPI.getlist) // 商品信息维护获取数据
+// Mock.mock(/\/commoditye\/insertCommodity/, 'post', infoManagementAPI.newAdd) // 商品信息维护添加数据
 Mock.mock(/\/commoditye\/updateCommodity/, 'post', infoManagementAPI.updateda) // 商品信息编辑修改
 Mock.mock(/\/order\/list/, 'post', orderListAPI.getOrderlist)
 // Role
@@ -63,7 +62,7 @@ Mock.mock(/\/customer\/insertCustomer/, 'post', customerAPI.insertCustomer)
 // orderOpenMessage
 Mock.mock(/\/orderOpenMessage\/getTableList/, 'post', orderOpenMessageAPI.getTableList)
 
-//invoiceOpening 开具
+// invoiceOpening 开具
 Mock.mock(/\/commodityInfo\/getList/, 'post', getListAPI.getlist)  //商品列表查询
 Mock.mock(/\/customer\/getList/, 'post', getGmfListAPI.getGmflist)  //购买方用户信息表查询
 
