@@ -88,7 +88,7 @@ export default {
     const info = getGmflist
     if (info) {
       return {
-        code: 20000,
+        code: '0000',
         data: info,
         message: "返回数据成功"
       }
