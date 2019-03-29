@@ -55,14 +55,10 @@ export function exportData(data) {
   })
 }
 // 商品信息添加
-export function updateData(data, id) {
-  console.log(data)
+export function editData(data, id) {
   return request({
-    url: apiPath.system.InfoManagement.updateda,
+    url: apiPath.system.InfoManagement.editData,
     method: 'post',
-    data: {
-      data,
-      id
-    }
+    data: data
   })
 }
