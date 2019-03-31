@@ -31,6 +31,14 @@ module.exports = {
       '/terminal':{
         target: 'http://192.168.4.128:8080', //后台api
         changeOrigin: true,
+      },
+      '/paramDetail':{
+        target: 'http://192.168.4.128:8080', //后台api
+        changeOrigin: true,
+      },
+      '/param':{
+        target: 'http://192.168.4.128:8080', //后台api
+        changeOrigin: true,
       }
     },
 

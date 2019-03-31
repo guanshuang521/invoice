@@ -4,6 +4,7 @@ import app from './modules/app'
 import user from './modules/user'
 import permission from './modules/permission'
 import tagsView from './modules/tagsView'
+import dictionary from './modules/dictionary'
 import fplx from './modules/fplx'
 import getters from './getters'
 
@@ -15,7 +16,8 @@ const store = new Vuex.Store({
     user,
     permission,
     tagsView,
-    fplx
+    fplx,
+    dictionary
   },
   getters
 })

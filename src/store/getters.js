@@ -11,6 +11,7 @@ const getters = {
   addRouters: state => state.permission.addRouters,
   visitedViews: state => state.tagsView.visitedViews,
   cachedViews: state => state.tagsView.cachedViews,
+  dictList: state => state.dictionary.dictList,
   // 发票类型
   fplx_ele: state => state.fplx.fplx_ele,
   fplx_gen: state => state.fplx.fplx_gen,

@@ -94,3 +94,27 @@ function exists(rows, parentId) {
   }
   return false
 }
+/**
+ * @author Linzb
+ * @date 2019/3/29
+ * @Description: 将数组结构数据按照指定字段转化成对象结构
+*/
+export function arrayToMap(arr, targetField) {
+  const map = {}
+  const t = targetField
+  if (arr instanceof Array) {
+    arr.forEach(function(item) {
+      if (!map[item[t]]) {
+        map[item[t]] = []
+      }
+    })
+    for (const p in map) {
+      arr.forEach(function(item) {
+        if (p === item[t]) {
+          map[p].push(item)
+        }
+      })
+    }
+  }
+  return map
+}

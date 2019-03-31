@@ -324,6 +324,7 @@ export default {
     // 列表勾选
     handleSelectionChange(val) {
       this.checkedList = val
+      console.log(this.checkedList)
     },
     // 更改每页显示条数
     handleSizeChange(val) {

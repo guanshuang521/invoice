@@ -1,29 +1,29 @@
 <template>
   <div class="dashboard-editor-container add-edit-info-container">
     <el-form ref="form" :model="terminalInfo" :rules="terminalRules" class="form" label-width="100px" size="mini">
-      <el-form-item label="所属税号：" prop="sssh" >
-        <el-input v-model="terminalInfo.sssh" placeholder="请输入"/>
+      <el-form-item label="所属税号：" prop="taxNum" >
+        <el-input v-model="terminalInfo.taxNum" placeholder="请输入"/>
       </el-form-item>
-      <el-form-item label="终端标识：" prop="zdbz" >
-        <el-input v-model="terminalInfo.zdbz" placeholder="请输入"/>
+      <el-form-item label="终端标识：" prop="terminalMark" >
+        <el-input v-model="terminalInfo.terminalMark" placeholder="请输入"/>
       </el-form-item>
-      <el-form-item label="终端名称：" prop="zdmc" >
-        <el-input v-model="terminalInfo.zdmc" placeholder="请输入"/>
+      <el-form-item label="终端名称：" prop="terminalName" >
+        <el-input v-model="terminalInfo.terminalName" placeholder="请输入"/>
       </el-form-item>
-      <el-form-item label="终端地址：" prop="zddz" >
-        <el-input v-model="terminalInfo.zddz" placeholder="请输入"/>
+      <el-form-item label="终端地址：" prop="terminalIp" >
+        <el-input v-model="terminalInfo.terminalIp" placeholder="请输入"/>
       </el-form-item>
-      <el-form-item label="终端端口号：" prop="zddkh" >
-        <el-input v-model="terminalInfo.zddkh" placeholder="请输入"/>
+      <el-form-item label="终端端口号：" prop="terminalPort" >
+        <el-input v-model="terminalInfo.terminalPort" placeholder="请输入"/>
       </el-form-item>
-      <el-form-item label="机器编号：" prop="jqbh" >
-        <el-input v-model="terminalInfo.jqbh" placeholder="请输入"/>
+      <el-form-item label="机器编号：" prop="machineCode" >
+        <el-input v-model="terminalInfo.machineCode" placeholder="请输入"/>
       </el-form-item>
-      <el-form-item label="开票类型：" prop="kplx" >
-        <el-checkbox-group v-model="terminalInfo.kplx">
-          <el-checkbox label="普票" name="pp"/>
-          <el-checkbox label="专票" name="zp"/>
-          <el-checkbox label="电票" name="dp"/>
+      <el-form-item label="开票类型：" prop="invoiceType" >
+        <el-checkbox-group v-model="terminalInfo.invoiceType">
+          <el-checkbox label="007" name="invoiceType">普票</el-checkbox>
+          <el-checkbox label="004" name="invoiceType">专票</el-checkbox>
+          <el-checkbox label="026" name="invoiceType">电票</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
     </el-form>

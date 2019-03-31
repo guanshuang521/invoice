@@ -10,7 +10,8 @@
  */
 const apiPath = {
   login: {
-    login: '/user/login'
+    login: '/user/login',
+    dict: '/paramDetail/selectParamDetailsList'
   },
   system: {
     organization: {
@@ -20,7 +21,8 @@ const apiPath = {
       updateNode: '/organization/updateOrganization',
       addNode: '/organization/insertOrganization',
       terminalList: '/terminal/selectByTerminal',
-      deleteTerminal: '/terminal/deleteTerminal'
+      deleteTerminal: '/terminal/deleteTerminal',
+      updateTerminal: '/terminal/updateTerminal'
     },
     shop: {
       list: '/store/selectAll.do',

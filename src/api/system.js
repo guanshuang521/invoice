@@ -1,49 +1,15 @@
+/**
+ * @author Linzb
+ * @date 2019/3/29
+ * @Description: 发送系统相关请求
+ */
 import request from '@/utils/request'
 import apiPath from '@/api/apiUrl'
 // 获取节点列表
-export function getNodeList(username, password) {
+export function getDictList() {
   return request({
-    url: apiPath.system.organization.list,
+    url: apiPath.login.dict,
     method: 'post',
-    data: {
-      username,
-      password
-    }
-  })
-}
-// 获取节点详情
-export function getNodeDetail(nodeId) {
-  return request({
-    url: apiPath.system.organization.nodeDetail,
-    method: 'post',
-    data: {
-      nodeId
-    }
-  })
-}
-// 删除节点
-export function deleteNode(nodeId) {
-  return request({
-    url: apiPath.system.organization.deleteNode,
-    method: 'post',
-    data: {
-      nodeId
-    }
-  })
-}
-// 更新节点
-export function updateNode(data) {
-  return request({
-    url: apiPath.system.organization.updateNode,
-    method: 'post',
-    data: data
-  })
-}
-// 新增子节点
-export function addNode(data) {
-  return request({
-    url: apiPath.system.organization.addNode,
-    method: 'post',
-    data: data
+    data: {}
   })
 }
