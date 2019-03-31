@@ -75,9 +75,9 @@
         </el-table-column>
       </el-table>
       <el-pagination
-        :current-page="currentPage"
-        :page-sizes="[25, 50, 100]"
-        :page-size="pageSize"
+        :current-page="searchParams.currentPage"
+        :page-sizes="[10, 25, 50, 100]"
+        :page-size="searchParams.pageSize"
         :total="total"
         layout="prev, pager, next, jumper, total, sizes, slot"
         style="margin-top: 20px"
@@ -132,7 +132,9 @@ export default {
         // 税收编码
         ssbm: '',
         // 商品或服务名称
-        sphfumc: ''
+        sphfumc: '',
+        currentPage: 1,
+        pageSize: 10
       },
       listLoading: false, // loading
       list: [
@@ -156,7 +158,7 @@ export default {
       checkedList: [],
       currentPage: 1,
       pageSize: 25,
-      total: 1000,
+      total: 0,
       dialogVisible2: false,
       dialogVisible3: false,
       fileList: []

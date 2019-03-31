@@ -285,7 +285,7 @@
   </div>
 </template>
 <script>
-import { commodictList, AddData, editData, exportData, importExcel, exportModle } from '@/api/system/infoManagement'
+import { commodictList, AddData, editData } from '@/api/system/infoManagement'
 import apiPath from '@/api/apiUrl'
 export default{
   name: 'InfoManagement',
