@@ -1,12 +1,22 @@
+/**
+* @author Linzb
+* @date 2019/3/31
+* @Description: 购方信息维护
+*/
 <template>
-  <div class="infoMaintenance-container">
+  <div
+    v-loading.fullscreen.lock="listLoading"
+    element-loading-text="加载中"
+    element-loading-spinner="el-icon-loading"
+    element-loading-background="rgba(0, 0, 0, 0.8)"
+    class="infoMaintenance-container">
     <div class="filter-container">
       <el-form :inline="true" :model="searchParams" class="demo-form-inline">
-        <el-form-item label="商品名称">
-          <el-input v-model="searchParams.userName" placeholder="请输入" size="small"/>
+        <el-form-item label="购方名称">
+          <el-input v-model="searchParams.khmc" placeholder="请输入" size="small"/>
         </el-form-item>
-        <el-form-item label="商品编码">
-          <el-input v-model="searchParams.userName" placeholder="请输入" size="small"/>
+        <el-form-item label="购方税号">
+          <el-input v-model="searchParams.khsh" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" size="small" @click="initTable">查询</el-button>
@@ -23,79 +33,36 @@
     <div class="table-container">
       <el-table
         v-loading="listLoading"
+        ref="table"
         :data="list"
+        :key="list.id"
         element-loading-text="Loading"
         border
         fit
         highlight-current-row
         @selection-change="handleSelectionChange">
-        <el-table-column
-          type="selection"
-          align="center"
-          width="34px"/>
-        <el-table-column align="center" width="31px">
-          <template slot-scope="scope">
-            {{ scope.$index + 1 }}
-          </template>
-        </el-table-column>
-        <el-table-column label="购方名称" align="center">
-          <template slot-scope="scope">
-            {{ scope.row.khmc }}
-          </template>
-        </el-table-column>
-        <el-table-column label="购方税号" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.khsh }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="地址" align="center">
-          <template slot-scope="scope">
-            {{ scope.row.khdz }}
-          </template>
-        </el-table-column>
-        <el-table-column label="邮箱" align="center">
-          <template slot-scope="scope">
-            {{ scope.row.yx }}
-          </template>
-        </el-table-column>
-        <el-table-column label="联系人员" align="center">
-          <template slot-scope="scope">
-            {{ scope.row.lxry }}
-          </template>
-        </el-table-column>
-        <el-table-column label="联系电话" align="center">
-          <template slot-scope="scope">
-            {{ scope.row.lxdh }}
-          </template>
-        </el-table-column>
-        <el-table-column label="移动电话" align="center">
-          <template slot-scope="scope">
-            {{ scope.row.sjhm }}
-          </template>
-        </el-table-column>
-        <el-table-column label="开户行" align="center">
-          <template slot-scope="scope">
-            {{ scope.row.khh }}
-          </template>
-        </el-table-column>
-        <el-table-column label="银行账号" align="center">
-          <template slot-scope="scope">
-            {{ scope.row.yhzh }}
-          </template>
-        </el-table-column>
+        <el-table-column type="selection" align="center" width="34px"/>
+        <el-table-column label="购方名称" align="center" prop="khmc"/>
+        <el-table-column label="购方税号" align="center" prop="khsh"/>
+        <el-table-column label="地址" align="center" prop="khdz"/>
+        <el-table-column label="邮箱" align="center" prop="yx"/>
+        <el-table-column label="联系人员" align="center" prop="lxry"/>
+        <el-table-column label="联系电话" align="center" prop="lxdh"/>
+        <el-table-column label="移动电话" align="center" prop="sjhm"/>
+        <el-table-column label="开户行" align="center" prop="khh"/>
+        <el-table-column label="银行账号" align="center" prop="yhzh"/>
       </el-table>
     </div>
     <div class="page-box">
       <el-pagination
-        :current-page="currentPage"
-        :page-sizes="[25, 50, 100]"
-        :page-size="pageSize"
-        :total="total"
-        layout="prev, pager, next, jumper, total, sizes, slot"
+        :current-page="searchParams.currentPage"
+        :page-sizes="[10, 20, 30, 40]"
+        :page-size="10"
+        :total="totalCount"
+        layout="total, sizes, prev, pager, next, jumper"
+        style="margin-top: 10px"
         @size-change="handleSizeChange"
-        @current-change="handleCurrentChange">
-        <!-- <span></span> -->
-      </el-pagination>
+        @current-change="handleCurrentChange"/>
     </div>
     <!-- 新增弹窗 -->
     <el-dialog
@@ -104,52 +71,36 @@
       title="新增购方信息"
       width="650px"
       custom-class="add-customer">
-      <el-form ref="form" :rules="rules" :model="form" label-width="120px">
-        <el-form-item label="购方名称" prop="khmc">
-          <el-input v-model="form.khmc"/>
+      <el-form ref="form" :rules="rules" :model="form" label-width="120px" size="mini">
+        <el-form-item label="购方名称：" prop="khmc">
+          <el-input v-model="form.khmc" placeholder="请输入"/>
         </el-form-item>
-        <el-form-item label="购方税号" prop="khsh">
-          <el-input v-model="form.khsh"/>
+        <el-form-item label="购方税号：" prop="khsh">
+          <el-input v-model="form.khsh" placeholder="请输入"/>
         </el-form-item>
-        <el-form-item label="联系人">
-          <el-input v-model="form.lxry"/>
+        <el-form-item label="联系人：">
+          <el-input v-model="form.lxry" placeholder="请输入"/>
         </el-form-item>
-        <el-form-item label="联系电话">
-          <el-input v-model="form.lxdh"/>
+        <el-form-item label="联系电话：">
+          <el-input v-model="form.lxdh" placeholder="请输入"/>
         </el-form-item>
-        <el-form-item label="移动电话">
-          <el-input v-model="form.sjhm"/>
+        <el-form-item label="移动电话：">
+          <el-input v-model="form.sjhm" placeholder="请输入"/>
         </el-form-item>
-        <el-form-item label="邮箱" prop="yx">
-          <el-input v-model="form.yx"/>
+        <el-form-item label="邮箱：" prop="yx">
+          <el-input v-model="form.yx" placeholder="请输入"/>
         </el-form-item>
-        <el-form-item label="地址">
-          <el-select v-model="form.khdz" placeholder="省">
-            <el-option label="北京市" value="北京市"/>
-            <el-option label="上海市" value="上海市"/>
-          </el-select>
-          <span>-</span>
-          <el-select v-model="form.khdz" placeholder="市">
-            <el-option label="北京市" value="北京市"/>
-            <el-option label="上海市" value="上海市"/>
-          </el-select>
-          <span>-</span>
-          <el-select v-model="form.khdz" placeholder="区">
-            <el-option label="北京市" value="北京市"/>
-            <el-option label="上海市" value="上海市"/>
-          </el-select>
+        <el-form-item label="详细地址：" prop="khdz" style="width: 540px">
+          <el-input v-model="form.khdz" placeholder="请输入" class="detailAddress"/>
         </el-form-item>
-        <el-form-item label="详细地址" class="address">
-          <el-input v-model="form.khdz"/>
-        </el-form-item>
-        <el-form-item label="开户银行">
-          <el-select v-model="form.khh" placeholder="开户银行">
+        <el-form-item label="开户银行：">
+          <el-select v-model="form.khh" placeholder="请选择">
             <el-option label="华夏银行" value="华夏银行"/>
             <el-option label="北京银行" value="北京银行"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="银行账号">
-          <el-input v-model="form.yhzh"/>
+        <el-form-item label="银行账号：">
+          <el-input v-model="form.yhzh" class="address"/>
         </el-form-item>
         <el-form-item class="button">
           <el-button type="primary" @click="addCustomerFn('form')">保存</el-button>
@@ -159,8 +110,7 @@
     </el-dialog>
     <!-- 导入弹窗 -->
     <el-dialog
-      :visible.sync="dialogVisible2"
-      :before-close="handleClose2"
+      :visible.sync="importDialogVisible"
       title="客户基础信息导入"
       width="650px"
       custom-class="add-customer">
@@ -182,24 +132,10 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import { getCustomerList, deleteCustomer, insertCustomer } from '@/api/system/infoMaintenance'
-
 export default {
-  name: 'Dashboard',
+  name: 'InfoMaintenance',
   data() {
-    function khshFilter(rule, value, callback) { // 购方税号验证
-      if (value === '') {
-        callback(new Error('购方税号不能为空'))
-      } else {
-        var re = /^[A-Za-z\d]+$/
-        if (!(re.test(value)) || !(value.length === 15 || value.length === 18 || value.length === 20)) {
-          callback(new Error('购方税号应由15、18或20个字符组成'))
-        } else {
-          callback()
-        }
-      }
-    }
     function yxFilter(rule, value, callback) { // 邮箱验证
       if (value === '') {
         callback(new Error('邮箱不能为空'))
@@ -213,54 +149,24 @@ export default {
       }
     }
     return {
-      list: [
-        {
-          khmc: '管理员',
-          khsh: '1',
-          khdz: '北京市丰台科技园',
-          yx: 'aerefe@123.com',
-          lxry: '管理员',
-          lxdh: '12433323454',
-          sjhm: '23543212343',
-          khh: '北京银行中关村支行',
-          yhzh: '123444321234567876',
-          id: 0
-        }, {
-          khmc: '附带v',
-          khsh: '5675432345f',
-          khdz: '北京市丰台科技园',
-          yx: 'aerefe@123.com',
-          lxry: '地方',
-          lxdh: '12433323454',
-          sjhm: '23543212343',
-          khh: '北京银行中关村支行',
-          yhzh: '123444321234567876',
-          id: 1
-        }, {
-          khmc: '而VS',
-          khsh: '344454566775g',
-          khdz: '北京市丰台科技园',
-          yx: 'aerefe@123.com',
-          lxry: '额度',
-          lxdh: '12433323454',
-          sjhm: '23543212343',
-          khh: '北京银行中关村支行',
-          yhzh: '123444321234567876',
-          id: 2
-        }
-      ],
-      list0: [], // 临时
+      // 列表
+      list: [],
+      // 加载层
       listLoading: false,
-      searchs: {
+      // 列表查询参数
+      searchParams: {
         khmc: '',
-        khsh: ''
+        khsh: '',
+        currentPage: 1,
+        pageSize: 10
       },
+      // 列表勾选项
       checkedList: [],
-      currentPage: 1,
-      pageSize: 25,
-      total: 1000,
+      // 列表总条数
+      totalCount: 0,
+      // 新增弹窗是否显示
       dialogVisible: false,
-      dialogType: '',
+      // 新增表单
       form: {
         khmc: '',
         khsh: '',
@@ -272,58 +178,52 @@ export default {
         khh: '',
         yhzh: ''
       },
+      // 新增表单校验规则
       rules: {
         khmc: [
           { required: true, message: '购方名称不能为空', trigger: 'blur' }
         ],
         khsh: [
-          { required: true, validator: khshFilter, trigger: 'blur' }
+          { required: true, message: '购方税号不能为空', trigger: 'blur' }
         ],
         yx: [
           { required: true, validator: yxFilter, trigger: 'blur' }
         ]
       },
-      dialogVisible2: false,
+      // 导入弹窗是否显示
+      importDialogVisible: false,
       fileList: []
     }
   },
-  computed: {
-    ...mapGetters([
-      'name',
-      'roles'
-    ])
-  },
-  created() {
-    this.fetchData()
+  mounted() {
+    this.initTable()
   },
   methods: {
-    fetchData() { // 获取数据
+    initTable() { // 获取数据
       this.listLoading = true
-      this.list0 = JSON.parse(JSON.stringify(this.list))
-      // this.total = this.list0.length
-      var params = JSON.parse(JSON.stringify(this.searchs))
-      params.pageSize = this.pageSize
-      params.currentPage = this.currentPage
-      getCustomerList(params).then(response => {
-        // console.log(response)
-        if (response.code === '0000') {
-          this.list = response.data.list
-          this.total = response.data.count
-        }
+      getCustomerList(this.searchParams).then(res => {
+        this.list = res.data.list
+        this.totalCount = res.data.count
+        this.listLoading = false
+      }).catch(err => {
+        console.log(err)
         this.listLoading = false
       })
     },
-    searchFn() {
-      this.fetchData()
-    },
-    initSearch() { // 重置
-      this.searchs = {
+    // table重置
+    reset() {
+      this.searchParams = {
         khmc: '',
-        khsh: ''
+        khsh: '',
+        currentPage: 1,
+        pageSize: 10
       }
+      this.initTable()
     },
     handleSelectionChange(val) { // 表格选中数据发生变化
-      this.checkedList = val
+      val.forEach((item) => {
+        this.checkedList.push(item.id)
+      })
     },
     addCustomer() {
       this.dialogVisible = true
@@ -331,13 +231,14 @@ export default {
     addCustomerFn(form) { // 添加购方信息
       this.$refs[form].validate((valid) => {
         if (valid) {
-          var params = JSON.parse(JSON.stringify(this.form))
-          insertCustomer(params).then(response => {
-            if (response.code === '0000') {
-              this.fetchData()
-            }
+          insertCustomer(this.form).then(res => {
+            this.$message({
+              type: 'success',
+              message: res.message
+            })
+            this.initTable()
             this.dialogVisible = false
-            for (var k in this.form) {
+            for (const k in this.form) {
               this.form[k] = ''
             }
           })
@@ -351,39 +252,32 @@ export default {
       if (this.checkedList.length === 0) {
         this.$message({
           type: 'info',
-          message: '请先选择表格中的数据'
+          message: '请至少选择一条数据！'
         })
         return false
       }
       this.$confirm('确定要删除选择的数据吗?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
-        // type: 'warning',
-        // center: true
       }).then(() => {
-        console.log(this.checkedList)
-        var ids = []
-        for (var i = 0; i < this.checkedList.length; i++) {
-          ids.push(this.checkedList[i].id)
+        const args = {
+          ids: this.checkedList.join(',')
         }
-        var params = {
-          ids
-        }
-        deleteCustomer(params).then(response => {
-          console.log(response)
-          if (response.code === '0000') {
-            this.$message({
-              type: 'success',
-              message: '删除成功!'
-            })
-            this.fetchData()
-          }
+        this.loading = true
+        deleteCustomer(args).then(res => {
+          this.$message({
+            type: 'success',
+            message: res.message
+          })
+          this.initTable()
+          this.loading = false
         })
-      }).catch(() => {
-        // this.$message({
-        //   type: 'info',
-        //   message: '已取消删除'
-        // });
+      }).catch(err => {
+        this.$message({
+          type: 'error',
+          message: err
+        })
+        this.loading = false
       })
     },
     downloadExcel() { // 下载
@@ -393,18 +287,16 @@ export default {
       this.dialogVisible2 = true
     },
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`)
+      this.searchParams.pageSize = val
+      this.initTable()
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`)
+      this.searchParams.currentPage = val
+      this.initTable()
     },
     handleClose(formName) { // 关闭弹窗
       this.dialogVisible = false
       this.$refs[formName].resetFields()
-    },
-    handleClose2() { // 关闭弹窗
-      this.dialogVisible2 = false
-      this.fileList = []
     },
     submitUpload() {
       this.$refs.upload.submit()
@@ -415,17 +307,7 @@ export default {
     handlePreview(file) {
       console.log(file)
     }
-  } // ,
-  // filters: {
-  //   statusFilter(status) {
-  //     const statusMap = {
-  //       published: 'success',
-  //       draft: 'gray',
-  //       deleted: 'danger'
-  //     }
-  //     return statusMap[status]
-  //   }
-  // }
+  }
 }
 </script>
 
@@ -433,17 +315,19 @@ export default {
 .infoMaintenance {
     &-container {
       margin: 30px;
-      .search-box {
-        .search-item {
-          // float: left;
-          display: inline-block;
-          span {
-            font-size: 14px;
-          }
+      .search-item {
+        display: inline-block;
+        span {
+          font-size: 14px;
+        }
+      }
+      .detailAddress{
+       /deep/ .el-input__inner{
+          width: 420px;
+          max-width: 420px;
         }
       }
       .button-container {
-        /*margin-top: 10px;*/
         margin-bottom: 10px;
       }
     }
