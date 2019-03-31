@@ -1,24 +1,26 @@
 <template>
-  <div class="dashboard-container">
-    <div class="search-box">
-      <div class="search-items">
-        <span>客户名称</span>
-        <el-input v-model="searchs.khmc"/>
-      </div>
-      <div class="search-items">
-        <span>客户税号</span>
-        <el-input v-model="searchs.khsh"/>
-      </div>
-      <el-button type="primary" size="small" @click="searchFn">查询</el-button>
-      <el-button type="primary" size="small" @click="initSearch">重置</el-button>
+  <div class="infoMaintenance-container">
+    <div class="filter-container">
+      <el-form :inline="true" :model="searchParams" class="demo-form-inline">
+        <el-form-item label="商品名称">
+          <el-input v-model="searchParams.userName" placeholder="请输入" size="small"/>
+        </el-form-item>
+        <el-form-item label="商品编码">
+          <el-input v-model="searchParams.userName" placeholder="请输入" size="small"/>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" size="small" @click="initTable">查询</el-button>
+          <el-button type="primary" size="small" @click="reset">重置</el-button>
+        </el-form-item>
+      </el-form>
     </div>
-    <div class="button-box">
+    <div class="button-container">
       <el-button type="primary" size="mini" @click="addCustomer">新增</el-button>
       <el-button type="primary" size="mini" @click="delCustomer">删除</el-button>
       <el-button type="primary" size="mini" @click="downloadExcel">Excel模板下载</el-button>
       <el-button type="primary" size="mini" @click="importExcel">导入Excel</el-button>
     </div>
-    <div class="table-box">
+    <div class="table-container">
       <el-table
         v-loading="listLoading"
         :data="list"
@@ -428,67 +430,26 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-.dashboard {
-  &-container {
-    margin: 30px;
-    .search-box {
-      .search-items {
-        // float: left;
-        display: inline-block;
-        span {
-          font-size: 14px;
+.infoMaintenance {
+    &-container {
+      margin: 30px;
+      .search-box {
+        .search-item {
+          // float: left;
+          display: inline-block;
+          span {
+            font-size: 14px;
+          }
         }
       }
-    }
-    .button-box {
-      margin-top: 10px;
-      margin-bottom: 10px;
-      margin-left: 0;
-    }
-  }
-  &-text {
-    font-size: 30px;
-    line-height: 46px;
-  }
-}
-</style>
-<style rel="stylesheet/scss" lang="scss">
-.dashboard-container {
-  .search-box {
-    .search-items {
-      .el-input {
-        max-width: 105px;
-        // height: 25px;
+      .button-container {
+        /*margin-top: 10px;*/
+        margin-bottom: 10px;
       }
     }
-  }
-}
-.add-customer {
-  .el-form:after {
-    content: '';
-    display: block;
-    clear: both;
-  }
-  .el-form-item {
-    float: left;
-    .el-input {
-      max-width: 150px;
-      // height: 25px;
-    }
-    &.address .el-input {
-      width: 450px;
-      max-width: 450px;
-    }
-    &.button {
-      width: 610px;
-      .el-form-item__content {
-        margin-left: 0!important;
-        text-align: center;
-        .el-button+.el-button {
-          margin-left: 50px;
-        }
-      }
+    &-text {
+      font-size: 30px;
+      line-height: 46px;
     }
   }
-}
 </style>

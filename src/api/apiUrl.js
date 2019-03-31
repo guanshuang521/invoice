@@ -40,7 +40,10 @@ const apiPath = {
     InfoManagement: {
       list: '/commoditye/selectByCommodity', // 页面加载获取数据
       newAdd: '/commoditye/insertCommodity', // 添加数据
-      updateda: '/commoditye/updateCommodity' // 编辑数据(修改数据)
+      editData: '/commoditye/updateCommodity', // 编辑数据(修改数据)
+      exportModle: '/commoditye/downloadCommodityExcel', // 下载模板
+      exportData: '/commoditye/exportCommodityExcel', // 导出数据
+      importExcel: '/commoditye/importCommodityExcel' // 导入Excel
     },
     store: {
       list: '',

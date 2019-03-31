@@ -4,14 +4,19 @@
 * @Description: 商品信息管理
 */
 <template>
-  <div class="infoManagement-container">
+  <div
+    v-loading.fullscreen.lock="loading"
+    element-loading-text="加载中"
+    element-loading-spinner="el-icon-loading"
+    element-loading-background="rgba(0, 0, 0, 0.8)"
+    class="infoManagement-container">
     <div class="filter-container">
       <el-form :inline="true" :model="searchParams" class="demo-form-inline">
         <el-form-item label="商品名称">
-          <el-input v-model="searchParams.commodityName" placeholder="请输入" size="small"/>
+          <el-input v-model="searchParams.spmc" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="商品编码">
-          <el-input v-model="searchParams.comcode" placeholder="请输入" size="small"/>
+          <el-input v-model="searchParams.spbm" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" size="small" @click="searchFn">查询</el-button>
@@ -22,13 +27,13 @@
     <div class="button-container">
       <el-button type="primary" size="mini" @click="addClick">新增</el-button>
       <el-button type="primary" size="mini" @click="settingClick">设置税收分类编码</el-button>
-      <el-button type="primary" size="mini">导出数据</el-button>
-      <el-button type="primary" size="mini">Excel模板下载</el-button>
+      <el-button type="primary" size="mini" @click="exportData">导出数据</el-button>
+      <el-button type="primary" size="mini" @click="exportModle">Excel模板下载</el-button>
       <el-button type="primary" size="mini" @click="importExcel">导入Excel</el-button>
     </div>
     <div class="table-container">
       <el-table
-        v-loading="listLoading"
+        v-loading="loading"
         :data="list"
         element-loading-text="Loading"
         border
@@ -71,7 +76,7 @@
         </el-table-column>
         <el-table-column label="单价" align="center">
           <template slot-scope="scope">
-            {{ scope.row.UnitPrice }}
+            {{ scope.row.dj }}
           </template>
         </el-table-column>
         <el-table-column label="计量单位" align="center">
@@ -81,17 +86,17 @@
         </el-table-column>
         <el-table-column label="含税标志" align="center">
           <template slot-scope="scope">
-            {{ scope.row.hssign }}
+            {{ scope.row.hsbz }}
           </template>
         </el-table-column>
         <el-table-column label="税收分类编码" align="center">
           <template slot-scope="scope">
-            {{ scope.row.ssflbm }}
+            {{ scope.row.shflbm }}
           </template>
         </el-table-column>
         <el-table-column label="税收分类名称" align="center">
           <template slot-scope="scope">
-            {{ scope.row.ssflmc }}
+            {{ scope.row.shflmc }}
           </template>
         </el-table-column>
         <el-table-column label="税率" align="center">
@@ -129,9 +134,9 @@
         </el-table-column>
       </el-table>
       <el-pagination
-        :current-page="currentPage"
-        :page-sizes="[25, 50, 100]"
-        :page-size="pageSize"
+        :current-page="searchParams.currentPage"
+        :page-sizes="[10, 25, 50, 100]"
+        :page-size="searchParams.pageSize"
         :total="total"
         layout="prev, pager, next, jumper, total, sizes, slot"
         style="margin-top: 20px"
@@ -163,10 +168,10 @@
               </el-select>
             </el-form-item>
             <el-form-item label="简码" prop="jcode" size="small">
-              <el-input v-model="form.jcode"/>
+              <el-input v-model="form.jm"/>
             </el-form-item>
             <el-form-item label="含税标志">
-              <el-select v-model="form.hssign" placeholder="请选择" size="small">
+              <el-select v-model="form.hsbz" placeholder="请选择" size="small">
                 <el-option label="企业所得税" value="企业"/>
                 <el-option label="个人所得税" value="个人"/>
               </el-select>
@@ -200,23 +205,23 @@
             <el-form-item label="规格型号" prop="ggxh" size="small">
               <el-input v-model="form.ggxh"/>
             </el-form-item>
-            <el-form-item label="单元(元)" prop="UnitPrice" size="small">
-              <el-input v-model="form.UnitPrice"/>
+            <el-form-item label="单元(元)" prop="dj" size="small">
+              <el-input v-model="form.dj"/>
             </el-form-item>
             <el-form-item label="计量单位" prop="meteringcom" size="small">
-              <el-input v-model="form.meteringcom"/>
+              <el-input v-model="form.jldw"/>
             </el-form-item>
             <el-form-item label="税收分类名称">
-              <el-select v-model="form.ssflmc" placeholder="请选择" size="small">
+              <el-select v-model="form.shflmc" placeholder="请选择" size="small">
                 <el-option label="企业所得税" value="企业"/>
                 <el-option label="个人所得税" value="个人"/>
               </el-select>
             </el-form-item>
-            <el-form-item label="税收分类编码" prop="ssflbm" size="small">
-              <el-input v-model="form.ssflbm"/>
+            <el-form-item label="税收分类编码" prop="shflbm" size="small">
+              <el-input v-model="form.shflbm"/>
             </el-form-item>
             <el-form-item label="是否享受优惠政策">
-              <el-select v-model="form.sfxsyh" placeholder="请选择" size="small">
+              <el-select v-model="form.sfxsyhzc " placeholder="请选择" size="small">
                 <el-option label="企业所得税" value="企业"/>
                 <el-option label="个人所得税" value="个人"/>
               </el-select>
@@ -238,18 +243,18 @@
       title="新增商品税收编码转换"
       width="650px"
       custom-class="add-customer">
-      <el-form ref="form1" :rules="rules" :model="form" label-width="120px">
+      <el-form ref="form1" :rules="rules" :model="form1" label-width="120px">
         <el-form-item label="税收分类名称">
-          <el-select v-model="form1.ssflmc" placeholder="请选择" size="small">
+          <el-select v-model="form1.shflmc" placeholder="请选择" size="small">
             <el-option label="企业所得税" value="企业"/>
             <el-option label="个人所得税" value="个人"/>
           </el-select>
         </el-form-item>
         <el-form-item label="税收分类编码" prop="spmcName" size="small">
-          <el-input v-model="form1.ssflbm"/>
+          <el-input v-model="form1.shflbm"/>
         </el-form-item>
         <el-form-item class="button">
-          <el-button type="primary" @click="dialogVisible1 = false">保存</el-button>
+          <el-button type="primary" @click="handleUpdata('form1')">保存</el-button>
           <el-button type="primary" @click="dialogVisible1 = false">取消</el-button>
         </el-form-item>
       </el-form>
@@ -267,9 +272,11 @@
         :on-remove="handleRemove"
         :file-list="fileList"
         :auto-upload="false"
+        :on-error="uploadError"
+        :on-success="uploadSuccess"
+        :action="uploadPath()"
         accept=".xls,.xlsx"
-        class="upload-demo"
-        action="https://jsonplaceholder.typicode.com/posts/">
+        class="upload-demo">
         <div slot="tip" class="el-upload__tip">选择上传文件</div>
         <el-button slot="trigger" size="small" type="primary">添加文件</el-button>
         <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">开始上传</el-button>
@@ -278,23 +285,24 @@
   </div>
 </template>
 <script>
-import { commodictList, AddData, updateData } from '@/api/system/infoManagement'
+import { commodictList, AddData, editData, exportData, importExcel, exportModle } from '@/api/system/infoManagement'
+import apiPath from '@/api/apiUrl'
 export default{
-  name: 'Dashboard',
+  name: 'InfoManagement',
   data() {
     return {
-      listLoading: false, // loading
+      loading: false, // loading
       list: [],
       searchParams: {
         // 商品名称
-        commodityName: '',
+        spmc: '',
         // 商品编码
-        comcode: ''
+        spbm: '',
+        currentPage: 1,
+        pageSize: 10
       },
+      total: 0,
       checkedList: [],
-      currentPage: 1,
-      pageSize: 25,
-      total: 1000,
       dialogType: '',
       fileList: [],
       dialogVisible: false,
@@ -304,23 +312,23 @@ export default{
         spbm: '',
         spmc: '',
         spsm: '',
-        jcode: '',
+        jm: '',
         ggxh: '',
-        UnitPrice: '',
-        meteringcom: '',
-        hssign: '',
-        ssflbm: '',
-        ssflmc: '',
+        dj: '',
+        jldw: '',
+        hsbz: '',
+        shflbm: '',
+        shflmc: '',
         sl: '',
         lslbs: '',
         mslx: '',
-        sfxsyh: '',
+        sfxsyhzc: '',
         yhzclx: '',
         id: 0
       },
       form1: {
-        ssflmc: '',
-        ssflbm: ''
+        shflmc: '',
+        shflbm: ''
       },
       rules: {
         spbm: [
@@ -332,16 +340,16 @@ export default{
         ggxh: [
           { required: true, message: '规格型号不能为空', trigger: 'blur' }
         ],
-        jcode: [
+        jm: [
           { required: true, message: '简码不能为空', trigger: 'blur' }
         ],
-        UnitPrice: [
+        dj: [
           { required: true, message: '单元不能为空', trigger: 'blur' }
         ],
-        meteringcom: [
+        jldw: [
           { required: true, message: '计量单位不能为空', trigger: 'blur' }
         ],
-        ssflbm: [
+        shflbm: [
           { required: true, message: '税收分类编码不能为空', trigger: 'blur' }
         ]
       }
@@ -350,22 +358,32 @@ export default{
   mounted() {
   },
   created() {
-    this.gitlist()
+    this.getList()
   },
   methods: {
     searchFn() {
+      this.getList()
     },
     initSearch() {
-      this.searchs = {
-        commodityName: '',
-        comcode: ''
+      this.searchParams = {
+        spmc: '',
+        spbm: ''
       }
     },
-    gitlist() { // 获取数据列表
-      commodictList().then(res => {
+    getList() { // 获取数据列表
+      this.loading = true
+      commodictList(this.searchParams).then(res => {
+        this.loading = false
         if (res.code === '0000') {
-          this.list = res.data
+          this.list = res.data.list
+          this.total = res.data.count
         }
+      }).catch(e => {
+        this.$message({
+          message: '网络错误，请稍后再试',
+          type: 'error'
+        })
+        this.loading = false
       })
     },
     handleSelectionChange(val) { // 表格选中数据发生变化
@@ -377,32 +395,53 @@ export default{
       console.log(rows)
       this.form = rows
     },
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`)
+    handleSizeChange(val) { // 改变单页条数
+      this.searchParams.currentPage = 1
+      this.searchParams.pageSize = val
+      this.getList()
     },
-    handleCurrentChange(val) {
-      console.log(`当前页: ${val}`)
+    handleCurrentChange(val) { // 改变页码
+      this.searchParams.currentPage = val
+      this.getList()
+    },
+    exportData() { // 导出数据
+      const url = apiPath.system.InfoManagement.exportData + '?spbm=' + this.searchParams.spbm + '&spmc=' + this.searchParams.spmc
+      window.open(url)
+    },
+    exportModle() { // 导出模板
+      window.open(apiPath.system.InfoManagement.exportModle)
     },
     addClick() { // 添加
       this.dialogVisible = true
       this.dialogType = 'adds'
-      console.log(111)
     },
     addAdata(formName) { // 点击添加确定后
       if (this.dialogType === 'adds') {
         this.$refs[formName].validate((valid) => {
           if (valid) {
             var params = JSON.parse(JSON.stringify(this.form))
+            this.loading = true
             AddData(params).then(res => {
-              if (res.code === '0000') {
-                console.log(res)
-                this.gitlist()
-              }
+              this.$message({
+                message: res.message,
+                type: 'success'
+              })
+              this.loading = false
+              this.getList()
               this.dialogVisible = false
               this.dialogType = ''
+            }).catch(e => {
+              this.$message({
+                message: e,
+                type: 'error'
+              })
+              this.loading = false
             })
           } else {
-            console.log('error!!')
+            this.$message({
+              message: '网络错误，请稍后再试',
+              type: 'error'
+            })
             return false
           }
         })
@@ -411,26 +450,72 @@ export default{
         this.$refs[formName].validate((valid) => {
           if (valid) {
             var params = JSON.parse(JSON.stringify(this.form))
-            updateData(params, params.id).then(res => {
-              if (res.code === '0000') {
-                console.log(res)
-                this.gitlist()
-              }
+            this.loading = true
+            editData(params).then(res => {
+              this.$message({
+                message: res.message,
+                type: 'success'
+              })
+              this.loading = false
+              this.getList()
               this.dialogVisible = false
               this.dialogType = ''
               this.form = {}
+            }).catch(e => {
+              this.$message({
+                message: e,
+                type: 'error'
+              })
+              this.loading = false
             })
           } else {
-            console.log('error!!')
             return false
           }
         })
       }
     },
     settingClick() { // 设置税收分类编码
+      if (this.checkedList.length !== 1) {
+        this.$message({
+          message: '请选择一条数据操作',
+          type: 'error'
+        })
+        return false
+      }
       this.dialogVisible1 = true
     },
-    importExcel() {
+    handleUpdata(formName) {
+      debugger
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          var params = {}
+          params.shflbm = JSON.parse(JSON.stringify(this.form1)).shflbm
+          params.shflmc = JSON.parse(JSON.stringify(this.form1)).shflmc
+          params.id = this.checkedList[0].id
+          this.loading = true
+          editData(params).then(res => {
+            this.$message({
+              message: res.message,
+              type: 'success'
+            })
+            this.loading = false
+            this.getList()
+            this.dialogVisible1 = false
+            this.dialogType = ''
+            this.form = {}
+          }).catch(e => {
+            this.$message({
+              message: e,
+              type: 'error'
+            })
+            this.loading = false
+          })
+        } else {
+          return false
+        }
+      })
+    },
+    importExcel() { // 导入Excel表格
       this.dialogVisible2 = true
     },
     handleClose() { // 关闭弹窗
@@ -438,13 +523,32 @@ export default{
       this.dialogVisible1 = false
       this.dialogVisible2 = false
     },
-    submitUpload() {
+    submitUpload() { // 开始上传按钮
+      this.loading = true
       this.$refs.upload.submit()
     },
-    handleRemove(file, fileList) {
+    uploadSuccess(res, file, fileList) { // 上传成功后的回调
+      this.loading = false
+      this.$message({
+        message: res.message,
+        type: res.code === '0000' ? 'success' : 'error'
+      })
+      res.code === '0000' ? this.dialogVisible2 = false : this.$refs.upload.clearFiles()
+    },
+    uploadError(res, file, fileList) { // 上传错误
+      this.loading = false
+      this.$message({
+        message: '网络错误，请稍后再试',
+        type: 'error'
+      })
+    },
+    uploadPath() { // 上传地址
+      return apiPath.system.InfoManagement.importExcel
+    },
+    handleRemove(file, fileList) { // 文件列表移除文件时的钩子
       console.log(file, fileList)
     },
-    handlePreview(file) {
+    handlePreview(file) { // 点击文件列表中已上传的文件时的钩子
       console.log(file)
     }
   }

@@ -45,9 +45,9 @@ Mock.mock(/\/user\/getRoute/, 'post', userAPI.getRoute)
 Mock.mock(/\/table\/list/, 'get', tableAPI.list)
 // System
 Mock.mock(/\/organization\/nodeDetail/, 'post', systemAPI.nodeDetail)
-Mock.mock(/\/commoditye\/selectByCommodity/, 'post', infoManagementAPI.getlist) // 商品信息维护获取数据
-Mock.mock(/\/commoditye\/insertCommodity/, 'post', infoManagementAPI.newAdd) // 商品信息维护添加数据
-Mock.mock(/\/commoditye\/updateCommodity/, 'post', infoManagementAPI.updateda) // 商品信息编辑修改
+// Mock.mock(/\/commoditye\/selectByCommodity/, 'post', infoManagementAPI.getlist) // 商品信息维护获取数据
+// Mock.mock(/\/commoditye\/insertCommodity/, 'post', infoManagementAPI.newAdd) // 商品信息维护添加数据
+// Mock.mock(/\/commoditye\/updateCommodity/, 'post', infoManagementAPI.updateda) // 商品信息编辑修改
 Mock.mock(/\/order\/list/, 'post', orderListAPI.getOrderlist)
 // Role
 Mock.mock(/\/role\/selectByRole/, 'post', roleAPI.selectByRole)

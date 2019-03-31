@@ -302,7 +302,7 @@ export default {
     },
     getTableList() {
       getTableList().then(res => {
-        if (res.code === 20000) {
+        if (res.code === '0000') {
           this.list = res.data
         }
       })
@@ -336,7 +336,7 @@ export default {
   }
 </style>
 <style rel="stylesheet/scss" lang="scss">
-  .dashboard-container {
+  .invoiceOrder-container {
     .search-box {
       .search-item {
         .el-input {

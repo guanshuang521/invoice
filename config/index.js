@@ -24,6 +24,13 @@ module.exports = {
         // },
         changeOrigin: true,
       },
+      '/commoditye':{
+        target: 'http://192.168.4.128:8080', //后台api
+        // pathRewrite: {
+        //   '^/rbac': '/'
+        // },
+        changeOrigin: true,
+      },
       '/organization':{
         target: 'http://192.168.4.128:8080', //后台api
         changeOrigin: true,
