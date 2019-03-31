@@ -185,9 +185,10 @@
 </template>
 
 <script>
-import { getNodeList, deleteNode, updateNode, addNode, terminalList, deleteTerminal } from '@/api/system/organization'
+import { getNodeList, deleteNode, updateNode, addNode, terminalList, deleteTerminal, updateterminal } from '@/api/system/organization'
 import dialogDetail from '@/components/system/organization'
 import { arrayToTree } from '@/utils/public'
+import { mapGetters } from 'vuex'
 export default {
   name: 'Dashboard',
   components: {
@@ -300,13 +301,13 @@ export default {
       dialogVisiblity: false,
       // 终端信息
       terminalInfo: {
-        sssh: '',
-        zdbz: '',
-        zdmc: '',
-        zddz: '',
-        zddkh: '',
-        jqbh: '',
-        kplx: []
+        taxNum: '',
+        terminalMark: '',
+        terminalName: '',
+        terminalIp: '',
+        terminalPort: '',
+        machineCode: '',
+        invoiceType: []
       },
       // 加载页面
       fullscreenLoading: false,
@@ -325,16 +326,21 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapGetters([
+      'dictList'
+    ])
+  },
   watch: {
     filterText(val) {
       this.$refs.organTree.filter(val)
     },
     nodeList(newVal, oldVal) {
-      console.log(newVal)
     }
   },
   mounted() {
     this.initTree()
+    console.log(this.dictList.SYS_FPLX)
   },
   methods: {
     // 初始化机构树
@@ -453,7 +459,7 @@ export default {
         }
       })
     },
-    // 税号维护提交
+    // 获取税号关联终端列表
     getTerminal() {
       const args = this.terminalQueryParams
       args.orgId = this.currentNodeDetail.orgCode
@@ -464,6 +470,7 @@ export default {
         console.log(err)
       })
     },
+    // 税号维护提交
     submitCodeMaintence(data) {
       this.$refs[data].validate((valid) => {
         if (valid) {
@@ -500,8 +507,9 @@ export default {
         deleteTerminal({ id: data.id }).then(res => {
           this.$message({
             type: 'success',
-            message: res.msg
+            message: res.message
           })
+          this.getTerminal()
         }).catch(err => {
           this.$message({
             type: 'error',
@@ -516,14 +524,24 @@ export default {
       })
     },
     // 修改终端
-    modifyTerminal() {
+    modifyTerminal(data) {
       this.dialogVisiblity = true
       this.dialogTitle = '修改终端信息'
+      console.log(data)
+      this.terminalInfo = data
+      this.terminalInfo.invoiceType = this.terminalInfo.invoiceType.split(',')
     },
     // 修改终端保存
     saveTerminal() {
-      this.$refs.dialog.$refs.form.validate((valid) => {
+      this.$refs.dialog.$refs.dialog.validate((valid) => {
         if (valid) {
+          updateterminal().then(res => {
+          }).catch(err => {
+            this.$message({
+              type: 'error',
+              message: err
+            })
+          })
           console.log(valid)
         }
       })

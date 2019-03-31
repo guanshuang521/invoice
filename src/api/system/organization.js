@@ -63,3 +63,11 @@ export function deleteTerminal(data) {
     data: data
   })
 }
+// 修改终端
+export function updateterminal(data) {
+  return request({
+    url: apiPath.system.organization.updateTerminal,
+    method: 'post',
+    data: data
+  })
+}

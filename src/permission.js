@@ -23,6 +23,9 @@ router.beforeEach((to, from, next) => {
       NProgress.done() // if current page is dashboard will not trigger	afterEach hook, so manually handle it
     } else {
       if (!store.getters.isAddRoute) { // 判断是否已加载动态路由
+        store.dispatch('GetDictList').then(() => {
+          console.log(store.getters.dictList)
+        })
         store.dispatch('GenerateRoutes', store.getters.uid).then(() => {
           router.addRoutes(store.getters.addRouters) // 动态添加可访问路由表
           store.dispatch('toggleIsAddRoute')
