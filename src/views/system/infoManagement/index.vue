@@ -44,7 +44,7 @@
           type="selection"
           align="center"
           width="80px"/>
-        <el-table-column label="序号" align="center" width="31px">
+        <el-table-column label="序号" align="center" width="50px">
           <template slot-scope="scope">
             {{ scope.$index + 1 }}
           </template>
@@ -558,9 +558,6 @@ export default{
   .infoManagement {
     &-container {
       margin: 30px;
-      .filter-container {
-        margin-bottom: 20px;
-      }
       .button-container {
         margin-bottom: 20px;
       }

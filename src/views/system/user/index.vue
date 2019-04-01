@@ -347,9 +347,6 @@ export default {
 .user {
   &-container{
     margin: 30px;
-    .filter-container{
-      margin-bottom: 20px;
-    }
     .button-container{
       margin-bottom: 20px;
     }

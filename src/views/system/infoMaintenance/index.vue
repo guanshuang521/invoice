@@ -42,6 +42,11 @@
         highlight-current-row
         @selection-change="handleSelectionChange">
         <el-table-column type="selection" align="center" width="34px"/>
+        <el-table-column label="序号" align="center" width="50px">
+          <template slot-scope="scope">
+            {{ scope.$index + 1 }}
+          </template>
+        </el-table-column>
         <el-table-column label="购方名称" align="center" prop="khmc"/>
         <el-table-column label="购方税号" align="center" prop="khsh"/>
         <el-table-column label="地址" align="center" prop="khdz"/>

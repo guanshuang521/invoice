@@ -122,31 +122,21 @@
                   border
                   style="width: 100%"
                   height="250">
-                  <el-table-column
-                    prop="terminalMark"
-                    label="终端标识"
-                    width="100"/>
-                  <el-table-column
-                    prop="terminalName"
-                    label="终端名称"
-                    width="100"/>
-                  <el-table-column
-                    prop="terminalIp"
-                    label="终端地址"
-                    width="100"/>
-                  <el-table-column
-                    prop="terminalPort"
-                    label="终端端口"
-                    width="100"/>
+                  <el-table-column label="序号" align="center" width="50px">
+                    <template slot-scope="scope">
+                      {{ scope.$index + 1 }}
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="terminalMark" label="终端标识" width="100"/>
+                  <el-table-column prop="terminalName" label="终端名称" width="100"/>
+                  <el-table-column prop="terminalIp" label="终端地址" width="100"/>
+                  <el-table-column prop="terminalPort" label="终端端口" width="100"/>
                   <el-table-column label="开票类型" width="100">
                     <template slot-scope="scope">
                       <span v-for="item in scope.row.invoiceType.split(',')" :key="item" class="space">{{ invoiceTypeObj[item] }}</span>
                     </template>
                   </el-table-column>
-                  <el-table-column
-                    prop="taxNum"
-                    label="所属税号"
-                    width="100"/>
+                  <el-table-column prop="taxNum" label="所属税号" width="100"/>
                   <el-table-column
                     prop="machineCode"
                     label="机器编号"
