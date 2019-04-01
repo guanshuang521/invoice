@@ -317,9 +317,11 @@ export default {
     }
   },
   computed: {
+    // 获取数据字典
     ...mapGetters([
       'dictList'
     ]),
+    // 发票类型
     invoiceTypeObj() {
       return arrayToMapField(this.dictList['SYS_FPLX'], 'code', 'name')
     }
@@ -331,14 +333,10 @@ export default {
   watch: {
     filterText(val) {
       this.$refs.organTree.filter(val)
-    },
-    nodeList(newVal, oldVal) {
     }
   },
   mounted() {
     this.initTree()
-    console.log(this.invoiceTypeObj)
-    console.log(this.dictList)
   },
   methods: {
     // 初始化机构树

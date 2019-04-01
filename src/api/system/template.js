@@ -13,3 +13,19 @@ export function getTable(data) {
     data: data
   })
 }
+// 模板新增
+export function addTemplate(data) {
+  return request({
+    url: apiPath.system.template.add,
+    method: 'post',
+    data: data
+  })
+}
+// 模板删除
+export function deleteTemplate(data) {
+  return request({
+    url: apiPath.system.template.delete,
+    method: 'post',
+    data: data
+  })
+}

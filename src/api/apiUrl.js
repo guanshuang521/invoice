@@ -1,12 +1,7 @@
-/*
- * @Description:
- * @Author: zhangzheng
- * @LastEditors: zhangzheng
- * @Date: 2019-03-19 09:38:33
- * @LastEditTime: 2019-03-21 17:44:27
- */
 /**
- * Created by linzb on 2019/3/1.
+ * @author Linzb
+ * @date 2019/4/1
+ * @Description: 接口配置文件
  */
 const apiPath = {
   login: {
@@ -49,7 +44,9 @@ const apiPath = {
     },
     // 开票规则模板
     template: {
-      list: '/invoiceRule/selectByInvoiceRule'
+      list: '/invoiceRule/selectByInvoiceRule',
+      add: '/invoiceRule/insertInvoiceRule',
+      delete: '/invoiceRule/deleteInvoiceRule'
     },
     // 商品信息维护
     InfoManagement: {
