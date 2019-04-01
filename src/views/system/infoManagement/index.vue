@@ -484,7 +484,7 @@ export default{
       }
       this.dialogVisible1 = true
     },
-    handleUpdata(formName) {
+    handleUpdata(formName) { // 设置税收分类编码提交
       debugger
       this.$refs[formName].validate((valid) => {
         if (valid) {

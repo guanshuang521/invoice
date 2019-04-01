@@ -27,8 +27,8 @@
     </div>
     <div class="button-container">
       <el-button type="primary" size="mini" @click="importExcel">导入</el-button>
-      <el-button type="primary" size="mini" @click="exportExcel">导出</el-button>
-      <el-button type="primary" size="mini" @click="importExceldownload">导入摸板下载</el-button>
+      <el-button type="primary" size="mini" @click="exportData">导出</el-button>
+      <el-button type="primary" size="mini" @click="exportModle">导入摸板下载</el-button>
     </div>
     <div class="table-container">
       <el-table
@@ -99,12 +99,14 @@
         :on-remove="handleRemove"
         :file-list="fileList"
         :auto-upload="false"
+        :on-error="uploadError"
+        :on-success="uploadSuccess"
+        :action="uploadPath()"
         accept=".xls,.xlsx"
-        class="upload-demo"
-        action="https://jsonplaceholder.typicode.com/posts/">
+        class="upload-demo">
         <div slot="tip" class="el-upload__tip">选择上传文件</div>
-        <el-button slot="trigger" size="mini" type="primary">添加文件</el-button>
-        <el-button style="margin-left: 10px;" size="mini" type="success" @click="submitUpload">开始上传</el-button>
+        <el-button slot="trigger" size="small" type="primary">添加文件</el-button>
+        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">开始上传</el-button>
       </el-upload>
     </el-dialog>
     <!--导入模板下载-->
@@ -123,6 +125,8 @@
 </template>
 
 <script>
+import { commodictList, AddData, editData } from '@/api/system/codeManagement'
+import apiPath from '@/api/apiUrl'
 export default {
   data() {
     return {
@@ -130,30 +134,14 @@ export default {
         // 商品分类
         sign: '',
         // 税收编码
-        ssbm: '',
+        ssflbm: '',
         // 商品或服务名称
-        sphfumc: '',
+        spmc: '',
         currentPage: 1,
         pageSize: 10
       },
       listLoading: false, // loading
       list: [
-        {
-          sphfumc: '111',
-          sl: '1.2',
-          sphffl: '让啊多若',
-          ssflbm: '654326',
-          splikm: '优惠政策类型',
-          id: 0
-        },
-        {
-          sphfumc: '543333',
-          sl: '1.2',
-          sphffl: '的情况都快疯了',
-          ssflbm: '543432',
-          splikm: '优惠政策类型',
-          id: 1
-        }
       ],
       checkedList: [],
       currentPage: 1,
@@ -167,41 +155,86 @@ export default {
   created() {
 
   },
+  mounted() {
+    this.getList()
+  },
   methods: {
     searchFn() { // 查询
-      console.log('查询')
+      this.getList()
+    },
+    getList() { // 获取数据列表
+      this.loading = true
+      commodictList(this.searchParams).then(res => {
+        this.loading = false
+        if (res.code === '0000') {
+          this.list = res.data.list
+          this.total = res.data.count
+        }
+      }).catch(e => {
+        this.$message({
+          message: '网络错误，请稍后再试',
+          type: 'error'
+        })
+        this.loading = false
+      })
     },
     initSearch() { // 重置
-      this.searchs = {
+      this.searchParams = {
+        // 商品分类
         sign: '',
-        ssbm: '',
-        sphfumc: ''
+        // 税收编码
+        ssflbm: '',
+        // 商品或服务名称
+        spmc: ''
       }
     },
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`)
+    handleSizeChange(val) { // 改变单页条数
+      this.searchParams.currentPage = 1
+      this.searchParams.pageSize = val
+      this.getList()
     },
-    handleCurrentChange(val) {
-      console.log(`当前页: ${val}`)
+    handleCurrentChange(val) { // 改变页码
+      this.searchParams.currentPage = val
+      this.getList()
+    },
+    exportData() { // 导出数据
+      const url = apiPath.system.codeManagement.exportData + '?spbm=' + this.searchParams.spbm + '&spmc=' + this.searchParams.spmc
+      window.open(url)
+    },
+    exportModle() { // 导出模板
+      window.open(apiPath.system.codeManagement.exportModle)
     },
     handleSelectionChange(val) { // 表格选中数据发生变化
       this.checkedList = val
     },
-    importExcel() { // 导入弹框显示
+    importExcel() { // 导入Excel表格
       this.dialogVisible2 = true
     },
-    submitUpload() {
+    submitUpload() { // 开始上传按钮
+      this.loading = true
       this.$refs.upload.submit()
     },
-    importExceldownload() { // 导入摸板下载弹框显示
-      this.dialogVisible3 = true
+    uploadSuccess(res, file, fileList) { // 上传成功后的回调
+      this.loading = false
+      this.$message({
+        message: res.message,
+        type: res.code === '0000' ? 'success' : 'error'
+      })
+      res.code === '0000' ? this.dialogVisible2 = false : this.$refs.upload.clearFiles()
+    },
+    uploadError(res, file, fileList) { // 上传错误
+      this.loading = false
+      this.$message({
+        message: '网络错误，请稍后再试',
+        type: 'error'
+      })
+    },
+    uploadPath() { // 上传地址
+      return apiPath.system.codeManagement.importExcel
     },
     handleClose() { // 关闭弹窗
       this.dialogVisible2 = false
       this.dialogVisible3 = false
-    },
-    exportExcel() {
-      console.log('导出')
     },
     handleRemove(file, fileList) {
       console.log(file, fileList)

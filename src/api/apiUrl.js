@@ -45,6 +45,14 @@ const apiPath = {
       exportData: '/commoditye/exportCommodityExcel', // 导出数据
       importExcel: '/commoditye/importCommodityExcel' // 导入Excel
     },
+    codeManagement: {
+      list: '/commodityType/selectByCommodityType', // 页面加载获取数据
+      newAdd: '/commodityType/insertCommodityType', // 添加数据
+      editData: '/commodityType/updateCommodityType', // 编辑数据(修改数据)
+      exportModle: '/commodityType/downloadCommodityTypeExcel', // 下载模板
+      exportData: '/commodityType/exportCommodityTypeExcel', // 导出数据
+      importExcel: '/commodityType/importCommodityTypeExcel' // 导入Excel
+    },
     store: {
       list: '',
       add: '',
