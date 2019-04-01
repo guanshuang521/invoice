@@ -13,10 +13,11 @@ const apiPath = {
     login: '/user/login',
     dict: '/paramDetail/selectParamDetailsList'
   },
+  // 系统管理
   system: {
+    // 组织机构管理
     organization: {
       list: '/organization/selectOrganizationsList',
-      // nodeDetail: '/organization/nodeDetail',
       deleteNode: '/organization/deleteOrganization',
       updateNode: '/organization/updateOrganization',
       addNode: '/organization/insertOrganization',
@@ -24,6 +25,7 @@ const apiPath = {
       deleteTerminal: '/terminal/deleteTerminal',
       updateTerminal: '/terminal/updateTerminal'
     },
+    // 门店管理
     shop: {
       list: '/store/selectAll.do',
       newAdd: '/store/insertStore.do',
@@ -31,12 +33,25 @@ const apiPath = {
       deletedata: '/store/deleteTicketList.do'
       // addNode: '/organization/add'
     },
+    // 用户管理
     user: {
       list: '/store/selectAll.do', // 获取用户列表
       save: '/system/user/save.do', // 用户保存
       delete: '/system/user/delete.do', // 删除用户
       detail: '/system/user/detail.do' // 获取用户详情
     },
+    // 角色权限管理
+    role: {
+      selectByRole: '/role/selectByRole ', // 角色信息查询
+      deleteRole: '/role/deleteRole', // 角色信息删除
+      insertRole: '/role/insertRole', // 角色信息新增
+      updateRole: '/role/updateRole' // 角色信息编辑
+    },
+    // 开票规则模板
+    template: {
+      list: '/invoiceRule/selectByInvoiceRule'
+    },
+    // 商品信息维护
     InfoManagement: {
       list: '/commoditye/selectByCommodity', // 页面加载获取数据
       newAdd: '/commoditye/insertCommodity', // 添加数据
@@ -44,18 +59,6 @@ const apiPath = {
       exportModle: '/commoditye/downloadCommodityExcel', // 下载模板
       exportData: '/commoditye/exportCommodityExcel', // 导出数据
       importExcel: '/commoditye/importCommodityExcel' // 导入Excel
-    },
-    store: {
-      list: '',
-      add: '',
-      edit: '',
-      delete: ''
-    },
-    role: {
-      selectByRole: '/role/selectByRole ', // 角色信息查询
-      deleteRole: '/role/deleteRole', // 角色信息删除
-      insertRole: '/role/insertRole', // 角色信息新增
-      updateRole: '/role/updateRole' // 角色信息编辑
     },
     customer: {
       selectByCustomer: '/customer/selectByCustomer', // 购方信息查询

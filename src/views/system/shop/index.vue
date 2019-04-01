@@ -15,7 +15,7 @@
       <el-button type="primary" icon="el-icon-search" size="mini" @click="dialogVisible('edit')">修改</el-button>
       <el-button type="primary" icon="el-icon-search" size="mini" @click="remove">删除</el-button>
     </div>
-    <div class="table">
+    <div class="table-container">
       <el-table
         ref="multipleTable"
         :data="list"
@@ -30,7 +30,7 @@
         <el-table-column
           label="序号"
           align="center"
-          width="120">
+          width="50">
           <!--<template slot-scope="scope">{{ scope.row.date }}</template>-->
         </el-table-column>
         <el-table-column
