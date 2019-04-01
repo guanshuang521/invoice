@@ -21,9 +21,10 @@
       </el-form-item>
       <el-form-item label="开票类型：" prop="invoiceType" >
         <el-checkbox-group v-model="terminalInfo.invoiceType">
-          <el-checkbox label="007" name="invoiceType">普票</el-checkbox>
-          <el-checkbox label="004" name="invoiceType">专票</el-checkbox>
-          <el-checkbox label="026" name="invoiceType">电票</el-checkbox>
+          <el-checkbox v-for="item in fplx" :key="item.id" :label="item.code" name="invoiceType">{{ item.name }}</el-checkbox>
+          <!--<el-checkbox label="007" name="invoiceType">普票</el-checkbox>-->
+          <!--<el-checkbox label="004" name="invoiceType">专票</el-checkbox>-->
+          <!--<el-checkbox label="026" name="invoiceType">电票</el-checkbox>-->
         </el-checkbox-group>
       </el-form-item>
     </el-form>
@@ -31,6 +32,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+import { mapGetters } from 'vuex'
 export default {
   components: {
   },
@@ -68,11 +70,17 @@ export default {
     }
   },
   computed: {
+    ...mapGetters([
+      'dictList'
+    ]),
+    fplx() {
+      return this.dictList['SYS_FPLX']
+    }
   },
   watch: {
   },
   created() {
-    console.log(this.userInfo)
+    console.log(this.fplx, 'fplx')
   },
   methods: {
   }

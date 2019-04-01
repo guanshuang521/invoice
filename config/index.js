@@ -53,6 +53,10 @@ module.exports = {
       '/param':{
         target: 'http://192.168.4.128:8080', //后台api
         changeOrigin: true,
+      },
+      '/customer':{
+        target: 'http://192.168.4.128:8080', //后台api
+        changeOrigin: true,
       }
     },
 

@@ -56,15 +56,15 @@ Mock.mock(/\/role\/insertRole/, 'post', roleAPI.insertRole)
 Mock.mock(/\/role\/updateRole/, 'post', roleAPI.updateRole)
 Mock.mock(/\/resource\/selectByResource/, 'post', roleAPI.selectByResource)
 // Customer
-Mock.mock(/\/customer\/selectByCustomer/, 'post', customerAPI.selectByCustomer)
-Mock.mock(/\/customer\/deleteCustomer/, 'post', customerAPI.deleteCustomer)
-Mock.mock(/\/customer\/insertCustomer/, 'post', customerAPI.insertCustomer)
+// Mock.mock(/\/customer\/selectByCustomer/, 'post', customerAPI.selectByCustomer)
+// Mock.mock(/\/customer\/deleteCustomer/, 'post', customerAPI.deleteCustomer)
+// Mock.mock(/\/customer\/insertCustomer/, 'post', customerAPI.insertCustomer)
 // orderOpenMessage
 Mock.mock(/\/orderOpenMessage\/getTableList/, 'post', orderOpenMessageAPI.getTableList)
 
 // invoiceOpening 开具
-Mock.mock(/\/commodityInfo\/getList/, 'post', getListAPI.getlist)  //商品列表查询
-Mock.mock(/\/customer\/getList/, 'post', getGmfListAPI.getGmflist)  //购买方用户信息表查询
+Mock.mock(/\/commodityInfo\/getList/, 'post', getListAPI.getlist)
+Mock.mock(/\/customer\/getList/, 'post', getGmfListAPI.getGmflist)
 
 // invoice
 Mock.mock(/\/invoice\/billDetail/, 'post', wSpecialAPI.getBillDetail)

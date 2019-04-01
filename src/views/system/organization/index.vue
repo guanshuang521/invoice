@@ -122,30 +122,21 @@
                   border
                   style="width: 100%"
                   height="250">
-                  <el-table-column
-                    prop="terminalMark"
-                    label="终端标识"
-                    width="100"/>
-                  <el-table-column
-                    prop="terminalName"
-                    label="终端名称"
-                    width="100"/>
-                  <el-table-column
-                    prop="terminalIp"
-                    label="终端地址"
-                    width="100"/>
-                  <el-table-column
-                    prop="terminalPort"
-                    label="终端端口"
-                    width="100"/>
-                  <el-table-column
-                    prop="invoiceType"
-                    label="开票类型"
-                    width="100"/>
-                  <el-table-column
-                    prop="taxNum"
-                    label="所属税号"
-                    width="100"/>
+                  <el-table-column label="序号" align="center" width="50px">
+                    <template slot-scope="scope">
+                      {{ scope.$index + 1 }}
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="terminalMark" label="终端标识" width="100"/>
+                  <el-table-column prop="terminalName" label="终端名称" width="100"/>
+                  <el-table-column prop="terminalIp" label="终端地址" width="100"/>
+                  <el-table-column prop="terminalPort" label="终端端口" width="100"/>
+                  <el-table-column label="开票类型" width="100">
+                    <template slot-scope="scope">
+                      <span v-for="item in scope.row.invoiceType.split(',')" :key="item" class="space">{{ invoiceTypeObj[item] }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="taxNum" label="所属税号" width="100"/>
                   <el-table-column
                     prop="machineCode"
                     label="机器编号"
@@ -160,11 +151,12 @@
                   </el-table-column>
                 </el-table>
                 <el-pagination
-                  :current-page="currentPage"
-                  :page-sizes="[100, 200, 300, 400]"
+                  :current-page="terminalQueryParams.currentPage"
+                  :page-sizes="[10, 20, 30, 40]"
                   :page-size="100"
                   :total="totalCount"
                   layout="total, sizes, prev, pager, next, jumper"
+                  style="margin-top: 10px"
                   @size-change="handleSizeChange"
                   @current-change="handleCurrentChange"/>
               </template>
@@ -174,7 +166,7 @@
       </el-col>
     </el-row>
     <!--创建和编辑终端-->
-    <el-dialog :title="dialogTitle" :visible.sync="dialogVisiblity" :lock-scroll="true" width="40%" custom-class="showPop dialog-wapper pub-min-pop">
+    <el-dialog :title="dialogTitle" :visible.sync="dialogVisiblity" :lock-scroll="true" width="500px" custom-class="showPop dialog-wapper pub-min-pop">
       <dialog-detail ref="dialog" :terminal-info="terminalInfo" :key="terminalInfo.id"/>
       <span slot="footer" class="dialog-footer" >
         <el-button v-loading.fullscreen.lock="fullscreenLoading" type="primary" size="mini" @click="saveTerminal">保存</el-button>
@@ -187,7 +179,7 @@
 <script>
 import { getNodeList, deleteNode, updateNode, addNode, terminalList, deleteTerminal, updateterminal } from '@/api/system/organization'
 import dialogDetail from '@/components/system/organization'
-import { arrayToTree } from '@/utils/public'
+import { arrayToTree, arrayToMapField } from '@/utils/public'
 import { mapGetters } from 'vuex'
 export default {
   name: 'Dashboard',
@@ -311,10 +303,8 @@ export default {
       },
       // 加载页面
       fullscreenLoading: false,
-      // 当前分页
-      currentPage: 1,
       // 当前总条数
-      totalCount: 1,
+      totalCount: 0,
       // 当前所有节点的数组
       nodeList: '',
       // 当前选中节点详细信息
@@ -329,7 +319,14 @@ export default {
   computed: {
     ...mapGetters([
       'dictList'
-    ])
+    ]),
+    invoiceTypeObj() {
+      return arrayToMapField(this.dictList['SYS_FPLX'], 'code', 'name')
+    }
+    // invoiceTypeObj() {
+    //   console.log(arrayToMap(this.dictList['SYS_FPLX'], 'code'))
+    //   return arrayToMap(this.dictList['SYS_FPLX'], 'code')
+    // }
   },
   watch: {
     filterText(val) {
@@ -340,7 +337,8 @@ export default {
   },
   mounted() {
     this.initTree()
-    console.log(this.dictList.SYS_FPLX)
+    console.log(this.invoiceTypeObj)
+    console.log(this.dictList)
   },
   methods: {
     // 初始化机构树
@@ -423,7 +421,6 @@ export default {
         type: 'warning'
       }).then(() => {
         deleteNode(this.$refs.organTree.getCurrentNode().id).then(res => {
-          console.log(res)
           this.$message({
             type: 'success',
             message: res.message
@@ -464,8 +461,8 @@ export default {
       const args = this.terminalQueryParams
       args.orgId = this.currentNodeDetail.orgCode
       terminalList(args).then(res => {
-        console.log(res)
         this.codeRelevanceTerminalList = res.data.list
+        this.totalCount = res.data.count
       }).catch(err => {
         console.log(err)
       })
@@ -527,36 +524,45 @@ export default {
     modifyTerminal(data) {
       this.dialogVisiblity = true
       this.dialogTitle = '修改终端信息'
-      console.log(data)
-      this.terminalInfo = data
+      this.terminalInfo = Object.assign({}, data)
       this.terminalInfo.invoiceType = this.terminalInfo.invoiceType.split(',')
     },
     // 修改终端保存
     saveTerminal() {
-      this.$refs.dialog.$refs.dialog.validate((valid) => {
+      this.$refs.dialog.$refs.form.validate((valid) => {
         if (valid) {
-          updateterminal().then(res => {
+          const args = Object.assign({}, this.terminalInfo)
+          args.invoiceType = args.invoiceType.join(',')
+          updateterminal(args).then(res => {
+            this.$message({
+              type: 'success',
+              message: res.message
+            })
+            this.dialogVisiblity = false
+            this.getTerminal()
           }).catch(err => {
             this.$message({
               type: 'error',
               message: err
             })
           })
-          console.log(valid)
         }
       })
     },
     handleClick(node) {
-      console.log(node)
       if (node.name === 'fourth') {
         this.getTerminal()
       }
     },
     // 修改每页最大条数
-    handleSizeChange() {
+    handleSizeChange(val) {
+      this.terminalQueryParams.pageSize = val
+      this.getTerminal()
     },
     // 更改页数
-    handleCurrentChange() {
+    handleCurrentChange(val) {
+      this.terminalQueryParams.currentPage = val
+      this.getTerminal()
     }
   }
 }
@@ -572,6 +578,9 @@ export default {
       }
       .el-input--mini{
         width: 200px!important;
+      }
+      .space{
+        margin-right: 10px  ;
       }
     }
     .note{
