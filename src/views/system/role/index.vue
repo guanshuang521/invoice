@@ -71,7 +71,7 @@
       :title="dialogType === 'add' && '新增角色' || dialogType === 'edit' && '权限分配' || ''"
       :visible.sync="dialogVisible"
       :before-close="() => handleClose('form')"
-      width="530px"
+      width="574px"
       custom-class="add-edit-role">
       <el-form ref="form" :rules="rules" :model="form" label-width="80px" size="mini">
         <el-form-item label="角色名称" prop="roleName">

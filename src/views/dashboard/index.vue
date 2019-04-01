@@ -1,3 +1,8 @@
+/**
+* @author Linzb
+* @date 2019/4/1
+* @Description: 首页
+*/
 <template>
   <div class="dashboard-container">
     首页
