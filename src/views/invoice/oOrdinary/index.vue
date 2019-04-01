@@ -6,7 +6,7 @@
 <template>
   <div class="oOpecial-container">
     <div class="filter-container">
-      <el-form :inline="true" :model="searchParams" class="demo-form-inline">
+      <el-form :inline="true" :model="listQuery" class="demo-form-inline">
         <el-form-item label="购方名称">
           <el-input v-model="listQuery.gfmc" placeholder="请输入" size="small"/>
         </el-form-item>
