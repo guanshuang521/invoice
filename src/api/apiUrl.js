@@ -22,11 +22,11 @@ const apiPath = {
     },
     // 门店管理
     shop: {
-      list: '/store/selectAll.do',
-      newAdd: '/store/insertStore.do',
-      editdata: '/store/updateStore.do',
-      deletedata: '/store/deleteTicketList.do'
-      // addNode: '/organization/add'
+      list: '/store/selectByStore',
+      newAdd: '/store/insertStore',
+      edit: '/store/updateStore',
+      delete: '/store/deleteTicketList',
+      detail: '/store/selectStoreByPrimaryKey'
     },
     // 用户管理
     user: {
