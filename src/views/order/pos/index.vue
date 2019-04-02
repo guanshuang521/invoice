@@ -7,29 +7,135 @@
  -->
 <template>
   <div class="dashboard-container">
-    <search-Form :moudel-type="moudelType" :config="queryConditionsForm" :data.sync="searchConditions" :data-source="dataSource"/>
-    <div class="btn_wrapper">
-      <el-button type="primary" icon="el-icon-edit" @click="orderDownload">订单下载</el-button>
-      <el-button type="primary" icon="el-icon-circle-check" @click="showInvoiceDialog">勾选生成预制发票</el-button>
-      <el-button type="primary" icon="el-icon-upload">导出</el-button>
-    </div>
-    <search-Table
-      :data-source="dataSource"
-      :columns="columns"
-      :operation="operation"
-      @handleDelete="handleDelete"
-      @handleSelectionChange="handleSelectionChange"/>
-    <!-- <el-dialog :visible.sync="dialogFormVisible" title="收货地址">
-      <el-form>
-        <el-form-item label="活动名称">
-          <el-input/>
+    <div class="filter-container">
+      <el-form :inline="true" :model="searchParams" class="demo-form-inline">
+        <el-form-item label="开票码">
+          <el-input v-model="searchParams.billingCode" placeholder="请输入开票码" size="small"/>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" size="small" @click="initTable">查询</el-button>
+          <el-button type="primary" size="small" @click="reset">重置</el-button>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
-      </div>
-    </el-dialog> -->
+    </div>
+    <div class="button-container">
+      <el-button type="primary" icon="el-icon-edit" size="small" @click="orderDownload">订单下载</el-button>
+      <el-button type="primary" icon="el-icon-circle-check" size="small" @click="showInvoiceDialog">勾选生成预制发票</el-button>
+      <el-button type="primary" icon="el-icon-upload" size="small">导出</el-button>
+    </div>
+    <div class="table-container">
+      <el-table
+        ref="multipleTable"
+        :data="tableList"
+        border
+        fit
+        style="width: 100%"
+        @selection-change="handleSelectionChange">
+        <el-table-column type="selection" width="35" align="center"/>
+        <el-table-column prop="index" label="序号" align="center" width="50">
+          <template slot-scope="scope">
+            {{ scope.$index + 1 }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="billCode"
+          label="单据编号"
+          align="center"
+          width="130"/>
+        <el-table-column
+          prop="billCode"
+          label="结算单号"
+          align="center"
+          width="130"/>
+        <el-table-column
+          prop="billCode"
+          label="数据类型"
+          align="center"
+          width="130"/>
+        <el-table-column
+          prop="billCode"
+          label="单据类型"
+          align="center"
+          width="130"/>
+        <el-table-column
+          prop="billCode"
+          label="费用单据编号"
+          align="center"
+          width="130"/>
+        <el-table-column
+          prop="billCode"
+          label="二级供应商编码"
+          align="center"
+          width="130"/>
+        <el-table-column
+          prop="billCode"
+          label="金额（不含税）"
+          align="center"
+          width="130"/>
+        <el-table-column
+          prop="billCode"
+          label="税额"
+          align="center"
+          width="130"/>
+        <el-table-column
+          prop="billCode"
+          label="价税合计"
+          align="center"
+          width="130"/>
+        <el-table-column
+          prop="billCode"
+          label="销方税号"
+          align="center"
+          width="130"/>
+        <el-table-column
+          prop="billCode"
+          label="购方名称"
+          align="center"
+          width="130"/>
+        <el-table-column
+          prop="billCode"
+          label="购方税号"
+          align="center"
+          width="130"/>
+        <el-table-column
+          prop="billCode"
+          label="购方地址电话"
+          align="center"
+          width="130"/>
+        <el-table-column
+          prop="billCode"
+          label="购方开户行及账号"
+          align="center"
+          width="130"/>
+        <el-table-column
+          prop="billCode"
+          label="传输日期"
+          align="center"
+          width="130"/>
+        <el-table-column
+          prop="billCode"
+          label="备注"
+          align="center"
+          width="130"/>
+        <el-table-column label="操作" align="center">
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              type="primary"
+              @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-pagination
+        :current-page = "searchParams.currentPage"
+        :page-sizes = "[10, 20, 30, 40]"
+        :page-size = "searchParams.pageSize"
+        :total = "totalCount"
+        style="margin-top: 20px"
+        layout = "total, sizes, prev, pager, next, jumper"
+        @size-change = "handleSizeChange"
+        @current-change = "handleCurrentChange"/>
+    </div>
     <Invoicedialog
       :moudel-type="moudelType"
       :ishow="showDialog"
@@ -39,17 +145,24 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import SearchForm from '../components/searchForm'
-import SearchTable from '../components/searchTable'
-import orderConfig from '../components/orderConfig'
 import Invoicedialog from '../components/invoiceDialog'
 import { getOrderlist } from '@/api/order'
 
 export default {
   name: 'Dashboard',
-  components: { SearchForm, SearchTable, Invoicedialog },
+  components: { Invoicedialog },
   data() {
     return {
+      // 列表查询参数
+      searchParams: {
+        pageSize: 10,
+        currentPage: 1,
+        billingCode: ''
+      },
+      // 列表数据
+      tableList: [],
+      // 列表总条数
+      totalCount: 0,
       moudelType: 'pos',
       searchConditions: {
         buyyerName: '',
@@ -71,33 +184,38 @@ export default {
       columns: [], // 接受的config的配置的参数
       operation: {}, // 接受的config的操作配置的参数
       showDialog: false
-    //   dynamicValidateForm: {
-    //     domains: [{
-    //       value: ''
-    //     }],
-    //     email: '',
-    //     tel: 'invoice'
-    //   },
-    //   rules: {
-    //     email: [
-    //       { required: true, message: '请输入邮箱地址', trigger: 'blur' },
-    //       { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }
-    //     ],
-    //     tel: [
-    //       { pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号码', trigger: 'blur' }
-    //     ]
-    //   }
     }
   },
   computed: {
     ...mapGetters(['name', 'roles'])
   },
   mounted() {
-    this.queryConditionsForm = orderConfig.posForm
-    this.columns = orderConfig.columns
-    this.operation = orderConfig.posOperation
   },
   methods: {
+    // 初始化数据
+    initTable() {
+      console.log(this.dataSource)
+      getOrderlist().then(res => {
+        console.log(res)
+        this.dataSource = res.data
+        this.$message({
+          message: '查询成功',
+          type: 'success'
+        })
+      }).catch(err => {
+        this.$message({
+          message: err,
+          type: 'error'
+        })
+      })
+    },
+    // 查询重置
+    reset() {
+      this.searchParams = {
+        billingCode: ''
+      }
+      this.initTable()
+    },
     // 获取查询列表
     getList() {
       console.log(this.dataSource)
@@ -134,11 +252,17 @@ export default {
         })
       })
     },
+    handleEdit(ind, rows) { // 编辑
+      this.dialogVisible = true
+      this.dialogType = 'edit'
+      console.log(rows)
+      this.form = rows
+    },
     // 选中复选框
     handleSelectionChange(item) {
       var idsStr = ''
       for (var i = 0; i < item.length; i++) {
-        idsStr += item[i]['username'] + ','
+        idsStr += item[i]['billingCode'] + ','
       }
       console.log(idsStr)
     },
@@ -170,22 +294,39 @@ export default {
     },
     hideDialog() {
       this.showDialog = false
+    },
+    // 关闭弹窗
+    closeDialog(val) {
+      console.log(val)
+      this.invoiceDialogVisible = val
+    },
+    // 更改每页显示条数
+    handleSizeChange(val) {
+      this.searchParams.pageSize = val
+      this.initTable()
+    },
+    // 更改当前页码
+    handleCurrentChange(val) {
+      this.searchParams.currentPage = val
+      this.initTable()
+    },
+    handleCheckChange() {
     }
   }
 }
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-.dashboard {
-  &-container {
-    margin: 0px;
-    .btn_wrapper{
-      padding: 10px 20px
+  .dashboard {
+    &-container {
+      margin: 30px;
+      .button-container{
+        margin-bottom: 20px;
+      }
+    }
+    &-text {
+      font-size: 30px;
+      line-height: 46px;
     }
   }
-  &-text {
-    font-size: 30px;
-    line-height: 46px;
-  }
-}
 </style>
