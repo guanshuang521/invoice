@@ -27,11 +27,10 @@
           type="selection"
           align="center"
           width="35"/>
-        <el-table-column
-          label="序号"
-          align="center"
-          width="50">
-          <!--<template slot-scope="scope">{{ scope.row.date }}</template>-->
+        <el-table-column prop="index" label="序号" align="center" width="50">
+          <template slot-scope="scope">
+            {{ scope.$index + 1 }}
+          </template>
         </el-table-column>
         <el-table-column
           prop="storeName"
@@ -86,9 +85,9 @@
     </div>
     <div class="block" style="margin-top:10px;">
       <el-pagination
-        :total="400"
-        :current-page="currentPage1"
-        :page-sizes="[100, 200, 300, 400]"
+        :total="totalCount"
+        :current-page="searchParams.currentPage"
+        :page-sizes="[10, 20, 30, 40]"
         :page-size="100"
         layout="total, sizes, prev, pager, next, jumper"
         @size-change="handleSizeChange"
@@ -131,21 +130,28 @@
           </el-select>
         </el-form-item>
       </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button size="mini" @click="close">取 消</el-button>
+      <span slot="footer" class="dialog-footer" align="center">
         <el-button size="mini" type="primary" @click="handleSubmit()">确 定</el-button>
+        <el-button size="mini" @click="close">取 消</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { getList, getNew, editData, deleteData } from '@/api/system/shop'
+import { getList, addStore, editData, deleteData, detailData } from '@/api/system/shop'
 
 export default {
   name: 'Shop',
   data() {
     return {
+      // 数据总条数
+      totalCount: 0,
+      // 查询参数
+      searchParams: {
+        currentPage: 1,
+        pageSize: 10
+      },
       // 新增/编辑门店表单校验
       storeRule: {
         storeName: [
@@ -159,9 +165,6 @@ export default {
         ],
         userPwd: [
           { required: true, message: '请输入密码', trigger: 'change' }
-        ],
-        datasourceType: [
-          { required: true, message: '请输入数据源', trigger: 'change' }
         ],
         datasourceDrive: [
           { required: true, message: '请输入数据源驱动', trigger: 'change' }
@@ -217,10 +220,14 @@ export default {
   methods: {
     // table列表查询
     getTableList() {
-      getList().then(res => {
-        this.list = res.info
+      getList(this.searchParams).then(res => {
+        this.list = res.data.list
+        this.totalCount = res.data.count
       }).catch(err => {
-        console.log(err)
+        this.$message({
+          type: 'error',
+          message: err
+        })
       })
     },
     // 点击新增/编辑按钮弹框出现
@@ -238,6 +245,17 @@ export default {
           })
           return false
         }
+        const args = {
+          id: this.multipleSelection[0]['id']
+        }
+        detailData(args).then(res => {
+          this.form = res.info
+        }).catch(err => {
+          this.$message({
+            type: 'error',
+            message: err
+          })
+        })
         this.showDialog = true
       }
     },
@@ -248,9 +266,14 @@ export default {
           this.loading = true
           if (this.type === 'add') {
             this.data = this.form
-            getNew(this.data).then(res => {
+            addStore(this.data).then(res => {
+              this.$message({
+                type: 'success',
+                message: res.message
+              })
               this.getTableList()
               this.show = false
+              this.loading = false
             }).catch(err => {
               this.loading = false
               console.log(err)
@@ -277,33 +300,34 @@ export default {
       if (this.multipleSelection.length < 1) {
         this.$message.error('至少选择一条数据')
       } else {
-        for (let i = 0; i < this.multipleSelection.length; i++) {
-          this.storeIds.push(this.multipleSelection[i].id)
-        }
-        deleteData(this.storeIds).then(res => {
+        const ids = []
+        this.multipleSelection.forEach((item) => {
+          ids.push(item.id)
+        })
+        deleteData(ids.join(',')).then(res => {
+          this.$message({
+            type: 'success',
+            message: res.message
+          })
           this.getTableList()
         }).catch(err => {
-          console.log(err)
+          this.$message({
+            type: 'error',
+            message: err
+          })
         })
-      }
-    },
-    toggleSelection(rows) {
-      if (rows) {
-        rows.forEach(row => {
-          this.$refs.multipleTable.toggleRowSelection(row)
-        })
-      } else {
-        this.$refs.multipleTable.clearSelection()
       }
     },
     handleSelectionChange(val) {
       this.multipleSelection = val
     },
     handleSizeChange(val) {
-      // console.log(`每页 ${val} 条`)
+      this.searchParams.pageSize = val
+      this.getTableList()
     },
     handleCurrentChange(val) {
-      // console.log(`当前页: ${val}`)
+      this.searchParams.currentPage = val
+      this.getTableList()
     }
   }
 }
