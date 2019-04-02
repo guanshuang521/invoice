@@ -133,6 +133,14 @@
           label="购方地址电话"
           align="center"
           width="130"/>
+        <el-table-column label="操作" align="center">
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              type="primary"
+              @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+          </template>
+        </el-table-column>
       </el-table>
       <el-pagination
         :current-page = "searchParams.currentPage"
@@ -241,6 +249,12 @@ export default {
       this.initTable()
     },
     handleCheckChange() {
+    },
+    handleEdit(ind, rows) { // 编辑
+      this.dialogVisible = true
+      this.dialogType = 'edit'
+      console.log(rows)
+      this.form = rows
     }
   }
 }
