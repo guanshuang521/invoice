@@ -99,12 +99,12 @@
             />
           </div>
         </el-form-item>
-        <el-form-item class="button">
-          <el-button v-if="dialogType === 'add'" type="primary" @click="addRoleFn('form')">添加</el-button>
-          <el-button v-if="dialogType === 'edit'" type="primary" @click="editRoleFn('form')">保存</el-button>
-          <el-button type="primary" @click="handleClose('form')">取消</el-button>
-        </el-form-item>
       </el-form>
+      <div slot="footer" class="dialog-footer" align="center">
+        <el-button v-if="dialogType === 'add'" size="mini" type="primary" @click="addRoleFn('form')">添加</el-button>
+        <el-button v-if="dialogType === 'edit'" size="mini" type="primary" @click="editRoleFn('form')">保存</el-button>
+        <el-button size="mini" type="primary" @click="handleClose('form')">取消</el-button>
+      </div>
     </el-dialog>
   </div>
 </template>

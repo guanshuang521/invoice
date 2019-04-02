@@ -14,6 +14,7 @@
       <el-button type="primary" icon="el-icon-search" size="mini" @click="dialogVisible('add')">新增</el-button>
       <el-button type="primary" icon="el-icon-search" size="mini" @click="dialogVisible('edit')">修改</el-button>
       <el-button type="primary" icon="el-icon-search" size="mini" @click="remove">删除</el-button>
+      <el-button type="primary" icon="el-icon-search" size="mini" @click="getTableList">查询</el-button>
     </div>
     <div class="table-container">
       <el-table
@@ -57,28 +58,28 @@
           prop="userPwd"
           label="密码"
           align="center"
-          width="160">
+          width="180">
           <template slot-scope="scope">{{ scope.row.userPwd }}</template>
         </el-table-column>
         <el-table-column
           prop="datasourceDrive"
           label="数据源驱动"
           align="center"
-          width="160">
+          width="180">
           <template slot-scope="scope">{{ scope.row.datasourceDrive }}</template>
         </el-table-column>
         <el-table-column
           prop="datasourceLink"
           label="数据源链接"
           align="center"
-          width="160">
+          width="180">
           <template slot-scope="scope">{{ scope.row.datasourceLink }}</template>
         </el-table-column>
         <el-table-column
           prop="datasourceType"
           label="数据类型"
           align="center"
-          width="160">
+          width="180">
           <template slot-scope="scope">{{ scope.row.datasourceType }}</template>
         </el-table-column>
       </el-table>
@@ -130,17 +131,16 @@
           </el-select>
         </el-form-item>
       </el-form>
-      <span slot="footer" class="dialog-footer" align="center">
+      <div slot="footer" class="dialog-footer" align="center">
         <el-button size="mini" type="primary" @click="handleSubmit()">确 定</el-button>
         <el-button size="mini" @click="close">取 消</el-button>
-      </span>
+      </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
 import { getList, addStore, editData, deleteData, detailData } from '@/api/system/shop'
-
 export default {
   name: 'Shop',
   data() {
@@ -215,7 +215,7 @@ export default {
     }
   },
   mounted() {
-    this.getTableList()
+    this.$store.getters.isAutoLoadData ? this.getTableList() : ''
   },
   methods: {
     // table列表查询
