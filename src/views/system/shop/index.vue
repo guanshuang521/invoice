@@ -130,9 +130,9 @@
           </el-select>
         </el-form-item>
       </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button size="mini" @click="close">取 消</el-button>
+      <span slot="footer" class="dialog-footer" align="center">
         <el-button size="mini" type="primary" @click="handleSubmit()">确 定</el-button>
+        <el-button size="mini" @click="close">取 消</el-button>
       </span>
     </el-dialog>
   </div>
@@ -249,10 +249,6 @@ export default {
           id: this.multipleSelection[0]['id']
         }
         detailData(args).then(res => {
-          this.$message({
-            type: 'success',
-            message: res.message
-          })
           this.form = res.info
         }).catch(err => {
           this.$message({
@@ -320,15 +316,6 @@ export default {
             message: err
           })
         })
-      }
-    },
-    toggleSelection(rows) {
-      if (rows) {
-        rows.forEach(row => {
-          this.$refs.multipleTable.toggleRowSelection(row)
-        })
-      } else {
-        this.$refs.multipleTable.clearSelection()
       }
     },
     handleSelectionChange(val) {
