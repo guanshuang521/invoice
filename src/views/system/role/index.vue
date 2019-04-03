@@ -18,7 +18,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" size="small" @click="searchFn">查询</el-button>
-          <el-button type="primary" size="small" @click="initSearch">重置</el-button>
+          <el-button type="primary" size="small" @click="reset">重置</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -39,6 +39,11 @@
           type="selection"
           align="center"
           width="34px"/>
+        <el-table-column prop="index" label="序号" align="center" width="50">
+          <template slot-scope="scope">
+            {{ scope.$index + 1 }}
+          </template>
+        </el-table-column>
         <el-table-column label="角色名称" prop="roleName" align="center"/>
         <el-table-column label="有效标志" align="center">
           <template slot-scope="scope">
@@ -50,17 +55,17 @@
             <el-button
               size="mini"
               type="primary"
-              @click="handleEdit(scope.$index, scope.row)">权限分配</el-button>
+              @click="handleEdit(scope.row.id)">权限分配</el-button>
           </template>
         </el-table-column>
       </el-table>
       <el-pagination
-        :current-page="currentPage"
-        :page-sizes="[25, 50, 100]"
-        :page-size="pageSize"
+        :current-page="searchParams.currentPage"
+        :page-sizes="[10, 20, 30, 40]"
+        :page-size="searchParams.pageSize"
         :total="total"
         style="margin-top: 20px"
-        layout="prev, pager, next, jumper, total, sizes, slot"
+        layout = "total, sizes, prev, pager, next, jumper"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange">
         <!-- <span></span> -->
@@ -103,7 +108,7 @@
       <div slot="footer" class="dialog-footer" align="center">
         <el-button v-if="dialogType === 'add'" size="mini" type="primary" @click="addRoleFn('form')">添加</el-button>
         <el-button v-if="dialogType === 'edit'" size="mini" type="primary" @click="editRoleFn('form')">保存</el-button>
-        <el-button size="mini" type="primary" @click="handleClose('form')">取消</el-button>
+        <el-button size="mini" @click="handleClose('form')">取消</el-button>
       </div>
     </el-dialog>
   </div>
@@ -111,7 +116,7 @@
 
 <script>
 import { arrayToTree } from '@/utils/public'
-import { getRoleList, deleteRole, insertRole, updateRole } from '@/api/system/role'
+import { getRoleList, deleteRole, insertRole, getRoleDetail, updateRole } from '@/api/system/role'
 import { getRoute } from '@/api/login'
 
 export default {
@@ -120,45 +125,31 @@ export default {
     return {
       // 表单行内显示
       isInline: true,
+      // 列表数据
       list: [],
-      list0: [
-        {
-          roleName: '管理员',
-          status: '1',
-          roleCode: '管理员',
-          id: 0,
-          resourceId: []
-        }, {
-          roleName: '对方v',
-          status: '1',
-          roleCode: '认同',
-          id: 1,
-          resourceId: []
-        }, {
-          roleName: '额度',
-          status: '1',
-          roleCode: '如同',
-          id: 2,
-          resourceId: []
-        }
-      ],
       listLoading: false,
+      // 查询参数
       searchParams: {
+        currentPage: 1,
+        pageSize: 10,
         roleName: '',
         status: ''
       },
+      // 选中的列表项
       checkedList: [],
-      currentPage: 1,
-      pageSize: 25,
-      total: 1000,
+      // 列表总条数
+      total: 0,
+      // 是否显示弹窗
       dialogVisible: false,
+      // 弹窗类型
       dialogType: '',
+      // 弹窗表单
       form: {
         roleName: '',
         status: '',
-        roleCode: '',
         resourceId: []
       },
+      // 表单校验
       rules: {
         roleName: [
           { required: true, message: '角色名称不能为空', trigger: 'blur' }
@@ -167,6 +158,7 @@ export default {
           { required: true, message: '有效标志不能为空', trigger: 'blur' }
         ]
       },
+      // 树形组件配置
       defaultProps: {
         children: 'children',
         label: 'label'
@@ -175,38 +167,43 @@ export default {
       resourceId: []
     }
   },
-  created() {
+  mounted() {
     this.fetchData()
   },
   methods: {
+    // 初始化数据
     fetchData() {
       this.listLoading = true
       var params = JSON.parse(JSON.stringify(this.searchParams))
-      params.pageSize = this.pageSize
-      params.currentPage = this.currentPage
-      getRoleList(params).then(response => {
-        if (response.code === '0000') {
-          this.list = response.data.list
-          this.total = response.data.count
-        }
+      getRoleList(params).then(res => {
+        this.list = res.data.list
+        this.total = res.data.count
+        this.listLoading = false
+      }).catch(err => {
+        this.$message.error(err)
         this.listLoading = false
       })
     },
+    // 获取权限树数据
     getResource() {
       var params = {}
       getRoute(params).then(res => {
-        console.log(res)
         this.treeData = arrayToTree(res.data, 'title')
       })
     },
+    // 查询
     searchFn() {
       this.fetchData()
     },
-    initSearch() {
-      this.searchs = {
+    // 重置
+    reset() {
+      this.searchParams = {
         roleName: '',
-        status: ''
+        status: '',
+        currentPage: 1,
+        pageSize: 10
       }
+      this.fetchData()
     },
     handleSelectionChange(val) { // 表格选中数据发生变化
       this.checkedList = []
@@ -219,6 +216,7 @@ export default {
       this.dialogVisible = true
       this.dialogType = 'add'
     },
+    // 添加角色提交
     addRoleFn(formName) { // 添加角色
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -255,10 +253,7 @@ export default {
     },
     delRole() { // 删除数据
       if (this.checkedList.length === 0) {
-        this.$message({
-          type: 'info',
-          message: '请先选择表格中的数据'
-        })
+        this.$message.error('至少选择一条数据')
         return false
       }
       this.$confirm('确定要删除选择的数据吗?', '提示', {
@@ -266,50 +261,40 @@ export default {
         cancelButtonText: '取消'
       }).then(() => {
         var params = {
-          ids: this.checkedList
+          roleId: this.checkedList.join(',')
         }
-        deleteRole(params).then(response => {
-          if (response.code === '0000') {
-            this.$message({
-              type: 'success',
-              message: '删除成功!'
-            })
-            this.fetchData()
-          }
+        deleteRole(params).then(res => {
+          this.$message.success(res.message)
+          this.fetchData()
+        }).catch(err => {
+          this.$message.error(err)
         })
       })
     },
-    handleEdit(index, item) { // 权限分配
-      this.getResource()
+    handleEdit(id) {
+      getRoleDetail(id).then(res => {
+        this.form = res.data
+      }).catch(err => {
+        this.$message.error(err)
+      })
       this.dialogVisible = true
       this.dialogType = 'edit'
-      this.form = JSON.parse(JSON.stringify(item))
-      this.form.status = item.status.toString()
+      // this.form = JSON.parse(JSON.stringify(item))
+      // this.form.status = item.status.toString()
     },
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`)
+      this.searchParams.pageSize = val
+      this.fetchData()
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`)
+      this.searchParams.currentPage = val
+      this.fetchData()
     },
     handleClose(formName) { // 关闭弹窗
       this.dialogVisible = false
       this.dialogType = ''
       this.$refs[formName].resetFields()
       this.clearForm()
-    },
-    clearForm() {
-      for (var k in this.form) {
-        if (Object.prototype.toString.call(this.form[k]) === '[object String]') {
-          this.form[k] = ''
-        }
-        if (Object.prototype.toString.call(this.form[k]) === '[object Number]') {
-          this.form[k] = 0
-        }
-        if (Object.prototype.toString.call(this.form[k]) === '[object Array]') {
-          this.form[k] = []
-        }
-      }
     },
     filterNode(value, data, node) { // 对树节点进行筛选时执行的方法
       return true
