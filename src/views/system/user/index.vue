@@ -23,7 +23,7 @@
       </el-form>
     </div>
     <div class="button-container">
-      <el-button size="mini" class="filter-item" type="primary" icon="el-icon-search" @click="addUser">新增</el-button>
+      <el-button size="mini" class="filter-item" type="primary" icon="el-icon-search" @click="addUserDialog">新增</el-button>
       <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="deleteUser">删除</el-button>
     </div>
     <div class="table-container">
@@ -52,7 +52,7 @@
           label="操作"
           width="120">
           <template slot-scope="scope">
-            <el-button type="primary" size="small" @click="editUser">编辑</el-button>
+            <el-button type="primary" size="small" @click="editUser(scope.row)">编辑</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -69,8 +69,8 @@
     <!--新增编辑用户弹窗-->
     <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" :lock-scroll="true" width="640px" custom-class="showPop dialog-wapper pub-min-pop">
       <el-form ref="userForm" :inline="true" :model="userInfo" :rules="userRules" class="form" label-width="100px" size="mini">
-        <el-form-item label="账号：" prop="account" >
-          <el-input v-model="userInfo.account" placeholder="请输入"/>
+        <el-form-item label="账号：" prop="userCode" >
+          <el-input v-model="userInfo.userCode" placeholder="请输入"/>
         </el-form-item>
         <el-form-item label="密码：" prop="password" >
           <el-input v-model="userInfo.password" placeholder="请输入"/>
@@ -78,35 +78,35 @@
         <el-form-item label="用户名：" prop="userName" >
           <el-input v-model="userInfo.userName" placeholder="请输入"/>
         </el-form-item>
-        <el-form-item label="角色：" prop="role" >
-          <el-input v-model="userInfo.role" placeholder="请输入"/>
-        </el-form-item>
+        <!--<el-form-item label="角色：" prop="role" >-->
+        <!--<el-input v-model="userInfo.role" placeholder="请输入"/>-->
+        <!--</el-form-item>-->
         <el-form-item label="收款人：" prop="receiver" >
           <el-input v-model="userInfo.receiver" placeholder="请输入"/>
         </el-form-item>
         <el-form-item label="复核人：" prop="checker" >
-          <el-input v-model="userInfo.checker" placeholder="请输入"/>
+          <el-input v-model="userInfo.reviewer" placeholder="请输入"/>
         </el-form-item>
         <el-form-item label="所属机构：" prop="kplx">
-          <el-select v-model="userInfo.organization" placeholder="请选择" style="width: 455px">
-            <el-option label="机构1" value="shanghai"/>
-            <el-option label="机构2" value="beijing"/>
+          <el-select v-model="userInfo.orgId" placeholder="请选择" style="width: 455px">
+            <el-option label="机构1" value="0"/>
+            <el-option label="机构2" value="1"/>
           </el-select>
         </el-form-item>
         <el-form-item label="用户状态：" prop="status" >
           <el-select v-model="userInfo.status" placeholder="请选择" style="width: 170px">
-            <el-option label="状态1" value="shanghai"/>
-            <el-option label="状态2" value="beijing"/>
+            <el-option label="状态1" value="0"/>
+            <el-option label="状态2" value="1"/>
           </el-select>
         </el-form-item>
         <el-form-item label="终端号：" prop="terminalCode" >
-          <el-input v-model="userInfo.terminalCode" placeholder="请输入"/>
+          <el-input v-model="userInfo.terminalId" placeholder="请输入"/>
         </el-form-item>
         <el-form-item label="数据权限：" prop="auth" >
           <div class="authTree">
             <el-tree
               ref="organTree"
-              :data="organTree"
+              :data="organTreeData"
               class="filter-tree"
               default-expand-all
               node-key="id"
@@ -116,10 +116,10 @@
           </div>
         </el-form-item>
       </el-form>
-      <span slot="footer" class="dialog-footer" >
-        <el-button type="primary" size="mini" @click="save">保存</el-button>
+      <div slot="footer" class="dialog-footer" align="center">
+        <el-button type="primary" size="mini" @click="addUser">保存</el-button>
         <el-button size="mini" @click="dialogVisible = !dialogVisible">取消</el-button>
-      </span>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -158,16 +158,14 @@ export default {
         account: '',
         password: '',
         userName: '',
-        role: '',
         receiver: '',
-        checker: '',
-        organization: '',
+        reviewer: '',
         status: '',
-        terminalCode: '',
-        auth: ''
+        terminalId: '',
+        auth: []
       },
       userRules: {
-        account: [
+        userCode: [
           { required: true, message: '请输入账号', trigger: 'blur' }
         ],
         password: [
@@ -177,29 +175,30 @@ export default {
           { required: true, message: '请输入用户名', trigger: 'blur' }
         ]
       },
-      organTree: []
+      organTreeData: []
     }
   },
   mounted() {
     this.initTable()
   },
   methods: {
-    // 初始化机构树
-    initTree() {
+    closeDialog() {
+      this.dialogVisible = false
+    },
+    initTree() { // 初始化机构树
       this.loading = true
-      nodeList(1).then(res => {
+      getNodeList().then(res => {
         this.loading = false
-        this.organTree = arrayToTree(res.data.list, 'orgName')
-      }).catch(err => {
+        this.organTreeData = arrayToTree(res.data.list, 'orgName')
+      }).catch(e => {
         this.loading = false
         this.$message({
-          message: err,
+          message: '网络错误！',
           type: 'error'
         })
       })
     },
-    // table列表查询
-    initTable() {
+    initTable() { // table列表查询
       this.loading = true
       getList(this.searchParams).then(res => {
         this.loading = false
@@ -207,6 +206,7 @@ export default {
       }).catch(err => {
         this.loading = false
         console.log(err)
+        this.$message.error('网络错误')
       })
     },
     // table重置
@@ -217,8 +217,7 @@ export default {
       }
       this.initTable()
     },
-    // 新增用户
-    addUser() {
+    addUserDialog() { // 新增用户打开弹框
       this.dialogTitle = '新增用户'
       this.dialogType = 'addUser'
       this.dialogVisible = true
@@ -226,43 +225,46 @@ export default {
         account: '',
         password: '',
         userName: '',
-        role: '',
         receiver: '',
-        checker: '',
-        organization: '',
+        reviewer: '',
         status: '',
-        terminalCode: '',
-        auth: ''
+        terminalId: ''
       }
       this.initTree()
     },
-    // 新增用户保存
-    save() {
+    addUser() { // 新增用户保存
+      this.userInfo.auth = JSON.parse(JSON.stringify(this.$refs.organTree.getCheckedKeys()))
       this.$refs['userForm'].validate((valid) => {
         if (valid) {
           if (this.dialogType === 'addUser') {
-            saveUser(this.userInfo).then(res => {
+            add(this.userInfo).then(res => {
               this.$message({
-                message: res.data.msg,
+                message: res.message,
                 type: 'success'
               })
+              this.closeDialog()
+              this.initTable()
             }).catch(err => {
               this.$message({
                 message: err,
                 type: 'error'
               })
+              this.closeDialog()
             })
           } else {
-            saveUser(this.userInfo).then(res => {
+            edit(this.userInfo).then(res => {
               this.$message({
-                message: res.data.msg,
+                message: res.message,
                 type: 'success'
               })
+              this.closeDialog()
+              this.initTable()
             }).catch(err => {
               this.$message({
                 message: err,
                 type: 'error'
               })
+              this.closeDialog()
             })
           }
         }
@@ -282,47 +284,37 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        deleteUser(this.checkedList).then(res => {
+        const args = {
+          id: this.checkedList.join()
+        }
+        deleteUser(args).then(res => {
           this.$message({
             type: 'success',
-            message: res.msg
+            message: res.message
           })
+          this.initTable()
         }).catch(err => {
           this.$message({
             type: 'error',
-            message: err.msg
+            message: err.message
           })
         })
       })
     },
-    // 编辑用户
-    editUser() {
+    editUser(row) { // 编辑用户
       this.dialogTitle = '编辑用户'
       this.dialogType = 'editUser'
       this.dialogVisible = true
       this.initTree()
-      this.getUserDetail()
-    },
-    // 获取用户详情
-    getUserDetail() {
-      getUserDetail().then(res => {
-        this.userInfo = {
-          account: res.account,
-          password: res.password,
-          userName: res.userName,
-          role: res.role,
-          receiver: res.receiver,
-          checker: res.checker,
-          organization: res.organization,
-          status: res.status,
-          terminalCode: res.terminalCode,
-          auth: res.auth
-        }
-      }).catch()
+      this.userInfo = row
     },
     // 列表勾选
     handleSelectionChange(val) {
-      this.checkedList = val
+      val.forEach((item) => {
+        this.checkedList.push(item.id)
+      })
+      var set = new Set(this.checkedList) // {1,2,3,4}
+      this.checkedList = Array.from(set)
       console.log(this.checkedList)
     },
     // 更改每页显示条数
@@ -335,8 +327,7 @@ export default {
       this.searchParams.currentPage = val
       this.initTable()
     },
-    handleCheckChange() {
-      console.log(this.$refs.organTree.getCheckedKeys())
+    handleCheckChange() { // 当勾选项发生变化
     }
   }
 }
