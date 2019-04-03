@@ -86,7 +86,7 @@
         </el-table-column>
         <el-table-column label="含税标志" align="center">
           <template slot-scope="scope">
-            {{ scope.row.hsbz }}
+            {{ SYS_HSBZ[scope.row.hsbz] }}
           </template>
         </el-table-column>
         <el-table-column label="税收分类编码" align="center">
@@ -101,7 +101,7 @@
         </el-table-column>
         <el-table-column label="税率" align="center">
           <template slot-scope="scope">
-            {{ scope.row.sl }}%
+            {{ SYS_SL[scope.row.sl] }}
           </template>
         </el-table-column>
         <el-table-column label="零税率标识" align="center">
@@ -138,7 +138,7 @@
         :page-sizes="[10, 25, 50, 100]"
         :page-size="searchParams.pageSize"
         :total="total"
-        layout="prev, pager, next, jumper, total, sizes, slot"
+        layout="total, sizes, prev, pager, next, jumper"
         style="margin-top: 20px"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange">
@@ -287,6 +287,8 @@
 <script>
 import { commodictList, AddData, editData } from '@/api/system/infoManagement'
 import apiPath from '@/api/apiUrl'
+import { arrayToTree, arrayToMapField } from '@/utils/public'
+import { mapGetters } from 'vuex'
 export default{
   name: 'InfoManagement',
   data() {
@@ -353,6 +355,35 @@ export default{
           { required: true, message: '税收分类编码不能为空', trigger: 'blur' }
         ]
       }
+    }
+  },
+  computed: {
+    ...mapGetters([
+      'dictList'
+    ]),
+    SYS_SL() { // 税率
+      return arrayToMapField(this.dictList['SYS_SL'], 'code', 'name')
+    },
+    SYS_HSBZ() { // 含税标志
+      return arrayToMapField(this.dictList['SYS_HSBZ'], 'code', 'name')
+    },
+    SYS_SPSM() { // 商品税目
+      return arrayToMapField(this.dictList['SYS_SPSM'], 'code', 'name')
+    },
+    SYS_SPSM() { // 税收分类名称
+      return arrayToMapField(this.dictList['SYS_SPSM'], 'code', 'name')
+    },
+    SYS_SPSM() { // 零含税标识
+      return arrayToMapField(this.dictList['SYS_SPSM'], 'code', 'name')
+    },
+    SYS_SPSM() { // 免税类型
+      return arrayToMapField(this.dictList['SYS_SPSM'], 'code', 'name')
+    },
+    SYS_SPSM() { // 是否享受优惠政策
+      return arrayToMapField(this.dictList['SYS_SPSM'], 'code', 'name')
+    },
+    SYS_SPSM() { // 优惠政策类型
+      return arrayToMapField(this.dictList['SYS_SPSM'], 'code', 'name')
     }
   },
   mounted() {
@@ -484,7 +515,7 @@ export default{
       }
       this.dialogVisible1 = true
     },
-    handleUpdata(formName) {
+    handleUpdata(formName) { // 设置税收分类编码提交
       debugger
       this.$refs[formName].validate((valid) => {
         if (valid) {

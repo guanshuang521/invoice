@@ -22,7 +22,21 @@ module.exports = {
         target: 'http://192.168.5.189:8080', //后台api
         changeOrigin: true
       },
-      '/commoditye':{
+      '/user':{
+        target: 'http://192.168.5.189:8080', //后台api
+        // pathRewrite: {
+        //   '^/rbac': '/'
+        // },
+        changeOrigin: true,
+      },
+      '/commoditye':{ // 商品信息管理
+        target: 'http://192.168.4.128:8080', //后台api
+        // pathRewrite: {
+        //   '^/rbac': '/'
+        // },
+        changeOrigin: true,
+      },
+      '/commodityType':{ // 税收分类编码管理
         target: 'http://192.168.4.128:8080', //后台api
         changeOrigin: true
       },

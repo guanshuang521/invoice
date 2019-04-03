@@ -4,10 +4,27 @@
 import request from '@/utils/request'
 import apiPath from '@/api/apiUrl'
 // 获取节点列表
-export function getList() {
+export function getList(data) {
   return request({
     url: apiPath.system.user.list,
-    method: 'get'
+    method: 'post',
+    data: data
+  })
+}
+// 新增数据
+export function add(data) {
+  return request({
+    url: apiPath.system.user.add,
+    method: 'post',
+    data: data
+  })
+}
+// 编辑数据
+export function edit(data) {
+  return request({
+    url: apiPath.system.user.edit,
+    method: 'post',
+    data: data
   })
 }
 // 保存用户
@@ -18,10 +35,11 @@ export function saveUser() {
   })
 }
 // 删除用户
-export function deleteUser() {
+export function deleteUser(data) {
   return request({
     url: apiPath.system.user.delete,
-    method: 'get'
+    method: 'post',
+    data:data
   })
 }
 // 获取用户详情

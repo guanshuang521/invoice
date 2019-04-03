@@ -30,9 +30,12 @@ const apiPath = {
     },
     // 用户管理
     user: {
-      list: '/store/selectAll.do', // 获取用户列表
+      nodeList: '/user/getRoleList', // 获取权限树
+      list: '/user/selectAll', // 获取用户列表
+      add: 'user/insertUser', // 新增数据
+      edit: 'user/updateUser', // 修改数据
       save: '/system/user/save.do', // 用户保存
-      delete: '/system/user/delete.do', // 删除用户
+      delete: '/user/deleteUser', // 删除用户
       detail: '/system/user/detail.do' // 获取用户详情
     },
     // 角色权限管理
@@ -58,10 +61,32 @@ const apiPath = {
       exportData: '/commoditye/exportCommodityExcel', // 导出数据
       importExcel: '/commoditye/importCommodityExcel' // 导入Excel
     },
+    codeManagement: {
+      list: '/commodityType/selectByCommodityType', // 页面加载获取数据
+      newAdd: '/commodityType/insertCommodityType', // 添加数据
+      editData: '/commodityType/updateCommodityType', // 编辑数据(修改数据)
+      exportModle: '/commodityType/downloadCommodityTypeExcel', // 下载模板
+      exportData: '/commodityType/exportCommodityTypeExcel', // 导出数据
+      importExcel: '/commodityType/importCommodityTypeExcel' // 导入Excel
+    },
+    store: {
+      list: '',
+      add: '',
+      edit: '',
+      delete: ''
+    },
+    role: {
+      selectByRole: '/role/selectByRole ', // 角色信息查询
+      deleteRole: '/role/deleteRole', // 角色信息删除
+      insertRole: '/role/insertRole', // 角色信息新增
+      updateRole: '/role/updateRole' // 角色信息编辑
+    },
     customer: {
       selectByCustomer: '/customer/selectByCustomer', // 购方信息查询
       deleteCustomer: '/customer/deleteCustomer', // 购方信息删除
-      insertCustomer: '/customer/insertCustomer' // 购方信息新增
+      insertCustomer: '/customer/insertCustomer', // 购方信息新增
+      exportModle: '/customer/downloadCustomerExcel', // 导出模板
+      importExcel: '/customer/importCustomerExcel' // 导入Excel数据
     },
     resource: {
       selectByResource: '/resource/selectByResource' // 获取菜单列表
