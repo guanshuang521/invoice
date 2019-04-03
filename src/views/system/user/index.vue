@@ -58,9 +58,9 @@
       </el-table>
       <el-pagination
         :current-page="searchParams.currentPage"
-        :page-sizes="[100, 200, 300, 400]"
-        :page-size="100"
-        :total="totalCount"
+        :page-sizes="[1, 10, 20, 30]"
+        :page-size="searchParams.pageSize"
+        :total="total"
         layout="total, sizes, prev, pager, next, jumper"
         style="margin-top: 20px"
         @size-change="handleSizeChange"
@@ -144,7 +144,7 @@ export default {
       // 列表数据
       tableList: [],
       // 列表总条数
-      totalCount: 0,
+      total: 0,
       // 已勾选的列表项
       checkedList: [],
       // 弹窗标题
@@ -155,7 +155,7 @@ export default {
       dialogVisible: false,
       // 新增用户表单
       userInfo: {
-        account: '',
+        userCode: '',
         password: '',
         userName: '',
         receiver: '',
@@ -202,10 +202,10 @@ export default {
       this.loading = true
       getList(this.searchParams).then(res => {
         this.loading = false
+        this.total = res.data.count
         this.tableList = res.data.list
       }).catch(err => {
         this.loading = false
-        console.log(err)
         this.$message.error('网络错误')
       })
     },
@@ -213,7 +213,9 @@ export default {
     reset() {
       this.searchParams = {
         userName: '',
-        role: ''
+        role: '',
+        currentPage: 1,
+        pageSize: 10
       }
       this.initTable()
     },
@@ -222,7 +224,7 @@ export default {
       this.dialogType = 'addUser'
       this.dialogVisible = true
       this.userInfo = {
-        account: '',
+        userCode: '',
         password: '',
         userName: '',
         receiver: '',
@@ -237,14 +239,17 @@ export default {
       this.$refs['userForm'].validate((valid) => {
         if (valid) {
           if (this.dialogType === 'addUser') {
+            this.loading = true
             add(this.userInfo).then(res => {
               this.$message({
                 message: res.message,
                 type: 'success'
               })
+              this.loading = false
               this.closeDialog()
               this.initTable()
             }).catch(err => {
+              this.loading = false
               this.$message({
                 message: err,
                 type: 'error'
@@ -252,7 +257,9 @@ export default {
               this.closeDialog()
             })
           } else {
+            this.loading = true
             edit(this.userInfo).then(res => {
+              this.loading = false
               this.$message({
                 message: res.message,
                 type: 'success'
@@ -260,6 +267,7 @@ export default {
               this.closeDialog()
               this.initTable()
             }).catch(err => {
+              this.loading = false
               this.$message({
                 message: err,
                 type: 'error'
@@ -285,15 +293,18 @@ export default {
         type: 'warning'
       }).then(() => {
         const args = {
-          id: this.checkedList.join()
+          ids: this.checkedList.join()
         }
+        this.loading = true
         deleteUser(args).then(res => {
+          this.loading = false
           this.$message({
             type: 'success',
             message: res.message
           })
           this.initTable()
         }).catch(err => {
+          this.loading = false
           this.$message({
             type: 'error',
             message: err.message
@@ -319,11 +330,13 @@ export default {
     },
     // 更改每页显示条数
     handleSizeChange(val) {
+      console.log(val)
       this.searchParams.pageSize = val
       this.initTable()
     },
     // 更改当前页码
     handleCurrentChange(val) {
+      console.log(val)
       this.searchParams.currentPage = val
       this.initTable()
     },

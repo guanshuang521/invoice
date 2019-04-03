@@ -35,7 +35,7 @@ const apiPath = {
       add: 'user/insertUser', // 新增数据
       edit: 'user/updateUser', // 修改数据
       save: '/system/user/save.do', // 用户保存
-      delete: '/user/deleteUser', // 删除用户
+      delete: '/user/deleteTicketList', // 删除用户
       detail: '/system/user/detail.do' // 获取用户详情
     },
     // 角色权限管理
