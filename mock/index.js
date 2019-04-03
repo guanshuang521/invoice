@@ -50,11 +50,11 @@ Mock.mock(/\/organization\/nodeDetail/, 'post', systemAPI.nodeDetail)
 // Mock.mock(/\/commoditye\/updateCommodity/, 'post', infoManagementAPI.updateda) // 商品信息编辑修改
 Mock.mock(/\/order\/list/, 'post', orderListAPI.getOrderlist)
 // Role
-Mock.mock(/\/role\/selectByRole/, 'post', roleAPI.selectByRole)
-Mock.mock(/\/role\/deleteRole/, 'post', roleAPI.deleteRole)
-Mock.mock(/\/role\/insertRole/, 'post', roleAPI.insertRole)
-Mock.mock(/\/role\/updateRole/, 'post', roleAPI.updateRole)
-Mock.mock(/\/resource\/selectByResource/, 'post', roleAPI.selectByResource)
+// Mock.mock(/\/role\/selectByRole/, 'post', roleAPI.selectByRole)
+// Mock.mock(/\/role\/deleteRole/, 'post', roleAPI.deleteRole)
+// Mock.mock(/\/role\/insertRole/, 'post', roleAPI.insertRole)
+// Mock.mock(/\/role\/updateRole/, 'post', roleAPI.updateRole)
+// Mock.mock(/\/resource\/selectByResource/, 'post', roleAPI.selectByResource)
 // Customer
 // Mock.mock(/\/customer\/selectByCustomer/, 'post', customerAPI.selectByCustomer)
 // Mock.mock(/\/customer\/deleteCustomer/, 'post', customerAPI.deleteCustomer)

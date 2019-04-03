@@ -1,22 +1,18 @@
-/*
- * @Description:
- * @Author: zhangzheng
- * @LastEditors: zhangzheng
- * @Date: 2019-03-19 09:38:33
- * @LastEditTime: 2019-03-21 17:44:27
- */
 /**
- * Created by linzb on 2019/3/1.
+ * @author Linzb
+ * @date 2019/4/1
+ * @Description: 接口配置文件
  */
 const apiPath = {
   login: {
     login: '/user/login',
     dict: '/paramDetail/selectParamDetailsList'
   },
+  // 系统管理
   system: {
+    // 组织机构管理
     organization: {
       list: '/organization/selectOrganizationsList',
-      // nodeDetail: '/organization/nodeDetail',
       deleteNode: '/organization/deleteOrganization',
       updateNode: '/organization/updateOrganization',
       addNode: '/organization/insertOrganization',
@@ -24,13 +20,15 @@ const apiPath = {
       deleteTerminal: '/terminal/deleteTerminal',
       updateTerminal: '/terminal/updateTerminal'
     },
+    // 门店管理
     shop: {
-      list: '/store/selectAll.do',
-      newAdd: '/store/insertStore.do',
-      editdata: '/store/updateStore.do',
-      deletedata: '/store/deleteTicketList.do'
-      // addNode: '/organization/add'
+      list: '/store/selectByStore',
+      newAdd: '/store/insertStore',
+      edit: '/store/updateStore',
+      delete: '/store/deleteTicketList',
+      detail: '/store/selectStoreByPrimaryKey'
     },
+    // 用户管理
     user: {
       nodeList: '/user/getRoleList', // 获取权限树
       list: '/user/selectAll', // 获取用户列表
@@ -40,6 +38,20 @@ const apiPath = {
       delete: '/user/deleteUser', // 删除用户
       detail: '/system/user/detail.do' // 获取用户详情
     },
+    // 角色权限管理
+    role: {
+      selectByRole: '/role/selectByRole', // 角色信息查询
+      deleteRole: '/role/deleteRole', // 角色信息删除
+      insertRole: '/role/insertRole', // 角色信息新增
+      updateRole: '/role/updateRole' // 角色信息编辑
+    },
+    // 开票规则模板
+    template: {
+      list: '/invoiceRule/selectByInvoiceRule',
+      add: '/invoiceRule/insertInvoiceRule',
+      delete: '/invoiceRule/deleteInvoiceRule'
+    },
+    // 商品信息维护
     InfoManagement: {
       list: '/commoditye/selectByCommodity', // 页面加载获取数据
       newAdd: '/commoditye/insertCommodity', // 添加数据

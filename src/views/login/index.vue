@@ -1,3 +1,8 @@
+/**
+* @author Linzb
+* @date 2019/4/1
+* @Description: 登录页
+*/
 <template>
   <div class="login-container">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">

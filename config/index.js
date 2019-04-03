@@ -12,17 +12,15 @@ module.exports = {
     proxyTable: {
       '/rbac':{
         target: 'http://192.168.7.50:59011', //测试环境
-        // pathRewrite: {
-        //   '^/rbac': '/'
-        // },
-        changeOrigin: true,
+        changeOrigin: true
       },
       '/store':{
         target: 'http://192.168.5.189:8080', //后台api
-        // pathRewrite: {
-        //   '^/rbac': '/'
-        // },
-        changeOrigin: true,
+        changeOrigin: true
+      },
+      '/role':{
+        target: 'http://192.168.5.189:8080', //后台api
+        changeOrigin: true
       },
       '/user':{
         target: 'http://192.168.5.189:8080', //后台api
@@ -40,30 +38,31 @@ module.exports = {
       },
       '/commodityType':{ // 税收分类编码管理
         target: 'http://192.168.4.128:8080', //后台api
-        // pathRewrite: {
-        //   '^/rbac': '/'
-        // },
-        changeOrigin: true,
+        changeOrigin: true
       },
       '/organization':{
         target: 'http://192.168.4.128:8080', //后台api
-        changeOrigin: true,
+        changeOrigin: true
       },
       '/terminal':{
         target: 'http://192.168.4.128:8080', //后台api
-        changeOrigin: true,
+        changeOrigin: true
       },
       '/paramDetail':{
         target: 'http://192.168.4.128:8080', //后台api
-        changeOrigin: true,
+        changeOrigin: true
       },
       '/param':{
         target: 'http://192.168.4.128:8080', //后台api
-        changeOrigin: true,
+        changeOrigin: true
       },
       '/customer':{
         target: 'http://192.168.4.128:8080', //后台api
-        changeOrigin: true,
+        changeOrigin: true
+      },
+      '/invoiceRule':{
+        target: 'http://192.168.4.128:8080', //后台api
+        changeOrigin: true
       }
     },
 

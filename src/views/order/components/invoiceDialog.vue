@@ -7,8 +7,8 @@
  -->
 <template>
   <div class="invoice_dialog">
-    <el-dialog :visible.sync="ishow" :before-close="hideDialog" title="预制发票">
-      <el-form ref="dynamicValidateForm" :rules="rules" :model="dynamicValidateForm" label-width="110px">
+    <el-dialog :visible.sync="ishow" :before-close="hideDialog" title="预制发票" width="600px">
+      <el-form ref="dynamicValidateForm" :rules="rules" :model="dynamicValidateForm" label-width="110px" size="mini">
         <el-form-item label="选择订单数">
           <el-input disabled="disabled"/>
         </el-form-item>
@@ -70,7 +70,6 @@ export default {
   },
   data() {
     return {
-    //   dialogFormVisible: true,
       dynamicValidateForm: {
         gfmc: '',
         options: [
@@ -135,7 +134,7 @@ export default {
       })
     },
     hideDialog() {
-      this.$emit('hideDialog')
+      this.$emit('hideDialog', false)
     }
   }
 }

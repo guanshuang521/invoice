@@ -11,6 +11,9 @@
       ref="searchTable"
       :data="dataSource.list"
       tooltip-effect="light"
+      border
+      fit
+      highlight-current-row
       @selection-change="handleSelectionChange"
     >
       <el-table-column

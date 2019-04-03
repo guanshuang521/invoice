@@ -131,7 +131,7 @@ const orderConfig = {
   ],
   columns: [ // 表头
     {
-      hasSort: true, // <Boolean> 是否排序
+      hasSort: false, // <Boolean> 是否排序
       isShow: true, // <Boolean> 是否展示
       prop: 'billCode', // <String>  对应属性名
       label: '单据编号', // <String>   表头标签
@@ -139,7 +139,7 @@ const orderConfig = {
       width: '100'
     },
     {
-      hasSort: true, // <Boolean> 是否排序
+      hasSort: false, // <Boolean> 是否排序
       isShow: true, // <Boolean> 是否展示
       prop: 'countOrderNum', // <String>  对应属性名
       label: '结算单号', // <String>   表头标签
@@ -147,7 +147,7 @@ const orderConfig = {
       width: '100'
     },
     {
-      hasSort: true, // <Boolean> 是否排序
+      hasSort: false, // <Boolean> 是否排序
       isShow: true, // <Boolean> 是否展示
       prop: 'datatype', // <String>  对应属性名
       label: '数据类型', // <String>   表头标签
@@ -155,7 +155,7 @@ const orderConfig = {
       width: '100'
     },
     {
-      hasSort: true, // <Boolean> 是否排序
+      hasSort: false, // <Boolean> 是否排序
       isShow: true, // <Boolean> 是否展示
       prop: 'ordertype', // <String>  对应属性名
       label: '单据类型', // <String>   表头标签
@@ -163,7 +163,7 @@ const orderConfig = {
       width: '100'
     },
     {
-      hasSort: true, // <Boolean> 是否排序
+      hasSort: false, // <Boolean> 是否排序
       isShow: true, // <Boolean> 是否展示
       prop: 'OrderNum', // <String>  对应属性名
       label: '费用单据编号', // <String>   表头标签
@@ -171,14 +171,14 @@ const orderConfig = {
       width: '100'
     },
     {
-      hasSort: true, // <Boolean> 是否排序
+      hasSort: false, // <Boolean> 是否排序
       isShow: true, // <Boolean> 是否展示
       prop: 'supplierCode', // <String>  对应属性名
       label: '二级供应商编码', // <String>   表头标签
       align: 'center'
     },
     {
-      hasSort: true, // <Boolean> 是否排序
+      hasSort: false, // <Boolean> 是否排序
       isShow: true, // <Boolean> 是否展示
       prop: 'money', // <String>  对应属性名
       label: '金额（不含税）', // <String>   表头标签
@@ -186,7 +186,7 @@ const orderConfig = {
       width: 120
     },
     {
-      hasSort: true, // <Boolean> 是否排序
+      hasSort: false, // <Boolean> 是否排序
       isShow: true, // <Boolean> 是否展示
       prop: 'se', // <String>  对应属性名
       label: '税额', // <String>   表头标签
@@ -194,56 +194,56 @@ const orderConfig = {
       width: 100// 列宽
     },
     {
-      hasSort: true, // <Boolean> 是否排序
+      hasSort: false, // <Boolean> 是否排序
       isShow: true, // <Boolean> 是否展示
       prop: 'sjhj', // <String>  对应属性名
       label: '价税合计', // <String>   表头标签
       align: 'center'
     },
     {
-      hasSort: true, // <Boolean> 是否排序
+      hasSort: false, // <Boolean> 是否排序
       isShow: true, // <Boolean> 是否展示
       prop: 'xfsh', // <String>  对应属性名
       label: '销方税号', // <String>   表头标签
       align: 'center'
     },
     {
-      hasSort: true, // <Boolean> 是否排序
+      hasSort: false, // <Boolean> 是否排序
       isShow: true, // <Boolean> 是否展示
       prop: 'gfmc', // <String>  对应属性名
       label: '购方名称', // <String>   表头标签
       align: 'center'
     },
     {
-      hasSort: true, // <Boolean> 是否排序
+      hasSort: false, // <Boolean> 是否排序
       isShow: true, // <Boolean> 是否展示
       prop: 'gfsh', // <String>  对应属性名
       label: '购方税号', // <String>   表头标签
       align: 'center'
     },
     {
-      hasSort: true, // <Boolean> 是否排序
+      hasSort: false, // <Boolean> 是否排序
       isShow: true, // <Boolean> 是否展示
       prop: 'addtel', // <String>  对应属性名
       label: '购方地址电话', // <String>   表头标签
       align: 'center'
     },
     {
-      hasSort: true, // <Boolean> 是否排序
+      hasSort: false, // <Boolean> 是否排序
       isShow: true, // <Boolean> 是否展示
       prop: 'account', // <String>  对应属性名
       label: '购方开户行及账号', // <String>   表头标签
       align: 'center'
     },
     {
-      hasSort: true, // <Boolean> 是否排序
+      hasSort: false, // <Boolean> 是否排序
       isShow: true, // <Boolean> 是否展示
       prop: 'transferdate', // <String>  对应属性名
       label: '传输日期', // <String>   表头标签
       align: 'center'
     },
     {
-      hasSort: true, // <Boolean> 是否排序
+      hasSort: false, // <Boolean> 是否排序
       isShow: true, // <Boolean> 是否展示
       prop: 'bz', // <String>  对应属性名
       label: '备注', // <String>   表头标签
@@ -252,7 +252,7 @@ const orderConfig = {
   ],
   commodityColumns: [ // 表头
     {
-      hasSort: true, // <Boolean> 是否排序
+      hasSort: false, // <Boolean> 是否排序
       isShow: true, // <Boolean> 是否展示
       prop: 'billCode', // <String>  对应属性名
       label: '单据编号', // <String>   表头标签
@@ -260,7 +260,7 @@ const orderConfig = {
       width: '100'
     },
     {
-      hasSort: true, // <Boolean> 是否排序
+      hasSort: false, // <Boolean> 是否排序
       isShow: true, // <Boolean> 是否展示
       prop: 'datatype', // <String>  对应属性名
       label: '数据类型', // <String>   表头标签
@@ -268,7 +268,7 @@ const orderConfig = {
       width: '100'
     },
     {
-      hasSort: true, // <Boolean> 是否排序
+      hasSort: false, // <Boolean> 是否排序
       isShow: true, // <Boolean> 是否展示
       prop: 'ordertype', // <String>  对应属性名
       label: '单据类型', // <String>   表头标签
@@ -276,7 +276,7 @@ const orderConfig = {
       width: '100'
     },
     {
-      hasSort: true, // <Boolean> 是否排序
+      hasSort: false, // <Boolean> 是否排序
       isShow: true, // <Boolean> 是否展示
       prop: 'OrderNum', // <String>  对应属性名
       label: '费用单据编号', // <String>   表头标签
@@ -284,14 +284,14 @@ const orderConfig = {
       width: '100'
     },
     {
-      hasSort: true, // <Boolean> 是否排序
+      hasSort: false, // <Boolean> 是否排序
       isShow: true, // <Boolean> 是否展示
       prop: 'supplierCode', // <String>  对应属性名
       label: '二级供应商编码', // <String>   表头标签
       align: 'center'
     },
     {
-      hasSort: true, // <Boolean> 是否排序
+      hasSort: false, // <Boolean> 是否排序
       isShow: true, // <Boolean> 是否展示
       prop: 'money', // <String>  对应属性名
       label: '金额（不含税）', // <String>   表头标签
@@ -299,7 +299,7 @@ const orderConfig = {
       width: 120
     },
     {
-      hasSort: true, // <Boolean> 是否排序
+      hasSort: false, // <Boolean> 是否排序
       isShow: true, // <Boolean> 是否展示
       prop: 'se', // <String>  对应属性名
       label: '税额', // <String>   表头标签
@@ -307,56 +307,56 @@ const orderConfig = {
       width: 100// 列宽
     },
     {
-      hasSort: true, // <Boolean> 是否排序
+      hasSort: false, // <Boolean> 是否排序
       isShow: true, // <Boolean> 是否展示
       prop: 'sjhj', // <String>  对应属性名
       label: '价税合计', // <String>   表头标签
       align: 'center'
     },
     {
-      hasSort: true, // <Boolean> 是否排序
+      hasSort: false, // <Boolean> 是否排序
       isShow: true, // <Boolean> 是否展示
       prop: 'xfsh', // <String>  对应属性名
       label: '销方税号', // <String>   表头标签
       align: 'center'
     },
     {
-      hasSort: true, // <Boolean> 是否排序
+      hasSort: false, // <Boolean> 是否排序
       isShow: true, // <Boolean> 是否展示
       prop: 'gfmc', // <String>  对应属性名
       label: '购方名称', // <String>   表头标签
       align: 'center'
     },
     {
-      hasSort: true, // <Boolean> 是否排序
+      hasSort: false, // <Boolean> 是否排序
       isShow: true, // <Boolean> 是否展示
       prop: 'gfsh', // <String>  对应属性名
       label: '购方税号', // <String>   表头标签
       align: 'center'
     },
     {
-      hasSort: true, // <Boolean> 是否排序
+      hasSort: false, // <Boolean> 是否排序
       isShow: true, // <Boolean> 是否展示
       prop: 'addtel', // <String>  对应属性名
       label: '购方地址电话', // <String>   表头标签
       align: 'center'
     },
     {
-      hasSort: true, // <Boolean> 是否排序
+      hasSort: false, // <Boolean> 是否排序
       isShow: true, // <Boolean> 是否展示
       prop: 'account', // <String>  对应属性名
       label: '购方开户行及账号', // <String>   表头标签
       align: 'center'
     },
     {
-      hasSort: true, // <Boolean> 是否排序
+      hasSort: false, // <Boolean> 是否排序
       isShow: true, // <Boolean> 是否展示
       prop: 'transferdate', // <String>  对应属性名
       label: '传输日期', // <String>   表头标签
       align: 'center'
     },
     {
-      hasSort: true, // <Boolean> 是否排序
+      hasSort: false, // <Boolean> 是否排序
       isShow: true, // <Boolean> 是否展示
       prop: 'bz', // <String>  对应属性名
       label: '备注', // <String>   表头标签

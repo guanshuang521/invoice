@@ -8,7 +8,8 @@ const user = {
     avatar: '',
     roles: [],
     id: '',
-    isAddRoute: false
+    isAddRoute: false,
+    isAutoLoadData: false
   },
 
   mutations: {
