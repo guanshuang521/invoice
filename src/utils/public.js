@@ -52,16 +52,16 @@ export function arrayToMenu(array) {
 /**
  * @author Wujy
  * @date 2019/3/21
- * @Description: 将接口返回的数组结构的数据转化为菜单树
+ * @Description: 将接口返回的数组结构的数据转化为树型结构
 */
-export function arrayToTree(array) {
+export function arrayToTree(array, targetField) {
   const nodes = []
   // 获取顶级节点`
   for (let i = 0; i < array.length; i++) {
     const row = array[i]
     if (!exists(array, row.fid)) {
       nodes.push({
-        label: row.orgName,
+        label: row[targetField],
         id: row.id
       })
     }
@@ -74,7 +74,7 @@ export function arrayToTree(array) {
       const row = array[i]
       if (row.parentId === node.id || row.fid === node.id) {
         const child = {
-          label: row.orgName,
+          label: row[targetField],
           id: row.id
         }
         if (node.children) {

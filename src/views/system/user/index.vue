@@ -128,7 +128,7 @@
 <script>
 import { getList, saveUser, deleteUser, getUserDetail } from '@/api/system/user'
 import { getNodeList } from '@/api/system/organization'
-
+import { arrayToTree } from '@/utils/public'
 export default {
   name: 'Dashboard',
   data() {
@@ -192,7 +192,7 @@ export default {
       this.loading = true
       getNodeList().then(res => {
         this.loading = false
-        this.organTree = res.data
+        this.organTree = arrayToTree(res.data.list, 'orgName')
       }).catch(err => {
         this.loading = false
         this.$message({

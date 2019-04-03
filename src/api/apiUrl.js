@@ -37,7 +37,7 @@ const apiPath = {
     },
     // 角色权限管理
     role: {
-      selectByRole: '/role/selectByRole ', // 角色信息查询
+      selectByRole: '/role/selectByRole', // 角色信息查询
       deleteRole: '/role/deleteRole', // 角色信息删除
       insertRole: '/role/insertRole', // 角色信息新增
       updateRole: '/role/updateRole' // 角色信息编辑

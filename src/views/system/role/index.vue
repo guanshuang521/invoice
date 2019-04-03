@@ -71,9 +71,9 @@
       :title="dialogType === 'add' && '新增角色' || dialogType === 'edit' && '权限分配' || ''"
       :visible.sync="dialogVisible"
       :before-close="() => handleClose('form')"
-      width="574px"
+      width="600px"
       custom-class="add-edit-role">
-      <el-form ref="form" :rules="rules" :model="form" label-width="80px" size="mini">
+      <el-form ref="form" :inline="isInline" :rules="rules" :model="form" label-width="80px" size="mini">
         <el-form-item label="角色名称" prop="roleName">
           <el-input v-model="form.roleName" :disabled="dialogType === 'edit'" placeholder="请输入"/>
         </el-form-item>
@@ -111,12 +111,15 @@
 
 <script>
 import { arrayToTree } from '@/utils/public'
-import { getRoleList, deleteRole, insertRole, updateRole, selectByResource } from '@/api/system/role'
+import { getRoleList, deleteRole, insertRole, updateRole } from '@/api/system/role'
+import { getRoute } from '@/api/login'
 
 export default {
   name: 'Role',
   data() {
     return {
+      // 表单行内显示
+      isInline: true,
       list: [],
       list0: [
         {
@@ -166,7 +169,7 @@ export default {
       },
       defaultProps: {
         children: 'children',
-        label: 'lable'
+        label: 'label'
       },
       treeData: [],
       resourceId: []
@@ -191,10 +194,9 @@ export default {
     },
     getResource() {
       var params = {}
-      selectByResource(params).then(response => {
-        if (response.code === '0000') {
-          this.treeData = arrayToTree(response.data.list)
-        }
+      getRoute(params).then(res => {
+        console.log(res)
+        this.treeData = arrayToTree(res.data, 'title')
       })
     },
     searchFn() {

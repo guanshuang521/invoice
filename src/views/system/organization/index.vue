@@ -345,7 +345,7 @@ export default {
       getNodeList().then(res => {
         this.loading = false
         this.nodeList = res.data.list
-        this.organTree = arrayToTree(res.data.list)
+        this.organTree = arrayToTree(res.data.list, 'orgName')
       }).catch(err => {
         this.loading = false
         this.$message({

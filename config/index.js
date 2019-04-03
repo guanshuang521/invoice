@@ -18,6 +18,10 @@ module.exports = {
         target: 'http://192.168.5.189:8080', //后台api
         changeOrigin: true
       },
+      '/role':{
+        target: 'http://192.168.5.189:8080', //后台api
+        changeOrigin: true
+      },
       '/commoditye':{
         target: 'http://192.168.4.128:8080', //后台api
         changeOrigin: true
