@@ -37,16 +37,15 @@
         style="width: 100%">
         <el-table-column type="selection" width="35"/>
         <el-table-column label="用户名称" prop="userName" align="center"/>
-        <el-table-column label="账号" prop="gfmc" align="center"/>
-        <el-table-column label="密码" prop="gfsh" align="center"/>
-        <el-table-column label="角色" prop="fplx" align="center"/>
-        <el-table-column label="复核人" prop="je" align="center"/>
-        <el-table-column label="收款人" prop="sl" align="center"/>
-        <el-table-column label="所属机构" prop="se" align="center"/>
-        <el-table-column label="终端号" prop="jshj" align="center"/>
-        <el-table-column label="用户状态" prop="kpzt" align="center"/>
-        <el-table-column label="上次登录IP" prop="kpts" align="center" width="100"/>
-        <el-table-column label="最后登录时间" prop="kpts" align="center" width="120"/>
+        <el-table-column label="账号" prop="userCode" align="center"/>
+        <el-table-column label="密码" prop="password" align="center"/>
+        <el-table-column label="复核人" prop="reviewer" align="center"/>
+        <el-table-column label="收款人" prop="receiver" align="center"/>
+        <el-table-column label="所属机构" prop="orgId" align="center"/>
+        <el-table-column label="终端号" prop="terminalId" align="center"/>
+        <el-table-column label="用户状态" prop="status" align="center"/>
+        <el-table-column label="上次登录IP" prop="modifiedId" align="center" width="100"/>
+        <el-table-column label="最后登录时间" prop="modifiedTime" align="center" width="120"/>
         <el-table-column
           align="center"
           fixed="right"
@@ -126,7 +125,7 @@
 </template>
 
 <script>
-import { getList, saveUser, deleteUser, getUserDetail } from '@/api/system/user'
+import { getList, add, edit, nodeList, saveUser, deleteUser, getUserDetail } from '@/api/system/user'
 import { getNodeList } from '@/api/system/organization'
 
 export default {
@@ -143,9 +142,7 @@ export default {
         pageSize: 10
       },
       // 列表数据
-      tableList: [{
-        userName: 1
-      }],
+      tableList: [],
       // 列表总条数
       totalCount: 0,
       // 已勾选的列表项
@@ -190,7 +187,7 @@ export default {
     // 初始化机构树
     initTree() {
       this.loading = true
-      getNodeList().then(res => {
+      nodeList(1).then(res => {
         this.loading = false
         this.organTree = res.data
       }).catch(err => {
@@ -203,10 +200,12 @@ export default {
     },
     // table列表查询
     initTable() {
+      this.loading = true
       getList(this.searchParams).then(res => {
-        this.list = res.info
-        console.log(res, 88888)
+        this.loading = false
+        this.tableList = res.data.list
       }).catch(err => {
+        this.loading = false
         console.log(err)
       })
     },

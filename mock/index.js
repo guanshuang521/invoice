@@ -15,7 +15,7 @@ import systemAPI from './system/organization'
 import roleAPI from './system/role'
 import customerAPI from './system/infoMaintenance'
 import orderOpenMessageAPI from './queryStatistics/orderOpenMessage'
-//开具
+// 开具
 import getListAPI from './invoiceOpening/getlist'
 import getGmfListAPI from './invoiceOpening/getGmflist'
 

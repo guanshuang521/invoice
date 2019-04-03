@@ -79,7 +79,7 @@
         :page-sizes="[10, 25, 50, 100]"
         :page-size="searchParams.pageSize"
         :total="total"
-        layout="prev, pager, next, jumper, total, sizes, slot"
+        layout="total, sizes, prev, pager, next, jumper"
         style="margin-top: 20px"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange">
@@ -221,6 +221,7 @@ export default {
         type: res.code === '0000' ? 'success' : 'error'
       })
       res.code === '0000' ? this.dialogVisible2 = false : this.$refs.upload.clearFiles()
+      this.getList()
     },
     uploadError(res, file, fileList) { // 上传错误
       this.loading = false
@@ -228,6 +229,8 @@ export default {
         message: '网络错误，请稍后再试',
         type: 'error'
       })
+      this.dialogVisible2 = false
+      this.getList()
     },
     uploadPath() { // 上传地址
       return apiPath.system.codeManagement.importExcel

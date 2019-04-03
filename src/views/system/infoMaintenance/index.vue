@@ -27,7 +27,7 @@
     <div class="button-container">
       <el-button type="primary" size="mini" @click="addCustomer">新增</el-button>
       <el-button type="primary" size="mini" @click="delCustomer">删除</el-button>
-      <el-button type="primary" size="mini" @click="downloadExcel">Excel模板下载</el-button>
+      <el-button type="primary" size="mini" @click="exportModle">Excel模板下载</el-button>
       <el-button type="primary" size="mini" @click="importExcel">导入Excel</el-button>
     </div>
     <div class="table-container">
@@ -115,9 +115,9 @@
     </el-dialog>
     <!-- 导入弹窗 -->
     <el-dialog
-      :visible.sync="importDialogVisible"
+      :visible.sync="dialogVisible2"
       title="客户基础信息导入"
-      width="650px"
+      width="350px"
       custom-class="add-customer">
       <el-upload
         ref="upload"
@@ -125,9 +125,11 @@
         :on-remove="handleRemove"
         :file-list="fileList"
         :auto-upload="false"
+        :on-error="uploadError"
+        :on-success="uploadSuccess"
+        :action="uploadPath()"
         accept=".xls,.xlsx"
-        class="upload-demo"
-        action="https://jsonplaceholder.typicode.com/posts/">
+        class="upload-demo">
         <div slot="tip" class="el-upload__tip">选择上传文件</div>
         <el-button slot="trigger" size="small" type="primary">添加文件</el-button>
         <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">开始上传</el-button>
@@ -138,6 +140,9 @@
 
 <script>
 import { getCustomerList, deleteCustomer, insertCustomer } from '@/api/system/infoMaintenance'
+import apiPath from '@/api/apiUrl'
+import { arrayToTree, arrayToMapField } from '@/utils/public'
+import { mapGetters } from 'vuex'
 export default {
   name: 'InfoMaintenance',
   data() {
@@ -196,12 +201,22 @@ export default {
         ]
       },
       // 导入弹窗是否显示
-      importDialogVisible: false,
+      dialogVisible2: false,
       fileList: []
+    }
+  },
+  computed: {
+    ...mapGetters([
+      'dictList'
+    ]),
+    invoiceTypeObj() {
+      console.log(arrayToMapField(this.dictList['SYS_FPLX'], 'code', 'name'))
+      return arrayToMapField(this.dictList['SYS_FPLX'], 'code', 'name')
     }
   },
   mounted() {
     this.initTable()
+    console.log(this.invoiceTypeObj)
   },
   methods: {
     initTable() { // 获取数据
@@ -285,8 +300,8 @@ export default {
         this.loading = false
       })
     },
-    downloadExcel() { // 下载
-      // this.dialogVisible = true
+    exportModle() { // 导出模板
+      window.open(apiPath.system.customer.exportModle)
     },
     importExcel() {
       this.dialogVisible2 = true
@@ -304,7 +319,27 @@ export default {
       this.$refs[formName].resetFields()
     },
     submitUpload() {
+      this.loading = true
       this.$refs.upload.submit()
+    },
+    uploadPath() {
+      return apiPath.system.customer.importExcel
+    },
+    uploadSuccess(res, file, fileList) { // 上传成功后的回调
+      this.loading = false
+      this.$message({
+        message: res.message,
+        type: res.code === '0000' ? 'success' : 'error'
+      })
+      res.code === '0000' ? this.dialogVisible2 = false : this.$refs.upload.clearFiles()
+      this.initTable()
+    },
+    uploadError(res, file, fileList) { // 上传错误
+      this.loading = false
+      this.$message({
+        message: '网络错误，请稍后再试',
+        type: 'error'
+      })
     },
     handleRemove(file, fileList) {
       console.log(file, fileList)
