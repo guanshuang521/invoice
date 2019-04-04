@@ -43,7 +43,7 @@
         <el-table-column
           type="selection"
           align="center"
-          width="80px"/>
+          width="35"/>
         <el-table-column label="序号" align="center" width="50px">
           <template slot-scope="scope">
             {{ scope.$index + 1 }}
@@ -135,7 +135,7 @@
       </el-table>
       <el-pagination
         :current-page="searchParams.currentPage"
-        :page-sizes="[10, 25, 50, 100]"
+        :page-sizes="[10, 50, 100]"
         :page-size="searchParams.pageSize"
         :total="total"
         layout="total, sizes, prev, pager, next, jumper"
@@ -150,88 +150,82 @@
       :visible.sync="dialogVisible"
       :before-close="handleClose"
       :title="dialogType === 'adds' && '新增' || dialogType === 'edit' && '编辑' || ''"
-      width="650px"
+      width="710px"
       custom-class="add-customer">
-      <el-form ref="form" :inline="isInline" :rules="rules" :model="form" label-width="120px">
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="商品编码" prop="spbm" size="small">
-              <el-input v-model="form.spbm"/>
-            </el-form-item>
-            <el-form-item label="商品名称" prop="spmc" size="small">
-              <el-input v-model="form.spmc"/>
-            </el-form-item>
-            <el-form-item label="商品税目">
-              <el-select v-model="form.spsm" placeholder="请选择" size="small">
-                <el-option label="企业所得税" value="企业"/>
-                <el-option label="个人所得税" value="个人"/>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="简码" prop="jcode" size="small">
-              <el-input v-model="form.jm"/>
-            </el-form-item>
-            <el-form-item label="含税标志">
-              <el-select v-model="form.hsbz" placeholder="请选择" size="small">
-                <el-option label="企业所得税" value="企业"/>
-                <el-option label="个人所得税" value="个人"/>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="零含税标识">
-              <el-select v-model="form.lslbs" placeholder="请选择" size="small">
-                <el-option label="企业所得税" value="企业"/>
-                <el-option label="个人所得税" value="个人"/>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="免税类型">
-              <el-select v-model="form.mslx" placeholder="请选择" size="small">
-                <el-option label="企业所得税" value="企业"/>
-                <el-option label="个人所得税" value="个人"/>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="优惠政策类型">
-              <el-select v-model="form.yhzclx" placeholder="请选择" size="small">
-                <el-option label="企业所得税" value="企业"/>
-                <el-option label="个人所得税" value="个人"/>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="税率(%)">
-              <el-select v-model="form.sl" placeholder="税率" size="small">
-                <el-option label="5%" value="0.05"/>
-                <el-option label="6%" value="0.06"/>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="规格型号" prop="ggxh" size="small">
-              <el-input v-model="form.ggxh"/>
-            </el-form-item>
-            <el-form-item label="单元(元)" prop="dj" size="small">
-              <el-input v-model="form.dj"/>
-            </el-form-item>
-            <el-form-item label="计量单位" prop="meteringcom" size="small">
-              <el-input v-model="form.jldw"/>
-            </el-form-item>
-            <el-form-item label="税收分类名称">
-              <el-select v-model="form.shflmc" placeholder="请选择" size="small">
-                <el-option label="企业所得税" value="企业"/>
-                <el-option label="个人所得税" value="个人"/>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="税收分类编码" prop="shflbm" size="small">
-              <el-input v-model="form.shflbm"/>
-            </el-form-item>
-            <el-form-item label="是否享受优惠政策">
-              <el-select v-model="form.sfxsyhzc " placeholder="请选择" size="small">
-                <el-option label="企业所得税" value="企业"/>
-                <el-option label="个人所得税" value="个人"/>
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
+      <el-form ref="form" :inline="isInline" :rules="rules" :model="form" label-width="120px" size="mini">
+        <el-form-item label="商品编码" prop="spbm" size="small">
+          <el-input v-model="form.spbm"/>
+        </el-form-item>
+        <el-form-item label="商品名称" prop="spmc" size="small">
+          <el-input v-model="form.spmc"/>
+        </el-form-item>
+        <el-form-item label="商品税目">
+          <el-select v-model="form.spsm" placeholder="请选择" size="small">
+            <el-option label="企业所得税" value="企业"/>
+            <el-option label="个人所得税" value="个人"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="简码" prop="jcode" size="small">
+          <el-input v-model="form.jm"/>
+        </el-form-item>
+        <el-form-item label="含税标志">
+          <el-select v-model="form.hsbz" placeholder="请选择" size="small">
+            <el-option label="企业所得税" value="企业"/>
+            <el-option label="个人所得税" value="个人"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="零含税标识">
+          <el-select v-model="form.lslbs" placeholder="请选择" size="small">
+            <el-option label="企业所得税" value="企业"/>
+            <el-option label="个人所得税" value="个人"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="免税类型">
+          <el-select v-model="form.mslx" placeholder="请选择" size="small">
+            <el-option label="企业所得税" value="企业"/>
+            <el-option label="个人所得税" value="个人"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="优惠政策类型">
+          <el-select v-model="form.yhzclx" placeholder="请选择" size="small">
+            <el-option label="企业所得税" value="企业"/>
+            <el-option label="个人所得税" value="个人"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="税率(%)">
+          <el-select v-model="form.sl" placeholder="税率" size="small">
+            <el-option label="5%" value="0.05"/>
+            <el-option label="6%" value="0.06"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="规格型号" prop="ggxh" size="small">
+          <el-input v-model="form.ggxh"/>
+        </el-form-item>
+        <el-form-item label="单元(元)" prop="dj" size="small">
+          <el-input v-model="form.dj"/>
+        </el-form-item>
+        <el-form-item label="计量单位" prop="meteringcom" size="small">
+          <el-input v-model="form.jldw"/>
+        </el-form-item>
+        <el-form-item label="税收分类名称">
+          <el-select v-model="form.shflmc" placeholder="请选择" size="small">
+            <el-option label="企业所得税" value="企业"/>
+            <el-option label="个人所得税" value="个人"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="税收分类编码" prop="shflbm" size="small">
+          <el-input v-model="form.shflbm"/>
+        </el-form-item>
+        <el-form-item label="是否享受优惠政策">
+          <el-select v-model="form.sfxsyhzc " placeholder="请选择" size="small">
+            <el-option label="企业所得税" value="企业"/>
+            <el-option label="个人所得税" value="个人"/>
+          </el-select>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button type="primary" size="mini" @click="addAdata('form')">确认</el-button>
-        <el-button type="primary" size="mini" @click="dialogVisible = false">取消</el-button>
+        <el-button size="mini" @click="dialogVisible = false">取消</el-button>
       </div>
     </el-dialog>
     <!--设置税收分类编码-->
@@ -239,9 +233,9 @@
       :visible.sync="dialogVisible1"
       :before-close="handleClose"
       title="新增商品税收编码转换"
-      width="650px"
+      width="700px"
       custom-class="add-customer">
-      <el-form ref="form1" :rules="rules" :model="form1" label-width="120px">
+      <el-form ref="form1" :rules="rules" :model="form1" :inline="true" label-width="120px">
         <el-form-item label="税收分类名称">
           <el-select v-model="form1.shflmc" placeholder="请选择" size="small">
             <el-option label="企业所得税" value="企业"/>
@@ -253,8 +247,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer" align="center">
-        <el-button type="primary" @click="handleUpdata('form1')">保存</el-button>
-        <el-button type="primary" @click="dialogVisible1 = false">取消</el-button>
+        <el-button type="primary" size="mini" @click="handleUpdata('form1')">保存</el-button>
+        <el-button size="mini" @click="dialogVisible1 = false">取消</el-button>
       </div>
     </el-dialog>
     <!--导入Excel-->
@@ -386,9 +380,7 @@ export default{
     }
   },
   mounted() {
-  },
-  created() {
-    this.getList()
+    this.$store.getters.isAutoLoadData ? this.getList() : ''
   },
   methods: {
     searchFn() {
@@ -397,8 +389,11 @@ export default{
     initSearch() {
       this.searchParams = {
         spmc: '',
-        spbm: ''
+        spbm: '',
+        currentPage: 1,
+        pageSize: 10
       }
+      this.getList()
     },
     getList() { // 获取数据列表
       this.loading = true

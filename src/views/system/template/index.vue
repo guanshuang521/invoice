@@ -11,8 +11,9 @@
     element-loading-spinner="el-icon-loading"
     element-loading-background="rgba(0, 0, 0, 0.8)">
     <div class="button-container">
-      <el-button type="primary" size="mini" class="dashboard-button" @click="dialogFormVisible = true">新增</el-button>
+      <el-button type="primary" size="mini" class="dashboard-button" @click="openDialog">新增</el-button>
       <el-button type="primary" size="mini" class="dashboard-button" @click="templateDelete">删除</el-button>
+      <el-button type="primary" size="mini" class="dashboard-button" @click="initTable">查询</el-button>
     </div>
     <div class="table-container">
       <el-table
@@ -95,6 +96,15 @@
             {{ showBoolean[scope.row.status] }}
           </template>
         </el-table-column>
+        <el-table-column
+          align="center"
+          fixed="right"
+          label="操作"
+          width="120">
+          <template slot-scope="scope">
+            <el-button type="primary" size="small" @click="editTemplate(scope.row)">编辑</el-button>
+          </template>
+        </el-table-column>
       </el-table>
       <el-pagination
         :current-page = "searchParams.currentPage"
@@ -107,8 +117,8 @@
         @current-change = "handleCurrentChange"/>
     </div>
     <!--新增规则弹框-->
-    <el-dialog :visible.sync="dialogFormVisible" title="新增规则" width="620px">
-      <el-form :model="templateForm" :ref="templateForm" :rules="rules" :inline="isInline" size="mini" label-width="140px">
+    <el-dialog :visible.sync="dialogFormVisible" :title="dialogTitle" width="620px">
+      <el-form ref="templateForm" :model="templateForm" :rules="rules" :inline="isInline" size="mini" label-width="140px">
         <el-form-item label="模板名称：" prop="ruleName">
           <el-input v-model="templateForm.ruleName "/>
         </el-form-item>
@@ -174,7 +184,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer" align="center">
-        <el-button type="primary" size="mini" @click="addTemplate(templateForm)">确 定</el-button>
+        <el-button v-if="dialogTitle !== '编辑规则'" type="primary" size="mini" @click="addTemplate(templateForm)">确 定</el-button>
+        <el-button v-if="dialogTitle === '编辑规则'" type="primary" size="mini" @click="saveTemplate(templateForm)">保 存</el-button>
         <el-button size="mini" @click="dialogFormVisible = false">取 消</el-button>
       </div>
     </el-dialog>
@@ -183,11 +194,13 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { getTable, addTemplate, deleteTemplate } from '@/api/system/template'
+import { getTable, addTemplate, editTemplate, deleteTemplate } from '@/api/system/template'
 export default {
   name: 'Template',
   data() {
     return {
+      // 弹窗标题
+      dialogTitle: '',
       // 加载层
       loading: false,
       // 表单行内显示
@@ -207,7 +220,7 @@ export default {
         price: '',
         listSign: '',
         invoiceLine: '',
-        status: ''
+        status: '1'
       },
       // 新增表单校验规则
       rules: {
@@ -248,7 +261,7 @@ export default {
     ])
   },
   mounted() {
-    this.initTable()
+    this.$store.getters.isAutoLoadData ? this.initTable() : ''
   },
   methods: {
     // 初始化列表
@@ -262,6 +275,21 @@ export default {
           message: err
         })
       })
+    },
+    openDialog() {
+      this.dialogTitle = '新增规则'
+      this.dialogFormVisible = true
+      this.templateForm = {
+        ruleName: '',
+        classBig: '',
+        rate: '',
+        commodity: '',
+        plusMinus: '',
+        price: '',
+        listSign: '',
+        invoiceLine: '',
+        status: '1'
+      }
     },
     // 新增模板
     addTemplate(formName) {
@@ -285,29 +313,58 @@ export default {
         }
       })
     },
+    // 编辑模板
+    editTemplate(row) {
+      console.log(row)
+      this.dialogTitle = '编辑规则'
+      this.dialogFormVisible = true
+      this.templateForm = Object.assign({}, row)
+    },
+    // 编辑模板保存
+    saveTemplate(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          var args = Object.assign({}, this.templateForm)
+          editTemplate(args).then(res => {
+            this.$message.success(res.message)
+            this.dialogFormVisible = false
+            this.initTable()
+          }).catch(err => {
+            this.$message.error(err)
+          })
+          this.dialogFormVisible = false
+        }
+      })
+    },
     // 删除模板
     templateDelete() {
       if (this.multipleSelection.length === 0) {
         this.$message.error('至少选择一条数据')
         return false
       }
-      const id = []
-      this.multipleSelection.forEach((item) => {
-        id.push(item.id)
-      })
-      var args = {
-        ids: id.join(',')
-      }
-      deleteTemplate(args).then(res => {
-        this.$message({
-          type: 'success',
-          message: res.message
+      this.$confirm('确定删除选择数据?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        const id = []
+        this.multipleSelection.forEach((item) => {
+          id.push(item.id)
         })
-        this.initTable()
-      }).catch(err => {
-        this.$message({
-          type: 'error',
-          message: err
+        const args = {
+          ids: id.join(',')
+        }
+        deleteTemplate(args).then(res => {
+          this.$message({
+            type: 'success',
+            message: res.message
+          })
+          this.initTable()
+        }).catch(err => {
+          this.$message({
+            type: 'error',
+            message: err
+          })
         })
       })
     },

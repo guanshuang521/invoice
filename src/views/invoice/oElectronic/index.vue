@@ -108,7 +108,7 @@
       </el-table>
       <el-pagination
         :current-page="listQuery.currentPage"
-        :page-sizes="[100, 200, 300, 400]"
+        :page-sizes="[10, 50, 100]"
         :page-size="100"
         :total="totalCount"
         layout="total, sizes, prev, pager, next, jumper"

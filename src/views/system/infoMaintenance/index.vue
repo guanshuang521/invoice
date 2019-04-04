@@ -61,7 +61,7 @@
     <div class="page-box">
       <el-pagination
         :current-page="searchParams.currentPage"
-        :page-sizes="[10, 20, 30, 40]"
+        :page-sizes="[10, 50, 100]"
         :page-size="10"
         :total="totalCount"
         layout="total, sizes, prev, pager, next, jumper"
@@ -76,7 +76,7 @@
       title="新增购方信息"
       width="650px"
       custom-class="add-customer">
-      <el-form ref="form" :rules="rules" :model="form" label-width="120px" size="mini">
+      <el-form ref="form" :inline="true" :rules="rules" :model="form" label-width="120px" size="mini">
         <el-form-item label="购方名称：" prop="khmc">
           <el-input v-model="form.khmc" placeholder="请输入"/>
         </el-form-item>
@@ -107,11 +107,11 @@
         <el-form-item label="银行账号：">
           <el-input v-model="form.yhzh" class="address"/>
         </el-form-item>
-        <el-form-item class="button">
-          <el-button type="primary" @click="addCustomerFn('form')">保存</el-button>
-          <el-button type="primary" @click="handleClose('form')">取消</el-button>
-        </el-form-item>
       </el-form>
+      <div slot="footer" class="dialog-footer" align="center">
+        <el-button type="primary" size="mini" @click="addCustomerFn('form')">保存</el-button>
+        <el-button size="mini" @click="handleClose('form')">取消</el-button>
+      </div>
     </el-dialog>
     <!-- 导入弹窗 -->
     <el-dialog
@@ -141,7 +141,7 @@
 <script>
 import { getCustomerList, deleteCustomer, insertCustomer } from '@/api/system/infoMaintenance'
 import apiPath from '@/api/apiUrl'
-import { arrayToTree, arrayToMapField } from '@/utils/public'
+import { arrayToMapField } from '@/utils/public'
 import { mapGetters } from 'vuex'
 export default {
   name: 'InfoMaintenance',
@@ -215,8 +215,7 @@ export default {
     }
   },
   mounted() {
-    this.initTable()
-    console.log(this.invoiceTypeObj)
+    this.$store.getters.isAutoLoadData ? this.initTable() : ''
   },
   methods: {
     initTable() { // 获取数据
@@ -292,12 +291,6 @@ export default {
           this.initTable()
           this.loading = false
         })
-      }).catch(err => {
-        this.$message({
-          type: 'error',
-          message: err
-        })
-        this.loading = false
       })
     },
     exportModle() { // 导出模板

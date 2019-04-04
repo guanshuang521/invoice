@@ -94,7 +94,7 @@
     <div class="page-box">
       <el-pagination
         :current-page="currentPage"
-        :page-sizes="[25, 50, 100]"
+        :page-sizes="[10, 50, 100]"
         :page-size="pageSize"
         :total="total"
         layout="prev, pager, next, jumper, total, sizes, slot"
