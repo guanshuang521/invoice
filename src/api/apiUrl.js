@@ -32,8 +32,8 @@ const apiPath = {
     user: {
       nodeList: '/rbac/user/getRoleList', // 获取权限树
       list: '/rbac/user/selectAll', // 获取用户列表
-      add: '/rbacuser/insertUser', // 新增数据
-      edit: '/rbacuser/updateUser', // 修改数据
+      add: '/rbac/user/insertUser', // 新增数据
+      edit: '/rbac/user/updateUser', // 修改数据
       save: '/rbac/system/user/save.do', // 用户保存
       delete: '/rbac/user/deleteUser', // 删除用户
       detail: '/rbac/system/user/detail.do' // 获取用户详情

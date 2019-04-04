@@ -38,8 +38,8 @@ export function saveUser() {
 export function deleteUser(data) {
   return request({
     url: apiPath.system.user.delete,
-    method: 'post',
-    data:data
+    method: 'get',
+    params: data
   })
 }
 // 获取用户详情

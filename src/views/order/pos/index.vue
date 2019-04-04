@@ -135,6 +135,10 @@
         layout = "total, sizes, prev, pager, next, jumper"
         @size-change = "handleSizeChange"
         @current-change = "handleCurrentChange"/>
+      <!--<span v-show="dataSource.list&&dataSource.list.length>1" class="hjje">合计金额:{{ dataSource.total }}</span>-->
+      <span class="hjje">合计金额:{{ dataSource.total }}</span>
+      <span class="hjse">合计税额:{{ dataSource.total }}</span>
+      <span class="jshj">加税合计:{{ dataSource.total }}</span>
     </div>
     <Invoicedialog
       :moudel-type="moudelType"
@@ -179,7 +183,8 @@ export default {
       dataSource: {
         currentPage: 1,
         count: 0,
-        pageSize: 5
+        pageSize: 5,
+        total: ''
       }, // 数据源
       columns: [], // 接受的config的配置的参数
       operation: {}, // 接受的config的操作配置的参数
