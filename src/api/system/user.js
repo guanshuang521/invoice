@@ -12,25 +12,19 @@ export function getList(data) {
   })
 }
 // 新增数据
-export function add() {
+export function add(data) {
   return request({
     url: apiPath.system.user.add,
-    method: 'post'
+    method: 'post',
+    data: data
   })
 }
-// 新增数据
-export function edit() {
+// 编辑数据
+export function edit(data) {
   return request({
     url: apiPath.system.user.edit,
-    method: 'post'
-  })
-}
-// 新增数据
-export function nodeList(userId) {
-  return request({
-    url: apiPath.system.user.nodeList,
-    method: 'get',
-    params: { 'userId': userId }
+    method: 'post',
+    data: data
   })
 }
 // 保存用户
@@ -41,10 +35,11 @@ export function saveUser() {
   })
 }
 // 删除用户
-export function deleteUser() {
+export function deleteUser(data) {
   return request({
     url: apiPath.system.user.delete,
-    method: 'post'
+    method: 'get',
+    params: data
   })
 }
 // 获取用户详情
