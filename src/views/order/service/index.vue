@@ -10,16 +10,22 @@
     <div class="filter-container">
       <el-form :inline="true" :model="searchParams" class="demo-form-inline">
         <el-form-item label="购方名称">
-          <el-input v-model="searchParams.userName" placeholder="请输入" size="small"/>
+          <el-input v-model="searchParams.gfmc" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="二级供应商编码">
-          <el-input v-model="searchParams.userName" placeholder="请输入" size="small"/>
+          <el-input v-model="searchParams.ejgysbm" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="费用单据编号">
           <el-input v-model="searchParams.userName" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="结算单号">
           <el-input v-model="searchParams.userName" placeholder="请输入" size="small"/>
+        </el-form-item>
+        <el-form-item label="订单状态">
+          <el-select v-model="searchParams.status" placeholder="请选择" size="small">
+            <el-option label="已开具" value="1"/>
+            <el-option label="无开具" value="0"/>
+          </el-select>
         </el-form-item>
         <el-form-item label="单据起号">
           <el-input v-model="searchParams.userName" placeholder="请输入" size="small"/>
@@ -169,7 +175,7 @@ export default {
       searchParams: {
         pageSize: 10,
         currentPage: 1,
-        userName: ''
+        gmfMc: ''
       },
       // 列表数据
       tableList: [],
@@ -213,7 +219,9 @@ export default {
     reset() {
       this.searchParams = {
         userName: '',
-        role: ''
+        role: '',
+        currentPage: 1,
+        pageSize: 10
       }
       this.initTable()
     },

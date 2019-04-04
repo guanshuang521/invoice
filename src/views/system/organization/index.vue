@@ -397,16 +397,10 @@ export default {
           const args = Object.assign({}, this.nodeMaintenanceForm)
           args.id = this.$refs.organTree.getCurrentNode().id
           updateNode(args).then(res => {
-            this.$message({
-              message: res.data.msg,
-              type: 'success'
-            })
+            this.$message.success(res.message)
             this.initTree()
           }).catch(err => {
-            this.$message({
-              message: err,
-              type: 'error'
-            })
+            this.$message.error(err)
           })
         }
       })
@@ -419,16 +413,10 @@ export default {
         type: 'warning'
       }).then(() => {
         deleteNode(this.$refs.organTree.getCurrentNode().id).then(res => {
-          this.$message({
-            type: 'success',
-            message: res.message
-          })
+          this.$message.success(res.message)
           this.initTree()
         }).catch(err => {
-          this.$message({
-            type: 'error',
-            message: err.message
-          })
+          this.$message.error(err)
         })
       })
     },
@@ -440,16 +428,10 @@ export default {
           args.fid = this.$refs.organTree.getCurrentNode().id
           addNode(args).then(res => {
             this.$refs[data].resetFields()
-            this.$message({
-              message: res.message,
-              type: 'success'
-            })
+            this.$message.success(res.message)
             this.initTree()
           }).catch(err => {
-            this.$message({
-              message: err,
-              type: 'error'
-            })
+            this.$message.error(err)
           })
         }
       })
@@ -462,7 +444,7 @@ export default {
         this.codeRelevanceTerminalList = res.data.list
         this.totalCount = res.data.count
       }).catch(err => {
-        console.log(err)
+        this.$message.error(err)
       })
     },
     // 税号维护提交
@@ -475,10 +457,7 @@ export default {
           this.loading = true
           updateNode(args).then(res => {
             this.$refs[data].resetFields()
-            this.$message({
-              message: res.message,
-              type: 'success'
-            })
+            this.$message.success(res.message)
             this.initTree()
             this.loading = false
             this.isTreeChecked = false
