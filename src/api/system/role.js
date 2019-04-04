@@ -28,6 +28,16 @@ export function insertRole(data) {
   })
 }
 // 编辑角色
+export function getRoleDetail(roleId) {
+  return request({
+    url: apiPath.system.role.detail,
+    method: 'get',
+    params: {
+      roleId
+    }
+  })
+}
+// 编辑角色
 export function updateRole(data) {
   return request({
     url: apiPath.system.role.updateRole,
@@ -35,12 +45,3 @@ export function updateRole(data) {
     data
   })
 }
-// 获取菜单列表
-export function selectByResource(data) {
-  return request({
-    url: apiPath.system.resource.selectByResource,
-    method: 'post',
-    data
-  })
-}
-

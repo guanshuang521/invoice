@@ -50,27 +50,27 @@
         </el-table-column>
         <el-table-column label="商品或服务名称" align="center">
           <template slot-scope="scope">
-            {{ scope.row.sphfumc }}
+            {{ scope.row.spmc }}
           </template>
         </el-table-column>
-        <el-table-column label="商品或服务分类简" align="center">
+        <el-table-column label="商品或服务分类简称" align="center">
           <template slot-scope="scope">
-            {{ scope.row.sphffl }}
+            {{ scope.row.spbm }}
           </template>
         </el-table-column>
         <el-table-column label="税收分类编码" align="center">
           <template slot-scope="scope">
-            {{ scope.row.ssflbm }}
+            {{ scope.row.shflbm }}
           </template>
         </el-table-column>
         <el-table-column label="税率" align="center">
           <template slot-scope="scope">
-            {{ scope.row.ssl }}
+            {{ scope.row.sl }}
           </template>
         </el-table-column>
         <el-table-column label="说明" align="center">
           <template slot-scope="scope">
-            {{ scope.row.sphfumc }}
+            {{ scope.row.spsm }}
           </template>
         </el-table-column>
       </el-table>
