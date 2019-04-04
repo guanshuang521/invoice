@@ -10,7 +10,7 @@
     <div class="filter-container">
       <el-form :inline="true" :model="searchParams" class="demo-form-inline">
         <el-form-item label="开票码">
-          <el-input v-model="searchParams.ddbh" placeholder="请输入开票码" size="small"/>
+          <el-input v-model="searchParams.djbh" placeholder="请输入开票码" size="small"/>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" size="small" @click="initTable">查询</el-button>
@@ -162,7 +162,7 @@ export default {
       searchParams: {
         pageSize: 10,
         currentPage: 1,
-        ddbh: ''
+        djbh: ''
       },
       // 列表数据
       tableList: [],
@@ -215,7 +215,7 @@ export default {
       this.searchParams = {
         pageSize: 10,
         currentPage: 1,
-        ddbh: ''
+        djbh: ''
       }
       this.initTable()
     },

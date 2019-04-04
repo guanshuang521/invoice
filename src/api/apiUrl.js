@@ -95,10 +95,10 @@ const apiPath = {
     }
   },
   order: {
-    list: '/erpOrder/findAllErpOrderByCondition',
+    list: '/invoice/erpOrder/findAllErpOrderByCondition',
     pos: {
-      findList: '/posOrder/findAllPosOrderByCondition',
-      delList: '/posOrder/deletePosOrderAndDetail'
+      findList: '/invoice/posOrder/findAllPosOrderByCondition',
+      delList: '/invoice/posOrder/deletePosOrderAndDetail'
     }
   },
   queryStatistics: {
