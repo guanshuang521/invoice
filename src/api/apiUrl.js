@@ -94,7 +94,11 @@ const apiPath = {
     }
   },
   order: {
-    list: '/order/list'
+    list: '/erpOrder/findAllErpOrderByCondition',
+    pos: {
+      findList: '/posOrder/findAllPosOrderByCondition',
+      delList: '/posOrder/deletePosOrderAndDetail'
+    }
   },
   queryStatistics: {
     orderOpenMessage: {
