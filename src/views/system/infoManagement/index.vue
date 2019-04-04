@@ -152,7 +152,7 @@
       :title="dialogType === 'adds' && '新增' || dialogType === 'edit' && '编辑' || ''"
       width="650px"
       custom-class="add-customer">
-      <el-form ref="form" :rules="rules" :model="form" label-width="120px">
+      <el-form ref="form" :inline="isInline" :rules="rules" :model="form" label-width="120px">
         <el-row>
           <el-col :span="12">
             <el-form-item label="商品编码" prop="spbm" size="small">
@@ -228,13 +228,11 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row>
-          <el-form-item class="button">
-            <el-button type="primary" @click="addAdata('form')">确认</el-button>
-            <el-button type="primary" @click="dialogVisible = false">取消</el-button>
-          </el-form-item>
-        </el-row>
       </el-form>
+      <div slot="footer" class="dialog-footer" align="center">
+        <el-button type="primary" size="mini" @click="addAdata('form')">确认</el-button>
+        <el-button type="primary" size="mini" @click="dialogVisible = false">取消</el-button>
+      </div>
     </el-dialog>
     <!--设置税收分类编码-->
     <el-dialog
@@ -253,11 +251,11 @@
         <el-form-item label="税收分类编码" prop="spmcName" size="small">
           <el-input v-model="form1.shflbm"/>
         </el-form-item>
-        <el-form-item class="button">
-          <el-button type="primary" @click="handleUpdata('form1')">保存</el-button>
-          <el-button type="primary" @click="dialogVisible1 = false">取消</el-button>
-        </el-form-item>
       </el-form>
+      <div slot="footer" class="dialog-footer" align="center">
+        <el-button type="primary" @click="handleUpdata('form1')">保存</el-button>
+        <el-button type="primary" @click="dialogVisible1 = false">取消</el-button>
+      </div>
     </el-dialog>
     <!--导入Excel-->
     <el-dialog
@@ -287,12 +285,13 @@
 <script>
 import { commodictList, AddData, editData } from '@/api/system/infoManagement'
 import apiPath from '@/api/apiUrl'
-import { arrayToTree, arrayToMapField } from '@/utils/public'
+import { arrayToMapField } from '@/utils/public'
 import { mapGetters } from 'vuex'
 export default{
   name: 'InfoManagement',
   data() {
     return {
+      isInline: true,
       loading: false, // loading
       list: [],
       searchParams: {

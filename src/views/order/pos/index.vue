@@ -10,7 +10,7 @@
     <div class="filter-container">
       <el-form :inline="true" :model="searchParams" class="demo-form-inline">
         <el-form-item label="开票码">
-          <el-input v-model="searchParams.billingCode" placeholder="请输入开票码" size="small"/>
+          <el-input v-model="searchParams.djbh" placeholder="请输入开票码" size="small"/>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" size="small" @click="initTable">查询</el-button>
@@ -22,6 +22,7 @@
       <el-button type="primary" icon="el-icon-edit" size="small" @click="orderDownload">订单下载</el-button>
       <el-button type="primary" icon="el-icon-circle-check" size="small" @click="showInvoiceDialog">勾选生成预制发票</el-button>
       <el-button type="primary" icon="el-icon-upload" size="small">导出</el-button>
+      <el-button type="primary" size="mini" @click="delList">删除</el-button>
     </div>
     <div class="table-container">
       <el-table
@@ -136,9 +137,9 @@
         @size-change = "handleSizeChange"
         @current-change = "handleCurrentChange"/>
       <!--<span v-show="dataSource.list&&dataSource.list.length>1" class="hjje">合计金额:{{ dataSource.total }}</span>-->
-      <span class="hjje">合计金额:{{ dataSource.total }}</span>
-      <span class="hjse">合计税额:{{ dataSource.total }}</span>
-      <span class="jshj">加税合计:{{ dataSource.total }}</span>
+      <span class="hjje">合计金额:</span>
+      <span class="hjse">合计税额:</span>
+      <span class="jshj">加税合计:</span>
     </div>
     <Invoicedialog
       :moudel-type="moudelType"
@@ -150,7 +151,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import Invoicedialog from '../components/invoiceDialog'
-import { getOrderlist } from '@/api/order'
+import { getPoslist ,delPosList} from '@/api/order'
 
 export default {
   name: 'Dashboard',
@@ -161,7 +162,7 @@ export default {
       searchParams: {
         pageSize: 10,
         currentPage: 1,
-        billingCode: ''
+        djbh: ''
       },
       // 列表数据
       tableList: [],
@@ -180,15 +181,11 @@ export default {
         orderState: ''
       },
       queryConditionsForm: [], // 接受的config的查询条件配置的参数
-      dataSource: {
-        currentPage: 1,
-        count: 0,
-        pageSize: 5,
-        total: ''
-      }, // 数据源
       columns: [], // 接受的config的配置的参数
       operation: {}, // 接受的config的操作配置的参数
-      showDialog: false
+      showDialog: false,
+      // 已勾选的列表项
+      checkedList: []
     }
   },
   computed: {
@@ -199,42 +196,59 @@ export default {
   methods: {
     // 初始化数据
     initTable() {
-      console.log(this.dataSource)
-      getOrderlist().then(res => {
+      this.listLoading = true
+      getPoslist(this.searchParams).then(res => {
         console.log(res)
-        this.dataSource = res.data
-        this.$message({
-          message: '查询成功',
-          type: 'success'
-        })
+        // this.list = res.data.list
+        // this.totalCount = res.data.count
+        this.listLoading = false
       }).catch(err => {
         this.$message({
           message: err,
           type: 'error'
         })
+        this.listLoading = false
       })
     },
     // 查询重置
     reset() {
       this.searchParams = {
-        billingCode: ''
+        pageSize: 10,
+        currentPage: 1,
+        djbh: ''
       }
       this.initTable()
     },
-    // 获取查询列表
-    getList() {
-      console.log(this.dataSource)
-      getOrderlist().then(res => {
-        console.log(res)
-        this.dataSource = res.data
+    delList() { // 删除数据
+      if (this.checkedList.length === 0) {
         this.$message({
-          message: '查询成功',
-          type: 'success'
+          type: 'info',
+          message: '请先选择表格中的数据'
         })
-      }).catch(err => {
-        this.$message({
-          message: err,
-          type: 'error'
+        return false
+      }
+      this.$confirm('确定要删除选择的数据吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(() => {
+        const params = {
+          ids: this.checkedList.join()
+        }
+        this.loading = true
+        delPosList(params).then(response => {
+          if (response.code === '0000') {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+            this.initTable()
+          }
+        }).catch(err => {
+          this.loading = false
+          this.$message({
+            type: 'error',
+            message: err.message
+          })
         })
       })
     },
@@ -264,12 +278,8 @@ export default {
       this.form = rows
     },
     // 选中复选框
-    handleSelectionChange(item) {
-      var idsStr = ''
-      for (var i = 0; i < item.length; i++) {
-        idsStr += item[i]['billingCode'] + ','
-      }
-      console.log(idsStr)
+    handleSelectionChange(val) {
+      this.checkedList = val
     },
     // 删除操作
     handleDelete(a, b) {
