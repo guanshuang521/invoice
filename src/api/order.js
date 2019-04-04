@@ -7,14 +7,24 @@
  */
 import request from '@/utils/request'
 import apiPath from '@/api/apiUrl'
-export function getOrderlist(username, password) {
+export function getOrderlist(data) {
   return request({
     url: apiPath.order.list,
     method: 'post',
-    data: {
-      username,
-      password
-    }
+    data: data
   })
 }
-
+export function getPoslist(data) {
+  return request({
+    url: apiPath.order.pos.findList,
+    method: 'post',
+    data: data
+  })
+}
+export function delPosList(data) {
+  return request({
+    url: apiPath.order.pos.delList,
+    method: 'post',
+    data: data
+  })
+}

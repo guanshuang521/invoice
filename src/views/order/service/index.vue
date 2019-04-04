@@ -16,26 +16,26 @@
           <el-input v-model="searchParams.ejgysbm" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="费用单据编号">
-          <el-input v-model="searchParams.userName" placeholder="请输入" size="small"/>
+          <el-input v-model="searchParams.djbh" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="结算单号">
-          <el-input v-model="searchParams.userName" placeholder="请输入" size="small"/>
+          <el-input v-model="searchParams.jsdh" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="订单状态">
-          <el-select v-model="searchParams.status" placeholder="请选择" size="small">
+          <el-select v-model="searchParams.ddzt" placeholder="请选择" size="small">
             <el-option label="已开具" value="1"/>
             <el-option label="无开具" value="0"/>
           </el-select>
         </el-form-item>
         <el-form-item label="单据起号">
-          <el-input v-model="searchParams.userName" placeholder="请输入" size="small"/>
+          <el-input v-model="searchParams.djqh" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="单据止号">
-          <el-input v-model="searchParams.userName" placeholder="请输入" size="small"/>
+          <el-input v-model="searchParams.djzh" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="传输日期起">
           <el-date-picker
-            v-model="searchParams.userName"
+            v-model="searchParams.createTime"
             type="date"
             size="small"
             class="filter-item"
@@ -43,7 +43,7 @@
         </el-form-item>
         <el-form-item label="传输日期止">
           <el-date-picker
-            v-model="searchParams.userName"
+            v-model="searchParams.createTime"
             type="date"
             size="small"
             class="filter-item"
@@ -139,14 +139,6 @@
           label="购方地址电话"
           align="center"
           width="130"/>
-        <el-table-column label="操作" align="center">
-          <template slot-scope="scope">
-            <el-button
-              size="mini"
-              type="primary"
-              @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-          </template>
-        </el-table-column>
       </el-table>
       <el-pagination
         :current-page = "searchParams.currentPage"
@@ -175,7 +167,15 @@ export default {
       searchParams: {
         pageSize: 10,
         currentPage: 1,
-        gmfMc: ''
+        gmfMc: '',
+        ejgysbm: '',
+        djbh: '',
+        jsdh: '',
+        ddzt: '',
+        djqh: '',
+        djzh: '',
+        createTime: '',
+        endTime: ''
       },
       // 列表数据
       tableList: [],
@@ -200,26 +200,30 @@ export default {
   methods: {
     // 初始化数据
     initTable() {
-      console.log(this.dataSource)
-      getOrderlist().then(res => {
-        console.log(res)
-        this.dataSource = res.data
-        this.$message({
-          message: '查询成功',
-          type: 'success'
-        })
+      this.listLoading = true
+      getOrderlist(this.searchParams).then(res => {
+        this.list = res.data.list
+        this.totalCount = res.data.count
+        this.listLoading = false
       }).catch(err => {
         this.$message({
           message: err,
           type: 'error'
         })
+        this.listLoading = false
       })
     },
     // 查询重置
     reset() {
       this.searchParams = {
-        userName: '',
-        role: '',
+        gmfMc: '',
+        ejgysbm: '',
+        djbh: '',
+        jsdh: '',
+        ddzt: '',
+        djqh: '',
+        djzh: '',
+        createTime: '',
         currentPage: 1,
         pageSize: 10
       }
