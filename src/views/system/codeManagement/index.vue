@@ -14,10 +14,10 @@
           </el-select>
         </el-form-item>
         <el-form-item label="税收编码">
-          <el-input v-model="searchParams.ssbm" placeholder="请输入" size="small"/>
+          <el-input v-model="searchParams.shflbm" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="商品或服务名称">
-          <el-input v-model="searchParams.sphfumc" placeholder="请输入" size="small"/>
+          <el-input v-model="searchParams.spmc" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" size="small" @click="searchFn">查询</el-button>
@@ -134,7 +134,7 @@ export default {
         // 商品分类
         sign: '',
         // 税收编码
-        ssflbm: '',
+        shflbm: '',
         // 商品或服务名称
         spmc: '',
         currentPage: 1,
@@ -183,7 +183,7 @@ export default {
         // 商品分类
         sign: '',
         // 税收编码
-        ssflbm: '',
+        shflbm: '',
         // 商品或服务名称
         spmc: ''
       }
