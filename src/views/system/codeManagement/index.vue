@@ -70,7 +70,7 @@
         </el-table-column>
         <el-table-column label="说明" align="center">
           <template slot-scope="scope">
-            {{ scope.row.sphfumc }}
+            {{ scope.row.spsm }}
           </template>
         </el-table-column>
       </el-table>
