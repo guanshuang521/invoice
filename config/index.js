@@ -13,7 +13,11 @@ module.exports = {
       '/rbac':{
         target: 'http://192.168.7.50:50009', //测试环境
         changeOrigin: true
-      }
+      },
+      '/invoice':{
+        target: 'http://192.168.7.50:50008', //测试环境
+        changeOrigin: true
+      },
     },
 
     // Various Dev Server settings

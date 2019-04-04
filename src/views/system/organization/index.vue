@@ -44,12 +44,6 @@
                 <el-form-item label="备注" prop="remark">
                   <el-input v-model="nodeMaintenanceForm.remark" classs="note" type="textarea"/>
                 </el-form-item>
-                <el-form-item label="是否是叶节点" prop="type">
-                  <el-radio-group v-model="nodeMaintenanceForm.type">
-                    <el-radio label="1">组织节点</el-radio>
-                    <el-radio label="2">税号节点</el-radio>
-                  </el-radio-group>
-                </el-form-item>
                 <el-form-item>
                   <el-button type="danger" icon="el-icon-delete" @click="deleteNode">删除</el-button>
                   <el-button type="primary" icon="el-icon-check" @click="updateForm('nodeMaintenanceForm')">保存</el-button>
