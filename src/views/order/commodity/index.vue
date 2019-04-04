@@ -12,19 +12,19 @@
         <el-form-item label="购方名称">
           <el-input v-model="searchParams.billingCode" placeholder="请输入" size="small"/>
         </el-form-item>
+        <el-form-item label="费用单据编号">
+          <el-input v-model="searchParams.billingCode" placeholder="请输入" size="small"/>
+        </el-form-item>
         <el-form-item label="二级供应商编码">
           <el-input v-model="searchParams.billingCode" placeholder="请输入" size="small"/>
         </el-form-item>
-        <el-form-item label="费用单据编号">
+        <el-form-item label="订单状态">
           <el-input v-model="searchParams.billingCode" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="单据起号">
           <el-input v-model="searchParams.billingCode" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="单据止号">
-          <el-input v-model="searchParams.billingCode" placeholder="请输入" size="small"/>
-        </el-form-item>
-        <el-form-item label="订单状态">
           <el-input v-model="searchParams.billingCode" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="传输日期起">
