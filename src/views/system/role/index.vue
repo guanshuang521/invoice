@@ -80,11 +80,11 @@
       custom-class="add-edit-role">
       <el-form ref="form" :inline="isInline" :rules="rules" :model="form" label-width="80px" size="mini">
         <el-form-item label="角色名称" prop="roleName">
-          <el-input v-model="form.roleName" :disabled="dialogType === 'edit'" placeholder="请输入"/>
+          <el-input v-model="form.roleName" placeholder="请输入"/>
         </el-form-item>
         <el-form-item label="有效标志" prop="status">
-          <el-select v-model="form.status" :disabled="dialogType === 'edit'" placeholder="请选择">
-            <el-option label="有效" value="1"/>
+          <el-select v-model="form.status" placeholder="请选择">
+            <el-option :value="enable" label="有效"/>
             <el-option label="无效" value="0"/>
           </el-select>
         </el-form-item>
@@ -123,6 +123,7 @@ export default {
   name: 'Role',
   data() {
     return {
+      enable: 1,
       // 表单行内显示
       isInline: true,
       // 列表数据
@@ -169,6 +170,7 @@ export default {
   },
   mounted() {
     this.fetchData()
+    this.getResource()
   },
   methods: {
     // 初始化数据
@@ -186,8 +188,7 @@ export default {
     },
     // 获取权限树数据
     getResource() {
-      var params = {}
-      getRoute(params).then(res => {
+      getRoute({}).then(res => {
         this.treeData = arrayToTree(res.data, 'title')
       })
     },
@@ -205,14 +206,14 @@ export default {
       }
       this.fetchData()
     },
-    handleSelectionChange(val) { // 表格选中数据发生变化
+    // 表格选中数据发生变化
+    handleSelectionChange(val) {
       this.checkedList = []
-      for (var i = 0; i < val.length; i++) {
+      for (let i = 0; i < val.length; i++) {
         this.checkedList.push(val[i].id)
       }
     },
     addRole() {
-      this.getResource()
       this.dialogVisible = true
       this.dialogType = 'add'
     },
@@ -221,15 +222,12 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           var params = JSON.parse(JSON.stringify(this.form))
-          params.resourceId = this.resourceId
-          insertRole(params).then(response => {
-            if (response.code === '0000') {
-              this.fetchData()
-            }
+          params.resourceIds = this.resourceId.join(',')
+          insertRole(params).then(res => {
+            this.fetchData()
             this.dialogVisible = false
             this.dialogType = ''
             this.$refs[formName].resetFields()
-            this.clearForm()
           })
         }
       })
@@ -240,18 +238,16 @@ export default {
           var params = JSON.parse(JSON.stringify(this.form))
           params.resourceId = this.resourceId
           updateRole(params).then(response => {
-            if (response.code === '0000') {
-              this.fetchData()
-            }
+            this.fetchData()
             this.dialogVisible = false
             this.dialogType = ''
             this.$refs[formName].resetFields()
-            this.clearForm()
           })
         }
       })
     },
-    delRole() { // 删除数据
+    // 删除数据
+    delRole() {
       if (this.checkedList.length === 0) {
         this.$message.error('至少选择一条数据')
         return false
@@ -271,6 +267,7 @@ export default {
         })
       })
     },
+    // 权限分配
     handleEdit(id) {
       getRoleDetail(id).then(res => {
         this.form = res.data
@@ -279,8 +276,6 @@ export default {
       })
       this.dialogVisible = true
       this.dialogType = 'edit'
-      // this.form = JSON.parse(JSON.stringify(item))
-      // this.form.status = item.status.toString()
     },
     handleSizeChange(val) {
       this.searchParams.pageSize = val
@@ -294,7 +289,6 @@ export default {
       this.dialogVisible = false
       this.dialogType = ''
       this.$refs[formName].resetFields()
-      this.clearForm()
     },
     filterNode(value, data, node) { // 对树节点进行筛选时执行的方法
       return true
