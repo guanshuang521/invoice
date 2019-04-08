@@ -121,7 +121,13 @@ const apiPath = {
       billSendBack: '/invoice/billSendBack',
       billDetail: 'invoice/billDetail'
     }
+  },
+  // 数据同步
+  dataSync: {
+    taskQuery: {
+      getList: '/invoice-job/scheduleJob/queryScheduleJobList',
+      exportExcel: '/invoice-job/scheduleJobLog/exportScheduleJobLog'
+    }
   }
-
 }
 export default apiPath

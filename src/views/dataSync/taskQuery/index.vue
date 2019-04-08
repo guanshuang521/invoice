@@ -8,26 +8,31 @@
     <div class="filter-container">
       <el-form :inline="true" :model="searchParams" class="demo-form-inline">
         <el-form-item label="数据类型">
-          <el-input v-model="searchParams.userName" placeholder="请输入" size="small"/>
+          <el-select v-model="searchParams.dataType" placeholder="请选择" size="small">
+            <el-option label="商品类订单" value="1"/>
+            <el-option label="服务类订单" value="2"/>
+          </el-select>
         </el-form-item>
         <el-form-item label="同步状态">
-          <el-select v-model="searchParams.role" placeholder="请选择" size="small">
-            <el-option label="角色1" value="shanghai"/>
-            <el-option label="角色2" value="beijing"/>
+          <el-select v-model="searchParams.syncStatus" placeholder="请选择" size="small">
+            <el-option label="成功" value="1"/>
+            <el-option label="失败" value="0"/>
           </el-select>
         </el-form-item>
         <el-form-item label="开票日期起">
           <el-date-picker
-            v-model="listQuery.spmc"
+            v-model="searchParams.syncStart"
             type="date"
             size="small"
+            value-format="yyyy-MM-dd "
             class="filter-item"
             placeholder="开票日期起"/>
         </el-form-item>
         <el-form-item label="开票日期止">
           <el-date-picker
-            v-model="listQuery.spmc"
+            v-model="searchParams.syncEnd"
             type="date"
+            value-format="yyyy-MM-dd"
             size="small"
             class="filter-item"
             placeholder="开票日期止"/>
@@ -43,10 +48,10 @@
     </div>
     <div class="table-container">
       <el-table
-        v-loading="listLoading"
+        v-loading="loading"
         :data="list"
-        element-loading-text="Loading"
         border
+        element-loading-text="loading"
         fit
         highlight-current-row
         @selection-change="handleSelectionChange">
@@ -61,21 +66,21 @@
         </el-table-column>
         <el-table-column label="数据类型" align="center">
           <template slot-scope="scope">
-            {{ scope.row.djsh }}
+            {{ scope.row.dataType }}
           </template>
         </el-table-column>
         <el-table-column label="数据源系统" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.xfmc }}</span>
+            <span>{{ scope.row.dataSource }}</span>
           </template>
         </el-table-column>
         <el-table-column label="同步时间" align="center">
-          <template slot-scope="scope">
+          <template slot-scope="syncTime">
             {{ scope.row.xfsh }}
           </template>
         </el-table-column>
         <el-table-column label="同步状态" align="center">
-          <template slot-scope="scope">
+          <template slot-scope="syncDescription">
             {{ scope.row.gfmc }}
           </template>
         </el-table-column>
@@ -86,7 +91,7 @@
         </el-table-column>
         <el-table-column label="同步状态描述" align="center">
           <template slot-scope="scope">
-            {{ scope.row.je }}
+            {{ scope.row.beanName }}
           </template>
         </el-table-column>
       </el-table>
@@ -118,6 +123,7 @@
 import { mapGetters } from 'vuex'
 import { getTableList } from '@/api/queryStatistics/orderOpenMessage'
 import invoiceOrderMessage from '@/components/queryStatistics/invoiceOrderMessage'
+import { getList, exportExcel } from '@/api/dataSync/taskQuery'
 export default {
   name: 'TaskQuery',
   components: {
@@ -126,17 +132,11 @@ export default {
   data() {
     return {
       value: '',
-      listQuery: {
-        title: '',
-        importance: '',
-        type: '',
-        sort: '',
-        limit: 10,
-        currentPage: 2
-      },
       searchParams: {
-        userName: '',
-        role: '',
+        dataType: '',
+        syncStatus: '',
+        syncStart: '',
+        syncEnd: '',
         currentPage: 1,
         pageSize: 10
       },
@@ -151,19 +151,8 @@ export default {
         label: '开票号'
       }],
       list: [
-        {
-          djsh: '管理员',
-          xfmc: 1,
-          gfmc: '北京市丰台科技园',
-          xfsh: '12433323454',
-          gfsh: '23543212343',
-          je: '北京银行中关村支行',
-          se: '123444321234567876',
-          jshj: 0,
-          ddzt: 0
-        }
       ],
-      listLoading: false,
+      loading: false,
       searchs: {
         customerName: '',
         customerTaxNumber: ''
@@ -196,21 +185,24 @@ export default {
   mounted() {
   },
   created() {
-    // this.fetchData()
-    this.getTableList()
   },
   methods: {
     change(a) {
       this.dialogVisible = false
     },
-    fetchData() { // 获取数据
-      this.listLoading = true
-      // getList(this.listQuery).then(response => {
-      //   this.list = response.data.items
-      //   this.listLoading = false
-      // })
+    getList() { // 获取数据
+      this.loading = true
+      getList(this.searchParams).then(response => {
+        this.loading = false
+        this.list = response.data.items
+        this.listLoading = false
+      }).catch(e => {
+        this.loading = false
+      })
     },
-    initTable() {},
+    initTable() {
+      this.getList()
+    },
     reset() { // 重置
       this.searchs = {
         customerName: '',
