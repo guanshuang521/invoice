@@ -21,7 +21,14 @@ export function submitSync(data) {
 }
 export function addSave(data) {
   return request({
-    url: apiPath.invoice.taskSetting.add,
+    url: apiPath.dataSync.taskSetting.add,
+    method: 'post',
+    data: data
+  })
+}
+export function handleEdit(data) {
+  return request({
+    url: apiPath.dataSync.taskSetting.edit,
     method: 'post',
     data: data
   })

@@ -141,7 +141,8 @@ const apiPath = {
     taskSetting: {
       list: '/invoiceJob/scheduleJob/queryScheduleJobList',
       submitSync: '/invoiceJob/scheduleJob/syncOrder',
-      add: '/invoiceJob/scheduleJob/addScheduleJob'
+      add: '/invoiceJob/scheduleJob/addScheduleJob',
+      edit: '/invoiceJob/scheduleJob/editScheduleJob'
     }
   }
 }

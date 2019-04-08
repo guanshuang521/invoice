@@ -82,7 +82,7 @@
               <el-button
                 size="mini"
                 type="primary"
-                @click="handleEdit(scope.$index, scope.row)">操作</el-button>
+                @click="handleEdit(scope.row)">编辑</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -108,21 +108,29 @@
               :value="item.code"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="开票日期起" prop="startTime">
-          <el-date-picker
+        <el-form-item label="开始时间" prop="startTime">
+          <el-time-picker
             v-model="dataSyncForm.startTime"
-            type="date"
+            picker-options="{
+              selectableRange: '00:00:00 - 23:59:59'
+            }"
+            value-format="HH:mm:ss"
             size="small"
             class="filter-item"
-            placeholder="开票日期起"/>
+            style="width: 170px"
+            placeholder="开始时间"/>
         </el-form-item>
-        <el-form-item label="开票日期止" prop="endTime">
-          <el-date-picker
+        <el-form-item label="结束时间" prop="endTime">
+          <el-time-picker
             v-model="dataSyncForm.endTime"
-            type="date"
+            picker-options="{
+              selectableRange: '00:00:00 - 23:59:59'
+            }"
+            value-format="HH:mm:ss"
             size="small"
             class="filter-item"
-            placeholder="开票日期止"/>
+            style="width: 170px"
+            placeholder="结束时间"/>
         </el-form-item>
         <el-form-item label="同步频率" prop="frequency" >
           <el-select v-model="dataSyncForm.frequency" placeholder="请选择" style="width: 170px">
@@ -144,7 +152,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer" align="center">
-        <el-button type="primary" size="mini" @click="addSave">保存</el-button>
+        <el-button v-if="dialogType === 'add'" type="primary" size="mini" @click="submit">保存</el-button>
+        <el-button v-else type="primary" size="mini" @click="submit">提交</el-button>
         <el-button size="mini" @click="dialogVisible = !dialogVisible">取消</el-button>
       </div>
     </el-dialog>
@@ -153,7 +162,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { submitSync, addSave, initData } from '@/api/dataSync/taskSetting'
+import { submitSync, addSave, initData, handleEdit } from '@/api/dataSync/taskSetting'
 import testSettings from '@/components/dataSync/testSettings'
 export default {
   name: 'Dashboard',
@@ -193,6 +202,8 @@ export default {
       dialogVisible: false,
       // 弹窗标题
       dialogTitle: '',
+      // 弹窗类型
+      dialogType: '',
       // 数据同步表单
       dataSyncForm: {
         dataType: '',
@@ -276,22 +287,41 @@ export default {
       this.dialogVisible = true
     },
     // 新增提交
-    addSave() {
+    submit() {
       this.$refs['dataSyncForm'].validate((valid) => {
         if (valid) {
-          addSave().then(res => {
-            this.initData()
-            this.dialogVisible = false
-            this.dialogType = ''
-            this.$refs['dataSyncForm'].resetFields()
-          }).catch(err => {
-            this.$message.error(err)
-          })
+          if (this.dialogType === 'add') {
+            const args = Object.assign({}, this.dataSyncForm)
+            addSave(args).then(res => {
+              this.$message.success(res.message)
+              this.initData()
+              this.dialogVisible = false
+              this.dialogType = ''
+              this.$refs['dataSyncForm'].resetFields()
+            }).catch(err => {
+              this.$message.error(err)
+            })
+          } else {
+            const args = Object.assign({}, this.dataSyncForm)
+            handleEdit(args).then(res => {
+              this.$message.success(res.message)
+              this.initData()
+              this.dialogVisible = false
+              this.dialogType = ''
+              this.$refs['dataSyncForm'].resetFields()
+            }).catch(err => {
+              this.$message.error(err)
+            })
+          }
         }
       })
     },
-    addCustomer() {
+    // 点击编辑
+    handleEdit(data) {
+      this.dialogType = 'edit'
+      this.dialogTitle = '编辑数据同步规则'
       this.dialogVisible = true
+      this.dataSyncForm = Object.assign({}, data)
     },
     handleSizeChange(val) {
       // console.log(`每页 ${val} 条`)
