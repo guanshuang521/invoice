@@ -11,13 +11,19 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/rbac':{
-        target: 'http://192.168.7.50:50009', //测试环境
+        target: 'http://192.168.4.128:8080',
+        // target: 'http://192.168.7.50:50009', //测试环境
+        changeOrigin: true
+      },
+      '/invoiceJob':{
+        target: 'http://192.168.2.130:8090',
+        // target: 'http://192.168.7.50:50008', //测试环境
         changeOrigin: true
       },
       '/invoice':{
         target: 'http://192.168.7.50:50008', //测试环境
         changeOrigin: true
-      },
+      }
     },
 
     // Various Dev Server settings
