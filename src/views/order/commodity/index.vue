@@ -13,23 +13,23 @@
           <el-input v-model="searchParams.billingCode" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="费用单据编号">
-          <el-input v-model="searchParams.billingCode" placeholder="请输入" size="small"/>
+          <el-input v-model="searchParams.djbh" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="二级供应商编码">
           <el-input v-model="searchParams.billingCode" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="订单状态">
-          <el-input v-model="searchParams.billingCode" placeholder="请输入" size="small"/>
+          <el-input v-model="searchParams.ddzt" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="单据起号">
-          <el-input v-model="searchParams.billingCode" placeholder="请输入" size="small"/>
+          <el-input v-model="searchParams.djqh" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="单据止号">
-          <el-input v-model="searchParams.billingCode" placeholder="请输入" size="small"/>
+          <el-input v-model="searchParams.djzh" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="传输日期起">
           <el-date-picker
-            v-model="searchParams.billingCode"
+            v-model="searchParams.createTime"
             type="date"
             size="small"
             class="filter-item"
@@ -37,7 +37,7 @@
         </el-form-item>
         <el-form-item label="传输日期止">
           <el-date-picker
-            v-model="searchParams.billingCode"
+            v-model="searchParams.createTime"
             type="date"
             size="small"
             class="filter-item"
@@ -50,8 +50,8 @@
       </el-form>
     </div>
     <div class="button-container">
-      <el-button type="primary" icon="el-icon-edit" size="small" @click="showInvoiceDialog">同一购方订单生成预制发票</el-button>
-      <el-button type="primary" icon="el-icon-circle-check" size="small" @click="showInvoiceDialog">勾选订单生成预制发票</el-button>
+      <el-button type="primary" icon="el-icon-edit" size="small" @click="createPreInvoice">同一购方订单生成预制发票</el-button>
+      <el-button type="primary" icon="el-icon-circle-check" size="small" @click="checkCreateInvoice">勾选订单生成预制发票</el-button>
       <el-button type="primary" icon="el-icon-upload" size="small">导出</el-button>
     </div>
     <div class="table-container">
@@ -171,7 +171,7 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import { getOrderlist } from '@/api/order'
+import { getOrderlist, generatenIvoices, exportERP, buildInvoice } from '@/api/order'
 import Invoicedialog from '../components/invoiceDialog'
 export default {
   name: 'Dashboard',
@@ -182,6 +182,13 @@ export default {
       searchParams: {
         pageSize: 10,
         currentPage: 1,
+        gfmc: '',
+        ejgysbm: '',
+        djbh: '',
+        ddzt: '',
+        djqh: '',
+        djzh: '',
+        createTime: '',
         billingCode: ''
       },
       // 列表数据
@@ -219,19 +226,18 @@ export default {
   methods: {
     // 初始化数据
     initTable() {
-      console.log(this.dataSource)
-      getOrderlist().then(res => {
+      this.listLoading = true
+      getOrderlist(this.searchParams).then(res => {
         console.log(res)
-        this.dataSource = res.data
-        this.$message({
-          message: '查询成功',
-          type: 'success'
-        })
+        this.list = res.data.list
+        this.totalCount = res.data.count
+        this.listLoading = false
       }).catch(err => {
         this.$message({
           message: err,
           type: 'error'
         })
+        this.listLoading = false
       })
     },
     // 查询重置
@@ -260,7 +266,6 @@ export default {
       })
     },
     handleDelete(a, b) {
-      console.log(orderConfig)
     },
     // handleSelectionChange(item) {
     //   var idsStr = ''
@@ -272,18 +277,91 @@ export default {
     makeInvoicePre(formName) {
       console.log(formName)
     },
-    // 显示预制发票弹出框
-    showInvoiceDialog() {
-      this.showDialog = true
+    // 同一购方订单生成预制发票
+    createPreInvoice() {
+      if (this.checkedList.length === 0) {
+        this.$message({
+          type: 'info',
+          message: '请先选择表格中的一条数据'
+        })
+        return false
+      }
+      if (this.checkedList.length !== 1) {
+        this.$message({
+          type: 'info',
+          message: '请选择表格中的一条数据'
+        })
+        return false
+      }
+      this.$confirm('确定要同一购方订单生成预制发票吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(() => {
+        const params = {
+          id: this.checkedList.join()
+        }
+        this.loading = true
+        buildInvoice(params).then(response => {
+          console.log(response)
+          this.showDialog = true
+          this.loading = false
+        }).catch(err => {
+          this.loading = false
+          this.$message({
+            type: 'error',
+            message: err.message
+          })
+        })
+      })
+    },
+    handleSelectionChange(val) { // 表格选中数据发生变化
+      val.forEach((item) => {
+        this.checkedList.push(item.id)
+      })
+      // this.checkedList = val
+      console.log(this.checkedList)
+    },
+    // 勾选生成预制发票
+    checkCreateInvoice() {
+      if (this.checkedList.length === 0) {
+        this.$message({
+          type: 'info',
+          message: '请先选择表格中的数据'
+        })
+        return false
+      }
+      this.$confirm('确定要生成预制发票吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(() => {
+        const params = {
+          ids: this.checkedList.join(',')
+        }
+        this.loading = true
+        generatenIvoices(params).then(response => {
+          this.loading = false
+          this.showDialog = true
+        }).catch(err => {
+          this.loading = false
+          this.$message({
+            type: 'error',
+            message: err.message
+          })
+        })
+      })
+    },
+    exportData() { // 导出数据
+      exportERP(this.searchParams).then(response => {
+      }).catch(err => {
+        this.$message({
+          type: 'error',
+          message: err.message
+        })
+      })
     },
     // 关闭预制发票弹出框
     hideDialog() {
       this.showDialog = false
-    },
-    // 列表勾选
-    handleSelectionChange(val) {
-      this.checkedList = val
-      console.log(this.checkedList)
     },
     // 更改每页显示条数
     handleSizeChange(val) {

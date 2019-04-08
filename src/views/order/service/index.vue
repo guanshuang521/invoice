@@ -152,14 +152,14 @@
         @current-change = "handleCurrentChange"/>
     </div>
     <!--生成预制发票弹窗-->
-    <invoice-dialog :ishow="invoiceDialogVisible" @hideDialog="closeDialog"/>
+    <invoice-dialog :ishow="invoiceDialogVisible" :popmessage="buildPop" @hideDialog="closeDialog"/>
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import { getOrderlist } from '@/api/order'
+import { getOrderlist, generatenIvoices, exportERP, buildInvoice } from '@/api/order'
 import invoiceDialog from '../components/invoiceDialog'
-import apiPath from '@/api/apiUrl'
+
 export default {
   name: 'Dashboard',
   components: { invoiceDialog },
@@ -178,6 +178,8 @@ export default {
         djzh: '',
         createTime: ''
       },
+      // 列表勾选项
+      checkedList: [],
       // 列表数据
       tableList: [],
       // 列表总条数
@@ -191,7 +193,8 @@ export default {
         pageSize: 5
       }, // 数据源
       columns: [],
-      operation: {}
+      operation: {},
+      buildPop: ''
     }
   },
   computed: {
@@ -232,28 +235,91 @@ export default {
     },
     // 同一购方订单生成预制发票
     createPreInvoice() {
-      this.invoiceDialogVisible = true
+      if (this.checkedList.length === 0) {
+        this.$message({
+          type: 'info',
+          message: '请先选择表格中的一条数据'
+        })
+        return false
+      }
+      if (this.checkedList.length !== 1) {
+        this.$message({
+          type: 'info',
+          message: '请选择表格中的一条数据'
+        })
+        return false
+      }
+      this.$confirm('确定要同一购方订单生成预制发票吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(() => {
+        const params = {
+          id: this.checkedList.join()
+        }
+        this.loading = true
+        buildInvoice(params).then(response => {
+          console.log(response)
+          this.invoiceDialogVisible = true
+          this.buildPop = ''
+          this.loading = false
+        }).catch(err => {
+          this.loading = false
+          this.$message({
+            type: 'error',
+            message: err.message
+          })
+        })
+      })
+    },
+    handleSelectionChange(val) { // 表格选中数据发生变化
+      val.forEach((item) => {
+        this.checkedList.push(item.id)
+      })
+      // this.checkedList = val
+      console.log(this.checkedList)
     },
     // 勾选生成预制发票
     checkCreateInvoice() {
-      if (this.multipleSelection.length === 0) {
-        this.$message.error('至少选择一条数据')
+      if (this.checkedList.length === 0) {
+        this.$message({
+          type: 'info',
+          message: '请先选择表格中的数据'
+        })
         return false
       }
+      this.$confirm('确定要生成预制发票吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(() => {
+        const params = {
+          ids: this.checkedList.join(',')
+        }
+        this.loading = true
+        generatenIvoices(params).then(response => {
+          this.loading = false
+          this.invoiceDialogVisible = true
+        }).catch(err => {
+          this.loading = false
+          this.$message({
+            type: 'error',
+            message: err.message
+          })
+        })
+      })
     },
     exportData() { // 导出数据
-      const url = apiPath.order.list.exportErp
-      window.open(url)
+      exportERP(this.searchParams).then(response => {
+      }).catch(err => {
+        this.$message({
+          type: 'error',
+          message: err.message
+        })
+      })
     },
     // 关闭弹窗
     closeDialog(val) {
       console.log(val)
       this.invoiceDialogVisible = val
-    },
-    // 列表勾选
-    handleSelectionChange(val) {
-      this.checkedList = val
-      console.log(this.checkedList)
     },
     // 更改每页显示条数
     handleSizeChange(val) {

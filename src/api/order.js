@@ -15,6 +15,27 @@ export function getOrderlist(data) {
     data: data
   })
 }
+export function generatenIvoices(data) {
+  return request({
+    url: apiPath.order.list.getInvoices,
+    method: 'post',
+    data: data
+  })
+}
+export function exportERP(data) {
+  return request({
+    url: apiPath.order.list.exportErp,
+    method: 'post',
+    data: data
+  })
+}
+export function buildInvoice(data) {
+  return request({
+    url: apiPath.order.list.buildInvoice,
+    method: 'post',
+    data: data
+  })
+}
 export function getPoslist(data) {
   return request({
     url: apiPath.order.pos.findList,
@@ -25,6 +46,27 @@ export function getPoslist(data) {
 export function delPosList(data) {
   return request({
     url: apiPath.order.pos.delList,
+    method: 'post',
+    data: data
+  })
+}
+export function downPosOrder(data) {
+  return request({
+    url: apiPath.order.pos.downPos,
+    method: 'post',
+    data: data
+  })
+}
+export function buildInvoicePre(data) {
+  return request({
+    url: apiPath.order.pos.buildInvoicePre,
+    method: 'post',
+    data: data
+  })
+}
+export function exportPosOrder(data) {
+  return request({
+    url: apiPath.order.pos.exportPosOrder,
     method: 'post',
     data: data
   })
