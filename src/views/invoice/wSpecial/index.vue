@@ -73,7 +73,12 @@
     </div>
     <Bill-detail :show-dialog="showBillDialog" :table-data="billList" @close-dialog="closeBillDetail"/>
     <Order-detail :show-dialog="showOrderDialog" :table-data="billList" @close-dialog="closeBillDetail"/>
-    <Bill-preview :show-dialog="showBillPreview" :table-data="billList" @close-dialog="closeBillDetail"/>
+    <el-dialog
+      :visible.sync="showBillPreview"
+      width="1200px"
+      custom-class="fpyl">
+      <fppm :pmfplx="fplx" @getformdata="getPmData"/>
+    </el-dialog>
   </div>
 </template>
 
@@ -81,10 +86,10 @@
 import { batchIssue, billSendBack, initList, getBillDetail } from '@/api/invoice/wSpecial'
 import BillDetail from '@/components/invoice/billDetail'
 import OrderDetail from '@/components/invoice/orderDetail'
-import BillPreview from '@/components/invoice/billPreview'
+import fppm from '@/components/fppiaomian'
 export default {
   name: 'WSpecial',
-  components: { BillDetail, OrderDetail, BillPreview },
+  components: { BillDetail, OrderDetail, fppm },
   data() {
     return {
       // 显示发票明细弹窗
@@ -115,10 +120,16 @@ export default {
       // 勾选的列表项
       checkedItems: [],
       // 发票明细
-      billList: []
+      billList: [],
+      // 发票类型
+      fplx: '004'
     }
   },
   methods: {
+    // 发票预览
+    billPreview() {
+      this.showBillPreview = true
+    },
     // 发票开具
     billIssue() {
       console.log('')
@@ -208,8 +219,9 @@ export default {
       this.showBillDialog = val
       this.showOrderDialog = val
     },
-    handleSizeChange() {
-    },
+    // 订单预览
+    getPmData() {},
+    handleSizeChange() {},
     handleCurrentChange() {},
     handleSelectionChange(val) {
       this.checkedItems = val
@@ -228,6 +240,13 @@ export default {
       }
       .button-container{
         margin-bottom: 20px;
+      }
+      /deep/ .el-dialog__wrapper{
+        .fpyl{
+          /deep/ .el-dialog__body{
+            padding: 0!important
+          }
+        }
       }
     }
   }
