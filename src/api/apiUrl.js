@@ -50,6 +50,7 @@ const apiPath = {
     template: {
       list: '/rbac/invoiceRule/selectByInvoiceRule',
       add: '/rbac/invoiceRule/insertInvoiceRule',
+      edit: '/rbac/invoiceRule/updateInvoiceRule',
       delete: '/rbac/invoiceRule/deleteInvoiceRule'
     },
     // 商品信息维护

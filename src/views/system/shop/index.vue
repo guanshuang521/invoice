@@ -88,7 +88,7 @@
       <el-pagination
         :total="totalCount"
         :current-page="searchParams.currentPage"
-        :page-sizes="[10, 20, 30, 40]"
+        :page-sizes="[10, 50, 100]"
         :page-size="100"
         layout="total, sizes, prev, pager, next, jumper"
         @size-change="handleSizeChange"

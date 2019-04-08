@@ -58,7 +58,7 @@
       </el-table>
       <el-pagination
         :current-page="searchParams.currentPage"
-        :page-sizes="[1, 10, 20, 30]"
+        :page-sizes="[10, 50, 100]"
         :page-size="searchParams.pageSize"
         :total="total"
         layout="total, sizes, prev, pager, next, jumper"
@@ -179,7 +179,7 @@ export default {
     }
   },
   mounted() {
-    this.initTable()
+    this.$store.getters.isAutoLoadData ? this.initTable() : ''
   },
   methods: {
     closeDialog() {
@@ -206,7 +206,7 @@ export default {
         this.tableList = res.data.list
       }).catch(err => {
         this.loading = false
-        this.$message.error('网络错误')
+        this.$message.error(err)
       })
     },
     // table重置

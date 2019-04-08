@@ -1,12 +1,12 @@
 /**
 * @author Linzb
-* @date 2019/3/21
-* @Description: 发票明细公共组件
+* @date 2019/4/4
+* @Description: 订单明细公共组件
 */
 <template>
   <el-dialog
     :visible.sync="show"
-    title="发票明细"
+    title="订单明细"
     width="80%"
     @close="closeDialog">
     <el-table
@@ -20,9 +20,14 @@
       </el-table-column>
       <el-table-column
         prop="date"
-        label="品名"
+        label="订单号"
         align="center"
         width="150"/>
+      <el-table-column
+        prop="date"
+        label="品名"
+        align="center"
+        width="120"/>
       <el-table-column
         prop="date"
         label="规格型号"
@@ -45,17 +50,17 @@
         width="120"/>
       <el-table-column
         prop="date"
-        label="金额"
+        label="含税金额"
         align="center"
         width="120"/>
       <el-table-column
         prop="date"
-        label="税率"
+        label="备注"
         align="center"
         width="120"/>
       <el-table-column
         prop="date"
-        label="税额"
+        label="发票类型"
         align="center"
         width="120"/>
     </el-table>
@@ -73,7 +78,7 @@
 
 <script>
 export default {
-  name: 'BillDetail',
+  name: 'OrderDetail',
   props: {
     'showDialog': {
       type: Boolean,

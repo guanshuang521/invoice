@@ -8,7 +8,7 @@
 </template>
 <script>
 export default {
-  name: 'Index',
+  name: 'BillPreview',
   // props: [],
   data() {
     return {

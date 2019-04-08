@@ -55,15 +55,15 @@
           label="操作"
           width="300">
           <template slot-scope="scope">
-            <el-button type="primary" size="mini">发票预览</el-button>
+            <el-button type="primary" size="mini" @click="billPreview">发票预览</el-button>
             <el-button type="primary" size="mini" @click="billDetail">发票明细</el-button>
-            <el-button type="primary" size="mini">订单明细</el-button>
+            <el-button type="primary" size="mini" @click="orderDetail">订单明细</el-button>
           </template>
         </el-table-column>
       </el-table>
       <el-pagination
         :current-page="listQuery.currentPage"
-        :page-sizes="[100, 200, 300, 400]"
+        :page-sizes="[10, 50, 100]"
         :page-size="100"
         :total="totalCount"
         layout="total, sizes, prev, pager, next, jumper"
@@ -71,19 +71,28 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"/>
     </div>
-    <Bill-detail :show-dialog="showDialog" :table-data="billList" @close-dialog="closeBillDetail"/>
+    <Bill-detail :show-dialog="showBillDialog" :table-data="billList" @close-dialog="closeBillDetail"/>
+    <Order-detail :show-dialog="showOrderDialog" :table-data="billList" @close-dialog="closeBillDetail"/>
+    <Bill-preview :show-dialog="showBillPreview" :table-data="billList" @close-dialog="closeBillDetail"/>
   </div>
 </template>
 
 <script>
 import { batchIssue, billSendBack, initList, getBillDetail } from '@/api/invoice/wSpecial'
 import BillDetail from '@/components/invoice/billDetail'
+import OrderDetail from '@/components/invoice/orderDetail'
+import BillPreview from '@/components/invoice/billPreview'
 export default {
   name: 'WSpecial',
-  components: { BillDetail },
+  components: { BillDetail, OrderDetail, BillPreview },
   data() {
     return {
-      showDialog: false,
+      // 显示发票明细弹窗
+      showBillDialog: false,
+      // 显示订单明细弹窗
+      showOrderDialog: false,
+      // 显示发票预览
+      showBillPreview: false,
       totalCount: 100,
       // 查询条件
       listQuery: {
@@ -117,10 +126,7 @@ export default {
     // 批量开具
     batchIssue() {
       if (this.checkedItems.length === 0) {
-        this.$message({
-          message: '请至少选择一条数据！',
-          type: 'error'
-        })
+        this.$message.info('请至少选择一条数据！')
         return
       }
       this.$confirm('是否确认批量开具选择预制发票?', '批量开具', {
@@ -129,15 +135,9 @@ export default {
         type: 'warning'
       }).then(() => {
         batchIssue().then(res => {
-          this.$message({
-            type: 'success',
-            message: res.msg
-          })
+          this.$message.success(res.messgae)
         }).catch(err => {
-          this.$message({
-            type: 'error',
-            message: err.msg
-          })
+          this.$message.error(err)
         })
       })
     },
@@ -150,7 +150,7 @@ export default {
         })
         return
       }
-      this.$confirm('是否确认回退选择的预制发票？?', '预制发票回退', {
+      this.$confirm('是否确认回退选择的预制发票?', '预制发票回退', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -169,8 +169,7 @@ export default {
       })
     },
     // 导出
-    exportList() {
-    },
+    exportList() {},
     // 查询
     initList() {
       initList().then(res => {
@@ -190,8 +189,9 @@ export default {
     },
     // 发票明细
     billDetail() {
+      this.showBillDialog = true
       getBillDetail().then(res => {
-        this.showDialog = true
+        this.showBillDialog = true
       }).catch(err => {
         this.$message({
           message: err,
@@ -199,9 +199,14 @@ export default {
         })
       })
     },
+    // 订单明细
+    orderDetail() {
+      this.showOrderDialog = true
+    },
     // 关闭订单明细
     closeBillDetail(val) {
-      this.showDialog = val
+      this.showBillDialog = val
+      this.showOrderDialog = val
     },
     handleSizeChange() {
     },
