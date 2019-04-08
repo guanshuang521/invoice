@@ -61,7 +61,7 @@
       </el-table>
       <el-pagination
         :current-page="searchParams.currentPage"
-        :page-sizes="[10, 20, 30, 40]"
+        :page-sizes="[10, 50, 100]"
         :page-size="searchParams.pageSize"
         :total="total"
         style="margin-top: 20px"
@@ -169,7 +169,7 @@ export default {
     }
   },
   mounted() {
-    this.fetchData()
+    this.$store.getters.isAutoLoadData ? this.fetchData() : ''
     this.getResource()
   },
   methods: {

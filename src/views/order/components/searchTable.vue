@@ -53,7 +53,7 @@
     <div class="pagination_box">
       <el-pagination
         :current-page="dataSource.currentPage"
-        :page-sizes="[5, 10, 20, 50,100]"
+        :page-sizes="[10, 50, 100]"
         :page-size="dataSource.pageSize"
         :total="dataSource.count"
         layout="prev, pager, next, jumper, total, sizes, slot"

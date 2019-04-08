@@ -7,9 +7,10 @@
  */
 import request from '@/utils/request'
 import apiPath from '@/api/apiUrl'
+// 服务类订单管理
 export function getOrderlist(data) {
   return request({
-    url: apiPath.order.list,
+    url: apiPath.order.list.erpList,
     method: 'post',
     data: data
   })

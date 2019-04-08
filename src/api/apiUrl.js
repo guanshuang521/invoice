@@ -50,6 +50,7 @@ const apiPath = {
     template: {
       list: '/rbac/invoiceRule/selectByInvoiceRule',
       add: '/rbac/invoiceRule/insertInvoiceRule',
+      edit: '/rbac/invoiceRule/updateInvoiceRule',
       delete: '/rbac/invoiceRule/deleteInvoiceRule'
     },
     // 商品信息维护
@@ -94,7 +95,11 @@ const apiPath = {
     }
   },
   order: {
-    list: '/invoice/erpOrder/findAllErpOrderByCondition',
+    list: {
+      erpList: '/invoice/erpOrder/findAllErpOrderByCondition',
+      delerpList: '/invoice/posOrder/deletePosOrderAndDetail',
+      exportErp: '/invoice/posOrder/deletePosOrderAndDetail'
+    },
     pos: {
       findList: '/invoice/posOrder/findAllPosOrderByCondition',
       delList: '/invoice/posOrder/deletePosOrderAndDetail'
@@ -125,8 +130,8 @@ const apiPath = {
   // 数据同步
   dataSync: {
     taskQuery: {
-      getList: '/invoice-job/scheduleJob/queryScheduleJobList',
-      exportExcel: '/invoice-job/scheduleJobLog/exportScheduleJobLog'
+      getList: 'invoiceJob/scheduleJob/queryScheduleJobList',
+      exportExcel: 'invoiceJob/scheduleJobLog/exportScheduleJobLog'
     }
   }
 }

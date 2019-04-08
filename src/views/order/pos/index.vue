@@ -137,9 +137,9 @@
         @size-change = "handleSizeChange"
         @current-change = "handleCurrentChange"/>
       <!--<span v-show="dataSource.list&&dataSource.list.length>1" class="hjje">合计金额:{{ dataSource.total }}</span>-->
-      <span class="hjje">合计金额:</span>
-      <span class="hjse">合计税额:</span>
-      <span class="jshj">加税合计:</span>
+      <!--<span class="hjje">合计金额:</span>-->
+      <!--<span class="hjse">合计税额:</span>-->
+      <!--<span class="jshj">加税合计:</span>-->
     </div>
     <Invoicedialog
       :moudel-type="moudelType"
@@ -151,7 +151,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import Invoicedialog from '../components/invoiceDialog'
-import { getPoslist ,delPosList} from '@/api/order'
+import { getPoslist, delPosList } from '@/api/order'
 
 export default {
   name: 'Dashboard',

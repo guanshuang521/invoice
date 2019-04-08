@@ -21,6 +21,14 @@ export function addTemplate(data) {
     data: data
   })
 }
+// 模板编辑
+export function editTemplate(data) {
+  return request({
+    url: apiPath.system.template.edit,
+    method: 'post',
+    data: data
+  })
+}
 // 模板删除
 export function deleteTemplate(data) {
   return request({

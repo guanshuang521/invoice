@@ -58,7 +58,7 @@
     <div class="button-container">
       <el-button type="primary" icon="el-icon-edit" size="small" @click="createPreInvoice">同一购方订单生成预制发票</el-button>
       <el-button type="primary" icon="el-icon-circle-check" size="small" @click="checkCreateInvoice">勾选订单生成预制发票</el-button>
-      <el-button type="primary" icon="el-icon-upload" size="small">导出</el-button>
+      <el-button type="primary" icon="el-icon-upload" size="small" @click="exportData">导出</el-button>
     </div>
     <div class="table-container">
       <el-table
@@ -158,6 +158,7 @@
 import { mapGetters } from 'vuex'
 import { getOrderlist } from '@/api/order'
 import invoiceDialog from '../components/invoiceDialog'
+import apiPath from '@/api/apiUrl'
 export default {
   name: 'Dashboard',
   components: { invoiceDialog },
@@ -167,15 +168,14 @@ export default {
       searchParams: {
         pageSize: 10,
         currentPage: 1,
-        gmfMc: '',
+        gfmc: '',
         ejgysbm: '',
         djbh: '',
         jsdh: '',
         ddzt: '',
         djqh: '',
         djzh: '',
-        createTime: '',
-        endTime: ''
+        createTime: ''
       },
       // 列表数据
       tableList: [],
@@ -216,7 +216,7 @@ export default {
     // 查询重置
     reset() {
       this.searchParams = {
-        gmfMc: '',
+        gfmc: '',
         ejgysbm: '',
         djbh: '',
         jsdh: '',
@@ -239,6 +239,10 @@ export default {
         this.$message.error('至少选择一条数据')
         return false
       }
+    },
+    exportData() { // 导出数据
+      const url = apiPath.order.list.exportErp
+      window.open(url)
     },
     // 关闭弹窗
     closeDialog(val) {

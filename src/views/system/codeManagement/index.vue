@@ -76,7 +76,7 @@
       </el-table>
       <el-pagination
         :current-page="searchParams.currentPage"
-        :page-sizes="[10, 25, 50, 100]"
+        :page-sizes="[10, 50, 100]"
         :page-size="searchParams.pageSize"
         :total="total"
         layout="total, sizes, prev, pager, next, jumper"
@@ -125,7 +125,7 @@
 </template>
 
 <script>
-import { commodictList, AddData, editData } from '@/api/system/codeManagement'
+import { commodictList } from '@/api/system/codeManagement'
 import apiPath from '@/api/apiUrl'
 export default {
   data() {
@@ -152,11 +152,8 @@ export default {
       fileList: []
     }
   },
-  created() {
-
-  },
   mounted() {
-    this.getList()
+    this.$store.getters.isAutoLoadData ? this.getList() : ''
   },
   methods: {
     searchFn() { // 查询
@@ -180,13 +177,17 @@ export default {
     },
     initSearch() { // 重置
       this.searchParams = {
-        // 商品分类
         sign: '',
         // 税收编码
         shflbm: '',
         // 商品或服务名称
-        spmc: ''
+        spmc: '',
+        ssflbm: '',
+        spmc: '',
+        currentPage: 1,
+        pageSize: 10
       }
+      this.getList()
     },
     handleSizeChange(val) { // 改变单页条数
       this.searchParams.currentPage = 1
