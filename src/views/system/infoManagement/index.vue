@@ -417,7 +417,6 @@ export default{
     handleEdit(ind, rows) { // 编辑
       this.dialogVisible = true
       this.dialogType = 'edit'
-      console.log(rows)
       this.form = rows
     },
     handleSizeChange(val) { // 改变单页条数
@@ -439,6 +438,7 @@ export default{
     addClick() { // 添加
       this.dialogVisible = true
       this.dialogType = 'adds'
+      this.form = {}
     },
     addAdata(formName) { // 点击添加确定后
       if (this.dialogType === 'adds') {
