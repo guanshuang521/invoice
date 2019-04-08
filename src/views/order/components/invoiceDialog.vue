@@ -75,19 +75,15 @@ export default {
         options: [
           {
             id: 0,
-            text: '快车'
+            text: '专用发票'
           },
           {
             id: 1,
-            text: '专车'
+            text: '普通发票'
           },
           {
             id: 2,
-            text: '顺风车'
-          },
-          {
-            id: 3,
-            text: '出租车'
+            text: '电子发票'
           }
         ],
         ydzfpType: '',

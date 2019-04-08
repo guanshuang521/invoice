@@ -94,7 +94,11 @@ const apiPath = {
     }
   },
   order: {
-    list: '/invoice/erpOrder/findAllErpOrderByCondition',
+    list: {
+      erpList: '/invoice/erpOrder/findAllErpOrderByCondition',
+      delerpList: '/invoice/posOrder/deletePosOrderAndDetail',
+      exportErp: '/invoice/posOrder/deletePosOrderAndDetail'
+    },
     pos: {
       findList: '/invoice/posOrder/findAllPosOrderByCondition',
       delList: '/invoice/posOrder/deletePosOrderAndDetail'
