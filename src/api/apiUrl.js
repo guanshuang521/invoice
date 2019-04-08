@@ -5,7 +5,7 @@
  */
 const apiPath = {
   login: {
-    login: '/user/login',
+    login: '/rbac/login',
     dict: '/rbac/paramDetail/selectParamDetailsList'
   },
   // 系统管理
@@ -132,6 +132,11 @@ const apiPath = {
     taskQuery: {
       getList: 'invoiceJob/scheduleJob/queryScheduleJobList',
       exportExcel: 'invoiceJob/scheduleJobLog/exportScheduleJobLog'
+    },
+    taskSetting: {
+      list: '/invoiceJob/scheduleJob/queryScheduleJobList',
+      submitSync: '/invoiceJob/scheduleJob/syncOrder',
+      add: '/invoiceJob/scheduleJob/addScheduleJob'
     }
   }
 }

@@ -1,13 +1,14 @@
 import request from '@/utils/request'
 import apiPath from '@/api/apiUrl'
+import md5 from 'js-md5'
 
 export function login(username, password) {
   return request({
     url: apiPath.login.login,
     method: 'post',
     data: {
-      username,
-      password
+      userName: username,
+      password: md5(password)
     }
   })
 }

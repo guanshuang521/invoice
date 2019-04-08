@@ -7,33 +7,33 @@
   <div class="taskSettings-container">
     <el-tabs v-model="activeName">
       <el-tab-pane label="手工同步" name="first">
-        <div class="search-item">
-          <span>数据类型</span>
-          <el-select v-model="value" placeholder="请选择">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"/>
-          </el-select>
-        </div>
-        <div class="search-item">
-          <span>数据源系统</span>
-          <el-select v-model="value" placeholder="请选择">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"/>
-          </el-select>
-        </div>
-        <div class="button-box">
-          <el-button type="primary" size="mini" @click="importExcel">同步</el-button>
-        </div>
+        <el-form ref="manualForm" :model="manualForm" :rules="manualFormRules" class="manual-form" label-width="100px">
+          <el-form-item label="数据类型" prop="dataType">
+            <el-select v-model="manualForm.dataType" placeholder="请选择">
+              <el-option
+                v-for="item in sjlx"
+                :key="item.id"
+                :label="item.name"
+                :value="item.code"/>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="数据源系统" prop="dataSource">
+            <el-select v-model="manualForm.dataSource" placeholder="请选择">
+              <el-option
+                v-for="item in sjyxt"
+                :key="item.id"
+                :label="item.name"
+                :value="item.code"/>
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" size="small" @click="syncSubmit">同步</el-button>
+          </el-form-item>
+        </el-form>
       </el-tab-pane>
       <el-tab-pane label="定时同步" name="second">
         <div class="button-container">
-          <el-button type="primary" size="mini" @click="importExcel">新增</el-button>
+          <el-button type="primary" size="mini" @click="handleAdd">新增</el-button>
         </div>
         <el-table
           v-loading="listLoading"
@@ -41,50 +41,40 @@
           element-loading-text="Loading"
           border
           fit
-          highlight-current-row
-          @selection-change="handleSelectionChange">
-          <el-table-column
-            type="selection"
-            align="center"
-            width="34px"/>
-          <el-table-column align="center" width="31px">
+          highlight-current-row>
+          <el-table-column align="center" width="41px">
             <template slot-scope="scope">
               {{ scope.$index + 1 }}
             </template>
           </el-table-column>
           <el-table-column label="数据类型" align="center">
             <template slot-scope="scope">
-              {{ scope.row.djsh }}
+              {{ scope.row.dataType }}
             </template>
           </el-table-column>
           <el-table-column label="数据源系统" align="center">
             <template slot-scope="scope">
-              <span>{{ scope.row.xfmc }}</span>
+              <span>{{ scope.row.dataSource }}</span>
             </template>
           </el-table-column>
           <el-table-column label="开始时间" align="center">
             <template slot-scope="scope">
-              {{ scope.row.xfsh }}
+              {{ scope.row.startTime }}
             </template>
           </el-table-column>
           <el-table-column label="结束时间" align="center">
             <template slot-scope="scope">
-              {{ scope.row.xfsh }}
+              {{ scope.row.endTime }}
             </template>
           </el-table-column>
           <el-table-column label="同步频率" align="center">
             <template slot-scope="scope">
-              {{ scope.row.xfsh }}
+              {{ scope.row.frequency }}
             </template>
           </el-table-column>
           <el-table-column label="状态" align="center">
             <template slot-scope="scope">
-              {{ scope.row.gfmc }}
-            </template>
-          </el-table-column>
-          <el-table-column label="入库记录数" align="center">
-            <template slot-scope="scope">
-              {{ scope.row.gfsh }}
+              {{ scope.row.jobStatus }}
             </template>
           </el-table-column>
           <el-table-column label="操作" align="center">
@@ -98,60 +88,72 @@
         </el-table>
       </el-tab-pane>
     </el-tabs>
-    <el-dialog :title="dialogVisible" :visible.sync="dialogVisible" :lock-scroll="true" width="640px" custom-class="showPop dialog-wapper pub-min-pop">
-      <el-form ref="userForm" :inline="true" :model="userInfo" :rules="userRules" class="form" label-width="100px" size="mini">
-        <el-form-item label="数据类型：" prop="status" >
-          <el-select v-model="userInfo.status" placeholder="请选择" style="width: 170px">
-            <el-option label="商品类订单" value="shanghai"/>
-            <el-option label="服务类订单" value="beijing"/>
+    <el-dialog :visible.sync="dialogVisible" :title="dialogTitle" width="640px" custom-class="showPop dialog-wapper pub-min-pop">
+      <el-form ref="dataSyncForm" :inline="true" :rules="dataSyncFormRules" :model="dataSyncForm" class="form" label-width="100px" size="mini">
+        <el-form-item label="数据类型" prop="dataType" >
+          <el-select v-model="dataSyncForm.dataType" placeholder="请选择" style="width: 170px">
+            <el-option
+              v-for="item in sjlx"
+              :key="item.id"
+              :label="item.name"
+              :value="item.code"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="数据源系统：" prop="status" >
-          <el-select v-model="userInfo.status" placeholder="请选择" style="width: 170px">
-            <el-option label="EBS系统" value="shanghai"/>
+        <el-form-item label="数据源系统" prop="dataSource">
+          <el-select v-model="dataSyncForm.dataSource" placeholder="请选择" style="width: 170px">
+            <el-option
+              v-for="item in sjyxt"
+              :key="item.id"
+              :label="item.name"
+              :value="item.code"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="开票日期起">
+        <el-form-item label="开票日期起" prop="startTime">
           <el-date-picker
-            v-model="listQuery.spmc"
+            v-model="dataSyncForm.startTime"
             type="date"
             size="small"
             class="filter-item"
             placeholder="开票日期起"/>
         </el-form-item>
-        <el-form-item label="开票日期止">
+        <el-form-item label="开票日期止" prop="endTime">
           <el-date-picker
-            v-model="listQuery.spmc"
+            v-model="dataSyncForm.endTime"
             type="date"
             size="small"
             class="filter-item"
             placeholder="开票日期止"/>
         </el-form-item>
-        <el-form-item label="同步频率：" prop="status" >
-          <el-select v-model="userInfo.status" placeholder="请选择" style="width: 170px">
-            <el-option label="30分钟" value="Thirty"/>
-            <el-option label="60分钟" value="Sixty"/>
-            <el-option label="1天" value="Day"/>
+        <el-form-item label="同步频率" prop="frequency" >
+          <el-select v-model="dataSyncForm.frequency" placeholder="请选择" style="width: 170px">
+            <el-option
+              v-for="item in tbpl"
+              :key="item.id"
+              :label="item.name"
+              :value="item.code"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="启用状态：" prop="status" >
-          <el-select v-model="userInfo.status" placeholder="请选择" style="width: 170px">
-            <el-option label="启用" value="Thirty"/>
-            <el-option label="禁用" value="Sixty"/>
+        <el-form-item label="启用状态" prop="jobStatus" >
+          <el-select v-model="dataSyncForm.jobStatus" placeholder="请选择" style="width: 170px">
+            <el-option
+              v-for="item in qyzt"
+              :key="item.id"
+              :label="item.name"
+              :value="item.code"/>
           </el-select>
         </el-form-item>
       </el-form>
-      <span slot="footer" class="dialog-footer" >
-        <el-button type="primary" size="mini" @click="save">保存</el-button>
+      <div slot="footer" class="dialog-footer" align="center">
+        <el-button type="primary" size="mini" @click="addSave">保存</el-button>
         <el-button size="mini" @click="dialogVisible = !dialogVisible">取消</el-button>
-      </span>
+      </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import { getTableList } from '@/api/queryStatistics/orderOpenMessage'
+import { submitSync, addSave, initData } from '@/api/dataSync/taskSetting'
 import testSettings from '@/components/dataSync/testSettings'
 export default {
   name: 'Dashboard',
@@ -160,138 +162,136 @@ export default {
   },
   data: function() {
     return {
-      value: '',
-      activeName: 'first',
-      options: [{
-        value: '01',
-        label: '服务类订单'
-      }, {
-        value: '02',
-        label: '商品类订单'
-      }],
-      list: [
-        {
-          djsh: '管理员',
-          xfmc: 1,
-          gfmc: '北京市丰台科技园',
-          xfsh: '12433323454',
-          gfsh: '23543212343',
-          je: '北京银行中关村支行',
-          se: '123444321234567876',
-          jshj: 0,
-          ddzt: 0
-        }
-      ],
-      listQuery: {
-        title: '',
-        importance: '',
-        type: '',
-        sort: '',
-        limit: 10,
-        currentPage: 2
+      // 手工同步表单
+      manualForm: {
+        dataType: '',
+        dataSource: ''
       },
-      userRules: {
-        account: [
-          { required: true, message: '请输入账号', trigger: 'blur' }
+      // 手工同步校验规则
+      manualFormRules: {
+        dataType: [
+          { required: true, message: '请选择数据类型', trigger: 'change' }
         ],
-        password: [
-          { required: true, message: '请输入密码', trigger: 'blur' }
-        ],
-        userName: [
-          { required: true, message: '请输入用户名', trigger: 'blur' }
+        dataSource: [
+          { required: true, message: '请选择数据来源', trigger: 'change' }
         ]
       },
+      // 默认选中的tab页
+      activeName: 'first',
+      // 定时同步数据列表
+      list: [],
+      // 请求遮罩
       listLoading: false,
-      searchs: {
-        customerName: '',
-        customerTaxNumber: ''
+      // 查询条件
+      searchParams: {
+        currentPage: 1,
+        pageSize: 10
       },
-      checkedList: [],
-      currentPage: 1,
-      pageSize: 25,
-      total: 1000,
+      // 列表总条数
+      total: 0,
+      // 定时同步新增弹窗显示
       dialogVisible: false,
-      dialogType: '',
-      form: {
-        customerName: '',
-        customerTaxNumber: '',
-        address: '',
-        email: '',
-        contacts: '',
-        contactNumber: '',
-        phone: '',
-        bank: '',
-        bankAccount: ''
+      // 弹窗标题
+      dialogTitle: '',
+      // 数据同步表单
+      dataSyncForm: {
+        dataType: '',
+        dataSource: '',
+        startTime: '',
+        endTime: '',
+        frequency: '',
+        jobStatus: ''
       },
-      userInfo: {
-        account: '',
-        password: '',
-        userName: '',
-        role: '',
-        receiver: '',
-        checker: '',
-        organization: '',
-        status: '',
-        terminalCode: '',
-        auth: ''
-      },
+      dataSyncFormRules: {
+        dataType: [
+          { required: true, message: '请选择数据类型', trigger: 'change' }
+        ],
+        dataSource: [
+          { required: true, message: '请选择数据来源', trigger: 'change' }
+        ],
+        startTime: [
+          { required: true, message: '请输入开始时间', trigger: 'blur' }
+        ],
+        endTime: [
+          { required: true, message: '请输入结束时间', trigger: 'blur' }
+        ],
+        frequency: [
+          { required: true, message: '请选择同步频率', trigger: 'change' }
+        ],
+        jobStatus: [
+          { required: true, message: '请选择启用状态', trigger: 'change' }
+        ]
+      }
     }
   },
   computed: {
     ...mapGetters([
-      'name',
-      'roles'
-    ])
+      'dictList'
+    ]),
+    sjlx() {
+      return this.dictList['SYS_SJLX']
+    },
+    sjyxt() {
+      return this.dictList['SYS_SJYXT']
+    },
+    tbpl() {
+      return this.dictList['SYS_TBPL']
+    },
+    qyzt() {
+      return this.dictList['SYS_QYZT']
+    }
   },
   mounted() {
-    // this.getTastData()
+    this.initData()
   },
   methods: {
-    change(a) {
-      this.dialogVisible = false
+    // 获取定时同步列表数据
+    initData() {
+      initData(this.searchParams).then(res => {
+        this.list = res.data.list
+      }).catch(err => {
+        this.$message.error(err)
+      })
     },
-    fetchData() { // 获取数据
-      this.listLoading = true
-      // getList(this.listQuery).then(response => {
-      //   this.list = response.data.items
-      //   this.listLoading = false
-      // })
+    // 同步提交
+    syncSubmit() {
+      this.$refs['manualForm'].validate((valid) => {
+        if (valid) {
+          submitSync(this.manualForm).then(res => {
+            this.manualForm = {
+              dataType: '',
+              dataSource: ''
+            }
+            this.$message.success(res.message)
+          }).catch(err => {
+            this.$message.error(err)
+          })
+        }
+      })
     },
-    searchFn() {},
-    initSearch() { // 重置
-      this.searchs = {
-        customerName: '',
-        customerTaxNumber: ''
-      }
+    // 新增定时任务
+    handleAdd() {
+      this.dialogType = 'add'
+      this.dialogTitle = '新增数据同步规则'
+      this.dialogVisible = true
     },
-    handleSelectionChange(val) { // 表格选中数据发生变化
-      this.checkedList = val
+    // 新增提交
+    addSave() {
+      this.$refs['dataSyncForm'].validate((valid) => {
+        if (valid) {
+          addSave().then(res => {
+            this.initData()
+            this.dialogVisible = false
+            this.dialogType = ''
+            this.$refs['dataSyncForm'].resetFields()
+          }).catch(err => {
+            this.$message.error(err)
+          })
+        }
+      })
     },
     addCustomer() {
       this.dialogVisible = true
-    },
-    addRoleFn() {
-      this.dialogVisible = false
-    },
-    delCustomer() { // 删除数据
-      this.$confirm('确定要删除选择的数据吗?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消'
-        // type: 'warning',
-        // center: true
-      }).then(() => {
-        console.log(this.checkedList)
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
-        })
-      })
-    },
-    downloadExcel() { // 下载
-      // this.dialogVisible = true
-    },
-    importExcel() {
-      this.dialogVisible2 = true
     },
     handleSizeChange(val) {
       // console.log(`每页 ${val} 条`)
@@ -299,31 +299,8 @@ export default {
     handleCurrentChange(val) {
       // console.log(`当前页: ${val}`)
     },
-    handleClose() { // 关闭弹窗
-      this.dialogVisible = false
-      this.dialogVisible2 = false
-    },
-    submitUpload() {
-      this.$refs.upload.submit()
-    },
-    handleRemove(file, fileList) {
-      console.log(file, fileList)
-    },
     handlePreview(file) {
       console.log(file)
-    },
-    handleEdit(index, row) {
-      this.dialogVisible = true
-    },
-    save() {
-
-    },
-    getTableList() {
-      getTableList().then(res => {
-        if (res.code === 20000) {
-          this.list = res.data
-        }
-      })
     }
   }
 }
@@ -333,6 +310,9 @@ export default {
 .taskSettings {
   &-container {
     margin: 30px;
+    .manual-form{
+      width: 300px;
+    }
     .el-dialog__body{
       padding-top: 50px;
       padding-bottom: 50px;
