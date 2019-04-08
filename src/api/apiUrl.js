@@ -98,11 +98,16 @@ const apiPath = {
     list: {
       erpList: '/invoice/erpOrder/findAllErpOrderByCondition',
       delerpList: '/invoice/posOrder/deletePosOrderAndDetail',
-      exportErp: '/invoice/posOrder/deletePosOrderAndDetail'
+      exportErp: '/invoice/erpOrder/exportErpOrder',
+      getInvoices: '/invoice/erpOrder/biuldInvoiceByIds',
+      buildInvoice: '/invoice/erpOrder/biuldInvoiceByGmf'
     },
     pos: {
       findList: '/invoice/posOrder/findAllPosOrderByCondition',
-      delList: '/invoice/posOrder/deletePosOrderAndDetail'
+      delList: '/invoice/posOrder/deletePosOrderAndDetail',
+      downPos: '/invoice/posOrder/downPosOrder',
+      buildInvoicePre: '/invoice/posOrder/buildInvoicePre',
+      exportPosOrder: '/invoice/posOrder/exportPosOrder'
     }
   },
   queryStatistics: {
