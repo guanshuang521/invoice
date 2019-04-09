@@ -21,7 +21,7 @@
     <div class="button-container">
       <el-button type="primary" icon="el-icon-edit" size="small" @click="orderDownload">订单下载</el-button>
       <el-button type="primary" icon="el-icon-circle-check" size="small" @click="showInvoiceDialog">勾选生成预制发票</el-button>
-      <el-button type="primary" icon="el-icon-upload" size="small">导出</el-button>
+      <el-button type="primary" icon="el-icon-upload" size="small" @click="exportPos">导出</el-button>
       <el-button type="primary" size="mini" @click="delList">删除</el-button>
     </div>
     <div class="table-container">
@@ -151,7 +151,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import Invoicedialog from '../components/invoiceDialog'
-import { getPoslist, delPosList } from '@/api/order'
+import { getPoslist, delPosList, downPosOrder, buildInvoicePre, exportPosOrder } from '@/api/order'
 
 export default {
   name: 'Dashboard',
@@ -219,6 +219,15 @@ export default {
       }
       this.initTable()
     },
+    exportPos() {
+      exportPosOrder(this.searchParams).then(response => {
+      }).catch(err => {
+        this.$message({
+          type: 'error',
+          message: err.message
+        })
+      })
+    },
     delList() { // 删除数据
       if (this.checkedList.length === 0) {
         this.$message({
@@ -236,13 +245,12 @@ export default {
         }
         this.loading = true
         delPosList(params).then(response => {
-          if (response.code === '0000') {
-            this.$message({
-              type: 'success',
-              message: '删除成功!'
-            })
-            this.initTable()
-          }
+          this.$message({
+            type: 'success',
+            message: response.message
+          })
+          this.initTable()
+          this.loading = false
         }).catch(err => {
           this.loading = false
           this.$message({
@@ -257,12 +265,20 @@ export default {
       this.$prompt('开票码', '下载POS订单', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
-        inputErrorMessage: '邮箱格式不正确'
+        inputPattern: /^[a-zA-Z0-9]+$/,
+        inputErrorMessage: '请输入正确的开票码'
       }).then(({ value }) => {
-        this.$message({
-          type: 'success',
-          message: '你的邮箱是: ' + value
+        // value是输入框的值
+        const params = {
+          djbh: value
+        }
+        downPosOrder(params).then(response => {
+          this.$message({
+            type: 'success',
+            message: response.message
+          })
+        }).catch(err => {
+          console.log(err)
         })
       }).catch(() => {
         this.$message({
@@ -278,8 +294,10 @@ export default {
       this.form = rows
     },
     // 选中复选框
-    handleSelectionChange(val) {
-      this.checkedList = val
+    handleSelectionChange(val) { // 表格选中数据发生变化
+      val.forEach((item) => {
+        this.checkedList.push(item.id)
+      })
     },
     // 删除操作
     handleDelete(a, b) {
@@ -304,8 +322,33 @@ export default {
       console.log(formName)
     },
     showInvoiceDialog() {
-      this.showDialog = true
-      console.log(this.showDialog)
+      if (this.checkedList.length === 0) {
+        this.$message({
+          type: 'info',
+          message: '请先选择表格中的数据'
+        })
+        return false
+      }
+      this.$confirm('确定要生成预制发票吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(() => {
+        const params = {
+          ids: this.checkedList.join(',')
+        }
+        this.loading = true
+        buildInvoicePre(params).then(response => {
+          this.loading = false
+          this.showDialog = true
+          console.log(this.showDialog)
+        }).catch(err => {
+          this.loading = false
+          this.$message({
+            type: 'error',
+            message: err.message
+          })
+        })
+      })
     },
     hideDialog() {
       this.showDialog = false

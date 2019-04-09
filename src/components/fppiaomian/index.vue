@@ -24,9 +24,9 @@
           <img v-if="formdata.fplx == this.$store.getters.fplx_spe" src="../../assets/common/logo_zhuan.png">
         </div>
         <div class="fpTitleCenter">
-          <div v-if="formdata.fplx == this.$store.getters.fplx_ele" id="titleText">增值税电子发票</div>
-          <div v-if="formdata.fplx == this.$store.getters.fplx_gen" id="titleText">增值税普通发票</div>
-          <div v-if="formdata.fplx == this.$store.getters.fplx_spe" id="titleText">增值税专用发票</div>
+          <div v-if="formdata.fplx == this.$store.getters.fplx_ele">增值税电子发票</div>
+          <div v-if="formdata.fplx == this.$store.getters.fplx_gen">增值税普通发票</div>
+          <div v-if="formdata.fplx == this.$store.getters.fplx_spe">增值税专用发票</div>
         </div>
         <div class="fpTitleRight">
           <img src="../../assets/common/no.jpg">
@@ -268,7 +268,7 @@
     </el-dialog>
 
     <!--选择税收编码dialog-->
-    <el-dialog :visible.sync="isgoods" title="选择税收编码" width="800px" class="goodsDialog" :before-close="closeIsGoods">
+    <el-dialog :visible.sync="isgoods" :before-close="closeIsGoods" title="选择税收编码" width="800px" class="goodsDialog">
       <div class="dialog_item">
         <div class="search_item">
           <div class="search_label">商品税收编码：</div>
@@ -310,168 +310,72 @@
 </template>
 
 <script>
-  import { getDate, getDx, dataConversion } from '@/utils/filter'
-  import { getSpmcList, getGmfList } from '@/api/invoiceOpening/opening'
-  import globaldata from '@/utils/filter'
-  // import pagination from 'components/pagination/pagination'
+import { getDate, getDx, dataConversion } from '@/utils/filter'
+import { getSpmcList, getGmfList } from '@/api/invoiceOpening/opening'
+import globaldata from '@/utils/filter'
+// import pagination from 'components/pagination/pagination'
 
-  export default {
-    name: 'Fppm',
-    components: {
-      /* 'v-pagination': pagination*/
-    },
-    props: {
-      'pmfplx': {
-        type: String,
-        default: ''
-      }
-    },
-    data() {
-      return {
-        dataConversion: dataConversion,
-        globaldata: globaldata,
-        // 票面form信息
-        formdata: {
-          fpqqlsh: '',
-          fplx: this.pmfplx,
-          bmb_bbh: '',
-          zsfs: '',
-          xsf_nsrsbh: '',
-          xsf_mc: '',
-          xsf_dzdh: '',
-          xsf_yhzh: '',
-          gmf_nsrsbh: '',
-          gmf_mc: '',
-          gmf_dzdh: '',
-          gmf_yhzh: '',
-          gmf_sjh: '',
-          gmf_dzyx: '',
-          kpr: '',
-          fhr: '',
-          skr: '',
-          yfp_dm: '',
-          yfp_hm: '',
-          jshj: '',
-          jshjupper: '',
-          hjje: '',
-          hjse: '',
-          kce: '',
-          bz: '',
-          hylx: '',
-          tspz: '',
-          ent_id: '',
-          od_no: '',
-          od_lsh: '',
-          wd_id: '',
-          kpzh: '',
-          lines: [
-            {
-              num: '1', // 序号
-              commodityId: '', // 商品编号
-              fphxz: '0', // 0 正常行,1折扣行,2被折扣行
-              yhzcbs: '0', // 优惠政策标识  0：不使用，1：使用
-              lslbs: '', // 零税率标识，空：非零税率， 1：免税，2：不征收，3 普通零税率
-              spmc: '', // 商品名称
-              spbh: '', // 商品编号
-              spbm: '', // 商品编码
-              xmmc: '', // 项目名称
-              zxbm: '', // 自行编码
-              ggxh: '', // 规格型号
-              dw: '', // 单位
-              xmsl: '', // 项目数量
-              hsxmdj: '', // 含税项目单价
-              xmdjShow: '', // 前端显示项目单价
-              xmdj: '', // 不含税项目单价
-              hsxmje: '', // 含税项目金额
-              xmjeShow: '', // 前端显示项目金额
-              xmje: '', // 不含税项目金额
-              sl: '', // 税率
-              se: '', // 税额
-              ywbh: '', // 业务编号
-              zzstsgl: '' // 增值税特殊管理
-            }
-          ]
-        },
-
-        kprq: '',
-        isgoods: false, // 选择税收编码弹窗显示
-        isgmfmcDialog: false, // 选择购买方名称弹窗显示
-        isyhxx: false, // 添加客户信息弹窗显示
-        // 查询购买方信息
-        gmfmcList: {
-          // dialogGoodsIndex: '', // 打开第几个商品
-          currentPage: 1, // 当前页数
-          pageSize: 5, // 每页显示条目个数
-          skfplx: '',
-          khmc: '',
-          khbh: '',
-          khsh: '',
-          list: [],
-          totalCount: 0,// 总条目数
-          item:'',
-          gmfchecked:false
-        },
-        // 查询商品信息
-        goods: {
-          dialogGoodsIndex: '', // 打开第几个商品
-          item: '',
-          currentPage: 1, // 当前页数
-          pageSize: 5, // 每页显示条目个数
-          skfplx: '',
-          spmc: '',
-          spssbm: '',
-          list: [],
-          totalCount: 0// 总条目数
-        },
-        // 用户信息
-        userList: {
-          bz: '',
-          dzdh: '',
-          khbh: '',
-          khmc: '',
-          khsh: '',
-          yhzh: ''
-        }
-      }
-    },
-    modules: {
-
-    },
-    computed: {
-    },
-    watch: {
-    },
-    created: function() {
-    },
-    mounted: function() {
-      this.kprq = getDate(new Date().getTime(), 'yyyy年MM月dd日')
-      // 计算所有 明细项 金额、税额 合计
-      if (this.formdata.hjje) {
-        this.formdata.hjje = Number(this.formdata.hjje).toFixed(2)
-      }
-      if (this.formdata.hjse) {
-        this.formdata.hjse = Number(this.formdata.hjse).toFixed(2)
-      }
-      this.formdata.jshj = (Number(this.formdata.hjje) + Number(this.formdata.hjse)).toFixed(2)
-      this.formdata.jshjupper = getDx(this.formdata.jshj)
-
-      this.$emit('getformdata', this.formdata)
-    },
-    methods: {
-      // 添加一行
-      addBtn() {
-        this.formdata.lines.push(
+export default {
+  name: 'Fppm',
+  components: {
+    /* 'v-pagination': pagination*/
+  },
+  props: {
+    'pmfplx': {
+      type: String,
+      default: ''
+    }
+  },
+  data() {
+    return {
+      dataConversion: dataConversion,
+      globaldata: globaldata,
+      // 票面form信息
+      formdata: {
+        fpqqlsh: '',
+        fplx: this.pmfplx,
+        bmb_bbh: '',
+        zsfs: '',
+        xsf_nsrsbh: '',
+        xsf_mc: '',
+        xsf_dzdh: '',
+        xsf_yhzh: '',
+        gmf_nsrsbh: '',
+        gmf_mc: '',
+        gmf_dzdh: '',
+        gmf_yhzh: '',
+        gmf_sjh: '',
+        gmf_dzyx: '',
+        kpr: '',
+        fhr: '',
+        skr: '',
+        yfp_dm: '',
+        yfp_hm: '',
+        jshj: '',
+        jshjupper: '',
+        hjje: '',
+        hjse: '',
+        kce: '',
+        bz: '',
+        hylx: '',
+        tspz: '',
+        ent_id: '',
+        od_no: '',
+        od_lsh: '',
+        wd_id: '',
+        kpzh: '',
+        lines: [
           {
-            num: this.formdata.lines.length + 1, // 序号
+            num: '1', // 序号
             commodityId: '', // 商品编号
             fphxz: '0', // 0 正常行,1折扣行,2被折扣行
-            yhzcbs: '0',
-            lslbs: '', // 零税率标识，暂时为空
+            yhzcbs: '0', // 优惠政策标识  0：不使用，1：使用
+            lslbs: '', // 零税率标识，空：非零税率， 1：免税，2：不征收，3 普通零税率
             spmc: '', // 商品名称
             spbh: '', // 商品编号
             spbm: '', // 商品编码
             xmmc: '', // 项目名称
-            zxbm: '', // 征税编码
+            zxbm: '', // 自行编码
             ggxh: '', // 规格型号
             dw: '', // 单位
             xmsl: '', // 项目数量
@@ -483,235 +387,331 @@
             xmje: '', // 不含税项目金额
             sl: '', // 税率
             se: '', // 税额
-            ywbh: '' // 业务编号
+            ywbh: '', // 业务编号
+            zzstsgl: '' // 增值税特殊管理
           }
-        )
+        ]
       },
-      // 删除一行
-      delBtn(index, yphxz) {
-        console.log(index,'index')
-        // const _this = this
-        if (this.formdata.lines.length === 1) {
-          return false
-        }
-        if (yphxz === '2') {
-          // hintFunction(_this.$store, 'warnHint', '该行已添加折扣信息，请先删除此行的折扣信息')
-          // todo this.$message
-          return
-        }
-        this.formdata.lines.splice(index, 1)
+
+      kprq: '',
+      isgoods: false, // 选择税收编码弹窗显示
+      isgmfmcDialog: false, // 选择购买方名称弹窗显示
+      isyhxx: false, // 添加客户信息弹窗显示
+      // 查询购买方信息
+      gmfmcList: {
+        // dialogGoodsIndex: '', // 打开第几个商品
+        currentPage: 1, // 当前页数
+        pageSize: 5, // 每页显示条目个数
+        skfplx: '',
+        khmc: '',
+        khbh: '',
+        khsh: '',
+        list: [],
+        totalCount: 0, // 总条目数
+        item: '',
+        gmfchecked: false
       },
-      // 查询商品列表
-      getGoodsList() {
-        const requestData = {
-          'currentPage': '' + this.goods.pageNum,
-          'pageSize': '' + this.goods.pageSize,
-          'flag': 0,
-          'skfplx': this.pmfplx,
-          'spssbm': this.goods.spssbm,
-          'spmc': this.goods.spmc
+      // 查询商品信息
+      goods: {
+        dialogGoodsIndex: '', // 打开第几个商品
+        item: '',
+        currentPage: 1, // 当前页数
+        pageSize: 5, // 每页显示条目个数
+        skfplx: '',
+        spmc: '',
+        spssbm: '',
+        list: [],
+        totalCount: 0// 总条目数
+      },
+      // 用户信息
+      userList: {
+        bz: '',
+        dzdh: '',
+        khbh: '',
+        khmc: '',
+        khsh: '',
+        yhzh: ''
+      }
+    }
+  },
+  modules: {
+
+  },
+  computed: {
+  },
+  watch: {
+  },
+  created: function() {
+  },
+  mounted: function() {
+    this.kprq = getDate(new Date().getTime(), 'yyyy年MM月dd日')
+    // 计算所有 明细项 金额、税额 合计
+    if (this.formdata.hjje) {
+      this.formdata.hjje = Number(this.formdata.hjje).toFixed(2)
+    }
+    if (this.formdata.hjse) {
+      this.formdata.hjse = Number(this.formdata.hjse).toFixed(2)
+    }
+    this.formdata.jshj = (Number(this.formdata.hjje) + Number(this.formdata.hjse)).toFixed(2)
+    this.formdata.jshjupper = getDx(this.formdata.jshj)
+
+    this.$emit('getformdata', this.formdata)
+  },
+  methods: {
+    // 添加一行
+    addBtn() {
+      this.formdata.lines.push(
+        {
+          num: this.formdata.lines.length + 1, // 序号
+          commodityId: '', // 商品编号
+          fphxz: '0', // 0 正常行,1折扣行,2被折扣行
+          yhzcbs: '0',
+          lslbs: '', // 零税率标识，暂时为空
+          spmc: '', // 商品名称
+          spbh: '', // 商品编号
+          spbm: '', // 商品编码
+          xmmc: '', // 项目名称
+          zxbm: '', // 征税编码
+          ggxh: '', // 规格型号
+          dw: '', // 单位
+          xmsl: '', // 项目数量
+          hsxmdj: '', // 含税项目单价
+          xmdjShow: '', // 前端显示项目单价
+          xmdj: '', // 不含税项目单价
+          hsxmje: '', // 含税项目金额
+          xmjeShow: '', // 前端显示项目金额
+          xmje: '', // 不含税项目金额
+          sl: '', // 税率
+          se: '', // 税额
+          ywbh: '' // 业务编号
         }
-        getSpmcList(requestData).then(res => {
-          this.goods.list = res.data.list
-          this.goods.totalCount = res.data.count
-          this.goods.pageSize = res.data.pageSize
-          this.goods.currentPage = res.data.currentPage
-        }).catch(err => {
-          this.$message({
-            message: err,
-            type: 'error'
-          })
+      )
+    },
+    // 删除一行
+    delBtn(index, yphxz) {
+      console.log(index, 'index')
+      // const _this = this
+      if (this.formdata.lines.length === 1) {
+        return false
+      }
+      if (yphxz === '2') {
+        // hintFunction(_this.$store, 'warnHint', '该行已添加折扣信息，请先删除此行的折扣信息')
+        // todo this.$message
+        return
+      }
+      this.formdata.lines.splice(index, 1)
+    },
+    // 查询商品列表
+    getGoodsList() {
+      const requestData = {
+        'currentPage': '' + this.goods.pageNum,
+        'pageSize': '' + this.goods.pageSize,
+        'flag': 0,
+        'skfplx': this.pmfplx,
+        'spssbm': this.goods.spssbm,
+        'spmc': this.goods.spmc
+      }
+      getSpmcList(requestData).then(res => {
+        this.goods.list = res.data.list
+        this.goods.totalCount = res.data.count
+        this.goods.pageSize = res.data.pageSize
+        this.goods.currentPage = res.data.currentPage
+      }).catch(err => {
+        this.$message({
+          message: err,
+          type: 'error'
         })
-      },
-      //购买方名称btn
-      gmfmcBtn(){
-        this.isgmfmcDialog = true
-        this.getGmfList()
-      },
-      // 查询购买方名称列表
-      getGmfList() {
-        // this.isyhxx = true;
-        const requestData = {
-          'currentPage': '' + this.gmfmcList.pageNum,
-          'pageSize': '' + this.gmfmcList.pageSize,
-          'flag': 0,
-          'skfplx': this.pmfplx,
-          'spssbm': this.gmfmcList.spssbm,
-          'spmc': this.gmfmcList.spmc
-        }
-        getGmfList(requestData).then(res => {
-          this.gmfmcList.list = res.data.list
-          this.gmfmcList.totalCount = res.data.count
-          this.gmfmcList.pageSize = res.data.pageSize
-          this.gmfmcList.currentPage = res.data.currentPage
-        }).catch(err => {
-          this.$message({
-            message: err,
-            type: 'error'
-          })
+      })
+    },
+    // 购买方名称btn
+    gmfmcBtn() {
+      this.isgmfmcDialog = true
+      this.getGmfList()
+    },
+    // 查询购买方名称列表
+    getGmfList() {
+      // this.isyhxx = true;
+      const requestData = {
+        'currentPage': '' + this.gmfmcList.pageNum,
+        'pageSize': '' + this.gmfmcList.pageSize,
+        'flag': 0,
+        'skfplx': this.pmfplx,
+        'spssbm': this.gmfmcList.spssbm,
+        'spmc': this.gmfmcList.spmc
+      }
+      getGmfList(requestData).then(res => {
+        this.gmfmcList.list = res.data.list
+        this.gmfmcList.totalCount = res.data.count
+        this.gmfmcList.pageSize = res.data.pageSize
+        this.gmfmcList.currentPage = res.data.currentPage
+      }).catch(err => {
+        this.$message({
+          message: err,
+          type: 'error'
         })
-      },
-      // 新增购买方用户信息
-      addGmf() {
-        this.isyhxx = true
-      },
-      // pageSize 改变
-      /*
+      })
+    },
+    // 新增购买方用户信息
+    addGmf() {
+      this.isyhxx = true
+    },
+    // pageSize 改变
+    /*
               data: $event只能传递第一个默认参数data
               type: 所属弹窗
           */
-      handleSizeChange(data, type) {
-        // 选择税收编码dialog
-        if (type === 'isgoods') {
-          this.goods.pageSize = data
-          this.getGoodsList()
-        }
-        // 选择购买方名称dialog
-        if (type === 'isgmfmc') {
-          this.gmfmcList.pageSize = data
-          // this.getGmfmcList();
-        }
-      },
-      // currentPage 改变
-      /*
+    handleSizeChange(data, type) {
+      // 选择税收编码dialog
+      if (type === 'isgoods') {
+        this.goods.pageSize = data
+        this.getGoodsList()
+      }
+      // 选择购买方名称dialog
+      if (type === 'isgmfmc') {
+        this.gmfmcList.pageSize = data
+        // this.getGmfmcList();
+      }
+    },
+    // currentPage 改变
+    /*
               data: $event只能传递第一个默认参数data
               type: 所属弹窗
           */
-      handleCurrentChange(data, type) {
-        // 选择税收编码dialog
-        if (type === 'isgoods') {
-          this.goods.pageNum = data
-          this.getGoodsList()
-        }
-        // 选择购买方名称dialog
-        if (type === 'isgmfmc') {
-          this.gmfmcList.pageSize = data
-          this.getGmfmcList();
-        }
-      },
-      // 上一页
-      /*
+    handleCurrentChange(data, type) {
+      // 选择税收编码dialog
+      if (type === 'isgoods') {
+        this.goods.pageNum = data
+        this.getGoodsList()
+      }
+      // 选择购买方名称dialog
+      if (type === 'isgmfmc') {
+        this.gmfmcList.pageSize = data
+        this.getGmfmcList()
+      }
+    },
+    // 上一页
+    /*
               data: $event只能传递第一个默认参数data
               type: 所属弹窗
           */
-      prePageChange(data, type) {
-        // 选择税收编码dialog
-        if (type === 'isgoods') {
-          this.goods.currentPage = data
-          this.getGoodsList()
-        }
-        // 选择购买方名称dialog
-        if (type === 'isgmfmc') {
-          this.gmfmcList.pageSize = data
-          this.getGmfmcList();
-        }
-      },
-      // 下一页
-      /*
+    prePageChange(data, type) {
+      // 选择税收编码dialog
+      if (type === 'isgoods') {
+        this.goods.currentPage = data
+        this.getGoodsList()
+      }
+      // 选择购买方名称dialog
+      if (type === 'isgmfmc') {
+        this.gmfmcList.pageSize = data
+        this.getGmfmcList()
+      }
+    },
+    // 下一页
+    /*
               data: $event只能传递第一个默认参数data
               type: 所属弹窗
           */
-      nextPageChange(data, type) {
-        // 选择税收编码dialog
-        if (type === 'isgoods') {
-          this.goods.currentPage = data
-          this.getGoodsList()
-        }
-        // 选择购买方名称dialog
-        if (type === 'isgmfmc') {
-          this.gmfmcList.pageSize = data
-          this.getGmfmcList();
-        }
-      },
-      isGoodsDialog(index) {
-        this.isgoods = true;
-        this.goods.dialogGoodsIndex = index;
-      },
-      // 双击选择商品
-      dbSelectGoods(item, index) {
-        this.formdata.lines[this.goods.dialogGoodsIndex]['xmmc'] = item.spmc;
-        this.formdata.lines[this.goods.dialogGoodsIndex]['spbm'] = item.spssbm;
-        this.formdata.lines[this.goods.dialogGoodsIndex]['spbh'] = item.spbh;
-        this.formdata.lines[this.goods.dialogGoodsIndex]['commodityId'] = item.spmc;
-        this.formdata.lines[this.goods.dialogGoodsIndex]['sl'] = item.sl;
-        this.isgoods = false;
-      },
-      //确认回填税收编码
-      selectGoods() {
-        if(this.goods.item!=''){
-          var checked = this.goods.item;
-          this.formdata.lines[this.goods.dialogGoodsIndex]['xmmc'] = checked.spmc;
-          this.formdata.lines[this.goods.dialogGoodsIndex]['spbm'] = checked.spssbm;
-          this.formdata.lines[this.goods.dialogGoodsIndex]['spbh'] = checked.spbh;
-          this.formdata.lines[this.goods.dialogGoodsIndex]['commodityId'] = checked.spmc;
-          this.formdata.lines[this.goods.dialogGoodsIndex]['sl'] = checked.sl;
-          this.isgoods = false;
-        }
-      },
-      closeIsGoods() {
-        this.goods.list = [];
-        this.isgoods = false ;
-      },
-      // 双击选择用户
-      dbSelectUser(item, index) {
-        this.formdata['gmf_nsrsbh'] = item.khsh
-        this.formdata['gmf_mc'] = item.khmc
-        this.formdata['gmf_dzdh'] = item.dzdh
-        this.formdata['gmf_yhzh'] = item.yhzh
+    nextPageChange(data, type) {
+      // 选择税收编码dialog
+      if (type === 'isgoods') {
+        this.goods.currentPage = data
+        this.getGoodsList()
+      }
+      // 选择购买方名称dialog
+      if (type === 'isgmfmc') {
+        this.gmfmcList.pageSize = data
+        this.getGmfmcList()
+      }
+    },
+    isGoodsDialog(index) {
+      this.isgoods = true
+      this.goods.dialogGoodsIndex = index
+    },
+    // 双击选择商品
+    dbSelectGoods(item, index) {
+      this.formdata.lines[this.goods.dialogGoodsIndex]['xmmc'] = item.spmc
+      this.formdata.lines[this.goods.dialogGoodsIndex]['spbm'] = item.spssbm
+      this.formdata.lines[this.goods.dialogGoodsIndex]['spbh'] = item.spbh
+      this.formdata.lines[this.goods.dialogGoodsIndex]['commodityId'] = item.spmc
+      this.formdata.lines[this.goods.dialogGoodsIndex]['sl'] = item.sl
+      this.isgoods = false
+    },
+    // 确认回填税收编码
+    selectGoods() {
+      if (this.goods.item != '') {
+        var checked = this.goods.item
+        this.formdata.lines[this.goods.dialogGoodsIndex]['xmmc'] = checked.spmc
+        this.formdata.lines[this.goods.dialogGoodsIndex]['spbm'] = checked.spssbm
+        this.formdata.lines[this.goods.dialogGoodsIndex]['spbh'] = checked.spbh
+        this.formdata.lines[this.goods.dialogGoodsIndex]['commodityId'] = checked.spmc
+        this.formdata.lines[this.goods.dialogGoodsIndex]['sl'] = checked.sl
+        this.isgoods = false
+      }
+    },
+    closeIsGoods() {
+      this.goods.list = []
+      this.isgoods = false
+    },
+    // 双击选择用户
+    dbSelectUser(item, index) {
+      this.formdata['gmf_nsrsbh'] = item.khsh
+      this.formdata['gmf_mc'] = item.khmc
+      this.formdata['gmf_dzdh'] = item.dzdh
+      this.formdata['gmf_yhzh'] = item.yhzh
+      this.isgmfmcDialog = false
+    },
+    // 确认回填用户信息
+    selectUser() {
+      if (this.gmfmcList.item !== '') {
+        var checked = this.gmfmcList.item
+        this.formdata['gmf_nsrsbh'] = checked.khsh
+        this.formdata['gmf_mc'] = checked.khmc
+        this.formdata['gmf_dzdh'] = checked.dzdh
+        this.formdata['gmf_yhzh'] = checked.yhzh
         this.isgmfmcDialog = false
-      },
-      //确认回填用户信息
-      selectUser() {
-        if(this.gmfmcList.item!=''){
-          var checked = this.gmfmcList.item;
-          this.formdata['gmf_nsrsbh'] = checked.khsh;
-          this.formdata['gmf_mc'] = checked.khmc;
-          this.formdata['gmf_dzdh'] = checked.dzdh;
-          this.formdata['gmf_yhzh'] = checked.yhzh;
-          this.isgmfmcDialog = false;
-        }
-      },
-      // 金额，数量，单价，获得焦点事件
-      inputFocus(event, xmjeShow) {
-        this.inputFocusVal = event.target.value
-        this.inputFocusMoneyVal = ''
-        if (xmjeShow) {
-          this.inputFocusMoneyVal = event.target.value
-        }
-      },
-      // 金额，数量，单价，失去焦点事件
-      inputBlur(index, currentInput, event) {
-        let _thisLines = this.formdata.lines;
-        const xmsl = _thisLines[index].xmsl
-        const xmdjShow = _thisLines[index].xmdjShow
-        const xmdj = _thisLines[index].xmdj
-        const hsxmdj = _thisLines[index].hsxmdj
-        const xmjeShow = Number(_thisLines[index].xmjeShow)
-        const xmje = Number(_thisLines[index].xmje)
-        const hsxmje = Number(_thisLines[index].hsxmje)
-        //const sl = Number(_thisLines[index].sl.replace('%', '')) / 100
-        const sl = Number(_thisLines[index].sl)
+      }
+    },
+    // 金额，数量，单价，获得焦点事件
+    inputFocus(event, xmjeShow) {
+      this.inputFocusVal = event.target.value
+      this.inputFocusMoneyVal = ''
+      if (xmjeShow) {
+        this.inputFocusMoneyVal = event.target.value
+      }
+    },
+    // 金额，数量，单价，失去焦点事件
+    inputBlur(index, currentInput, event) {
+      const _thisLines = this.formdata.lines
+      const xmsl = _thisLines[index].xmsl
+      const xmdjShow = _thisLines[index].xmdjShow
+      const xmdj = _thisLines[index].xmdj
+      const hsxmdj = _thisLines[index].hsxmdj
+      const xmjeShow = Number(_thisLines[index].xmjeShow)
+      const xmje = Number(_thisLines[index].xmje)
+      const hsxmje = Number(_thisLines[index].hsxmje)
+      // const sl = Number(_thisLines[index].sl.replace('%', '')) / 100
+      const sl = Number(_thisLines[index].sl)
 
-        // 调用计算函数（金额，税额）
-        this.calculateMoney(index, xmsl, xmdj, xmdjShow, hsxmdj, xmje, xmjeShow, hsxmje, sl, currentInput)
+      // 调用计算函数（金额，税额）
+      this.calculateMoney(index, xmsl, xmdj, xmdjShow, hsxmdj, xmje, xmjeShow, hsxmje, sl, currentInput)
 
-        // 控制输入0
-        /*this.lines[index].xmsl = Number(xmsl) === 0 ? '' : xmsl
+      // 控制输入0
+      /* this.lines[index].xmsl = Number(xmsl) === 0 ? '' : xmsl
         this.lines[index].xmdjShow = Number(xmdjShow) === 0 ? '' : xmdjShow
         this.lines[index].xmjeShow = Number(xmjeShow) === 0 ? '' : xmjeShow*/
-      },
-      // 金额，税额计算
-      calculateMoney(index, xmsl, xmdj, xmdjShow, hsxmdj, xmje, xmjeShow, hsxmje, sl, currentInput) {
-        let _thisLines = this.formdata.lines;
-        // 税额
-        /*折扣行相关
+    },
+    // 金额，税额计算
+    calculateMoney(index, xmsl, xmdj, xmdjShow, hsxmdj, xmje, xmjeShow, hsxmje, sl, currentInput) {
+      const _thisLines = this.formdata.lines
+      // 税额
+      /* 折扣行相关
         _thisLines[index].xmjeShow =_thisLines[index].fphxz !== '1' ? Math.abs(xmjeShow) : '-' + Math.abs(xmjeShow)*/
-        _thisLines[index].se = Number(xmje * sl / (1 + sl)).toFixed(2)
-        // 金额
-        /*_thisLines[index].xmje = _thisLines[index].fphxz !== '1' ? Number(Math.abs(xmjeShow) - Math.abs(_thisLines[index].se)).toFixed(2) : '-' + Number(Math.abs(xmjeShow) - Math.abs(_thisLines[index].se)).toFixed(2)
+      _thisLines[index].se = Number(xmje * sl / (1 + sl)).toFixed(2)
+      // 金额
+      /* _thisLines[index].xmje = _thisLines[index].fphxz !== '1' ? Number(Math.abs(xmjeShow) - Math.abs(_thisLines[index].se)).toFixed(2) : '-' + Number(Math.abs(xmjeShow) - Math.abs(_thisLines[index].se)).toFixed(2)
         _thisLines[index].hsxmje = _thisLines[index].fphxz !== '1' ? Number(Math.abs(xmjeShow)).toFixed(2) : '-' + Number(Math.abs(xmjeShow)).toFixed(2)*/
-        this.calculatePrice(index, xmsl, xmdj, xmdjShow, hsxmdj, xmje, xmjeShow, hsxmje, sl, currentInput)
-        /*// 金额，税额控制(含税不含税两种情况)
+      this.calculatePrice(index, xmsl, xmdj, xmdjShow, hsxmdj, xmje, xmjeShow, hsxmje, sl, currentInput)
+      /* // 金额，税额控制(含税不含税两种情况)
         // 含税
         if (String(this.hsbz) === String(this.globalVal.enums_tax)) {
           // 税额
@@ -732,46 +732,46 @@
               this.lines[index].hsxmje = this.lines[index].fphxz !== '1' ? Number(Math.abs(xmjeShow) + Math.abs(this.lines[index].se)).toFixed(2) : '-' + Number(Math.abs(xmjeShow) + Math.abs(this.lines[index].se)).toFixed(2);
               this.calculatePrice(index, xmsl, xmdj, xmdjShow, hsxmdj, xmje, xmjeShow, hsxmje, sl, currentInput);
             }*/
-      },
-      // 处理单价
-      calculatePrice(index, xmsl, xmdj, xmdjShow, hsxmdj, xmje, xmjeShow, hsxmje, sl, currentInput) {
-        let _thisLines = this.formdata.lines;
-        // 金额，单价
-        if (Number(xmsl) !== 0 && Number(xmdj) !== 0) {
-          // 如果是金额输入框
-          if (currentInput === 'xmje' && Number(xmje) !== 0) {
-            _thisLines[index].xmdj = Math.abs(this.dealWithDataShow(xmje / xmsl));
-            //_thisLines[index].hsxmdj = Math.abs(this.dealWithDataShow(hsxmje / xmsl));
-          } else {
-            _thisLines[index].xmje = Number(xmdj * xmsl).toFixed(2);
-          }
-        } else if (Number(xmsl) !== 0 && Number(xmje) !== 0) {
-          _thisLines[index].xmdj = Math.abs(this.dealWithDataShow(xmje / xmsl));
-          //_thisLines[index].hsxmdj = Math.abs(this.dealWithDataShow(hsxmje / xmsl));
-        } else if (Number(xmdj) !== 0 && Number(xmje) !== 0) {
-          _thisLines[index].xmsl = this.dealWithDataShow(xmje / xmdj);
+    },
+    // 处理单价
+    calculatePrice(index, xmsl, xmdj, xmdjShow, hsxmdj, xmje, xmjeShow, hsxmje, sl, currentInput) {
+      const _thisLines = this.formdata.lines
+      // 金额，单价
+      if (Number(xmsl) !== 0 && Number(xmdj) !== 0) {
+        // 如果是金额输入框
+        if (currentInput === 'xmje' && Number(xmje) !== 0) {
+          _thisLines[index].xmdj = Math.abs(this.dealWithDataShow(xmje / xmsl))
+          // _thisLines[index].hsxmdj = Math.abs(this.dealWithDataShow(hsxmje / xmsl));
+        } else {
+          _thisLines[index].xmje = Number(xmdj * xmsl).toFixed(2)
         }
-      },
-      // 处理六位小数
-      dealWithDataShow(data) {
-        data = parseFloat(Number(data));
-        let x = String(data).indexOf('.') + 1; // 小数点的位置
-        let y = String(data).length - x; // 小数的位数
-
-        if ((x === 0) || (y <= 6)) {
-          // 没有小数
-          return data;
-        } else if (y > 6) {
-          return data.toFixed(6);
-        }
-      },
-      // 添加用户信息
-      addUser() {
-        console.log(this.userList)
-        this.isyhxx = false
+      } else if (Number(xmsl) !== 0 && Number(xmje) !== 0) {
+        _thisLines[index].xmdj = Math.abs(this.dealWithDataShow(xmje / xmsl))
+        // _thisLines[index].hsxmdj = Math.abs(this.dealWithDataShow(hsxmje / xmsl));
+      } else if (Number(xmdj) !== 0 && Number(xmje) !== 0) {
+        _thisLines[index].xmsl = this.dealWithDataShow(xmje / xmdj)
       }
+    },
+    // 处理六位小数
+    dealWithDataShow(data) {
+      data = parseFloat(Number(data))
+      const x = String(data).indexOf('.') + 1 // 小数点的位置
+      const y = String(data).length - x // 小数的位数
+
+      if ((x === 0) || (y <= 6)) {
+        // 没有小数
+        return data
+      } else if (y > 6) {
+        return data.toFixed(6)
+      }
+    },
+    // 添加用户信息
+    addUser() {
+      console.log(this.userList)
+      this.isyhxx = false
     }
   }
+}
 </script>
 <style scoped rel="stylesheet/scss" lang="scss">
   .fppm{
@@ -786,7 +786,7 @@
     ul{
       height: 100%;
       padding: 0;
-      padding-top: 17px;
+      margin-bottom: 0!important;
       li{
         list-style: none;
         width: 40px;

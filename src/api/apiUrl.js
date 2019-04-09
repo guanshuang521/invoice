@@ -5,7 +5,7 @@
  */
 const apiPath = {
   login: {
-    login: '/user/login',
+    login: '/rbac/login',
     dict: '/rbac/paramDetail/selectParamDetailsList'
   },
   // 系统管理
@@ -60,13 +60,14 @@ const apiPath = {
       editData: '/rbac/commoditye/updateCommodity', // 编辑数据(修改数据)
       exportModle: '/rbac/commoditye/downloadCommodityExcel', // 下载模板
       exportData: '/rbac/commoditye/exportCommodityExcel', // 导出数据
-      importExcel: '/rbac/commoditye/importCommodityExcel' // 导入Excel
+      importExcel: '/rbac/commoditye/importCommodityExcel', // 导入Excel
+      commodityTypes: '/rbac/commodityType/selectCommodityTypesList' // 获取所有的税收分类编码
     },
     codeManagement: {
       list: '/rbac/commodityType/selectByCommodityType', // 页面加载获取数据
       newAdd: '/rbac/commodityType/insertCommodityType', // 添加数据
       editData: '/rbac/commodityType/updateCommodityType', // 编辑数据(修改数据)
-      exportModle: '/rbac/commodityType/downloadCommodityTypeExcel', // 下载模板
+      exportModle: '/rbac/commodityType/download', // 下载模板
       exportData: '/rbac/commodityType/exportCommodityTypeExcel', // 导出数据
       importExcel: '/rbac/commodityType/importCommodityTypeExcel' // 导入Excel
     },
@@ -98,11 +99,16 @@ const apiPath = {
     list: {
       erpList: '/invoice/erpOrder/findAllErpOrderByCondition',
       delerpList: '/invoice/posOrder/deletePosOrderAndDetail',
-      exportErp: '/invoice/posOrder/deletePosOrderAndDetail'
+      exportErp: '/invoice/erpOrder/exportErpOrder',
+      getInvoices: '/invoice/erpOrder/biuldInvoiceByIds',
+      buildInvoice: '/invoice/erpOrder/biuldInvoiceByGmf'
     },
     pos: {
       findList: '/invoice/posOrder/findAllPosOrderByCondition',
-      delList: '/invoice/posOrder/deletePosOrderAndDetail'
+      delList: '/invoice/posOrder/deletePosOrderAndDetail',
+      downPos: '/invoice/posOrder/downPosOrder',
+      buildInvoicePre: '/invoice/posOrder/buildInvoicePre',
+      exportPosOrder: '/invoice/posOrder/exportPosOrder'
     }
   },
   queryStatistics: {
@@ -132,6 +138,12 @@ const apiPath = {
     taskQuery: {
       getList: 'invoiceJob/scheduleJob/queryScheduleJobList',
       exportExcel: 'invoiceJob/scheduleJobLog/exportScheduleJobLog'
+    },
+    taskSetting: {
+      list: '/invoiceJob/scheduleJob/queryScheduleJobList',
+      submitSync: '/invoiceJob/scheduleJob/syncOrder',
+      add: '/invoiceJob/scheduleJob/addScheduleJob',
+      edit: '/invoiceJob/scheduleJob/editScheduleJob'
     }
   }
 }

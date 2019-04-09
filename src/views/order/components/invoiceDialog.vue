@@ -6,7 +6,7 @@
  * @LastEditTime: 2019-03-26 11:10:07
  -->
 <template>
-  <div class="invoice_dialog">
+  <div class="invoice_dialog" >
     <el-dialog :visible.sync="ishow" :before-close="hideDialog" title="预制发票" width="600px">
       <el-form ref="dynamicValidateForm" :rules="rules" :model="dynamicValidateForm" label-width="110px" size="mini">
         <el-form-item label="选择订单数">
@@ -66,6 +66,10 @@ export default {
     ishow: {
       type: Boolean,
       default: () => false
+    },
+    popmeaasge: { // 表格数据源
+      type: Object,
+      default: () => {}
     }
   },
   data() {
@@ -93,6 +97,7 @@ export default {
         email: '',
         tel: ''
       },
+      buildPop: '',
       rules: {
         ydzfpType: [
           { required: true, message: '请选择预制发票类型', trigger: 'blur' }
