@@ -34,7 +34,6 @@
       <el-table
         ref="table"
         :data="list"
-        :key="list.id"
         element-loading-text="Loading"
         border
         fit
