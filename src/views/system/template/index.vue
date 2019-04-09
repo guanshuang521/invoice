@@ -159,8 +159,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer" align="center">
-        <el-button v-if="dialogTitle !== '编辑规则'" type="primary" size="mini" @click="addTemplate(templateForm)">确 定</el-button>
-        <el-button v-if="dialogTitle === '编辑规则'" type="primary" size="mini" @click="saveTemplate(templateForm)">保 存</el-button>
+        <el-button v-if="dialogTitle !== '编辑规则'" type="primary" size="mini" @click="addTemplate('templateForm')">确 定</el-button>
+        <el-button v-if="dialogTitle === '编辑规则'" type="primary" size="mini" @click="saveTemplate('templateForm')">保 存</el-button>
         <el-button size="mini" @click="dialogFormVisible = false">取 消</el-button>
       </div>
     </el-dialog>
