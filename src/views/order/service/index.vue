@@ -76,68 +76,83 @@
           </template>
         </el-table-column>
         <el-table-column
-          prop="billCode"
+          prop="djbh"
           label="单据编号"
           align="center"
           width="130"/>
         <el-table-column
-          prop="billCode"
+          prop="jsdh"
           label="结算单号"
           align="center"
           width="130"/>
         <el-table-column
-          prop="billCode"
+          prop="sjlx"
           label="数据类型"
           align="center"
           width="130"/>
         <el-table-column
-          prop="billCode"
+          prop="djlx"
           label="单据类型"
           align="center"
           width="130"/>
         <el-table-column
-          prop="billCode"
+          prop="djbh"
           label="费用单据编号"
           align="center"
           width="130"/>
         <el-table-column
-          prop="billCode"
+          prop="ejgysbm"
           label="二级供应商编码"
           align="center"
           width="130"/>
         <el-table-column
-          prop="billCode"
+          prop="je"
           label="金额（不含税）"
           align="center"
           width="130"/>
         <el-table-column
-          prop="billCode"
+          prop="sj"
           label="税额"
           align="center"
           width="130"/>
         <el-table-column
-          prop="billCode"
+          prop="jshj"
           label="价税合计"
           align="center"
           width="130"/>
         <el-table-column
-          prop="billCode"
+          prop="xfnssbh"
           label="销方税号"
           align="center"
           width="130"/>
         <el-table-column
-          prop="billCode"
+          prop="gfmc"
           label="购方名称"
           align="center"
           width="130"/>
         <el-table-column
-          prop="billCode"
+          prop="gfsh"
           label="购方税号"
           align="center"
           width="130"/>
         <el-table-column
-          prop="billCode"
+          prop="gfdzdh"
           label="购方地址电话"
+          align="center"
+          width="130"/>
+        <el-table-column
+          prop="gfkhhzh"
+          label="购方开户行及账号"
+          align="center"
+          width="130"/>
+        <el-table-column
+          prop="csrq"
+          label="传输日期"
+          align="center"
+          width="130"/>
+        <el-table-column
+          prop="bz"
+          label="备注"
           align="center"
           width="130"/>
       </el-table>
@@ -159,7 +174,7 @@
 import { mapGetters } from 'vuex'
 import { getOrderlist, generatenIvoices, exportERP, buildInvoice } from '@/api/order'
 import invoiceDialog from '../components/invoiceDialog'
-
+import apiPath from '@/api/apiUrl'
 export default {
   name: 'Dashboard',
   components: { invoiceDialog },
@@ -271,12 +286,12 @@ export default {
         })
       })
     },
-    handleSelectionChange(val) { // 表格选中数据发生变化
-      val.forEach((item) => {
-        this.checkedList.push(item.id)
-      })
-      // this.checkedList = val
-      console.log(this.checkedList)
+    // 表格选中数据发生变化
+    handleSelectionChange(val) {
+      this.checkedList = []
+      for (let i = 0; i < val.length; i++) {
+        this.checkedList.push(val[i].id)
+      }
     },
     // 勾选生成预制发票
     checkCreateInvoice() {
@@ -308,13 +323,14 @@ export default {
       })
     },
     exportData() { // 导出数据
-      exportERP(this.searchParams).then(response => {
-      }).catch(err => {
-        this.$message({
-          type: 'error',
-          message: err.message
-        })
-      })
+      window.open(apiPath.order.list.exportErp)
+      // exportERP(this.searchParams).then(response => {
+      // }).catch(err => {
+      //   this.$message({
+      //     type: 'error',
+      //     message: err.message
+      //   })
+      // })
     },
     // 关闭弹窗
     closeDialog(val) {

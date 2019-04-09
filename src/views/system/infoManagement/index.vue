@@ -203,7 +203,7 @@
         </el-form-item>
         <el-form-item label="税收分类名称">
           <el-select v-model="form.shflmc" placeholder="请选择" size="small">
-            <el-option v-for="item in dictList['SYS_SSFLMC']" :key="item.id" :label="item.name" :value="item.code"/>
+            <el-option v-for="item in commodityTypes" :key="item.id" :label="item.jm" :value="item.id"/>
           </el-select>
         </el-form-item>
         <el-form-item label="税收分类编码" prop="shflbm" size="small">

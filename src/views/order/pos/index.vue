@@ -39,93 +39,33 @@
           </template>
         </el-table-column>
         <el-table-column
-          prop="billCode"
-          label="单据编号"
-          align="center"
-          width="130"/>
+          prop="djbh"
+          label="开票码"
+          align="center"/>
         <el-table-column
-          prop="billCode"
-          label="结算单号"
-          align="center"
-          width="130"/>
+          prop="mdh"
+          label="门店号"
+          align="center"/>
         <el-table-column
-          prop="billCode"
-          label="数据类型"
-          align="center"
-          width="130"/>
-        <el-table-column
-          prop="billCode"
-          label="单据类型"
-          align="center"
-          width="130"/>
-        <el-table-column
-          prop="billCode"
-          label="费用单据编号"
-          align="center"
-          width="130"/>
-        <el-table-column
-          prop="billCode"
-          label="二级供应商编码"
-          align="center"
-          width="130"/>
-        <el-table-column
-          prop="billCode"
-          label="金额（不含税）"
-          align="center"
-          width="130"/>
-        <el-table-column
-          prop="billCode"
-          label="税额"
-          align="center"
-          width="130"/>
-        <el-table-column
-          prop="billCode"
+          prop="jshj"
           label="价税合计"
-          align="center"
-          width="130"/>
+          align="center"/>
         <el-table-column
-          prop="billCode"
-          label="销方税号"
-          align="center"
-          width="130"/>
+          prop="zkje"
+          label="折扣金额"
+          align="center"/>
         <el-table-column
-          prop="billCode"
-          label="购方名称"
-          align="center"
-          width="130"/>
+          prop="ddzt"
+          label="订单状态"
+          align="center"/>
         <el-table-column
-          prop="billCode"
-          label="购方税号"
-          align="center"
-          width="130"/>
+          prop="rksj"
+          label="下载时间"
+          align="center"/>
         <el-table-column
-          prop="billCode"
-          label="购方地址电话"
-          align="center"
-          width="130"/>
-        <el-table-column
-          prop="billCode"
-          label="购方开户行及账号"
-          align="center"
-          width="130"/>
-        <el-table-column
-          prop="billCode"
-          label="传输日期"
-          align="center"
-          width="130"/>
-        <el-table-column
-          prop="billCode"
+          prop="bz"
           label="备注"
-          align="center"
-          width="130"/>
-        <el-table-column label="操作" align="center">
-          <template slot-scope="scope">
-            <el-button
-              size="mini"
-              type="primary"
-              @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-          </template>
-        </el-table-column>
+          align="center"/>
       </el-table>
       <el-pagination
         :current-page = "searchParams.currentPage"
@@ -152,7 +92,7 @@
 import { mapGetters } from 'vuex'
 import Invoicedialog from '../components/invoiceDialog'
 import { getPoslist, delPosList, downPosOrder, buildInvoicePre, exportPosOrder } from '@/api/order'
-
+import apiPath from '@/api/apiUrl'
 export default {
   name: 'Dashboard',
   components: { Invoicedialog },
@@ -198,10 +138,9 @@ export default {
     initTable() {
       this.listLoading = true
       getPoslist(this.searchParams).then(res => {
-        console.log(res)
-        // this.list = res.data.list
-        // this.totalCount = res.data.count
-        this.listLoading = false
+        this.loading = false
+        this.total = res.data.count
+        this.tableList = res.data.list
       }).catch(err => {
         this.$message({
           message: err,
@@ -220,7 +159,11 @@ export default {
       this.initTable()
     },
     exportPos() {
-      exportPosOrder(this.searchParams).then(response => {
+      // window.open(apiPath.order.pos.exportPosOrder)
+      exportPosOrder(this.searchParams, { responseType: 'arraybuffer' }).then(response => {
+        const blob = new Blob([response], { type: 'application/vnd.ms-excel' })
+        const objectUrl = URL.createObjectURL(blob)
+        window.location.href = objectUrl
       }).catch(err => {
         this.$message({
           type: 'error',
@@ -241,7 +184,7 @@ export default {
         cancelButtonText: '取消'
       }).then(() => {
         const params = {
-          ids: this.checkedList.join()
+          ids: this.checkedList.join(',')
         }
         this.loading = true
         delPosList(params).then(response => {
@@ -278,7 +221,10 @@ export default {
             message: response.message
           })
         }).catch(err => {
-          console.log(err)
+          this.$message({
+            type: 'error',
+            message: err.message
+          })
         })
       }).catch(() => {
         this.$message({
@@ -293,11 +239,12 @@ export default {
       console.log(rows)
       this.form = rows
     },
-    // 选中复选框
-    handleSelectionChange(val) { // 表格选中数据发生变化
-      val.forEach((item) => {
-        this.checkedList.push(item.id)
-      })
+    // 表格选中数据发生变化
+    handleSelectionChange(val) {
+      this.checkedList = []
+      for (let i = 0; i < val.length; i++) {
+        this.checkedList.push(val[i].id)
+      }
     },
     // 删除操作
     handleDelete(a, b) {
@@ -336,11 +283,12 @@ export default {
         const params = {
           ids: this.checkedList.join(',')
         }
+        console.log(this.checkedList.join(','))
         this.loading = true
         buildInvoicePre(params).then(response => {
           this.loading = false
           this.showDialog = true
-          console.log(this.showDialog)
+          console.log(response)
         }).catch(err => {
           this.loading = false
           this.$message({

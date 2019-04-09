@@ -10,7 +10,7 @@ export function getList(data) {
   return request({
     url: apiPath.dataSync.taskQuery.getList,
     method: 'post',
-    params: data
+    data: data
   })
 }
 export function exportExcel(data) {
@@ -18,6 +18,6 @@ export function exportExcel(data) {
   return request({
     url: apiPath.dataSync.taskQuery.exportExcel,
     method: 'get',
-    pr: data
+    params: data
   })
 }
