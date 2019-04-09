@@ -234,7 +234,7 @@ export default {
         status: '',
         terminalCode: '',
         auth: ''
-      },
+      }
     }
   },
   computed: {

@@ -10,12 +10,14 @@ export function getList(data) {
   return request({
     url: apiPath.dataSync.taskQuery.getList,
     method: 'post',
-    data: data
+    params: data
   })
 }
-export function exportExcel() {
+export function exportExcel(data) {
+  console.log(data)
   return request({
-    url: apiPath.invoice.dataSync.exportExcel,
-    method: 'post'
+    url: apiPath.dataSync.taskQuery.exportExcel,
+    method: 'get',
+    pr: data
   })
 }

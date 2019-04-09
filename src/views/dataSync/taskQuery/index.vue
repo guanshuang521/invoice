@@ -44,69 +44,42 @@
       </el-form>
     </div>
     <div class="button-container">
-      <el-button size="small" type="primary" @click="importExcel">导出</el-button>
+      <el-button size="small" type="primary" @click="exportExcel">导出</el-button>
     </div>
     <div class="table-container">
       <el-table
-        v-loading="loading"
+        ref="table"
         :data="list"
+        :key="list.id"
+        element-loading-text="Loading"
         border
-        element-loading-text="loading"
         fit
         highlight-current-row
         @selection-change="handleSelectionChange">
-        <el-table-column
-          type="selection"
-          align="center"
-          width="34px"/>
-        <el-table-column align="center" width="31px">
+        <el-table-column type="selection" align="center" width="34px"/>
+        <el-table-column label="序号" align="center" width="50px">
           <template slot-scope="scope">
             {{ scope.$index + 1 }}
           </template>
         </el-table-column>
-        <el-table-column label="数据类型" align="center">
-          <template slot-scope="scope">
-            {{ scope.row.dataType }}
-          </template>
-        </el-table-column>
-        <el-table-column label="数据源系统" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.dataSource }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="同步时间" align="center">
-          <template slot-scope="syncTime">
-            {{ scope.row.xfsh }}
-          </template>
-        </el-table-column>
-        <el-table-column label="同步状态" align="center">
-          <template slot-scope="syncDescription">
-            {{ scope.row.gfmc }}
-          </template>
-        </el-table-column>
-        <el-table-column label="入库记录数" align="center">
-          <template slot-scope="scope">
-            {{ scope.row.gfsh }}
-          </template>
-        </el-table-column>
-        <el-table-column label="同步状态描述" align="center">
-          <template slot-scope="scope">
-            {{ scope.row.beanName }}
-          </template>
-        </el-table-column>
+        <el-table-column label="数据类型" align="center" prop="dataType"/>
+        <el-table-column label="数据源系统" align="center" prop="dataSource"/>
+        <el-table-column label="同步时间" align="center" prop="modifiedTime"/>
+        <el-table-column label="同步状态" align="center" prop="jobStatus"/>
+        <el-table-column label="入库记录数" align="center" prop="params"/>
+        <el-table-column label="同步状态描述" align="center" prop="cronExpression"/>
       </el-table>
     </div>
     <div class="page-box">
       <el-pagination
-        :current-page="currentPage"
-        :page-sizes="[10, 50, 100]"
-        :page-size="pageSize"
+        :current-page="searchParams.currentPage"
+        :page-sizes="[1, 10, 50, 100]"
+        :page-size="10"
         :total="total"
-        layout="prev, pager, next, jumper, total, sizes, slot"
+        layout="total, sizes, prev, pager, next, jumper"
+        style="margin-top: 10px"
         @size-change="handleSizeChange"
-        @current-change="handleCurrentChange">
-        <!-- <span></span> -->
-      </el-pagination>
+        @current-change="handleCurrentChange"/>
     </div>
     <el-dialog
       :visible.sync="dialogVisible"
@@ -121,9 +94,9 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { getTableList } from '@/api/queryStatistics/orderOpenMessage'
 import invoiceOrderMessage from '@/components/queryStatistics/invoiceOrderMessage'
 import { getList, exportExcel } from '@/api/dataSync/taskQuery'
+import apiPath from '@/api/apiUrl'
 export default {
   name: 'TaskQuery',
   components: {
@@ -158,9 +131,7 @@ export default {
         customerTaxNumber: ''
       },
       checkedList: [],
-      currentPage: 1,
-      pageSize: 25,
-      total: 1000,
+      total: 0,
       dialogVisible: false,
       dialogType: '',
       form: {
@@ -195,7 +166,7 @@ export default {
       getList(this.searchParams).then(response => {
         this.loading = false
         this.list = response.data.list
-        this.listLoading = false
+        this.total = response.data.count
       }).catch(e => {
         this.loading = false
       })
@@ -204,10 +175,15 @@ export default {
       this.getList()
     },
     reset() { // 重置
-      this.searchs = {
-        customerName: '',
-        customerTaxNumber: ''
+      this.searchParams = {
+        dataType: '',
+        syncStatus: '',
+        syncStart: '',
+        syncEnd: '',
+        currentPage: 1,
+        pageSize: 10
       }
+      this.initTable()
     },
     handleSelectionChange(val) { // 表格选中数据发生变化
       this.checkedList = val
@@ -218,56 +194,61 @@ export default {
     addRoleFn() {
       this.dialogVisible = false
     },
-    delCustomer() { // 删除数据
-      this.$confirm('确定要删除选择的数据吗?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消'
-        // type: 'warning',
-        // center: true
-      }).then(() => {
-        console.log(this.checkedList)
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
+    exportExcel() { // 下载
+      // openPostWindow(apiPath.dataSync.taskQuery.exportExcel, this.searchParams)
+      exportExcel(this.searchParams)
+        .then(response => {
+          console.log(response)
         })
-      })
+        .catch(e => {
+          console.log('error:' + e)
+        })
     },
-    downloadExcel() { // 下载
-      // this.dialogVisible = true
+    handleSizeChange(val) { // 改变单页数据
+      this.searchParams.pageSize = val
+      this.initTable()
     },
-    importExcel() {
-      this.dialogVisible2 = true
-    },
-    handleSizeChange(val) {
-      // console.log(`每页 ${val} 条`)
-    },
-    handleCurrentChange(val) {
-      // console.log(`当前页: ${val}`)
+    handleCurrentChange(val) { // 改变页码
+      this.searchParams.currentPage = val
+      this.initTable()
     },
     handleClose() { // 关闭弹窗
       this.dialogVisible = false
       this.dialogVisible2 = false
     },
-    submitUpload() {
-      this.$refs.upload.submit()
-    },
-    handleRemove(file, fileList) {
-      console.log(file, fileList)
-    },
-    handlePreview(file) {
-      console.log(file)
-    },
     handleEdit(index, row) {
       this.dialogVisible = true
-    },
-    getTableList() {
-      getTableList().then(res => {
-        if (res.code === 20000) {
-          this.list = res.data
-        }
-      })
     }
   }
+}
+// window.open将get请求转化为post
+function openPostWindow(url, data1) {
+  var tempForm = document.createElement('form')
+  tempForm.id = 'tempForm1'
+  tempForm.method = 'post'
+  tempForm.contentType = 'application/x-www-form-urlencoded;charset=UTF-8'
+  tempForm.action = url
+  tempForm.target = '_blank' // 打开新页面
+  var hideInput1 = document.createElement('input')
+  hideInput1.type = 'hidden'
+  hideInput1.name = 'opid' // 后台要接受这个参数来取值
+  hideInput1.value = data1 // 后台实际取到的值
+  tempForm.appendChild(hideInput1)
+  if (document.all) {
+    tempForm.attachEvent('onsubmit', function() {
+    }) // IE
+  } else {
+    var subObj = tempForm.addEventListener('submit', function() {
+    }, false) // firefox
+  }
+  document.body.appendChild(tempForm)
+  if (document.all) {
+    tempForm.fireEvent('onsubmit')
+  } else {
+    tempForm.dispatchEvent(new Event('submit'))
+  }
+  tempForm.submit()
+  document.body.removeChild(tempForm)
 }
 </script>
 <style rel="stylesheet/scss" lang="scss">
