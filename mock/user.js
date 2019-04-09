@@ -251,7 +251,7 @@ const users = {
     parentId: 6,
     title: '任务查询',
     name: 'taskQuery',
-    path: '/taskQuery',
+    path: 'taskQuery',
     component: 'dataSync/taskQuery',
     hidden: false
   }, {
@@ -259,7 +259,7 @@ const users = {
     parentId: 6,
     title: '任务设置',
     name: 'taskSettings',
-    path: '/taskSettings',
+    path: 'taskSettings',
     component: 'dataSync/taskSettings',
     hidden: false
   }],

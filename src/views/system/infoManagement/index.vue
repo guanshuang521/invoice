@@ -1,5 +1,5 @@
 /**
-* @author Dongyt
+* @author Wujy
 * @date 2019/3/27
 * @Description: 商品信息管理
 */
@@ -66,7 +66,7 @@
         </el-table-column>
         <el-table-column label="简码" align="center">
           <template slot-scope="scope">
-            {{ scope.row.jcode }}
+            {{ scope.row.jm }}
           </template>
         </el-table-column>
         <el-table-column label="规格型号" align="center">
@@ -81,7 +81,7 @@
         </el-table-column>
         <el-table-column label="计量单位" align="center">
           <template slot-scope="scope">
-            {{ scope.row.meteringcom }}
+            {{ scope.row.jldw }}
           </template>
         </el-table-column>
         <el-table-column label="含税标志" align="center">
@@ -116,7 +116,7 @@
         </el-table-column>
         <el-table-column label="是否享受优惠政策" align="center">
           <template slot-scope="scope">
-            {{ scope.row.sfxsyh }}
+            {{ scope.row.sfxsyhzc }}
           </template>
         </el-table-column>
         <el-table-column label="优惠政策类型" align="center">
@@ -154,72 +154,64 @@
       custom-class="add-customer">
       <el-form ref="form" :inline="isInline" :rules="rules" :model="form" label-width="120px" size="mini">
         <el-form-item label="商品编码" prop="spbm" size="small">
-          <el-input v-model="form.spbm"/>
+          <el-input v-model="form.spbm" placeholder="请输入"/>
         </el-form-item>
         <el-form-item label="商品名称" prop="spmc" size="small">
-          <el-input v-model="form.spmc"/>
+          <el-input v-model="form.spmc" placeholder="请输入"/>
         </el-form-item>
         <el-form-item label="商品税目">
           <el-select v-model="form.spsm" placeholder="请选择" size="small">
-            <el-option label="企业所得税" value="企业"/>
-            <el-option label="个人所得税" value="个人"/>
+            <el-option v-for="item in dictList['SYS_SPSM']" :key="item.id" :label="item.name" :value="item.code"/>
           </el-select>
         </el-form-item>
         <el-form-item label="简码" prop="jcode" size="small">
-          <el-input v-model="form.jm"/>
+          <el-input v-model="form.jm" placeholder="请输入"/>
         </el-form-item>
         <el-form-item label="含税标志">
           <el-select v-model="form.hsbz" placeholder="请选择" size="small">
-            <el-option label="企业所得税" value="企业"/>
-            <el-option label="个人所得税" value="个人"/>
+            <el-option v-for="item in dictList['SYS_HSBZ']" :key="item.id" :label="item.name" :value="item.code"/>
           </el-select>
         </el-form-item>
         <el-form-item label="零含税标识">
           <el-select v-model="form.lslbs" placeholder="请选择" size="small">
-            <el-option label="企业所得税" value="企业"/>
-            <el-option label="个人所得税" value="个人"/>
+            <el-option v-for="item in dictList['SYS_LSLBS']" :key="item.id" :label="item.name" :value="item.code"/>
           </el-select>
         </el-form-item>
         <el-form-item label="免税类型">
           <el-select v-model="form.mslx" placeholder="请选择" size="small">
-            <el-option label="企业所得税" value="企业"/>
-            <el-option label="个人所得税" value="个人"/>
+            <el-option v-for="item in dictList['SYS_MSLX']" :key="item.id" :label="item.name" :value="item.code"/>
           </el-select>
         </el-form-item>
         <el-form-item label="优惠政策类型">
           <el-select v-model="form.yhzclx" placeholder="请选择" size="small">
-            <el-option label="企业所得税" value="企业"/>
-            <el-option label="个人所得税" value="个人"/>
+            <el-option v-for="item in dictList['SYS_YHZCLX']" :key="item.id" :label="item.name" :value="item.code"/>
           </el-select>
         </el-form-item>
         <el-form-item label="税率(%)">
           <el-select v-model="form.sl" placeholder="税率" size="small">
-            <el-option label="5%" value="0.05"/>
-            <el-option label="6%" value="0.06"/>
+            <el-option v-for="item in dictList['SYS_SL']" :key="item.id" :label="item.name" :value="item.code"/>
           </el-select>
         </el-form-item>
         <el-form-item label="规格型号" prop="ggxh" size="small">
-          <el-input v-model="form.ggxh"/>
+          <el-input v-model="form.ggxh" placeholder="请输入"/>
         </el-form-item>
         <el-form-item label="单元(元)" prop="dj" size="small">
-          <el-input v-model="form.dj"/>
+          <el-input v-model="form.dj" placeholder="请输入"/>
         </el-form-item>
         <el-form-item label="计量单位" prop="meteringcom" size="small">
-          <el-input v-model="form.jldw"/>
+          <el-input v-model="form.jldw" placeholder="请输入"/>
         </el-form-item>
         <el-form-item label="税收分类名称">
           <el-select v-model="form.shflmc" placeholder="请选择" size="small">
-            <el-option label="企业所得税" value="企业"/>
-            <el-option label="个人所得税" value="个人"/>
+            <el-option v-for="item in commodityTypes" :key="item.id" :label="item.jm" :value="item.id"/>
           </el-select>
         </el-form-item>
         <el-form-item label="税收分类编码" prop="shflbm" size="small">
-          <el-input v-model="form.shflbm"/>
+          <el-input v-model="form.shflbm" placeholder="请输入"/>
         </el-form-item>
         <el-form-item label="是否享受优惠政策">
           <el-select v-model="form.sfxsyhzc " placeholder="请选择" size="small">
-            <el-option label="企业所得税" value="企业"/>
-            <el-option label="个人所得税" value="个人"/>
+            <el-option v-for="item in dictList['SYS_SFXSYHZC']" :key="item.id" :label="item.name" :value="item.code"/>
           </el-select>
         </el-form-item>
       </el-form>
@@ -238,8 +230,7 @@
       <el-form ref="form1" :rules="rules" :model="form1" :inline="true" label-width="120px">
         <el-form-item label="税收分类名称">
           <el-select v-model="form1.shflmc" placeholder="请选择" size="small">
-            <el-option label="企业所得税" value="企业"/>
-            <el-option label="个人所得税" value="个人"/>
+            <el-option v-for="item in commodityTypes" :key="item.id" :label="item.jm" :value="item.id"/>
           </el-select>
         </el-form-item>
         <el-form-item label="税收分类编码" prop="spmcName" size="small">
@@ -277,7 +268,7 @@
   </div>
 </template>
 <script>
-import { commodictList, AddData, editData } from '@/api/system/infoManagement'
+import { commodictList, AddData, editData, getAllCommodityTypes } from '@/api/system/infoManagement'
 import apiPath from '@/api/apiUrl'
 import { arrayToMapField } from '@/utils/public'
 import { mapGetters } from 'vuex'
@@ -347,40 +338,45 @@ export default{
         shflbm: [
           { required: true, message: '税收分类编码不能为空', trigger: 'blur' }
         ]
-      }
+      },
+      // 所有税收分类编码
+      commodityTypes: []
     }
   },
   computed: {
     ...mapGetters([
       'dictList'
     ]),
-    SYS_SL() { // 税率
-      return arrayToMapField(this.dictList['SYS_SL'], 'code', 'name')
+    SYS_SPSM() { // 商品税目
+      return arrayToMapField(this.dictList['SYS_SPSM'], 'code', 'name')
     },
     SYS_HSBZ() { // 含税标志
       return arrayToMapField(this.dictList['SYS_HSBZ'], 'code', 'name')
     },
-    SYS_SPSM() { // 商品税目
-      return arrayToMapField(this.dictList['SYS_SPSM'], 'code', 'name')
+    SYS_LSLBS() { // 零税率标识
+      return arrayToMapField(this.dictList['SYS_LSLBS'], 'code', 'name')
     },
-    SYS_SPSM() { // 税收分类名称
-      return arrayToMapField(this.dictList['SYS_SPSM'], 'code', 'name')
+    SYS_MSLX() { // 免税类型
+      return arrayToMapField(this.dictList['SYS_MSLX'], 'code', 'name')
     },
-    SYS_SPSM() { // 零含税标识
-      return arrayToMapField(this.dictList['SYS_SPSM'], 'code', 'name')
+    SYS_YHZCLX() { // 优惠政策类型
+      return arrayToMapField(this.dictList['SYS_YHZCLX'], 'code', 'name')
     },
-    SYS_SPSM() { // 免税类型
-      return arrayToMapField(this.dictList['SYS_SPSM'], 'code', 'name')
+    SYS_SL() { // 税率
+      return arrayToMapField(this.dictList['SYS_SL'], 'code', 'name')
     },
-    SYS_SPSM() { // 是否享受优惠政策
-      return arrayToMapField(this.dictList['SYS_SPSM'], 'code', 'name')
-    },
-    SYS_SPSM() { // 优惠政策类型
-      return arrayToMapField(this.dictList['SYS_SPSM'], 'code', 'name')
+    SYS_SFXSYHZC() { // 是否享受优惠政策
+      return arrayToMapField(this.dictList['SYS_SFXSYHZC'], 'code', 'name')
     }
   },
   mounted() {
     this.$store.getters.isAutoLoadData ? this.getList() : ''
+    // 获取所有的税收分类名称
+    getAllCommodityTypes({}).then(res => {
+      this.commodityTypes = res.data.list
+    }).catch(err => {
+      this.$message.error(err)
+    })
   },
   methods: {
     searchFn() {
@@ -399,16 +395,8 @@ export default{
       this.loading = true
       commodictList(this.searchParams).then(res => {
         this.loading = false
-        if (res.code === '0000') {
-          this.list = res.data.list
-          this.total = res.data.count
-        }
-      }).catch(e => {
-        this.$message({
-          message: '网络错误，请稍后再试',
-          type: 'error'
-        })
-        this.loading = false
+        this.list = res.data.list
+        this.total = res.data.count
       })
     },
     handleSelectionChange(val) { // 表格选中数据发生变化
@@ -510,7 +498,6 @@ export default{
       this.dialogVisible1 = true
     },
     handleUpdata(formName) { // 设置税收分类编码提交
-      debugger
       this.$refs[formName].validate((valid) => {
         if (valid) {
           var params = {}

@@ -32,7 +32,6 @@
     </div>
     <div class="table-container">
       <el-table
-        v-loading="listLoading"
         ref="table"
         :data="list"
         :key="list.id"
@@ -240,6 +239,7 @@ export default {
       this.initTable()
     },
     handleSelectionChange(val) { // 表格选中数据发生变化
+      this.checkedList = []
       val.forEach((item) => {
         this.checkedList.push(item.id)
       })
@@ -299,11 +299,11 @@ export default {
     importExcel() {
       this.dialogVisible2 = true
     },
-    handleSizeChange(val) {
+    handleSizeChange(val) { // 改变单页数据
       this.searchParams.pageSize = val
       this.initTable()
     },
-    handleCurrentChange(val) {
+    handleCurrentChange(val) { // 改变页码
       this.searchParams.currentPage = val
       this.initTable()
     },

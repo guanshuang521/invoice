@@ -13,9 +13,11 @@ export function getList(data) {
     data: data
   })
 }
-export function exportExcel() {
+export function exportExcel(data) {
+  console.log(data)
   return request({
-    url: apiPath.invoice.dataSync.exportExcel,
-    method: 'post'
+    url: apiPath.dataSync.taskQuery.exportExcel,
+    method: 'get',
+    params: data
   })
 }

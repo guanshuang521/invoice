@@ -24,7 +24,7 @@
         style="width: 100%"
         @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="35" align="center"/>
-        <el-table-column prop="index" label="序号" align="center" width="50">
+        <el-table-column prop="index" label="序号" align="center" width="54">
           <template slot-scope="scope">
             {{ scope.$index + 1 }}
           </template>
@@ -33,11 +33,11 @@
           prop="ruleName"
           label="模板名称"
           align="center"
-          width="150"/>
+          width="160"/>
         <el-table-column
           label="按相同大类合并"
           align="center"
-          width="130">
+          width="160">
           <template slot-scope="scope">
             {{ showBoolean[scope.row.classBig] }}
           </template>
@@ -45,7 +45,7 @@
         <el-table-column
           label="按相同税率合并"
           align="center"
-          width="130">
+          width="160">
           <template slot-scope="scope">
             {{ showBoolean[scope.row.rate] }}
           </template>
@@ -53,7 +53,7 @@
         <el-table-column
           label="按相同品名合并"
           align="center"
-          width="130">
+          width="160">
           <template slot-scope="scope">
             {{ showBoolean[scope.row.commodity] }}
           </template>
@@ -61,7 +61,7 @@
         <el-table-column
           label="正负合并"
           align="center"
-          width="130">
+          width="160">
           <template slot-scope="scope">
             {{ showBoolean[scope.row.plusMinus] }}
           </template>
@@ -69,38 +69,24 @@
         <el-table-column
           label="按相同单价合并"
           align="center"
-          width="130">
+          width="160">
           <template slot-scope="scope">
             {{ showBoolean[scope.row.price] }}
           </template>
         </el-table-column>
         <el-table-column
-          label="清单标识"
-          align="center"
-          width="130">
-          <template slot-scope="scope">
-            {{ showListSign[scope.row.listSign] }}
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="invoiceLine"
-          label="发票明细限制行数"
-          align="center"
-          width="146"/>
-        <el-table-column
           prop="status"
           label="启用状态"
           align="center"
-          width="130">
+          width="160">
           <template slot-scope="scope">
             {{ showBoolean[scope.row.status] }}
           </template>
         </el-table-column>
         <el-table-column
           align="center"
-          fixed="right"
           label="操作"
-          width="120">
+          width="160">
           <template slot-scope="scope">
             <el-button type="primary" size="small" @click="editTemplate(scope.row)">编辑</el-button>
           </template>
@@ -163,17 +149,6 @@
             active-value="1"
             inactive-value="2"/>
         </el-form-item>
-        <el-form-item label="清单标识：" class="dashboard-selectBox">
-          <el-switch
-            v-model="templateForm.listSign"
-            active-text="带清单"
-            inactive-text="无清单"
-            active-value="1"
-            inactive-value="2"/>
-        </el-form-item>
-        <el-form-item label="发票明细限制行数：" class="dashboard-selectBox" >
-          <el-input v-model="templateForm.invoiceLine" />
-        </el-form-item>
         <el-form-item label="启用状态：" class="dashboard-selectBox">
           <el-switch
             v-model="templateForm.status"
@@ -218,8 +193,6 @@ export default {
         commodity: '',
         plusMinus: '',
         price: '',
-        listSign: '',
-        invoiceLine: '',
         status: '1'
       },
       // 新增表单校验规则
@@ -286,8 +259,6 @@ export default {
         commodity: '',
         plusMinus: '',
         price: '',
-        listSign: '',
-        invoiceLine: '',
         status: '1'
       }
     },

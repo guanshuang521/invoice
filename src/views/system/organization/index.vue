@@ -95,8 +95,8 @@
                 <el-form-item label="电子发票限额" prop="electricityLimit">
                   <el-input v-model="codeMaintenanceForm.electricityLimit" type="number"/>
                 </el-form-item>
-                <el-form-item label="最大订单数" prop="maxOrderNum">
-                  <el-input v-model="codeMaintenanceForm.maxOrderNum" type="number"/>
+                <el-form-item label="商品行数" prop="maxOrderNum">
+                  <el-input v-model.number="codeMaintenanceForm.maxOrderNum" type="number"/>
                 </el-form-item>
                 <el-form-item label="地址" prop="coAddr">
                   <el-input v-model="codeMaintenanceForm.coAddr"/>
@@ -221,7 +221,7 @@ export default {
         expertLimit: '',
         generalLimit: '',
         electricityLimit: '',
-        maxOrderNum: '',
+        maxOrderNum: 0,
         coAddr: '',
         coPhone: ''
       },
@@ -261,7 +261,8 @@ export default {
           { required: true, message: '请输入电子发票限额', trigger: 'blur' }
         ],
         maxOrderNum: [
-          { required: true, message: '请输入最大订单数', trigger: 'blur' }
+          { required: true, type: 'number', message: '请输入最大订单数', trigger: 'blur' },
+          { min: 1, max: 100, type: 'number', message: '长度在 1 到 100 之间', trigger: 'blur' }
         ],
         coAddr: [
           { required: true, message: '请输入地址', trigger: 'blur' }

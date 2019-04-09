@@ -209,9 +209,9 @@ export default {
     // 表格选中数据发生变化
     handleSelectionChange(val) {
       this.checkedList = []
-      for (let i = 0; i < val.length; i++) {
-        this.checkedList.push(val[i].id)
-      }
+      val.forEach((item) => {
+        this.checkedList.push(item.id)
+      })
     },
     addRole() {
       this.dialogVisible = true

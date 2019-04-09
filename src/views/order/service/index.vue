@@ -39,6 +39,7 @@
             type="date"
             size="small"
             class="filter-item"
+            value-format="yyyy-MM-dd"
             placeholder="请选择"/>
         </el-form-item>
         <el-form-item label="传输日期止">

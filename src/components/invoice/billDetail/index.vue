@@ -7,12 +7,12 @@
   <el-dialog
     :visible.sync="show"
     title="发票明细"
-    width="80%"
+    width="1000px"
     @close="closeDialog">
     <el-table
       :data="tableData"
       border
-      style="width: 100%">
+      style="width: 1000px">
       <el-table-column prop="index" label="" align="center" width="50">
         <template slot-scope="scope">
           {{ scope.$index + 1 }}
