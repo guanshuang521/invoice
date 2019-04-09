@@ -71,3 +71,11 @@ export function exportPosOrder(data) {
     data: data
   })
 }
+export function dobuildInvoicePre(data) {
+  return request({
+    url: apiPath.order.pos.dobuildInvoicePre,
+    method: 'post',
+    data: data
+  })
+}
+

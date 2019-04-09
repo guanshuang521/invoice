@@ -107,7 +107,8 @@ const apiPath = {
       delList: '/invoice/posOrder/deletePosOrderAndDetail',
       downPos: '/invoice/posOrder/downPosOrder',
       buildInvoicePre: '/invoice/posOrder/buildInvoicePre',
-      exportPosOrder: '/invoice/posOrder/exportPosOrder'
+      exportPosOrder: '/invoice/posOrder/exportPosOrder',
+      dobuildInvoicePre: '/invoice/posOrder/doBuildInvoicePre'
     }
   },
   queryStatistics: {
