@@ -239,6 +239,7 @@ export default {
       this.initTable()
     },
     handleSelectionChange(val) { // 表格选中数据发生变化
+      this.checkedList = []
       val.forEach((item) => {
         this.checkedList.push(item.id)
       })
