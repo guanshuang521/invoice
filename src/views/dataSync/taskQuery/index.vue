@@ -19,23 +19,23 @@
             <el-option label="失败" value="0"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="开票日期起">
+        <el-form-item label="同步日期起">
           <el-date-picker
             v-model="searchParams.syncStart"
             type="date"
             size="small"
             value-format="yyyy-MM-dd "
             class="filter-item"
-            placeholder="开票日期起"/>
+            placeholder="同步日期起"/>
         </el-form-item>
-        <el-form-item label="开票日期止">
+        <el-form-item label="同步日期止">
           <el-date-picker
             v-model="searchParams.syncEnd"
             type="date"
             value-format="yyyy-MM-dd"
             size="small"
             class="filter-item"
-            placeholder="开票日期止"/>
+            placeholder="同步日期止"/>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" size="small" @click="initTable">查询</el-button>
@@ -62,10 +62,18 @@
             {{ scope.$index + 1 }}
           </template>
         </el-table-column>
-        <el-table-column label="数据类型" align="center" prop="dataType"/>
+        <el-table-column label="数据类型" align="center" prop="dataType">
+          <template slot-scope="scope">
+            {{ SYS_SJLX[scope.row.dataType] }}
+          </template>
+        </el-table-column>
         <el-table-column label="数据源系统" align="center" prop="dataSource"/>
         <el-table-column label="同步时间" align="center" prop="modifiedTime"/>
-        <el-table-column label="同步状态" align="center" prop="jobStatus"/>
+        <el-table-column label="同步状态" align="center" prop="jobStatus">
+          <template slot-scope="scope">
+            {{ SYS_TBZT[scope.row.jobStatus] }}
+          </template>
+        </el-table-column>
         <el-table-column label="入库记录数" align="center" prop="params"/>
         <el-table-column label="同步状态描述" align="center" prop="cronExpression"/>
       </el-table>
@@ -96,10 +104,13 @@
 import { mapGetters } from 'vuex'
 import invoiceOrderMessage from '@/components/queryStatistics/invoiceOrderMessage'
 import { getList, exportExcel } from '@/api/dataSync/taskQuery'
-import apiPath from '@/api/apiUrl'
+import { arrayToMapField } from '@/utils/public'
+import Template from "../../system/template/index";
+
 export default {
   name: 'TaskQuery',
   components: {
+    Template,
     invoiceOrderMessage
   },
   data() {
@@ -149,9 +160,14 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'name',
-      'roles'
-    ])
+      'dictList'
+    ]),
+    SYS_SJLX() { // 数据类型
+      return arrayToMapField(this.dictList['SYS_SJLX'], 'code', 'name')
+    },
+    SYS_TBZT() { // 同步状态
+      return arrayToMapField(this.dictList['SYS_TBZT'], 'code', 'name')
+    }
   },
   mounted() {
   },
