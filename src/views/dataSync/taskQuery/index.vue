@@ -51,7 +51,7 @@
         ref="table"
         :data="list"
         :key="list.id"
-        element-loading-text="Loading"
+        element-loading-text="listloading"
         border
         fit
         highlight-current-row
@@ -125,7 +125,7 @@ export default {
       }],
       list: [
       ],
-      loading: false,
+      listloading: false,
       searchs: {
         customerName: '',
         customerTaxNumber: ''
@@ -162,13 +162,13 @@ export default {
       this.dialogVisible = false
     },
     getList() { // 获取数据
-      this.loading = true
+      this.listloading = true
       getList(this.searchParams).then(response => {
-        this.loading = false
+        this.listloading = false
         this.list = response.data.list
         this.total = response.data.count
       }).catch(e => {
-        this.loading = false
+        this.listloading = false
       })
     },
     initTable() {
@@ -220,35 +220,6 @@ export default {
       this.dialogVisible = true
     }
   }
-}
-// window.open将get请求转化为post
-function openPostWindow(url, data1) {
-  var tempForm = document.createElement('form')
-  tempForm.id = 'tempForm1'
-  tempForm.method = 'post'
-  tempForm.contentType = 'application/x-www-form-urlencoded;charset=UTF-8'
-  tempForm.action = url
-  tempForm.target = '_blank' // 打开新页面
-  var hideInput1 = document.createElement('input')
-  hideInput1.type = 'hidden'
-  hideInput1.name = 'opid' // 后台要接受这个参数来取值
-  hideInput1.value = data1 // 后台实际取到的值
-  tempForm.appendChild(hideInput1)
-  if (document.all) {
-    tempForm.attachEvent('onsubmit', function() {
-    }) // IE
-  } else {
-    var subObj = tempForm.addEventListener('submit', function() {
-    }, false) // firefox
-  }
-  document.body.appendChild(tempForm)
-  if (document.all) {
-    tempForm.fireEvent('onsubmit')
-  } else {
-    tempForm.dispatchEvent(new Event('submit'))
-  }
-  tempForm.submit()
-  document.body.removeChild(tempForm)
 }
 </script>
 <style rel="stylesheet/scss" lang="scss">
