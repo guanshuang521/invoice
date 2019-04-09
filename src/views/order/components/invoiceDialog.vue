@@ -28,7 +28,7 @@
         </el-form-item>
         <el-form-item v-if="moudelType ==='pos'" label="购方名称" prop="gfmc">
           <el-select v-model="dynamicValidateForm.gfmc" placeholder="请选择购方名称">
-            <el-option v-for="option in dynamicValidateForm.options" :key="option.id" :value="option.id" :label="option.text"/>
+            <el-option v-for="option in dynamicValidateForm.gfnames" :key="option.id" :value="option.id" :label="option.text"/>
           </el-select>
         </el-form-item>
         <el-form-item v-if="moudelType ==='pos'" label="购方税号" prop="gfsh">
@@ -56,6 +56,7 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
+import { dobuildInvoicePre } from '@/api/order'
 export default {
   name: 'InvoiceDialog',
   props: {
@@ -88,6 +89,20 @@ export default {
           {
             id: 2,
             text: '电子发票'
+          }
+        ],
+        gfnames: [
+          {
+            id: 0,
+            text: '中国移动'
+          },
+          {
+            id: 1,
+            text: '中国联通'
+          },
+          {
+            id: 2,
+            text: '中国电信'
           }
         ],
         ydzfpType: '',
@@ -128,6 +143,22 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.$emit('makeInvoicePre', this.dynamicValidateForm)
+          console.log(this.dynamicValidateForm)
+          const args = Object.assign({}, this.dynamicValidateForm)
+          this.loading = true
+          dobuildInvoicePre(args).then(response => {
+            this.loading = false
+            this.$message({
+              type: 'success',
+              message: response.message
+            })
+          }).catch(err => {
+            this.loading = false
+            this.$message({
+              type: 'error',
+              message: err.message
+            })
+          })
         } else {
           console.log('error submit!!')
           return false
