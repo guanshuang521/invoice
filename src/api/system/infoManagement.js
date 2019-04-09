@@ -62,3 +62,10 @@ export function editData(data, id) {
     data: data
   })
 }
+export function getAllCommodityTypes(data) {
+  return request({
+    url: apiPath.system.InfoManagement.commodityTypes,
+    method: 'post',
+    data: data
+  })
+}
