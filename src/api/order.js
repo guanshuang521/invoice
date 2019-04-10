@@ -78,4 +78,11 @@ export function dobuildInvoicePre(data) {
     data: data
   })
 }
+export function gfmcPos(data) {
+  return request({
+    url: apiPath.order.pos.gfmcPos,
+    method: 'post',
+    data: data
+  })
+}
 

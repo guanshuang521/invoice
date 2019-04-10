@@ -109,6 +109,7 @@ const apiPath = {
       downPos: '/invoice/posOrder/downPosOrder',
       buildInvoicePre: '/invoice/posOrder/buildInvoicePre',
       exportPosOrder: '/invoice/posOrder/exportPosOrder',
+      gfmcPos: '/invoice/posOrder/exportPosOrder',
       dobuildInvoicePre: '/invoice/posOrder/doBuildInvoicePre'
     }
   },
