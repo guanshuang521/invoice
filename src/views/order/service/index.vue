@@ -28,14 +28,14 @@
           </el-select>
         </el-form-item>
         <el-form-item label="单据起号">
-          <el-input v-model="searchParams.djqh" placeholder="请输入" size="small"/>
+          <el-input v-model="searchParams.startDjbh" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="单据止号">
-          <el-input v-model="searchParams.djzh" placeholder="请输入" size="small"/>
+          <el-input v-model="searchParams.endDjbh" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="传输日期起">
           <el-date-picker
-            v-model="searchParams.createTime"
+            v-model="searchParams.startDate"
             type="date"
             size="small"
             class="filter-item"
@@ -44,7 +44,7 @@
         </el-form-item>
         <el-form-item label="传输日期止">
           <el-date-picker
-            v-model="searchParams.createTime"
+            v-model="searchParams.endDate"
             type="date"
             size="small"
             class="filter-item"
@@ -151,7 +151,7 @@
         @current-change = "handleCurrentChange"/>
     </div>
     <!--生成预制发票弹窗-->
-    <invoice-dialog :ishow="invoiceDialogVisible" :popmessage="buildPop" @hideDialog="closeDialog"/>
+    <invoice-dialog :ishow="invoiceDialogVisible" :buildPop="buildPop" @hideDialog="closeDialog"/>
   </div>
 </template>
 <script>
@@ -173,9 +173,10 @@ export default {
         djbh: '',
         jsdh: '',
         ddzt: '',
-        djqh: '',
-        djzh: '',
-        createTime: ''
+        startDjbh: '',
+        endDjbh: '',
+        startDate: '',
+        endDate: ''
       },
       // 列表勾选项
       checkedList: [],
@@ -193,7 +194,7 @@ export default {
       }, // 数据源
       columns: [],
       operation: {},
-      buildPop: ''
+      buildPop: {}
     }
   },
   computed: {
@@ -224,9 +225,10 @@ export default {
         djbh: '',
         jsdh: '',
         ddzt: '',
-        djqh: '',
-        djzh: '',
-        createTime: '',
+        startDjbh: '',
+        endDjbh: '',
+        startDate: '',
+        endDate: '',
         currentPage: 1,
         pageSize: 10
       }
@@ -259,7 +261,10 @@ export default {
         buildInvoice(params).then(response => {
           console.log(response)
           this.invoiceDialogVisible = true
-          this.buildPop = ''
+          this.buildPop.num = response.data.num
+          this.buildPop.hjje = response.data.hjje
+          this.buildPop.hjse = response.data.hjse
+          this.buildPop.jshj = response.data.jshj
           this.loading = false
         }).catch(err => {
           this.loading = false
@@ -307,14 +312,9 @@ export default {
       })
     },
     exportData() { // 导出数据
-      window.open(apiPath.order.list.exportErp)
-      // exportERP(this.searchParams).then(response => {
-      // }).catch(err => {
-      //   this.$message({
-      //     type: 'error',
-      //     message: err.message
-      //   })
-      // })
+      const args = Object.assign({}, this.searchParams)
+      const url = apiPath.order.list.exportErp + '?' + args
+      window.open(url)
     },
     // 关闭弹窗
     closeDialog(val) {

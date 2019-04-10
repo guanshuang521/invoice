@@ -7,23 +7,23 @@
  -->
 <template>
   <div class="invoice_dialog" >
-    <el-dialog :visible.sync="ishow" :before-close="hideDialog" title="预制发票" width="600px">
+    <el-dialog :visible.sync="ishow" :before-close="hideDialog" title="预制发票" width="450px">
       <el-form ref="dynamicValidateForm" :rules="rules" :model="dynamicValidateForm" label-width="110px" size="mini">
         <el-form-item label="选择订单数">
-          <el-input disabled="disabled"/>
+          <el-input v-model="buildPop.num" disabled="disabled"/>
         </el-form-item>
         <el-form-item label="合计金额（不含税)">
-          <el-input disabled="disabled"/>
+          <el-input v-model="buildPop.hjje" disabled="disabled"/>
         </el-form-item>
         <el-form-item label="合计税额">
-          <el-input disabled="disabled"/>
+          <el-input v-model="buildPop.hjse" disabled="disabled"/>
         </el-form-item>
         <el-form-item label="加税合计">
-          <el-input disabled="disabled"/>
+          <el-input v-model="buildPop.jshj" disabled="disabled"/>
         </el-form-item>
         <el-form-item label="预制发票类型" prop="ydzfpType">
-          <el-select v-model="dynamicValidateForm.ydzfpType" placeholder="请选择预制发票类型">
-            <el-option v-for="option in dictList['SYS_MSLX']" :key="option.id" :value="option.code" :label="option.name"/>
+          <el-select v-model="dynamicValidateForm.fplx" placeholder="请选择预制发票类型">
+            <el-option v-for="option in dictList['SYS_FPLX']" :key="option.id" :value="option.code" :label="option.name"/>
           </el-select>
         </el-form-item>
         <el-form-item label="邮箱" prop="email">
@@ -34,8 +34,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="hideDialog">取 消</el-button>
-        <el-button type="primary" @click="submitForm('dynamicValidateForm')">确 定</el-button>
+        <el-button size="mini" @click="hideDialog">取 消</el-button>
+        <el-button size="mini" type="primary" @click="submitForm('dynamicValidateForm')">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -54,7 +54,7 @@ export default {
       type: Boolean,
       default: () => false
     },
-    popmeaasge: { // 表格数据源
+    buildPop: { // 表格数据源
       type: Object,
       default: () => {}
     }
@@ -62,52 +62,13 @@ export default {
   data() {
     return {
       dynamicValidateForm: {
-        gfmc: '',
-        options: [
-          {
-            id: 0,
-            text: '专用发票'
-          },
-          {
-            id: 1,
-            text: '普通发票'
-          },
-          {
-            id: 2,
-            text: '电子发票'
-          }
-        ],
-        gfnames: [
-          {
-            id: 0,
-            text: '中国移动'
-          },
-          {
-            id: 1,
-            text: '中国联通'
-          },
-          {
-            id: 2,
-            text: '中国电信'
-          }
-        ],
-        ydzfpType: '',
-        gfsh: '',
-        khhinfo: '',
-        address: '',
+        fplx: '',
         email: '',
         tel: ''
       },
-      buildPop: '',
       rules: {
-        ydzfpType: [
+        fplx: [
           { required: true, message: '请选择预制发票类型', trigger: 'blur' }
-        ],
-        gfmc: [
-          { required: true, message: '请选择购方名称', trigger: 'blur' }
-        ],
-        gfsh: [
-          { required: true, message: '请输入购方税号', trigger: 'blur' }
         ],
         email: [
           { required: true, message: '请输入邮箱地址', trigger: 'blur' },
@@ -129,7 +90,6 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.$emit('makeInvoicePre', this.dynamicValidateForm)
-          console.log(this.dynamicValidateForm)
           const args = Object.assign({}, this.dynamicValidateForm)
           this.loading = true
           dobuildInvoicePre(args).then(response => {
@@ -138,6 +98,7 @@ export default {
               type: 'success',
               message: response.message
             })
+            this.$emit('hideDialog', false)
           }).catch(err => {
             this.loading = false
             this.$message({

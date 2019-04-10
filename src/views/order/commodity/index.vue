@@ -22,10 +22,10 @@
           <el-input v-model="searchParams.ddzt" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="单据起号">
-          <el-input v-model="searchParams.djqh" placeholder="请输入" size="small"/>
+          <el-input v-model="searchParams.startDjbh" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="单据止号">
-          <el-input v-model="searchParams.djzh" placeholder="请输入" size="small"/>
+          <el-input v-model="searchParams.endDjbh" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="传输日期起">
           <el-date-picker
@@ -164,9 +164,10 @@ export default {
         ejgysbm: '',
         djbh: '',
         ddzt: '',
-        djqh: '',
-        djzh: '',
-        createTime: '',
+        startDjbh: '',
+        endDjbh: '',
+        startDate: '',
+        endDate: '',
         billingCode: ''
       },
       // 列表数据
@@ -222,6 +223,16 @@ export default {
     // 查询重置
     reset() {
       this.searchParams = {
+        pageSize: 10,
+        currentPage: 1,
+        gfmc: '',
+        ejgysbm: '',
+        djbh: '',
+        ddzt: '',
+        startDjbh: '',
+        endDjbh: '',
+        startDate: '',
+        endDate: '',
         billingCode: ''
       }
       this.initTable()
@@ -330,14 +341,9 @@ export default {
       })
     },
     exportData() { // 导出数据
-      window.open(apiPath.order.list.exportErp)
-      // exportERP(this.searchParams).then(response => {
-      // }).catch(err => {
-      //   this.$message({
-      //     type: 'error',
-      //     message: err.message
-      //   })
-      // })
+      const args = Object.assign({}, this.searchParams)
+      const url = apiPath.order.list.exportErp + '?' + args
+      window.open(url)
     },
     // 关闭预制发票弹出框
     hideDialog() {
