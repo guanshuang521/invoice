@@ -42,7 +42,6 @@
           <div class="tbT gmfTable">
             <div class="tbmc">
               <span class="gmftitle">名      称：</span>
-              <!--<input v-model="formdata.gmf_mc" class="gmfcontent">-->
               <el-select
                 v-model="formdata.gmf_mc"
                 :remote-method="remoteSearch"
@@ -52,14 +51,14 @@
                 reserve-keyword
                 allow-create
                 size="mini"
-                placeholder="请输入关键词">
+                placeholder="请输入关键词"
+                @change="remoteChange">
                 <el-option
                   v-for="item in gfList"
                   :key="item.value"
                   :label="item.khmc"
                   :value="item.id"/>
               </el-select>
-              <!--<button class="small_select customerSelect" @click="gmfmcBtn">···</button>-->
             </div>
             <div class="tbnsrsbh">
               <span class="gmftitle">纳税人识别号：</span>
@@ -533,17 +532,25 @@ export default {
         })
       })
     },
-    // 购买方名称btn
+    // 购方名称关键字检索
     remoteSearch(query) {
-      console.log(query)
       const args = {
-        kfmc: query
+        khmc: query
       }
       getAllCustomer(args).then(res => {
-        console.log(res)
         this.gfList = res.data.list
       }).catch(err => {
         this.$message.error(err)
+      })
+    },
+    remoteChange(val) {
+      console.log(val)
+      this.gfList.forEach(item => {
+        if (item.id === val) {
+          this.formdata.gmf_nsrsbh = item.khsh
+          this.formdata.gmf_dzdh = item.khdz
+          this.formdata.gmf_yhzh = item.khh + '-' + item.yhzh
+        }
       })
     },
     // 查询购买方名称列表
