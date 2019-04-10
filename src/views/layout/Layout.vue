@@ -68,7 +68,7 @@ export default {
       color: #ffffff;
       .logo-png{
         position: relative;
-        top: 10px;
+        top: 5px;
         left: -10px;
         width: 25px;
         height: 25px;
