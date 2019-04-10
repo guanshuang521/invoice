@@ -259,6 +259,8 @@ export default {
             for (const k in this.form) {
               this.form[k] = ''
             }
+          }).catch(e => {
+            this.$message.error(e)
           })
         } else {
           console.log('error submit!!')

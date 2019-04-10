@@ -122,7 +122,7 @@
         <el-form-item label="链接：" prop="datasourceLink">
           <el-input v-model="form.datasourceLink" size="mini"/>
         </el-form-item>
-        <el-form-item label="启所属组织机构：" prop="orgId">
+        <el-form-item label="所属组织机构：" prop="orgId">
           <el-select v-model="form.orgId" placeholder="请选择" filterable>
             <el-option
               v-for="item in orgIdOptions"
