@@ -42,8 +42,24 @@
           <div class="tbT gmfTable">
             <div class="tbmc">
               <span class="gmftitle">名      称：</span>
-              <input v-model="formdata.gmf_mc" class="gmfcontent">
-              <button class="small_select customerSelect" @click="gmfmcBtn">···</button>
+              <!--<input v-model="formdata.gmf_mc" class="gmfcontent">-->
+              <el-select
+                v-model="formdata.gmf_mc"
+                :remote-method="remoteSearch"
+                filterable
+                remote
+                clearable
+                reserve-keyword
+                allow-create
+                size="mini"
+                placeholder="请输入关键词">
+                <el-option
+                  v-for="item in gfList"
+                  :key="item.value"
+                  :label="item.khmc"
+                  :value="item.id"/>
+              </el-select>
+              <!--<button class="small_select customerSelect" @click="gmfmcBtn">···</button>-->
             </div>
             <div class="tbnsrsbh">
               <span class="gmftitle">纳税人识别号：</span>
@@ -312,6 +328,7 @@
 <script>
 import { getDate, getDx, dataConversion } from '@/utils/filter'
 import { getSpmcList, getGmfList } from '@/api/invoiceOpening/opening'
+import { getAllCustomer } from '@/api/system/infoMaintenance'
 import globaldata from '@/utils/filter'
 // import pagination from 'components/pagination/pagination'
 
@@ -431,17 +448,10 @@ export default {
         khmc: '',
         khsh: '',
         yhzh: ''
-      }
+      },
+      // 购方信息列表
+      gfList: []
     }
-  },
-  modules: {
-
-  },
-  computed: {
-  },
-  watch: {
-  },
-  created: function() {
   },
   mounted: function() {
     this.kprq = getDate(new Date().getTime(), 'yyyy年MM月dd日')
@@ -524,9 +534,17 @@ export default {
       })
     },
     // 购买方名称btn
-    gmfmcBtn() {
-      this.isgmfmcDialog = true
-      this.getGmfList()
+    remoteSearch(query) {
+      console.log(query)
+      const args = {
+        kfmc: query
+      }
+      getAllCustomer(args).then(res => {
+        console.log(res)
+        this.gfList = res.data.list
+      }).catch(err => {
+        this.$message.error(err)
+      })
     },
     // 查询购买方名称列表
     getGmfList() {
@@ -638,7 +656,7 @@ export default {
     },
     // 确认回填税收编码
     selectGoods() {
-      if (this.goods.item != '') {
+      if (this.goods.item !== '') {
         var checked = this.goods.item
         this.formdata.lines[this.goods.dialogGoodsIndex]['xmmc'] = checked.spmc
         this.formdata.lines[this.goods.dialogGoodsIndex]['spbm'] = checked.spssbm
@@ -774,6 +792,14 @@ export default {
 }
 </script>
 <style scoped rel="stylesheet/scss" lang="scss">
+  .tbmc /deep/ .el-input__inner{
+    height: 25px!important;
+    border-radius: 0;
+    border-top: none;
+    border-left: none;
+    border-color: #B2945F;
+    width: 422px;
+  }
   .fppm{
     display: flex;
     overflow: hidden;
