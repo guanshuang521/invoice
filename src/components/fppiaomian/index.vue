@@ -309,14 +309,14 @@
               <input v-model="goods.item" :value="item" type="radio" name="goodsId">
               {{ index + 1 }}
             </div>
-            <div>{{ item.spssbm }}</div>
+            <div>{{ item.spbm }}</div>
             <div>{{ item.spmc }}</div>
-            <div>{{ parseInt(item.sl * 100) }}%</div>
+            <div>{{ SYS_SL[item.sl] }}</div>
           </li>
         </ul>
       </div>
 
-      <el-pagination :current-page="goods.currentPage" :page-sizes="[1, 5, 10, 20,50,100]" :page-size="goods.pageSize" :total="goods.totalCount" layout="total, sizes, prev, pager, next, jumper" @size-change="handleSizeChange($event,'isgoods')" @current-change="handleCurrentChange($event,'isgoods')" @prev-click="prePageChange($event,'isgoods')" @next-click="nextPageChange($event,'isgoods')"/>
+      <el-pagination :current-page="goods.currentPage" :page-sizes="[1, 5, 10, 20,50,100]" :page-size="goods.pageSize" :total="goods.totalCount" layout="total, sizes, prev, pager, next, jumper" style="margin: 20px auto" @size-change="handleSizeChange($event,'isgoods')" @current-change="handleCurrentChange($event,'isgoods')" @prev-click="prePageChange($event,'isgoods')" @next-click="nextPageChange($event,'isgoods')"/>
       <div class="dialogbutton-box">
         <button class="bluebtn" @click="selectGoods">确认</button>
       </div>
@@ -328,6 +328,9 @@
 import { getDate, getDx, dataConversion } from '@/utils/filter'
 import { getSpmcList, getGmfList } from '@/api/invoiceOpening/opening'
 import { getAllCustomer } from '@/api/system/infoMaintenance'
+import { getAllList } from '@/api/system/infoManagement'
+import { arrayToMapField } from '@/utils/public'
+import { mapGetters } from 'vuex'
 import globaldata from '@/utils/filter'
 // import pagination from 'components/pagination/pagination'
 
@@ -452,6 +455,14 @@ export default {
       gfList: []
     }
   },
+  computed: {
+    ...mapGetters([
+      'dictList'
+    ]),
+    SYS_SL() { // 税率
+      return arrayToMapField(this.dictList['SYS_SL'], 'code', 'name')
+    }
+  },
   mounted: function() {
     this.kprq = getDate(new Date().getTime(), 'yyyy年MM月dd日')
     // 计算所有 明细项 金额、税额 合计
@@ -549,7 +560,7 @@ export default {
         if (item.id === val) {
           this.formdata.gmf_nsrsbh = item.khsh
           this.formdata.gmf_dzdh = item.khdz
-          this.formdata.gmf_yhzh = item.khh + '-' + item.yhzh
+          this.formdata.gmf_yhzh = item.khh
         }
       })
     },
@@ -649,6 +660,12 @@ export default {
       }
     },
     isGoodsDialog(index) {
+      getAllList({}).then(res => {
+        this.goods.list = res.data.list
+        this.$message.error(res.message)
+      }).catch(err => {
+        this.$message.error(err)
+      })
       this.isgoods = true
       this.goods.dialogGoodsIndex = index
     },

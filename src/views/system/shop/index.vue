@@ -236,6 +236,19 @@ export default {
       if (type === 'add') {
         this.dialogTitle = '新增门店'
         this.showDialog = true
+        this.form = {
+          storeName: '',
+          storeCode: '',
+          userName: '',
+          userPwd: '',
+          datasourceType: '',
+          datasourceDrive: '',
+          datasourceLink: '',
+          orgId: ''
+        }
+        this.$nextTick(() => {
+          this.$refs['store'].resetFields()
+        })
       } else {
         this.dialogTitle = '编辑门店'
         if (this.multipleSelection.length !== 1) {

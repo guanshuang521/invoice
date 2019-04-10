@@ -69,3 +69,11 @@ export function getAllCommodityTypes(data) {
     data: data
   })
 }
+// 获取所有商品列表
+export function getAllList(data) {
+  return request({
+    url: apiPath.system.InfoManagement.allList,
+    method: 'post',
+    data: data
+  })
+}
