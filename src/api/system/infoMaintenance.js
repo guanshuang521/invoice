@@ -27,4 +27,12 @@ export function insertCustomer(data) {
     data
   })
 }
+// 获取所有的购方信息
+export function getAllCustomer(data) {
+  return request({
+    url: apiPath.system.customer.selectCustomerList,
+    method: 'post',
+    data
+  })
+}
 

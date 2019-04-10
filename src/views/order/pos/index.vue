@@ -84,35 +84,35 @@
       custom-class="add-customer">
       <el-form ref="dynamicValidateForm" :rules="rules" :model="dynamicValidateForm" label-width="110px" size="mini">
         <el-form-item label="选择订单数">
-          <el-input disabled="disabled"/>
+          <el-input v-model="num" disabled="disabled"/>
         </el-form-item>
         <el-form-item label="合计金额（不含税)">
-          <el-input disabled="disabled"/>
+          <el-input v-model="hjje" disabled="disabled"/>
         </el-form-item>
         <el-form-item label="合计税额">
-          <el-input disabled="disabled"/>
+          <el-input v-model="hjse" disabled="disabled"/>
         </el-form-item>
         <el-form-item label="加税合计">
-          <el-input disabled="disabled"/>
+          <el-input v-model="jshj" disabled="disabled"/>
         </el-form-item>
-        <el-form-item label="预制发票类型" prop="ydzfpType">
-          <el-select v-model="dynamicValidateForm.ydzfpType" placeholder="请选择预制发票类型">
-            <el-option v-for="option in dictList['SYS_MSLX']" :key="option.id" :value="option.code" :label="option.name"/>
+        <el-form-item label="预制发票类型" prop="fplx">
+          <el-select v-model="dynamicValidateForm.fplx" placeholder="请选择预制发票类型">
+            <el-option v-for="option in dictList['SYS_FPLX']" :key="option.id" :value="option.code" :label="option.name"/>
           </el-select>
         </el-form-item>
         <el-form-item label="购方名称" prop="gfmc">
           <el-select v-model="dynamicValidateForm.gfmc" placeholder="请选择购方名称">
-            <el-option v-for="option in gfmcData" :key="option.id" :value="option.code" :label="option.name"/>
+            <el-option v-for="option in gfmcData" :key="option.id" :value="option.id" :label="option.text"/>
           </el-select>
         </el-form-item>
         <el-form-item label="购方税号" prop="gfsh">
           <el-input v-model="dynamicValidateForm.gfsh"/>
         </el-form-item>
         <el-form-item label="购方地址电话">
-          <el-input v-model="dynamicValidateForm.address" />
+          <el-input v-model="dynamicValidateForm.gfdzdh" />
         </el-form-item>
         <el-form-item label="开户行及账号" >
-          <el-input v-model="dynamicValidateForm.khhinfo" />
+          <el-input v-model="dynamicValidateForm.khhzh" />
         </el-form-item>
         <el-form-item label="邮箱" prop="email">
           <el-input v-model="dynamicValidateForm.email"/>
@@ -130,7 +130,7 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import { getPoslist, delPosList, downPosOrder, buildInvoicePre, exportPosOrder, dobuildInvoicePre } from '@/api/order'
+import { getPoslist, delPosList, downPosOrder, buildInvoicePre, dobuildInvoicePre, gfmcPos } from '@/api/order'
 import apiPath from '@/api/apiUrl'
 export default {
   name: 'Dashboard',
@@ -144,7 +144,20 @@ export default {
       },
       // 列表数据
       tableList: [],
-      gfmcData: [],
+      gfmcData: [
+        {
+          id: 0,
+          text: '中国移动'
+        },
+        {
+          id: 1,
+          text: '中国联通'
+        },
+        {
+          id: 2,
+          text: '中国电信'
+        }
+      ],
       // 列表总条数
       totalCount: 0,
       searchConditions: {
@@ -165,45 +178,17 @@ export default {
       // 已勾选的列表项
       checkedList: [],
       dynamicValidateForm: {
+        ids: '',
         gfmc: '',
-        options: [
-          {
-            id: 0,
-            text: '专用发票'
-          },
-          {
-            id: 1,
-            text: '普通发票'
-          },
-          {
-            id: 2,
-            text: '电子发票'
-          }
-        ],
-        gfnames: [
-          {
-            id: 0,
-            text: '中国移动'
-          },
-          {
-            id: 1,
-            text: '中国联通'
-          },
-          {
-            id: 2,
-            text: '中国电信'
-          }
-        ],
-        ydzfpType: '',
+        fplx: '',
         gfsh: '',
-        khhinfo: '',
-        address: '',
+        gmfDzdh: '',
+        khhzh: '',
         email: '',
         tel: ''
       },
-      buildPop: '',
       rules: {
-        ydzfpType: [
+        fplx: [
           { required: true, message: '请选择预制发票类型', trigger: 'blur' }
         ],
         gfmc: [
@@ -219,7 +204,12 @@ export default {
         tel: [
           { pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号码', trigger: 'blur' }
         ]
-      }
+      },
+      // 勾选弹窗
+      num: '',
+      hjje: '',
+      hjse: '',
+      jshj: ''
     }
   },
   computed: {
@@ -377,6 +367,19 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       }).then(() => {
+        // 购方名称接口
+        // gfmcPos().then(response => {
+        //   this.loading = false
+        //   console.log(response)
+        //   // this.gfmcData = response.data
+        // }).catch(err => {
+        //   this.loading = false
+        //   this.$message({
+        //     type: 'error',
+        //     message: err.message
+        //   })
+        // })
+        // 勾选生成预制发票
         const params = {
           ids: this.checkedList.join(',')
         }
@@ -385,7 +388,10 @@ export default {
         buildInvoicePre(params).then(response => {
           this.loading = false
           this.dialogVisible = true
-          console.log(response)
+          this.num = response.data.num
+          this.hjje = response.data.hjje
+          this.hjse = response.data.hjse
+          this.jshj = response.data.jshj
         }).catch(err => {
           this.loading = false
           this.$message({
@@ -393,7 +399,6 @@ export default {
             message: err.message
           })
         })
-        // 购方名称接口
       })
     },
     hideDialog() {
@@ -418,7 +423,6 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.$emit('makeInvoicePre', this.dynamicValidateForm)
-          console.log(this.dynamicValidateForm)
           const args = Object.assign({}, this.dynamicValidateForm)
           this.loading = true
           dobuildInvoicePre(args).then(response => {
@@ -427,6 +431,7 @@ export default {
               type: 'success',
               message: response.message
             })
+            this.dialogVisible = false
           }).catch(err => {
             this.loading = false
             this.$message({

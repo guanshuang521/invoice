@@ -81,6 +81,7 @@ const apiPath = {
     },
     customer: {
       selectByCustomer: '/rbac/customer/selectByCustomer', // 购方信息查询
+      selectCustomerList: '/rbac/customer/selectCustomersList', // 获取所有购方信息
       deleteCustomer: '/rbac/customer/deleteCustomer', // 购方信息删除
       insertCustomer: '/rbac/customer/insertCustomer', // 购方信息新增
       exportModle: '/rbac/customer/downloadCustomerExcel', // 导出模板
@@ -91,10 +92,6 @@ const apiPath = {
     },
     invoiceModel: {
       list: ''
-    },
-    infoManagement: {
-      list: '',
-      newAdd: ''
     }
   },
   order: {
@@ -111,6 +108,7 @@ const apiPath = {
       downPos: '/invoice/posOrder/downPosOrder',
       buildInvoicePre: '/invoice/posOrder/buildInvoicePre',
       exportPosOrder: '/invoice/posOrder/exportPosOrder',
+      gfmcPos: '/invoice/posOrder/exportPosOrder',
       dobuildInvoicePre: '/invoice/posOrder/doBuildInvoicePre'
     }
   },
