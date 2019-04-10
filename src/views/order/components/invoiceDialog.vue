@@ -23,22 +23,8 @@
         </el-form-item>
         <el-form-item label="预制发票类型" prop="ydzfpType">
           <el-select v-model="dynamicValidateForm.ydzfpType" placeholder="请选择预制发票类型">
-            <el-option v-for="option in dynamicValidateForm.options" :key="option.id" :value="option.id" :label="option.text"/>
+            <el-option v-for="option in dictList['SYS_MSLX']" :key="option.id" :value="option.code" :label="option.name"/>
           </el-select>
-        </el-form-item>
-        <el-form-item v-if="moudelType ==='pos'" label="购方名称" prop="gfmc">
-          <el-select v-model="dynamicValidateForm.gfmc" placeholder="请选择购方名称">
-            <el-option v-for="option in dynamicValidateForm.gfnames" :key="option.id" :value="option.id" :label="option.text"/>
-          </el-select>
-        </el-form-item>
-        <el-form-item v-if="moudelType ==='pos'" label="购方税号" prop="gfsh">
-          <el-input v-model="dynamicValidateForm.gfsh"/>
-        </el-form-item>
-        <el-form-item v-if="moudelType ==='pos'" label="购方地址电话">
-          <el-input v-model="dynamicValidateForm.address" />
-        </el-form-item>
-        <el-form-item v-if="moudelType ==='pos'" label="开户行及账号" >
-          <el-input v-model="dynamicValidateForm.khhinfo" />
         </el-form-item>
         <el-form-item label="邮箱" prop="email">
           <el-input v-model="dynamicValidateForm.email"/>
@@ -134,7 +120,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['name', 'roles'])
+    ...mapGetters(['name', 'roles', 'dictList'])
   },
   mounted() {
   },
