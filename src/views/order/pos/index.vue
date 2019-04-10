@@ -76,26 +76,64 @@
         layout = "total, sizes, prev, pager, next, jumper"
         @size-change = "handleSizeChange"
         @current-change = "handleCurrentChange"/>
-      <!--<span v-show="dataSource.list&&dataSource.list.length>1" class="hjje">合计金额:{{ dataSource.total }}</span>-->
-      <!--<span class="hjje">合计金额:</span>-->
-      <!--<span class="hjse">合计税额:</span>-->
-      <!--<span class="jshj">加税合计:</span>-->
     </div>
-    <Invoicedialog
-      :moudel-type="moudelType"
-      :ishow="showDialog"
-      @makeInvoicePre="makeInvoicePre"
-      @hideDialog="hideDialog"/>
+    <el-dialog
+      :visible.sync="dialogVisible"
+      :before-close="hideDialog"
+      width="620px"
+      custom-class="add-customer">
+      <el-form ref="dynamicValidateForm" :rules="rules" :model="dynamicValidateForm" label-width="110px" size="mini">
+        <el-form-item label="选择订单数">
+          <el-input disabled="disabled"/>
+        </el-form-item>
+        <el-form-item label="合计金额（不含税)">
+          <el-input disabled="disabled"/>
+        </el-form-item>
+        <el-form-item label="合计税额">
+          <el-input disabled="disabled"/>
+        </el-form-item>
+        <el-form-item label="加税合计">
+          <el-input disabled="disabled"/>
+        </el-form-item>
+        <el-form-item label="预制发票类型" prop="ydzfpType">
+          <el-select v-model="dynamicValidateForm.ydzfpType" placeholder="请选择预制发票类型">
+            <el-option v-for="option in dictList['SYS_MSLX']" :key="option.id" :value="option.code" :label="option.name"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="购方名称" prop="gfmc">
+          <el-select v-model="dynamicValidateForm.gfmc" placeholder="请选择购方名称">
+            <el-option v-for="option in gfmcData" :key="option.id" :value="option.code" :label="option.name"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="购方税号" prop="gfsh">
+          <el-input v-model="dynamicValidateForm.gfsh"/>
+        </el-form-item>
+        <el-form-item label="购方地址电话">
+          <el-input v-model="dynamicValidateForm.address" />
+        </el-form-item>
+        <el-form-item label="开户行及账号" >
+          <el-input v-model="dynamicValidateForm.khhinfo" />
+        </el-form-item>
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="dynamicValidateForm.email"/>
+        </el-form-item>
+        <el-form-item label="手机号" prop="tel">
+          <el-input v-model="dynamicValidateForm.tel"/>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer" align="center">
+        <el-button size="mini" type="primary" @click="submitForm('dynamicValidateForm')">确 定</el-button>
+        <el-button size="mini" @click="dialogVisible = false">取消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import Invoicedialog from '../components/invoiceDialog'
-import { getPoslist, delPosList, downPosOrder, buildInvoicePre, exportPosOrder } from '@/api/order'
+import { getPoslist, delPosList, downPosOrder, buildInvoicePre, exportPosOrder, dobuildInvoicePre } from '@/api/order'
 import apiPath from '@/api/apiUrl'
 export default {
   name: 'Dashboard',
-  components: { Invoicedialog },
   data() {
     return {
       // 列表查询参数
@@ -106,9 +144,9 @@ export default {
       },
       // 列表数据
       tableList: [],
+      gfmcData: [],
       // 列表总条数
       totalCount: 0,
-      moudelType: 'pos',
       searchConditions: {
         buyyerName: '',
         supplierCode: '',
@@ -123,13 +161,69 @@ export default {
       queryConditionsForm: [], // 接受的config的查询条件配置的参数
       columns: [], // 接受的config的配置的参数
       operation: {}, // 接受的config的操作配置的参数
-      showDialog: false,
+      dialogVisible: false,
       // 已勾选的列表项
-      checkedList: []
+      checkedList: [],
+      dynamicValidateForm: {
+        gfmc: '',
+        options: [
+          {
+            id: 0,
+            text: '专用发票'
+          },
+          {
+            id: 1,
+            text: '普通发票'
+          },
+          {
+            id: 2,
+            text: '电子发票'
+          }
+        ],
+        gfnames: [
+          {
+            id: 0,
+            text: '中国移动'
+          },
+          {
+            id: 1,
+            text: '中国联通'
+          },
+          {
+            id: 2,
+            text: '中国电信'
+          }
+        ],
+        ydzfpType: '',
+        gfsh: '',
+        khhinfo: '',
+        address: '',
+        email: '',
+        tel: ''
+      },
+      buildPop: '',
+      rules: {
+        ydzfpType: [
+          { required: true, message: '请选择预制发票类型', trigger: 'blur' }
+        ],
+        gfmc: [
+          { required: true, message: '请选择购方名称', trigger: 'blur' }
+        ],
+        gfsh: [
+          { required: true, message: '请输入购方税号', trigger: 'blur' }
+        ],
+        email: [
+          { required: true, message: '请输入邮箱地址', trigger: 'blur' },
+          { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }
+        ],
+        tel: [
+          { pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号码', trigger: 'blur' }
+        ]
+      }
     }
   },
   computed: {
-    ...mapGetters(['name', 'roles'])
+    ...mapGetters(['name', 'roles', 'dictList'])
   },
   mounted() {
   },
@@ -159,17 +253,18 @@ export default {
       this.initTable()
     },
     exportPos() {
-      // window.open(apiPath.order.pos.exportPosOrder)
-      exportPosOrder(this.searchParams, { responseType: 'arraybuffer' }).then(response => {
-        const blob = new Blob([response], { type: 'application/vnd.ms-excel' })
-        const objectUrl = URL.createObjectURL(blob)
-        window.location.href = objectUrl
-      }).catch(err => {
-        this.$message({
-          type: 'error',
-          message: err.message
-        })
-      })
+      const url = apiPath.order.pos.exportPosOrder + '?djbh=' + this.searchParams.djbh
+      window.open(url)
+      // exportPosOrder(this.searchParams, { responseType: 'arraybuffer' }).then(response => {
+      //   const blob = new Blob([response], { type: 'application/vnd.ms-excel' })
+      //   const objectUrl = URL.createObjectURL(blob)
+      //   window.location.href = objectUrl
+      // }).catch(err => {
+      //   this.$message({
+      //     type: 'error',
+      //     message: err.message
+      //   })
+      // })
     },
     delList() { // 删除数据
       if (this.checkedList.length === 0) {
@@ -268,7 +363,9 @@ export default {
     makeInvoicePre(formName) {
       console.log(formName)
     },
+    // 勾选生成预制发票
     showInvoiceDialog() {
+      // this.dialogVisible = true
       if (this.checkedList.length === 0) {
         this.$message({
           type: 'info',
@@ -287,7 +384,7 @@ export default {
         this.loading = true
         buildInvoicePre(params).then(response => {
           this.loading = false
-          this.showDialog = true
+          this.dialogVisible = true
           console.log(response)
         }).catch(err => {
           this.loading = false
@@ -296,10 +393,11 @@ export default {
             message: err.message
           })
         })
+        // 购方名称接口
       })
     },
     hideDialog() {
-      this.showDialog = false
+      this.dialogVisible = false
     },
     // 关闭弹窗
     closeDialog(val) {
@@ -316,7 +414,31 @@ export default {
       this.searchParams.currentPage = val
       this.initTable()
     },
-    handleCheckChange() {
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$emit('makeInvoicePre', this.dynamicValidateForm)
+          console.log(this.dynamicValidateForm)
+          const args = Object.assign({}, this.dynamicValidateForm)
+          this.loading = true
+          dobuildInvoicePre(args).then(response => {
+            this.loading = false
+            this.$message({
+              type: 'success',
+              message: response.message
+            })
+          }).catch(err => {
+            this.loading = false
+            this.$message({
+              type: 'error',
+              message: err.message
+            })
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
     }
   }
 }
@@ -333,6 +455,11 @@ export default {
     &-text {
       font-size: 30px;
       line-height: 46px;
+    }
+  }
+  .invoice {
+    &_dialog {
+      margin: 0px;
     }
   }
 </style>

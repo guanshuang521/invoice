@@ -78,83 +78,67 @@
         <el-table-column
           prop="djbh"
           label="单据编号"
-          align="center"
-          width="130"/>
+          align="center"/>
         <el-table-column
           prop="jsdh"
           label="结算单号"
-          align="center"
-          width="130"/>
+          align="center"/>
         <el-table-column
           prop="sjlx"
           label="数据类型"
-          align="center"
-          width="130"/>
+          align="center"/>
         <el-table-column
           prop="djlx"
           label="单据类型"
-          align="center"
-          width="130"/>
+          align="center"/>
         <el-table-column
           prop="djbh"
           label="费用单据编号"
-          align="center"
-          width="130"/>
+          align="center"/>
         <el-table-column
           prop="ejgysbm"
           label="二级供应商编码"
-          align="center"
-          width="130"/>
+          align="center"/>
         <el-table-column
           prop="je"
           label="金额（不含税）"
-          align="center"
-          width="130"/>
+          align="center"/>
         <el-table-column
           prop="sj"
           label="税额"
-          align="center"
-          width="130"/>
+          align="center"/>
         <el-table-column
           prop="jshj"
           label="价税合计"
-          align="center"
-          width="130"/>
+          align="center"/>
         <el-table-column
           prop="xfnssbh"
           label="销方税号"
-          align="center"
-          width="130"/>
+          align="center"/>
         <el-table-column
           prop="gfmc"
           label="购方名称"
-          align="center"
-          width="130"/>
+          align="center"/>
         <el-table-column
           prop="gfsh"
           label="购方税号"
-          align="center"
-          width="130"/>
+          align="center"/>
         <el-table-column
           prop="gfdzdh"
           label="购方地址电话"
-          align="center"
-          width="130"/>
+          align="center"/>
         <el-table-column
           prop="gfkhhzh"
           label="购方开户行及账号"
-          align="center"
-          width="130"/>
+          align="center"/>
         <el-table-column
           prop="csrq"
           label="传输日期"
-          align="center"
-          width="130"/>
+          align="center"/>
         <el-table-column
           prop="bz"
           label="备注"
-          align="center"
-          width="130"/>
+          align="center"/>
       </el-table>
       <el-pagination
         :current-page = "searchParams.currentPage"
@@ -221,9 +205,9 @@ export default {
     initTable() {
       this.listLoading = true
       getOrderlist(this.searchParams).then(res => {
-        this.list = res.data.list
-        this.totalCount = res.data.count
-        this.listLoading = false
+        this.loading = false
+        this.total = res.data.count
+        this.tableList = res.data.list
       }).catch(err => {
         this.$message({
           message: err,
