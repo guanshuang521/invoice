@@ -202,7 +202,7 @@
           <el-input v-model="form.jldw" placeholder="请输入"/>
         </el-form-item>
         <el-form-item label="税收分类名称">
-          <el-select v-model="form.shflmc" placeholder="请选择" size="small">
+          <el-select v-model="form.shflmc" filterable placeholder="请选择" size="small">
             <el-option v-for="item in commodityTypes" :key="item.id" :label="item.jm" :value="item.id"/>
           </el-select>
         </el-form-item>
@@ -229,7 +229,7 @@
       custom-class="add-customer">
       <el-form ref="form1" :rules="rules" :model="form1" :inline="true" label-width="120px">
         <el-form-item label="税收分类名称">
-          <el-select v-model="form1.shflmc" placeholder="请选择" size="small">
+          <el-select v-model="form1.shflmc" filterable placeholder="请选择" size="small">
             <el-option v-for="item in commodityTypes" :key="item.id" :label="item.jm" :value="item.id"/>
           </el-select>
         </el-form-item>

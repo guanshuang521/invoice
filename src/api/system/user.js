@@ -49,4 +49,20 @@ export function getUserDetail() {
     method: 'get'
   })
 }
+// 用户关联角色
+export function assignRoles(data) {
+  return request({
+    url: apiPath.system.user.assignRole,
+    method: 'post',
+    data
+  })
+}
+// 获取所有角色
+export function getAllRoles(data) {
+  return request({
+    url: apiPath.system.user.roleList,
+    method: 'post',
+    data
+  })
+}
 
