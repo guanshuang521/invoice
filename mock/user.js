@@ -6,14 +6,14 @@ const users = {
   },
   'admin-token': [{
     id: 1,
-    parentId: 0,
+    fid: 0,
     title: '系统管理',
     name: 'system',
     path: '/system',
     hidden: false
   }, {
     id: 10,
-    parentId: 1,
+    fid: 1,
     title: '组织机构管理',
     name: 'organization',
     path: 'organization',
@@ -21,7 +21,7 @@ const users = {
     hidden: false
   }, {
     id: 11,
-    parentId: 1,
+    fid: 1,
     title: '门店管理',
     name: 'shop',
     path: 'shop',
@@ -29,7 +29,7 @@ const users = {
     hidden: false
   }, {
     id: 12,
-    parentId: 1,
+    fid: 1,
     title: '用户管理',
     name: 'user',
     path: 'user',
@@ -37,7 +37,7 @@ const users = {
     hidden: false
   }, {
     id: 13,
-    parentId: 1,
+    fid: 1,
     title: '角色权限管理',
     name: 'role',
     path: 'role',
@@ -45,7 +45,7 @@ const users = {
     hidden: false
   }, {
     id: 14,
-    parentId: 1,
+    fid: 1,
     title: '开票规则模板',
     name: 'template',
     path: 'template',
@@ -53,7 +53,7 @@ const users = {
     hidden: false
   }, {
     id: 15,
-    parentId: 1,
+    fid: 1,
     title: '购方信息维护',
     name: 'infoMaintenance',
     path: 'infoMaintenance',
@@ -61,7 +61,7 @@ const users = {
     hidden: false
   }, {
     id: 16,
-    parentId: 1,
+    fid: 1,
     title: '税收分类编码管理',
     name: 'codeManagement',
     path: 'codeManagement',
@@ -69,7 +69,7 @@ const users = {
     hidden: false
   }, {
     id: 17,
-    parentId: 1,
+    fid: 1,
     title: '商品信息管理',
     name: 'infoManagement',
     path: 'infoManagement',
@@ -77,14 +77,14 @@ const users = {
     hidden: false
   }, {
     id: 2,
-    parentId: 0,
+    fid: 0,
     title: '订单管理',
     name: 'order',
     path: '/order',
     hidden: false
   }, {
     id: 20,
-    parentId: 2,
+    fid: 2,
     title: '服务类订单管理',
     name: 'service',
     path: 'service',
@@ -92,7 +92,7 @@ const users = {
     hidden: false
   }, {
     id: 21,
-    parentId: 2,
+    fid: 2,
     title: 'POS订单管理',
     name: 'pos',
     path: 'pos',
@@ -100,7 +100,7 @@ const users = {
     hidden: false
   }, {
     id: 22,
-    parentId: 2,
+    fid: 2,
     title: '商品类订单管理',
     name: 'commodity',
     path: 'commodity',
@@ -108,14 +108,14 @@ const users = {
     hidden: false
   }, {
     id: 3,
-    parentId: 0,
+    fid: 0,
     title: '发票管理',
     name: 'invoice',
     path: '/invoice',
     hidden: false
   }, {
     id: 30,
-    parentId: 3,
+    fid: 3,
     title: '待开专票管理',
     name: 'wSpecial',
     path: 'wSpecial',
@@ -123,7 +123,7 @@ const users = {
     hidden: false
   }, {
     id: 31,
-    parentId: 3,
+    fid: 3,
     title: '待开普票管理',
     name: 'wOrdinary',
     path: 'wOrdinary',
@@ -131,7 +131,7 @@ const users = {
     hidden: false
   }, {
     id: 32,
-    parentId: 3,
+    fid: 3,
     title: '待开电子发票管理',
     name: 'wElectronic',
     path: 'wElectronic',
@@ -139,7 +139,7 @@ const users = {
     hidden: false
   }, {
     id: 33,
-    parentId: 3,
+    fid: 3,
     title: '已开专票管理',
     name: 'oSpecial',
     path: 'oSpecial',
@@ -147,7 +147,7 @@ const users = {
     hidden: false
   }, {
     id: 34,
-    parentId: 3,
+    fid: 3,
     title: '已开普票管理',
     name: 'oOrdinary',
     path: 'oOrdinary',
@@ -155,7 +155,7 @@ const users = {
     hidden: false
   }, {
     id: 35,
-    parentId: 3,
+    fid: 3,
     title: '已开电子发票管理',
     name: 'oElectronic',
     path: 'oElectronic',
@@ -163,7 +163,7 @@ const users = {
     hidden: false
   }, {
     id: 36,
-    parentId: 3,
+    fid: 3,
     title: '红字信息表管理',
     name: 'redTable',
     path: 'redTable',
@@ -171,14 +171,14 @@ const users = {
     hidden: false
   }, {
     id: 4,
-    parentId: 0,
+    fid: 0,
     title: '发票填开',
     name: 'invoiceOpening',
     path: '/invoiceOpening',
     hidden: false
   }, {
     id: 40,
-    parentId: 4,
+    fid: 4,
     title: '手工填开专票',
     name: 'special',
     path: 'special',
@@ -186,7 +186,7 @@ const users = {
     hidden: false
   }, {
     id: 41,
-    parentId: 4,
+    fid: 4,
     title: '手工填开普票',
     name: 'ordinary',
     path: 'ordinary',
@@ -194,7 +194,7 @@ const users = {
     hidden: false
   }, {
     id: 42,
-    parentId: 4,
+    fid: 4,
     title: '手工填开电子发票',
     name: 'electronic',
     path: 'electronic',
@@ -202,7 +202,7 @@ const users = {
     hidden: false
   }, {
     id: 43,
-    parentId: 4,
+    fid: 4,
     title: '手工填开农产品收购',
     name: 'buyFarm',
     path: 'buyFarm',
@@ -210,14 +210,14 @@ const users = {
     hidden: false
   }, {
     id: 5,
-    parentId: 0,
+    fid: 0,
     title: '查询与统计',
     name: 'queryStatistics',
     path: '/queryStatistics',
     hidden: false
   }, {
     id: 51,
-    parentId: 5,
+    fid: 5,
     title: '已开发票查询',
     name: 'openInvoice',
     path: 'openInvoice',
@@ -225,7 +225,7 @@ const users = {
     hidden: false
   }, {
     id: 52,
-    parentId: 5,
+    fid: 5,
     title: '订单开票信息查询',
     name: 'orderOpenMessage',
     path: 'orderOpenMessage',
@@ -233,7 +233,7 @@ const users = {
     hidden: false
   }, {
     id: 53,
-    parentId: 5,
+    fid: 5,
     title: '发票订单信息查询',
     name: 'invoiceOrderMessage',
     path: 'invoiceOrderMessage',
@@ -241,14 +241,14 @@ const users = {
     hidden: false
   }, {
     id: 6,
-    parentId: 0,
+    fid: 0,
     title: '数据同步',
     name: 'dataSync',
     path: '/dataSync',
     hidden: false
   }, {
     id: 60,
-    parentId: 6,
+    fid: 6,
     title: '任务查询',
     name: 'taskQuery',
     path: 'taskQuery',
@@ -256,7 +256,7 @@ const users = {
     hidden: false
   }, {
     id: 61,
-    parentId: 6,
+    fid: 6,
     title: '任务设置',
     name: 'taskSettings',
     path: 'taskSettings',
