@@ -297,6 +297,7 @@ export default {
     },
     importExcel() {
       this.dialogVisible2 = true
+      this.fileList = []
     },
     handleSizeChange(val) { // 改变单页数据
       this.searchParams.pageSize = val
