@@ -78,9 +78,13 @@
         <el-form-item label="用户名：" prop="userName" >
           <el-input v-model="userInfo.userName" placeholder="请输入"/>
         </el-form-item>
-        <!--<el-form-item label="角色：" prop="role" >-->
-        <!--<el-input v-model="userInfo.role" placeholder="请输入"/>-->
-        <!--</el-form-item>-->
+        <br>
+        <el-form-item label="角色：" prop="role">
+          <el-select v-model="userInfo.role" filterable multiple placeholder="请选择" size="small" style="width: 450px">
+            <el-option v-for="item in roleList" :key="item.id" :label="item.roleName" :value="item.id"/>
+          </el-select>
+        </el-form-item>
+        <br>
         <el-form-item label="收款人：" prop="receiver" >
           <el-input v-model="userInfo.receiver" placeholder="请输入"/>
         </el-form-item>
@@ -88,7 +92,7 @@
           <el-input v-model="userInfo.reviewer" placeholder="请输入"/>
         </el-form-item>
         <el-form-item label="所属机构：" prop="kplx">
-          <el-select v-model="userInfo.orgId" placeholder="请选择" style="width: 455px">
+          <el-select v-model="userInfo.orgId" placeholder="请选择" style="width: 450px">
             <el-option label="机构1" value="0"/>
             <el-option label="机构2" value="1"/>
           </el-select>
@@ -111,7 +115,6 @@
               default-expand-all
               node-key="id"
               show-checkbox
-              @check-change="handleCheckChange"
             />
           </div>
         </el-form-item>
@@ -125,7 +128,7 @@
 </template>
 
 <script>
-import { getList, add, edit, nodeList, saveUser, deleteUser, getUserDetail } from '@/api/system/user'
+import { getList, add, edit, deleteUser, getAllRoles, assignRoles } from '@/api/system/user'
 import { getNodeList } from '@/api/system/organization'
 import { arrayToTree } from '@/utils/public'
 export default {
@@ -173,13 +176,20 @@ export default {
         ],
         userName: [
           { required: true, message: '请输入用户名', trigger: 'blur' }
+        ],
+        role: [
+          { required: true, message: '请选择角色', trigger: 'blur' }
         ]
       },
-      organTreeData: []
+      organTreeData: [],
+      // 所有角色列表
+      roleList: []
     }
   },
   mounted() {
+    this.listLoading = true
     this.$store.getters.isAutoLoadData ? this.initTable() : ''
+    this.handleRoleList()
   },
   methods: {
     closeDialog() {
@@ -230,7 +240,8 @@ export default {
         receiver: '',
         reviewer: '',
         status: '',
-        terminalId: ''
+        terminalId: '',
+        role: []
       }
       this.initTree()
     },
@@ -240,21 +251,25 @@ export default {
         if (valid) {
           if (this.dialogType === 'addUser') {
             this.loading = true
-            add(this.userInfo).then(res => {
-              this.$message({
-                message: res.message,
-                type: 'success'
-              })
+            const add = add(this.userInfo).then(res => {
+              this.$message.success(res.message)
               this.loading = false
               this.closeDialog()
               this.initTable()
             }).catch(err => {
               this.loading = false
-              this.$message({
-                message: err,
-                type: 'error'
-              })
+              this.$message.error(err)
               this.closeDialog()
+            })
+            const roles = {
+              roleIdList: this.userInfo.role.join(',')
+            }
+            const assignRoles = assignRoles(roles).then(res => {
+            }).catch()
+            Promise.all([add, assignRoles]).then(res => {
+              this.$message.success(res.message)
+            }).catch(err => {
+              this.$message.error(err)
             })
           } else {
             this.loading = true
@@ -321,12 +336,12 @@ export default {
     },
     // 列表勾选
     handleSelectionChange(val) {
+      this.checkedList = []
       val.forEach((item) => {
         this.checkedList.push(item.id)
       })
       var set = new Set(this.checkedList) // {1,2,3,4}
       this.checkedList = Array.from(set)
-      console.log(this.checkedList)
     },
     // 更改每页显示条数
     handleSizeChange(val) {
@@ -340,7 +355,15 @@ export default {
       this.searchParams.currentPage = val
       this.initTable()
     },
-    handleCheckChange() { // 当勾选项发生变化
+    handleRoleList() {
+      getAllRoles({}).then(res => {
+        this.listLoading = false
+        this.roleList = res.data.list
+        this.$message.success(res)
+      }).catch(err => {
+        this.listLoading = false
+        this.$message.error(err)
+      })
     }
   }
 }

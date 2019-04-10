@@ -4,6 +4,7 @@
       :show-timeout="200"
       :default-active="$route.path"
       :collapse="isCollapse"
+      :unique-opened="true"
       :background-color="variables.menuBg"
       :text-color="variables.menuText"
       :active-text-color="variables.menuActiveText"

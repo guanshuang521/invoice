@@ -35,8 +35,10 @@ const apiPath = {
       add: '/rbac/user/insertUser', // 新增数据
       edit: '/rbac/user/updateUser', // 修改数据
       save: '/rbac/system/user/save.do', // 用户保存
-      delete: '/rbac/user/deleteUser', // 删除用户
-      detail: '/rbac/system/user/detail.do' // 获取用户详情
+      delete: '/rbac/user/deleteTicketList', // 删除用户
+      detail: '/rbac/system/user/detail.do', // 获取用户详情
+      roleList: '/rbac/role/selectByRoleList', // 查询全部角色列表
+      assignRole: '/rbac/user/assignRole' // 用户关联角色
     },
     // 角色权限管理
     role: {
@@ -79,6 +81,7 @@ const apiPath = {
     },
     customer: {
       selectByCustomer: '/rbac/customer/selectByCustomer', // 购方信息查询
+      selectCustomerList: '/rbac/customer/selectCustomersList', // 获取所有购方信息
       deleteCustomer: '/rbac/customer/deleteCustomer', // 购方信息删除
       insertCustomer: '/rbac/customer/insertCustomer', // 购方信息新增
       exportModle: '/rbac/customer/downloadCustomerExcel', // 导出模板
@@ -89,10 +92,6 @@ const apiPath = {
     },
     invoiceModel: {
       list: ''
-    },
-    infoManagement: {
-      list: '',
-      newAdd: ''
     }
   },
   order: {

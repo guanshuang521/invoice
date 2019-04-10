@@ -1,6 +1,6 @@
 <template>
   <div :class="classObj" class="app-wrapper">
-    <div class="logo">华联</div>
+    <div class="logo"><img class="logo-png" src="@/assets/common/logo.png">华联</div>
     <sidebar class="sidebar-container"/>
     <div class="main-container">
       <navbar/>
@@ -66,6 +66,14 @@ export default {
       text-align: center;
       background-color: rgb(48, 65, 86);
       color: #ffffff;
+      .logo-png{
+        position: relative;
+        top: 5px;
+        left: -10px;
+        width: 25px;
+        height: 25px;
+        margin-left: -10px;
+      }
     }
   }
   .drawer-bg {

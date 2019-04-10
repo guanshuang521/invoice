@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import fppm from '@/components/fppiaomian/index'
+import fppm from '@/components/fppiaomian'
 
 export default {
   name: 'Special',
@@ -22,8 +22,6 @@ export default {
       fplx: this.$store.getters.fplx_spe, // 专票 004
       formlist: {}
     }
-  },
-  computed: {
   },
   methods: {
     kaijuBtn() {
