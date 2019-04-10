@@ -246,6 +246,19 @@ export default {
           orgId: ''
         }
         this.showDialog = true
+        this.form = {
+          storeName: '',
+          storeCode: '',
+          userName: '',
+          userPwd: '',
+          datasourceType: '',
+          datasourceDrive: '',
+          datasourceLink: '',
+          orgId: ''
+        }
+        this.$nextTick(() => {
+          this.$refs['store'].resetFields()
+        })
       } else {
         if (this.multipleSelection.length !== 1) {
           this.$message({

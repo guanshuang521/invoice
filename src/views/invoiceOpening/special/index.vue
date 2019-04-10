@@ -1,7 +1,7 @@
 <template>
   <div class="special"><!--手工填开专票 004-->
     <form>
-      <button class="bluebtn" @click="kaijuBtn">确认开具</button>
+      <button class="bluebtn" style="margin: 20px 0 0 20px" @click="kaijuBtn">确认开具</button>
       <div class="specialPm">
         <fppm :pmfplx="fplx" @getformdata="pmformdata"/>
       </div>
