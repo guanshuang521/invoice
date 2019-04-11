@@ -159,14 +159,6 @@
         <el-form-item label="商品名称" prop="spmc" size="small">
           <el-input v-model="form.spmc" placeholder="请输入"/>
         </el-form-item>
-        <el-form-item label="商品税目">
-          <el-select v-model="form.spsm" placeholder="请选择" size="small">
-            <el-option v-for="item in dictList['SYS_SPSM']" :key="item.id" :label="item.name" :value="item.code"/>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="简码" prop="jcode" size="small">
-          <el-input v-model="form.jm" placeholder="请输入"/>
-        </el-form-item>
         <el-form-item label="含税标志">
           <el-select v-model="form.hsbz" placeholder="请选择" size="small">
             <el-option v-for="item in dictList['SYS_HSBZ']" :key="item.id" :label="item.name" :value="item.code"/>
@@ -195,7 +187,7 @@
         <el-form-item label="规格型号" prop="ggxh" size="small">
           <el-input v-model="form.ggxh" placeholder="请输入"/>
         </el-form-item>
-        <el-form-item label="单元(元)" prop="dj" size="small">
+        <el-form-item label="单价(元)" prop="dj" size="small">
           <el-input v-model="form.dj" placeholder="请输入"/>
         </el-form-item>
         <el-form-item label="计量单位" prop="meteringcom" size="small">
@@ -328,9 +320,6 @@ export default{
         ],
         jm: [
           { required: true, message: '简码不能为空', trigger: 'blur' }
-        ],
-        dj: [
-          { required: true, message: '单元不能为空', trigger: 'blur' }
         ],
         jldw: [
           { required: true, message: '计量单位不能为空', trigger: 'blur' }

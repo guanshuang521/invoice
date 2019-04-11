@@ -96,8 +96,9 @@
     </div>
     <!--新增/编辑弹框-->
     <el-dialog
+      v-if="showDialog"
       :visible.sync="showDialog"
-      :title="dialogTitle"
+      :title="type === 'add' && '新增' || type === 'edit' && '编辑' || ''"
       width="500px">
       <el-form ref="store" :model="form" :rules="storeRule" label-width="130px" size="mini">
         <el-form-item label="门店名称：" prop="storeName">
@@ -121,7 +122,7 @@
         <el-form-item label="链接：" prop="datasourceLink">
           <el-input v-model="form.datasourceLink" size="mini"/>
         </el-form-item>
-        <el-form-item label="启所属组织机构：" prop="orgId">
+        <el-form-item label="所属组织机构：" prop="orgId">
           <el-select v-model="form.orgId" placeholder="请选择" filterable>
             <el-option
               v-for="item in orgIdOptions"
@@ -234,10 +235,31 @@ export default {
     dialogVisible(type) {
       this.type = type
       if (type === 'add') {
-        this.dialogTitle = '新增门店'
+        this.form = {
+          storeName: '',
+          storeCode: '',
+          userName: '',
+          userPwd: '',
+          datasourceType: '',
+          datasourceDrive: '',
+          datasourceLink: '',
+          orgId: ''
+        }
         this.showDialog = true
+        this.form = {
+          storeName: '',
+          storeCode: '',
+          userName: '',
+          userPwd: '',
+          datasourceType: '',
+          datasourceDrive: '',
+          datasourceLink: '',
+          orgId: ''
+        }
+        this.$nextTick(() => {
+          this.$refs['store'].resetFields()
+        })
       } else {
-        this.dialogTitle = '编辑门店'
         if (this.multipleSelection.length !== 1) {
           this.$message({
             message: '请选择一条数据进行操作',
@@ -261,35 +283,39 @@ export default {
     },
     // 新增/编辑数据
     handleSubmit() {
-      this.$refs['store'].validate((valid) => {
-        if (valid) {
-          this.loading = true
-          if (this.type === 'add') {
-            this.data = this.form
-            addStore(this.data).then(res => {
+      if (this.type === 'add') {
+        this.$refs['store'].validate((valid) => {
+          if (valid) {
+            this.loading = true
+            addStore(this.form).then(res => {
               this.$message({
                 type: 'success',
                 message: res.message
               })
               this.getTableList()
-              this.show = false
+              this.showDialog = false
               this.loading = false
             }).catch(err => {
               this.loading = false
-              console.log(err)
+              this.showDialog = false
             })
-          } else {
-            this.show = false
+          }
+        })
+      } else {
+        this.$refs['store'].validate((valid) => {
+          if (valid) {
+            this.showDialog = false
             editData(this.data2).then(res => {
               this.getTableList()
-              this.show = false
+              this.showDialog = false
             }).catch(err => {
               this.loading = false
+              this.showDialog = false
               console.log(err)
             })
           }
-        }
-      })
+        })
+      }
     },
     // 点击弹框中取消和确定弹框消失
     close() {

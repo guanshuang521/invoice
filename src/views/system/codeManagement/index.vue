@@ -50,12 +50,12 @@
         </el-table-column>
         <el-table-column label="商品或服务名称" align="center">
           <template slot-scope="scope">
-            {{ scope.row.jm }}
+            {{ scope.row.shflmc }}
           </template>
         </el-table-column>
         <el-table-column label="商品或服务分类简称" align="center">
           <template slot-scope="scope">
-            {{ scope.row.spbm }}
+            {{ scope.row.jm }}
           </template>
         </el-table-column>
         <el-table-column label="税收分类编码" align="center">

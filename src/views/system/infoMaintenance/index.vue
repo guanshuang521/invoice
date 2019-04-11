@@ -259,6 +259,8 @@ export default {
             for (const k in this.form) {
               this.form[k] = ''
             }
+          }).catch(e => {
+            this.$message.error(e)
           })
         } else {
           console.log('error submit!!')
@@ -297,6 +299,7 @@ export default {
     },
     importExcel() {
       this.dialogVisible2 = true
+      this.fileList = []
     },
     handleSizeChange(val) { // 改变单页数据
       this.searchParams.pageSize = val
