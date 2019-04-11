@@ -12,15 +12,10 @@ import tableAPI from './table'
 import orderListAPI from './orderList'
 
 import systemAPI from './system/organization'
-import roleAPI from './system/role'
-import customerAPI from './system/infoMaintenance'
 import orderOpenMessageAPI from './queryStatistics/orderOpenMessage'
 // 开具
 import getListAPI from './invoiceOpening/getlist'
 import getGmfListAPI from './invoiceOpening/getGmflist'
-
-import infoManagementAPI from './system/infoManagement'
-
 
 import wSpecialAPI from './invoice/wSpecial'
 // Fix an issue with setting withCredentials = true, cross-domain request lost cookies

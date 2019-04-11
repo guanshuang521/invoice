@@ -121,9 +121,10 @@ const apiPath = {
 
   invoiceOpening: {
     opening: {
-      // 开具
-      gmfGetList: 'rbac/mvc/customer/getList', // POST 查询客户信息列表
-      spmcGetList: 'rbac/mvc/commodityInfo/getList' // POST 查询商品信息列表
+      // 开具纸票
+      makeInvoicePaper: '/invoice/invoice/makeInvoicePaper',
+      // 开具电票
+      makeEInvoice: '/invoice/invoice/makeEInvoice'
     }
   },
 

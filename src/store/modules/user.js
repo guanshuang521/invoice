@@ -9,9 +9,15 @@ const user = {
     roles: [],
     id: '',
     isAddRoute: false,
-    isAutoLoadData: false
+    isAutoLoadData: false,
+    org: {
+      mc: '顺丰快递公司',
+      nsrsbh: '1101011234567890000Q',
+      zcDzdh: '中国北京 13587954531',
+      khhMczh: '中国工商银行 6895758965487415',
+      kpr: '管理员'
+    }
   },
-
   mutations: {
     SET_TOKEN: (state, token) => {
       state.token = token

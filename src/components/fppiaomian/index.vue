@@ -15,7 +15,6 @@
         <li/>
       </ul>
     </div>
-
     <div class="pm_all">
       <div class="fpTitle">
         <div class="fpTitleLeft">
@@ -43,7 +42,7 @@
             <div class="tbmc">
               <span class="gmftitle">名      称：</span>
               <el-select
-                v-model="formdata.gmf_mc"
+                v-model="formdata.gmfMc"
                 :remote-method="remoteSearch"
                 filterable
                 remote
@@ -62,15 +61,15 @@
             </div>
             <div class="tbnsrsbh">
               <span class="gmftitle">纳税人识别号：</span>
-              <input v-model="formdata.gmf_nsrsbh" class="gmfcontent">
+              <input v-model="formdata.gmfNsrsbh" class="gmfcontent">
             </div>
             <div class="tbdzdh">
               <span class="gmftitle">地址  、  电话：</span>
-              <input v-model="formdata.gmf_dzdh" class="gmfcontent">
+              <input v-model="formdata.gmfDzdh" class="gmfcontent">
             </div>
             <div class="tbkhh">
               <span class="gmftitle">开户行及账号：</span>
-              <input v-model="formdata.gmf_yhzh" class="gmfcontent">
+              <input v-model="formdata.gmfYhzh" class="gmfcontent">
             </div>
           </div>
           <div class="tbT mmqText">密<br>码<br>区</div>
@@ -83,8 +82,8 @@
             <li style="width:8%">规格型号</li>
             <li style="width:6%">单位</li>
             <li style="width:9%">数量</li>
-            <li style="width:10%">单价</li>
-            <li style="width:10%">金额</li>
+            <li style="width:10%">单价(含税)</li>
+            <li style="width:10%">金额(含税)</li>
             <li style="width:8%">税率</li>
             <li style="width:8%">税额</li>
             <li style="width:16%">操作</li>
@@ -150,24 +149,24 @@
           <div class="tbB xsfTable">
             <div class="tbmc">
               <span class="xsftitle">名称：</span>
-              <span class="xsfcontent" v-html="formdata.xsf_mc"/>
+              <span class="xsfcontent" v-html="xsfMc"/>
             </div>
             <div class="tbnsrsbh">
               <span class="xsftitle">纳税人识别号：</span>
-              <span class="xsfcontent" v-html="formdata.xsf_nsrsbh"/>
+              <span class="xsfcontent" v-html="xsfNsrsbh"/>
             </div>
             <div class="tbdzdh">
               <span class="xsftitle">地址  、  电话：</span>
-              <span class="xsfcontent" v-html="formdata.xsf_dzdh"/>
+              <span class="xsfcontent" v-html="xsfDzdh"/>
             </div>
             <div class="tbkhh">
               <span class="xsftitle">开户行及账号：</span>
-              <span class="xsfcontent" v-html="formdata.xsf_yhzh"/>
+              <span class="xsfcontent" v-html="xsfYhzh"/>
             </div>
           </div>
           <div class="tbB bzText">备<br><br>注</div>
           <div class="tbB bzTable">
-            <textarea v-model="formdata.xsf_yhzh"/>
+            <textarea v-model="formdata.bz"/>
           </div>
         </div>
       </div>
@@ -177,7 +176,7 @@
         <div class="msgText">复核人：</div>
         <div class="msgCon" v-html="formdata.fhr"/>
         <div class="msgText"><span class="required">*</span>开票人：</div>
-        <div class="msgCon" v-html="formdata.kpr"/>
+        <div class="msgCon" v-html="kpr"/>
         <div class="msgText"><span class="required">*</span>销售方：(章)</div>
         <div class="msgCon"/>
       </div>
@@ -186,7 +185,6 @@
         <p>绑定的流水号为“”,接收发票推送的邮箱为“”</p>
       </div>
     </div>
-
     <div class="edgebg rightEdge">
       <ul class="edge_right">
         <li/>
@@ -287,13 +285,14 @@
       <div class="dialog_item">
         <div class="search_item">
           <div class="search_label">商品税收编码：</div>
-          <input v-model="goods.spssbm" class="search_input" type="text">
+          <input v-model="goods.spbm" class="search_input" type="text">
         </div>
         <div class="search_item">
           <div class="search_label">商品名称：</div>
           <input v-model="goods.spmc" class="search_input" type="text">
         </div>
         <div class="bluebtn" @click="getGoodsList">查询</div>
+        <div class="bluebtn" @click="resetGoodsList">重置</div>
       </div>
 
       <div class="list-table-container">
@@ -316,7 +315,7 @@
         </ul>
       </div>
 
-      <el-pagination :current-page="goods.currentPage" :page-sizes="[1, 5, 10, 20,50,100]" :page-size="goods.pageSize" :total="goods.totalCount" layout="total, sizes, prev, pager, next, jumper" style="margin: 20px auto" @size-change="handleSizeChange($event,'isgoods')" @current-change="handleCurrentChange($event,'isgoods')" @prev-click="prePageChange($event,'isgoods')" @next-click="nextPageChange($event,'isgoods')"/>
+      <el-pagination :current-page="goods.currentPage" :page-sizes="[10, 50, 100]" :page-size="goods.pageSize" :total="goods.totalCount" layout="total, sizes, prev, pager, next, jumper" style="margin: 20px auto" @size-change="handleSizeChange($event,'isgoods')" @current-change="handleCurrentChange($event,'isgoods')" @prev-click="prePageChange($event,'isgoods')" @next-click="nextPageChange($event,'isgoods')"/>
       <div class="dialogbutton-box">
         <button class="bluebtn" @click="selectGoods">确认</button>
       </div>
@@ -326,9 +325,8 @@
 
 <script>
 import { getDate, getDx, dataConversion } from '@/utils/filter'
-import { getSpmcList, getGmfList } from '@/api/invoiceOpening/opening'
 import { getAllCustomer } from '@/api/system/infoMaintenance'
-import { getAllList } from '@/api/system/infoManagement'
+import { commodictList } from '@/api/system/infoManagement'
 import { arrayToMapField } from '@/utils/public'
 import { mapGetters } from 'vuex'
 import globaldata from '@/utils/filter'
@@ -355,16 +353,18 @@ export default {
         fplx: this.pmfplx,
         bmb_bbh: '',
         zsfs: '',
-        xsf_nsrsbh: '',
-        xsf_mc: '',
-        xsf_dzdh: '',
-        xsf_yhzh: '',
-        gmf_nsrsbh: '',
-        gmf_mc: '',
-        gmf_dzdh: '',
-        gmf_yhzh: '',
-        gmf_sjh: '',
-        gmf_dzyx: '',
+        // 销方信息
+        xsfNsrsbh: '',
+        xsfMc: '',
+        xsfDzdh: '',
+        xsfYhzh: '',
+        // 购方信息
+        gmfNsrsbh: '',
+        gmfMc: '',
+        gmfDzdh: '',
+        gmfYhzh: '',
+        gmfSjh: '',
+        gmfDzyx: '',
         kpr: '',
         fhr: '',
         skr: '',
@@ -411,7 +411,6 @@ export default {
           }
         ]
       },
-
       kprq: '',
       isgoods: false, // 选择税收编码弹窗显示
       isgmfmcDialog: false, // 选择购买方名称弹窗显示
@@ -435,8 +434,9 @@ export default {
         dialogGoodsIndex: '', // 打开第几个商品
         item: '',
         currentPage: 1, // 当前页数
-        pageSize: 5, // 每页显示条目个数
+        pageSize: 10, // 每页显示条目个数
         skfplx: '',
+        spbm: '',
         spmc: '',
         spssbm: '',
         list: [],
@@ -457,10 +457,50 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'dictList'
+      'dictList',
+      'org'
     ]),
     SYS_SL() { // 税率
       return arrayToMapField(this.dictList['SYS_SL'], 'code', 'name')
+    },
+    xsfMc() {
+      this.formdata.xsfMc
+      return this.org.mc
+    },
+    xsfNsrsbh() {
+      this.formdata.xsfNsrsbh
+      return this.org.nsrsbh
+    },
+    xsfDzdh() {
+      this.formdata.xsfDzdh
+      return this.org.zcDzdh
+    },
+    xsfYhzh() {
+      this.formdata.xsfYhzh
+      return this.org.khhMczh
+    },
+    kpr() {
+      return this.org.kpr
+    }
+  },
+  watch: {
+    'formdata.lines': {
+      deep: true,
+      handler(newValue, oldValue) {
+        console.log(newValue)
+        let totalHjje = 0
+        let totalHjse = 0
+        newValue.forEach(item => {
+          if (item.hasOwnProperty('xmje') && item.xmje !== '') {
+            totalHjje += parseFloat(item.xmje)
+            totalHjse += parseFloat(item.se)
+          }
+        })
+        this.formdata.hjje = totalHjje - totalHjse
+        this.formdata.hjse = totalHjse
+        this.formdata.jshjupper = getDx(totalHjje)
+        this.formdata.jshj = totalHjje
+      }
     }
   },
   mounted: function() {
@@ -473,8 +513,6 @@ export default {
       this.formdata.hjse = Number(this.formdata.hjse).toFixed(2)
     }
     this.formdata.jshj = (Number(this.formdata.hjje) + Number(this.formdata.hjse)).toFixed(2)
-    this.formdata.jshjupper = getDx(this.formdata.jshj)
-
     this.$emit('getformdata', this.formdata)
   },
   methods: {
@@ -509,7 +547,6 @@ export default {
     },
     // 删除一行
     delBtn(index, yphxz) {
-      console.log(index, 'index')
       // const _this = this
       if (this.formdata.lines.length === 1) {
         return false
@@ -523,24 +560,32 @@ export default {
     },
     // 查询商品列表
     getGoodsList() {
-      const requestData = {
-        'currentPage': '' + this.goods.pageNum,
-        'pageSize': '' + this.goods.pageSize,
-        'flag': 0,
-        'skfplx': this.pmfplx,
-        'spssbm': this.goods.spssbm,
-        'spmc': this.goods.spmc
+      const args = {
+        currentPage: this.goods.currentPage,
+        pageSize: this.goods.pageSize,
+        spbm: this.goods.spbm,
+        spmc: this.goods.spmc
       }
-      getSpmcList(requestData).then(res => {
+      commodictList(args).then(res => {
         this.goods.list = res.data.list
         this.goods.totalCount = res.data.count
-        this.goods.pageSize = res.data.pageSize
-        this.goods.currentPage = res.data.currentPage
       }).catch(err => {
-        this.$message({
-          message: err,
-          type: 'error'
-        })
+        this.$message.error(err)
+      })
+    },
+    // 重置商品列表
+    resetGoodsList() {
+      const args = {
+        currentPage: 1  ,
+        pageSize: 10,
+        spbm: '',
+        spmc: ''
+      }
+      commodictList(args).then(res => {
+        this.goods.list = res.data.list
+        this.goods.totalCount = res.data.count
+      }).catch(err => {
+        this.$message.error(err)
       })
     },
     // 购方名称关键字检索
@@ -555,12 +600,11 @@ export default {
       })
     },
     remoteChange(val) {
-      console.log(val)
       this.gfList.forEach(item => {
         if (item.id === val) {
-          this.formdata.gmf_nsrsbh = item.khsh
-          this.formdata.gmf_dzdh = item.khdz
-          this.formdata.gmf_yhzh = item.khh
+          this.formdata.gmfNsrsbh = item.khsh
+          this.formdata.gmfDzdh = item.khdz
+          this.formdata.gmfYhzh = item.khh
         }
       })
     },
@@ -591,33 +635,41 @@ export default {
     addGmf() {
       this.isyhxx = true
     },
-    // pageSize 改变
-    /*
-              data: $event只能传递第一个默认参数data
-              type: 所属弹窗
-          */
     handleSizeChange(data, type) {
-      // 选择税收编码dialog
       if (type === 'isgoods') {
-        this.goods.pageSize = data
-        this.getGoodsList()
+        const args = {
+          currentPage: this.goods.currentPage,
+          pageSize: data,
+          spbm: this.goods.spbm,
+          spmc: this.goods.spmc
+        }
+        commodictList(args).then(res => {
+          this.goods.list = res.data.list
+          this.goods.totalCount = res.data.count
+        }).catch(err => {
+          this.$message.error(err)
+        })
       }
-      // 选择购买方名称dialog
       if (type === 'isgmfmc') {
         this.gmfmcList.pageSize = data
         // this.getGmfmcList();
       }
     },
-    // currentPage 改变
-    /*
-              data: $event只能传递第一个默认参数data
-              type: 所属弹窗
-          */
     handleCurrentChange(data, type) {
       // 选择税收编码dialog
       if (type === 'isgoods') {
-        this.goods.pageNum = data
-        this.getGoodsList()
+        const args = {
+          currentPage: data,
+          pageSize: data,
+          spbm: this.goods.spbm,
+          spmc: this.goods.spmc
+        }
+        commodictList(args).then(res => {
+          this.goods.list = res.data.list
+          this.goods.totalCount = res.data.count
+        }).catch(err => {
+          this.$message.error(err)
+        })
       }
       // 选择购买方名称dialog
       if (type === 'isgmfmc') {
@@ -625,13 +677,7 @@ export default {
         this.getGmfmcList()
       }
     },
-    // 上一页
-    /*
-              data: $event只能传递第一个默认参数data
-              type: 所属弹窗
-          */
     prePageChange(data, type) {
-      // 选择税收编码dialog
       if (type === 'isgoods') {
         this.goods.currentPage = data
         this.getGoodsList()
@@ -642,13 +688,7 @@ export default {
         this.getGmfmcList()
       }
     },
-    // 下一页
-    /*
-              data: $event只能传递第一个默认参数data
-              type: 所属弹窗
-          */
     nextPageChange(data, type) {
-      // 选择税收编码dialog
       if (type === 'isgoods') {
         this.goods.currentPage = data
         this.getGoodsList()
@@ -660,9 +700,15 @@ export default {
       }
     },
     isGoodsDialog(index) {
-      getAllList({}).then(res => {
+      const args = {
+        currentPage: this.goods.currentPage,
+        pageSize: this.goods.pageSize,
+        spbm: this.goods.spbm,
+        spmc: this.goods.spmc
+      }
+      commodictList(args).then(res => {
         this.goods.list = res.data.list
-        this.$message.error(res.message)
+        this.goods.totalCount = res.data.count
       }).catch(err => {
         this.$message.error(err)
       })
@@ -809,7 +855,6 @@ export default {
     },
     // 添加用户信息
     addUser() {
-      console.log(this.userList)
       this.isyhxx = false
     }
   }
