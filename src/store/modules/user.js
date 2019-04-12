@@ -36,6 +36,9 @@ const user = {
     },
     SET_ISADDROUTE: (state, isAddRoute) => {
       state.isAddRoute = isAddRoute
+    },
+    SET_ORG: (state, org) => {
+      state.org = org
     }
   },
 
@@ -46,7 +49,9 @@ const user = {
       return new Promise((resolve, reject) => {
         login(username, userInfo.password).then(response => {
           const data = response
+          data.token = '19668890-ec09-4c8a-aef2-5d7b559c9983'
           commit('SET_ID', data.id)
+          commit('SET_TOKEN', data.token)
           setToken(data.token)
           resolve()
         }).catch(error => {
@@ -89,6 +94,7 @@ const user = {
         resolve()
       })
     },
+    // 切换登录状态
     toggleIsAddRoute({ commit }) {
       return new Promise(resolve => {
         commit('SET_ISADDROUTE', true)

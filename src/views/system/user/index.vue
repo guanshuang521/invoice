@@ -251,7 +251,11 @@ export default {
         if (valid) {
           if (this.dialogType === 'addUser') {
             this.loading = true
-            const add = add(this.userInfo).then(res => {
+            const roles = {
+              roleIdList: this.userInfo.role.join(',')
+            }
+            const args = Object({}, roles, this.userInfo)
+            add(args).then(res => {
               this.$message.success(res.message)
               this.loading = false
               this.closeDialog()
@@ -261,16 +265,7 @@ export default {
               this.$message.error(err)
               this.closeDialog()
             })
-            const roles = {
-              roleIdList: this.userInfo.role.join(',')
-            }
-            const assignRoles = assignRoles(roles).then(res => {
-            }).catch()
-            Promise.all([add, assignRoles]).then(res => {
-              this.$message.success(res.message)
-            }).catch(err => {
-              this.$message.error(err)
-            })
+
           } else {
             this.loading = true
             edit(this.userInfo).then(res => {

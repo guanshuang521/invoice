@@ -33,9 +33,10 @@ Mock.XHR.prototype.send = function() {
 
 // User
 // Mock.mock(/\/rbac\/login/, 'post', userAPI.login)
+Mock.mock(/\/resource\/info/, 'get', userAPI.getInfo)
 Mock.mock(/\/user\/info/, 'get', userAPI.getInfo)
 Mock.mock(/\/user\/logout/, 'post', userAPI.logout)
-Mock.mock(/\/user\/getRoute/, 'post', userAPI.getRoute)
+Mock.mock(/\/resource\/findRourceByUser/, 'get', userAPI.getRoute)
 // Table
 Mock.mock(/\/table\/list/, 'get', tableAPI.list)
 // System
