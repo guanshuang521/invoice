@@ -2,6 +2,7 @@ import request from '@/utils/request'
 import apiPath from '@/api/apiUrl'
 import md5 from 'js-md5'
 
+// 登录
 export function login(username, password) {
   return request({
     url: apiPath.login.login,
@@ -30,8 +31,8 @@ export function logout() {
 // 获取有权限的路由
 export function getRoute(id) {
   return request({
-    url: '/user/getRoute',
-    method: 'post',
+    url: apiPath.login.userInfo,
+    method: 'get',
     params: { id }
   })
 }

@@ -150,9 +150,9 @@
       :visible.sync="dialogVisible"
       :before-close="handleClose"
       :title="dialogType === 'adds' && '新增' || dialogType === 'edit' && '编辑' || ''"
-      width="710px"
+      width="740px"
       custom-class="add-customer">
-      <el-form ref="form" :inline="isInline" :rules="rules" :model="form" label-width="120px" size="mini">
+      <el-form ref="form" :inline="isInline" :rules="rules" :model="form" label-width="140px" size="mini">
         <el-form-item label="商品编码" prop="spbm" size="small">
           <el-input v-model="form.spbm" placeholder="请输入"/>
         </el-form-item>
@@ -194,15 +194,15 @@
           <el-input v-model="form.jldw" placeholder="请输入"/>
         </el-form-item>
         <el-form-item label="税收分类名称">
-          <el-select v-model="form.shflmc" filterable placeholder="请选择" size="small">
-            <el-option v-for="item in commodityTypes" :key="item.id" :label="item.jm" :value="item.id"/>
+          <el-select v-model="form.shflmc" filterable placeholder="请选择" size="small" @change="changeShflmc">
+            <el-option v-for="item in commodityTypes" :key="item.id" :label="item.shflmc" :value="item.id"/>
           </el-select>
         </el-form-item>
         <el-form-item label="税收分类编码" prop="shflbm" size="small">
-          <el-input v-model="form.shflbm" placeholder="请输入"/>
+          <el-input v-model="form.shflbm" placeholder="请输入" readonly/>
         </el-form-item>
         <el-form-item label="是否享受优惠政策">
-          <el-select v-model="form.sfxsyhzc " placeholder="请选择" size="small">
+          <el-select v-model="form.sfxsyhzc" placeholder="请选择" size="small">
             <el-option v-for="item in dictList['SYS_SFXSYHZC']" :key="item.id" :label="item.name" :value="item.code"/>
           </el-select>
         </el-form-item>
@@ -368,6 +368,17 @@ export default{
     })
   },
   methods: {
+    // 税收分类名称切换
+    changeShflmc() {
+      console.log(this.form.shflmc)
+      this.commodityTypes.forEach(item => {
+        if (item.id === this.form.shflmc) {
+          this.form.shflbm = item.shflbm
+          this.form.sl = item.sl
+          this.form.sfxsyhzc = item.sfxsyhzc
+        }
+      })
+    },
     searchFn() {
       this.getList()
     },
@@ -439,12 +450,6 @@ export default{
               })
               this.loading = false
             })
-          } else {
-            this.$message({
-              message: '网络错误，请稍后再试',
-              type: 'error'
-            })
-            return false
           }
         })
       }
@@ -559,6 +564,9 @@ export default{
   .infoManagement {
     &-container {
       margin: 30px;
+      /deep/ .el-input__inner{
+        width: 180px;
+      }
       .button-container {
         margin-bottom: 20px;
       }

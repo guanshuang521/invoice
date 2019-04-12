@@ -3,23 +3,20 @@
  */
 import request from '@/utils/request'
 import apiPath from '@/api/apiUrl'
-// 商品名称查询列表
-export function getSpmcList(params) {
-  return request({
-    url: apiPath.invoiceOpening.opening.spmcGetList,
-    method: 'post',
-    data:
-      params
 
+// 纸票开具
+export function invoice(params) {
+  return request({
+    url: apiPath.invoiceOpening.opening.makeInvoicePaper,
+    method: 'post',
+    data: params
   })
 }
-// 购买方信息查询列表
-export function getGmfList(params) {
+// 电票开具
+export function invoiceEle(params) {
   return request({
-    url: apiPath.invoiceOpening.opening.gmfGetList,
+    url: apiPath.invoiceOpening.opening.makeEInvoice,
     method: 'post',
-    data:
-      params
-
+    data: params
   })
 }

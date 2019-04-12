@@ -12,15 +12,10 @@ import tableAPI from './table'
 import orderListAPI from './orderList'
 
 import systemAPI from './system/organization'
-import roleAPI from './system/role'
-import customerAPI from './system/infoMaintenance'
 import orderOpenMessageAPI from './queryStatistics/orderOpenMessage'
 // 开具
 import getListAPI from './invoiceOpening/getlist'
 import getGmfListAPI from './invoiceOpening/getGmflist'
-
-import infoManagementAPI from './system/infoManagement'
-
 
 import wSpecialAPI from './invoice/wSpecial'
 // Fix an issue with setting withCredentials = true, cross-domain request lost cookies
@@ -37,10 +32,11 @@ Mock.XHR.prototype.send = function() {
 // })
 
 // User
-Mock.mock(/\/rbac\/login/, 'post', userAPI.login)
+// Mock.mock(/\/rbac\/login/, 'post', userAPI.login)
+Mock.mock(/\/resource\/info/, 'get', userAPI.getInfo)
 Mock.mock(/\/user\/info/, 'get', userAPI.getInfo)
 Mock.mock(/\/user\/logout/, 'post', userAPI.logout)
-Mock.mock(/\/user\/getRoute/, 'post', userAPI.getRoute)
+Mock.mock(/\/resource\/findRourceByUser/, 'get', userAPI.getRoute)
 // Table
 Mock.mock(/\/table\/list/, 'get', tableAPI.list)
 // System

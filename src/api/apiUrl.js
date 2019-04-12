@@ -5,8 +5,9 @@
  */
 const apiPath = {
   login: {
-    login: '/rbac/login',
-    dict: '/rbac/paramDetail/selectParamDetailsList'
+    login: '/rbac/user/login',
+    dict: '/rbac/paramDetail/selectParamDetailsList',
+    userInfo: '/rbac/resource/findRourceByUser'
   },
   // 系统管理
   system: {
@@ -123,9 +124,10 @@ const apiPath = {
 
   invoiceOpening: {
     opening: {
-      // 开具
-      gmfGetList: 'rbac/mvc/customer/getList', // POST 查询客户信息列表
-      spmcGetList: 'rbac/mvc/commodityInfo/getList' // POST 查询商品信息列表
+      // 开具纸票
+      makeInvoicePaper: '/invoice/invoice/makeInvoicePaper',
+      // 开具电票
+      makeEInvoice: '/invoice/invoice/makeEInvoice'
     }
   },
 
@@ -135,6 +137,20 @@ const apiPath = {
       batchIssue: '/invoice/batchIssue',
       billSendBack: '/invoice/billSendBack',
       billDetail: 'invoice/billDetail'
+    },
+    oSpecial: {
+      list: '/invoice/getInvoiceListPage',
+      batchIssue: '/invoice/batchIssue',
+      billSendBack: '/invoice/billSendBack',
+      billDetail: 'invoice/billDetail'
+    },
+    redTable: {
+      list: '/invoice/invoiceHzxxb/selectByInvoiceHzxxb', // 查询
+      delete: '/invoice/invoiceHzxxb/deleteInvoiceHzxxb', // 删除
+      detail: '/invoice/invoiceHzxxb/selectByInvoiceHzxxbByfp', // 详情
+      insert: '/invoice/invoiceHzxxb/insertInvoiceHzxxb', // 保存
+      apply: '/invoice/invoiceHzxxb/applyInvoiceHzxxb', // 申请
+      sync: '/invoice/invoiceHzxxb/queryInvoiceHzxxb' // 同步
     }
   },
   // 数据同步

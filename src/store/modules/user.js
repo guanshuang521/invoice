@@ -9,9 +9,15 @@ const user = {
     roles: [],
     id: '',
     isAddRoute: false,
-    isAutoLoadData: false
+    isAutoLoadData: false,
+    org: {
+      mc: '顺丰快递公司',
+      nsrsbh: '1101011234567890000Q',
+      zcDzdh: '中国北京 13587954531',
+      khhMczh: '中国工商银行 6895758965487415',
+      kpr: '管理员'
+    }
   },
-
   mutations: {
     SET_TOKEN: (state, token) => {
       state.token = token
@@ -30,6 +36,9 @@ const user = {
     },
     SET_ISADDROUTE: (state, isAddRoute) => {
       state.isAddRoute = isAddRoute
+    },
+    SET_ORG: (state, org) => {
+      state.org = org
     }
   },
 
@@ -40,7 +49,9 @@ const user = {
       return new Promise((resolve, reject) => {
         login(username, userInfo.password).then(response => {
           const data = response
+          data.token = '19668890-ec09-4c8a-aef2-5d7b559c9983'
           commit('SET_ID', data.id)
+          commit('SET_TOKEN', data.token)
           setToken(data.token)
           resolve()
         }).catch(error => {
@@ -83,6 +94,7 @@ const user = {
         resolve()
       })
     },
+    // 切换登录状态
     toggleIsAddRoute({ commit }) {
       return new Promise(resolve => {
         commit('SET_ISADDROUTE', true)
