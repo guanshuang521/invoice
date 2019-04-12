@@ -85,4 +85,17 @@ export function gfmcPos(data) {
     data: data
   })
 }
-
+export function dobuildInvoiceGmf(data) {
+  return request({
+    url: apiPath.order.list.dobuildInvoiceGmf,
+    method: 'post',
+    data: data
+  })
+}
+export function dobuildInvoiceIds(data) {
+  return request({
+    url: apiPath.order.list.dobuildInvoiceIds,
+    method: 'post',
+    data: data
+  })
+}

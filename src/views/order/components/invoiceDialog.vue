@@ -7,7 +7,7 @@
  -->
 <template>
   <div class="invoice_dialog" >
-    <el-dialog :visible.sync="ishow" :before-close="hideDialog" title="预制发票" width="450px">
+    <el-dialog :visible.sync="ishow" :before-close="hideDialog" :title="dialogTitle" width="450px">
       <el-form ref="dynamicValidateForm" :rules="rules" :model="dynamicValidateForm" label-width="110px" size="mini">
         <el-form-item label="选择订单数">
           <el-input v-model="buildPop.num" disabled="disabled"/>
@@ -21,28 +21,29 @@
         <el-form-item label="加税合计">
           <el-input v-model="buildPop.jshj" disabled="disabled"/>
         </el-form-item>
-        <el-form-item label="预制发票类型" prop="ydzfpType">
+        <el-form-item label="预制发票类型" prop="fplx">
           <el-select v-model="dynamicValidateForm.fplx" placeholder="请选择预制发票类型">
             <el-option v-for="option in dictList['SYS_FPLX']" :key="option.id" :value="option.code" :label="option.name"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="邮箱" prop="email">
-          <el-input v-model="dynamicValidateForm.email"/>
+        <el-form-item label="邮箱" prop="gmfDzyx">
+          <el-input v-model="dynamicValidateForm.gmfDzyx" :rules="dynamicValidateForm.fplx==26?rules.gmfDzyx:[{ required: false, message: '请输入邮箱地址', trigger: 'blur' }]"/>
         </el-form-item>
-        <el-form-item label="手机号" prop="tel">
-          <el-input v-model="dynamicValidateForm.tel"/>
+        <el-form-item label="手机号" prop="gmfSjh">
+          <el-input v-model="dynamicValidateForm.gmfSjh"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button size="mini" @click="hideDialog">取 消</el-button>
-        <el-button size="mini" type="primary" @click="submitForm('dynamicValidateForm')">确 定</el-button>
+        <el-button v-if="dialogTitle !== '同一购方订单生成预制发票'" size="mini" type="primary" @click="submitAllForm('dynamicValidateForm')">确 定</el-button>
+        <el-button v-if="dialogTitle === '同一购方订单生成预制发票'" type="primary" size="mini" @click="submitForm('dynamicValidateForm')">确 定</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import { dobuildInvoicePre } from '@/api/order'
+import { dobuildInvoiceGmf, dobuildInvoiceIds } from '@/api/order'
 export default {
   name: 'InvoiceDialog',
   props: {
@@ -57,24 +58,33 @@ export default {
     buildPop: { // 表格数据源
       type: Object,
       default: () => {}
+    },
+    dialogTitle: {
+      type: String,
+      default: () => ''
     }
   },
   data() {
     return {
+      // 弹窗标题
       dynamicValidateForm: {
+        ids: '',
         fplx: '',
-        email: '',
-        tel: ''
+        gmfDzyx: '',
+        gmfSjh: '',
+        hjje: '',
+        jshj: '',
+        hjse: ''
       },
       rules: {
         fplx: [
           { required: true, message: '请选择预制发票类型', trigger: 'blur' }
         ],
-        email: [
+        gmfDzyx: [
           { required: true, message: '请输入邮箱地址', trigger: 'blur' },
           { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }
         ],
-        tel: [
+        gmfSjh: [
           { pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号码', trigger: 'blur' }
         ]
       }
@@ -86,13 +96,51 @@ export default {
   mounted() {
   },
   methods: {
+    // 同一购方确定
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.$emit('makeInvoicePre', this.dynamicValidateForm)
           const args = Object.assign({}, this.dynamicValidateForm)
+          args.ids = this.buildPop.ids
+          args.hjje = this.buildPop.hjje
+          args.hjse = this.buildPop.hjse
+          args.jshj = this.buildPop.jshj
           this.loading = true
-          dobuildInvoicePre(args).then(response => {
+          console.log(args)
+          dobuildInvoiceGmf(args).then(response => {
+            this.loading = false
+            this.$message({
+              type: 'success',
+              message: response.message
+            })
+            this.$emit('hideDialog', false)
+          }).catch(err => {
+            this.loading = false
+            this.$message({
+              type: 'error',
+              message: err.message
+            })
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    // 勾选生成发票确定
+    submitAllForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$emit('makeInvoicePre', this.dynamicValidateForm)
+          const args = Object.assign({}, this.dynamicValidateForm)
+          args.ids = this.buildPop.ids
+          args.hjje = this.buildPop.hjje
+          args.hjse = this.buildPop.hjse
+          args.jshj = this.buildPop.jshj
+          this.loading = true
+          console.log(args)
+          dobuildInvoiceIds(args).then(response => {
             this.loading = false
             this.$message({
               type: 'success',

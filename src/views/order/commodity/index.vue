@@ -139,21 +139,18 @@
         @size-change = "handleSizeChange"
         @current-change = "handleCurrentChange"/>
     </div>
-    <Invoicedialog
-      :moudel-type="moudelType"
-      :ishow="showDialog"
-      @makeInvoicePre="makeInvoicePre"
-      @hideDialog="hideDialog"/>
+    <!--生成预制发票弹窗-->
+    <invoice-dialog :ishow="invoiceDialogVisible" :buildPop="buildPop" @hideDialog="closeDialog"/>
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import { getOrderlist, generatenIvoices, exportERP, buildInvoice } from '@/api/order'
-import Invoicedialog from '../components/invoiceDialog'
+import { getOrderlist, generatenIvoices, buildInvoice } from '@/api/order'
+import invoiceDialog from '../components/invoiceDialog'
 import apiPath from '@/api/apiUrl'
 export default {
   name: 'Dashboard',
-  components: { Invoicedialog },
+  components: { invoiceDialog },
   data() {
     return {
       // 列表查询参数
@@ -167,28 +164,17 @@ export default {
         startDjbh: '',
         endDjbh: '',
         startDate: '',
-        endDate: '',
-        billingCode: ''
+        endDate: ''
       },
-      // 列表数据
-      tableList: [],
       // 列表勾选项
       checkedList: [],
+      // 列表数据
+      tableList: [],
       // 列表总条数
       totalCount: 0,
-      moudelType: 'server',
-      searchConditions: {
-        buyyerName: '',
-        supplierCode: '',
-        billCode: '',
-        countOrderNum: '',
-        orderStart: '',
-        orderEnd: '',
-        dateStart: '',
-        dateEnd: '',
-        orderState: ''
-      },
-      queryConditionsForm: [],
+      // 生成预制发票窗口是否显示
+      invoiceDialogVisible: false,
+      multipleSelection: [],
       dataSource: {
         currentPage: 1,
         count: 0,
@@ -196,14 +182,14 @@ export default {
       }, // 数据源
       columns: [],
       operation: {},
-      showDialog: false
+      buildPop: {},
+      dialogTitle: ''
     }
   },
   computed: {
     ...mapGetters(['name', 'roles'])
   },
-  mounted() {
-  },
+  mounted() {},
   methods: {
     // 初始化数据
     initTable() {
@@ -223,8 +209,6 @@ export default {
     // 查询重置
     reset() {
       this.searchParams = {
-        pageSize: 10,
-        currentPage: 1,
         gfmc: '',
         ejgysbm: '',
         djbh: '',
@@ -233,39 +217,10 @@ export default {
         endDjbh: '',
         startDate: '',
         endDate: '',
-        billingCode: ''
+        currentPage: 1,
+        pageSize: 10
       }
       this.initTable()
-    },
-    getList() {
-      console.log(this.dataSource)
-      // if(){}
-      console.log(this.searchConditions === '{}')
-      getOrderlist().then(res => {
-        console.log(res)
-        this.dataSource = res.data
-        this.$message({
-          message: '查询成功',
-          type: 'success'
-        })
-      }).catch(err => {
-        this.$message({
-          message: err,
-          type: 'error'
-        })
-      })
-    },
-    handleDelete(a, b) {
-    },
-    // handleSelectionChange(item) {
-    //   var idsStr = ''
-    //   for (var i = 0; i < item.length; i++) {
-    //     idsStr += item[i]['billingCode'] + ','
-    //   }
-    //   console.log(idsStr)
-    // },
-    makeInvoicePre(formName) {
-      console.log(formName)
     },
     // 同一购方订单生成预制发票
     createPreInvoice() {
@@ -292,8 +247,13 @@ export default {
         }
         this.loading = true
         buildInvoice(params).then(response => {
-          console.log(response)
-          this.showDialog = true
+          this.dialogTitle = '同一购方订单生成预制发票'
+          this.invoiceDialogVisible = true
+          this.buildPop.num = response.data.num
+          this.buildPop.hjje = response.data.hjje
+          this.buildPop.hjse = response.data.hjse
+          this.buildPop.jshj = response.data.jshj
+          this.buildPop.ids = response.data.ids
           this.loading = false
         }).catch(err => {
           this.loading = false
@@ -330,7 +290,8 @@ export default {
         this.loading = true
         generatenIvoices(params).then(response => {
           this.loading = false
-          this.showDialog = true
+          this.dialogTitle = '生成预制发票'
+          this.invoiceDialogVisible = true
         }).catch(err => {
           this.loading = false
           this.$message({
@@ -345,9 +306,10 @@ export default {
       const url = apiPath.order.list.exportErp + '?' + args
       window.open(url)
     },
-    // 关闭预制发票弹出框
-    hideDialog() {
-      this.showDialog = false
+    // 关闭弹窗
+    closeDialog(val) {
+      console.log(val)
+      this.invoiceDialogVisible = val
     },
     // 更改每页显示条数
     handleSizeChange(val) {
@@ -368,8 +330,6 @@ export default {
       this.form = rows
     }
   }
-  // 生成预制发票
-
 }
 </script>
 

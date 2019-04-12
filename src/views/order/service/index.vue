@@ -151,12 +151,12 @@
         @current-change = "handleCurrentChange"/>
     </div>
     <!--生成预制发票弹窗-->
-    <invoice-dialog :ishow="invoiceDialogVisible" :buildPop="buildPop" @hideDialog="closeDialog"/>
+    <invoice-dialog :ishow="invoiceDialogVisible" :dialogTitle="dialogTitle" :buildPop="buildPop" @hideDialog="closeDialog"/>
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import { getOrderlist, generatenIvoices, exportERP, buildInvoice } from '@/api/order'
+import { getOrderlist, generatenIvoices, buildInvoice } from '@/api/order'
 import invoiceDialog from '../components/invoiceDialog'
 import apiPath from '@/api/apiUrl'
 export default {
@@ -194,7 +194,8 @@ export default {
       }, // 数据源
       columns: [],
       operation: {},
-      buildPop: {}
+      buildPop: {},
+      dialogTitle: ''
     }
   },
   computed: {
@@ -259,12 +260,13 @@ export default {
         }
         this.loading = true
         buildInvoice(params).then(response => {
-          console.log(response)
+          this.dialogTitle = '同一购方订单生成预制发票'
           this.invoiceDialogVisible = true
           this.buildPop.num = response.data.num
           this.buildPop.hjje = response.data.hjje
           this.buildPop.hjse = response.data.hjse
           this.buildPop.jshj = response.data.jshj
+          this.buildPop.ids = response.data.ids
           this.loading = false
         }).catch(err => {
           this.loading = false
@@ -301,6 +303,7 @@ export default {
         this.loading = true
         generatenIvoices(params).then(response => {
           this.loading = false
+          this.dialogTitle = '生成预制发票'
           this.invoiceDialogVisible = true
         }).catch(err => {
           this.loading = false

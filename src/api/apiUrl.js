@@ -101,7 +101,9 @@ const apiPath = {
       delerpList: '/invoice/posOrder/deletePosOrderAndDetail',
       exportErp: '/invoice/erpOrder/exportErpOrder',
       getInvoices: '/invoice/erpOrder/biuldInvoiceByIds',
-      buildInvoice: '/invoice/erpOrder/biuldInvoiceByGmf'
+      buildInvoice: '/invoice/erpOrder/biuldInvoiceByGmf',
+      dobuildInvoiceGmf: '/invoice/erpOrder/doBiuldInvoiceByGmf',
+      dobuildInvoiceIds: '/invoice/erpOrder/doBiuldInvoiceByIds'
     },
     pos: {
       findList: '/invoice/posOrder/findAllPosOrderByCondition',
