@@ -172,9 +172,13 @@
       </div>
       <div class="fpmsg">
         <div class="msgText">收款人：</div>
-        <div class="msgCon" v-html="formdata.skr"/>
+        <div class="msgCon">
+          <input v-model="formdata.spr" class="gmfcontent">
+        </div>
         <div class="msgText">复核人：</div>
-        <div class="msgCon" v-html="formdata.fhr"/>
+        <div class="msgCon">
+          <input v-model="formdata.fhr" class="gmfcontent">
+        </div>
         <div class="msgText"><span class="required">*</span>开票人：</div>
         <div class="msgCon" v-html="kpr"/>
         <div class="msgText"><span class="required">*</span>销售方：(章)</div>
