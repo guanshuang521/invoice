@@ -44,7 +44,7 @@ export default {
   },
   data() {
     return {
-      fplx: this.$store.getters.fplx_spe, // 电票 026
+      fplx: this.$store.getters.fplx_ele, // 电票 026
       // 开具数据
       form: {},
       loading: false,

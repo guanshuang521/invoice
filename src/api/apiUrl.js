@@ -5,7 +5,7 @@
  */
 const apiPath = {
   login: {
-    login: '/rbac/login',
+    login: '/rbac/user/login',
     dict: '/rbac/paramDetail/selectParamDetailsList'
   },
   // 系统管理
@@ -134,6 +134,20 @@ const apiPath = {
       batchIssue: '/invoice/batchIssue',
       billSendBack: '/invoice/billSendBack',
       billDetail: 'invoice/billDetail'
+    },
+    oSpecial: {
+      list: '/invoice/getInvoiceListPage',
+      batchIssue: '/invoice/batchIssue',
+      billSendBack: '/invoice/billSendBack',
+      billDetail: 'invoice/billDetail'
+    },
+    redTable: {
+      list: '/invoice/invoiceHzxxb/selectByInvoiceHzxxb', // 查询
+      delete: '/invoice/invoiceHzxxb/deleteInvoiceHzxxb', // 删除
+      detail: '/invoice/invoiceHzxxb/selectByInvoiceHzxxbByfp', // 详情
+      insert: '/invoice/invoiceHzxxb/insertInvoiceHzxxb', // 保存
+      apply: '/invoice/invoiceHzxxb/applyInvoiceHzxxb', // 申请
+      sync: '/invoice/invoiceHzxxb/queryInvoiceHzxxb' // 同步
     }
   },
   // 数据同步

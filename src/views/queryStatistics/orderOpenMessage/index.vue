@@ -345,7 +345,7 @@ export default {
     }
   }
 </style>
-<style rel="stylesheet/scss" lang="scss">
+<style rel="stylesheet/scss" lang="scss" scoped>
   .dashboard-container {
     .search-box {
       .search-item {
@@ -366,7 +366,6 @@ export default {
       float: left;
       .el-input {
         max-width: 150px;
-        // height: 25px;
       }
       &.address .el-input {
         width: 450px;

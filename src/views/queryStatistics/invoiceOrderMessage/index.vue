@@ -335,7 +335,7 @@ export default {
     }
   }
 </style>
-<style rel="stylesheet/scss" lang="scss">
+<style rel="stylesheet/scss" lang="scss" scoped>
   .invoiceOrder-container {
     .search-box {
       .search-item {

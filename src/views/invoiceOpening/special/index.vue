@@ -26,7 +26,7 @@ export default {
   },
   data() {
     return {
-      fplx: this.$store.getters.fplx_ele, // 专票 004
+      fplx: this.$store.getters.fplx_spe, // 专票 004
       // 开具数据
       form: {},
       loading: false

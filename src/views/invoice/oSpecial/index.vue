@@ -8,20 +8,20 @@
     <div class="filter-container">
       <el-form :inline="true" :model="listQuery" class="demo-form-inline">
         <el-form-item label="购方名称">
-          <el-input v-model="listQuery.gfmc" placeholder="请输入" size="small"/>
+          <el-input v-model="listQuery.gmfMc" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="商品名称">
           <el-input v-model="listQuery.ddh" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="发票代码">
-          <el-input v-model="listQuery.spmc" placeholder="请输入" size="small"/>
+          <el-input v-model="listQuery.fpDm" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="发票号码">
-          <el-input v-model="listQuery.fphm" placeholder="请输入" size="small"/>
+          <el-input v-model="listQuery.fpHm" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="开票日期起">
           <el-date-picker
-            v-model="listQuery.spmc"
+            v-model="listQuery.kprq_start"
             type="date"
             size="small"
             class="filter-item"
@@ -29,7 +29,7 @@
         </el-form-item>
         <el-form-item label="开票日期止">
           <el-date-picker
-            v-model="listQuery.spmc"
+            v-model="listQuery.kprq_end"
             type="date"
             size="small"
             class="filter-item"
@@ -37,7 +37,7 @@
         </el-form-item>
         <el-form-item label="作废日期起">
           <el-date-picker
-            v-model="listQuery.spmc"
+            v-model="listQuery.zfrq_start"
             type="date"
             size="small"
             class="filter-item"
@@ -45,20 +45,30 @@
         </el-form-item>
         <el-form-item label="作废日期止">
           <el-date-picker
-            v-model="listQuery.spmc"
+            v-model="listQuery.zfrq_end"
             type="date"
             size="small"
             class="filter-item"
             placeholder="请选择"/>
         </el-form-item>
         <el-form-item label="发票状态">
-          <el-input v-model="listQuery.fphm" placeholder="请输入" size="small"/>
+          <el-select v-model="listQuery.fpzt" placeholder="请选择" size="small">
+            <el-option label="正常" value="1"/>
+            <el-option label="红冲" value="2"/>
+            <el-option label="部分红冲" value="3"/>
+            <el-option label="作废" value="4"/>
+          </el-select>
         </el-form-item>
         <el-form-item label="打印状态">
-          <el-input v-model="listQuery.fphm" placeholder="请输入" size="small"/>
+          <el-select v-model="listQuery.dybz" placeholder="请选择" size="small">
+            <el-option label="是" value="1"/>
+            <el-option label="否" value="0"/>
+          </el-select>
         </el-form-item>
         <el-form-item label="税率">
-          <el-input v-model="listQuery.fphm" placeholder="请输入" size="small"/>
+          <el-select v-model="listQuery.sl" placeholder="请选择" size="small">
+            <el-option v-for="item in dictList['SYS_SL']" :key="item.id" :label="item.name" :value="item.code"/>
+          </el-select>
         </el-form-item>
         <el-form-item>
           <el-button size="small" type="primary" icon="el-icon-search" @click="initList">查询</el-button>
@@ -79,7 +89,6 @@
     <div class="table-container">
       <el-table
         v-loading="listLoading"
-        :key="tableKey"
         :data="dataList"
         border
         fit
@@ -127,35 +136,47 @@
 </template>
 
 <script>
-import { batchIssue, billSendBack, initList } from '@/api/invoice/wSpecial'
+import { getList } from '@/api/invoice/oSpecial'
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'OSpecial',
   data() {
     return {
-      totalCount: 100,
-      placeholder: '请输入',
+      // 列表总条数
+      totalCount: 0,
+      // 列表查询条件
       listQuery: {
         title: '',
         importance: '',
         type: '',
         sort: '',
-        limit: 10,
-        currentPage: 2
+        currentPage: 1,
+        pageSize: 10
       },
-      calendarTypeOptions: [{ name: '1', key: '1' }],
       listLoading: false,
-      list: [{ id: 1 }],
-      tableKey: '',
-      dataList: [{
-        orderNo: 1,
-        gfmc: '购方名称',
-        gfsh: '购方税号'
-      }],
+      dataList: [],
       // 勾选的列表项
       checkedItems: []
     }
   },
+  computed: {
+    ...mapGetters([
+      'dictList'
+    ])
+  },
+  mounted() {
+    this.initList()
+  },
   methods: {
+    initList() {
+      getList(this.listQuery).then(res => {
+        this.dataList = res.data.list
+        this.totalCount = res.count
+      }).catch(err => {
+        this.$message.error(err)
+      })
+    },
     // 发票开具
     billIssue() {
       console.log('')
@@ -217,26 +238,26 @@ export default {
     // 导出
     exportList() {
     },
-    // 查询
-    initList() {
-      initList().then(res => {
-      }).catch(err => {
-        this.$message({
-          message: err,
-          type: 'error'
-        })
-      })
-    },
     // 重置
     handleReset() {
-      this.listQuery.gfmc = ''
-      this.listQuery.ddh = ''
-      this.listQuery.spmc = ''
+      this.listQuery = {
+        title: '',
+        importance: '',
+        type: '',
+        sort: '',
+        currentPage: 1,
+        pageSize: 10
+      }
       this.initList()
     },
-    handleSizeChange() {
+    handleSizeChange(val) {
+      this.listQuery.pageSize = val
+      this.initList()
     },
-    handleCurrentChange() {},
+    handleCurrentChange(val) {
+      this.listQuery.currentPage = val
+      this.initList()
+    },
     handleSelectionChange(val) {
       this.checkedItems = val
       console.log(val)

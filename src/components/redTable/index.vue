@@ -17,11 +17,9 @@
       <table class="hzfp_title" ui="type:Control;id:hzxxbContainTitle">
         <tbody>
           <tr>
-            <td width="33%">填开日期：<input id="tkrq" type="text" name="tkrq" readonly="readonly" style="border: 0"></td>
-            <td width="33%"> 申请方经办人：<input id="sqrmc" type="text" name="sqrmc" readonly="readonly" style="border:0">
-              <input name="sqjgmc" readonly="readonly" style="border:0;" class="ui-hide">
-            </td>
-            <td width="33%"> 申请单号：<input id="sqDh" type="text" name="sqdh" readonly="readonly" style="border: 0;width: 190px"></td>
+            <td width="33%">填开日期：<input v-model="formdata.tkrq" type="text" readonly="readonly" style="border: 0"></td>
+            <td width="33%"> 申请方经办人：<input v-model="formdata.tkrq" type="text" readonly="readonly" style="border:0"></td>
+            <td width="33%"> 申请单号：<input v-model="formdata.sqdh" type="text" readonly="readonly" style="border: 0;width: 190px"></td>
           </tr>
         </tbody>
       </table>
@@ -32,19 +30,23 @@
             <td rowspan="2" width="10%" style="text-align:center;">销<br>方 </td>
             <td class="td_border" style="text-align:center;" width="14%">名称：</td>
             <td class="td_border" width="26%" style="position:relative;">
-              <input id="xhdwmc" type="text" class="bw-input" readonly="readonly" name="xhdwmc">
+              <input v-model="formdata.xhdwmc" type="text" class="bw-input" readonly="readonly">
             </td>
             <td rowspan="2" style="text-align:center;" width="10%">购<br>方</td>
             <td class="td_border" style="text-align:center;" width="14%">名称：</td>
             <td class="td_border" width="26%">
-              <input id="ghdwmc" type="text" class="bw-input" readonly="readonly" name="ghdwmc">
+              <input v-model="formdata.ghdwmc" type="text" class="bw-input">
             </td>
           </tr>
           <tr>
             <td class="td_border" align="center">纳税人识别号：</td>
-            <td class="td_border"><input id="xhdwsbh" type="text" class="bw-input" readonly="readonly" name="xhdwsbh" maxlength="20"></td>
+            <td class="td_border">
+              <input v-model="formdata.xhdwsbh" type="text" class="bw-input" readonly="readonly">
+            </td>
             <td class="td_border" align="center">纳税人识别号：</td>
-            <td class="td_border"><input id="ghdwsbh" type="text" class="bw-input" readonly="readonly" name="ghdwsbh"></td>
+            <td class="td_border">
+              <input v-model="formdata.ghdwsbh" type="text" class="bw-input">
+            </td>
           </tr>
         </tbody>
       </table>
@@ -58,18 +60,49 @@
                 <tbody>
                   <tr class="zz_tab">
                     <td width="4.5%">行号</td>
-                    <td id="spmctitle" rowselect="n" width="20.5%"><span style="color:red;" class="ui-hide">(清单)</span>货物或应税劳务、服务名称</td>
+                    <td rowselect="n" width="20.5%"><span style="color:red;" class="ui-hide">(清单)</span>货物或应税劳务、服务名称</td>
                     <td width="8%">规格型号</td>
                     <td width="6%">单位</td>
                     <td width="9%">数量</td>
-                    <td id="djsfhsstr" width="10%">单价<span style="color:red">(含税)</span></td>
-                    <td id="sfhsstr" width="10%">金额<span style="color:red">(含税)</span></td>
+                    <td width="10%">单价<span style="color:red">(含税)</span></td>
+                    <td width="10%">金额<span style="color:red">(含税)</span></td>
                     <td width="8%">税率</td>
                     <td width="8%">税额</td>
-                    <td width="16%">操作</td>
+                  </tr>
+                  <tr v-for="(item,index) in formdata.lines" :key="item.id" class="zz_tab">
+                    <td width="4.5%">{{ index+1 }}</td>
+                    <td id="spmctitle" rowselect="n" width="20.5%">
+                      <input v-model="item.spmc" type="text" class="formInput">
+                    </td>
+                    <td width="8%">
+                      <input v-model="item.ggxh" type="text" class="formInput">
+                    </td>
+                    <td width="6%">
+                      <input v-model="item.dw" type="text" class="formInput">
+                    </td>
+                    <td width="9%">
+                      <input v-model="item.cpsl" type="text" class="formInput">
+                    </td>
+                    <td width="10%">
+                      <input v-model="item.dj" type="text" class="formInput">
+                    </td>
+                    <td width="10%">
+                      <input v-model="item.je" type="text" class="formInput">
+                    </td>
+                    <td width="8%">
+                      <input v-model="item.sl" type="text" class="formInput">
+                    </td>
+                    <td width="8%">
+                      <input v-model="item.se" type="text" class="formInput">
+                    </td>
                   </tr>
                 </tbody>
               </table>
+              <ul class="hjtop">
+                <li style="width:60%;padding-left: 5px;">合计</li>
+                <li style="width:18%">￥{{ formdata.hjje }}</li>
+                <li style="width:20%">￥{{ formdata.hjse }}</li>
+              </ul>
             </td>
           </tr>
         </tbody>
@@ -139,11 +172,11 @@
                 <div class="kjhzxx_xfsq mbt5 margin_left mbottom10 font-cor">对应蓝字专用发票密码区内打印的发票信息：</div>
                 <div class="search-item" style="margin-bottom: 10px">
                   <span class="hzxx_span search-label">发票代码：</span>
-                  <input id="fpdmsq" type="text" name="fpdm" disabled="true" class="hzxx_input search-input">
+                  <input v-model="formdata.yfpdm" type="text" readonly class="hzxx_input search-input">
                 </div>
                 <div class="search-item" style="margin-bottom: 10px">
                   <span class="hzxx_span search-label">发票号码：</span>
-                  <input id="fphmsq" type="text" name="fphm" disabled="true" class="hzxx_input search-input">
+                  <input v-model="formdata.yfphm" type="text" readonly class="hzxx_input search-input">
                 </div>
                 <div class="search-item" style="margin-bottom: 10px">
                   <span class="hzxx_span">发票种类：</span>
@@ -151,13 +184,11 @@
                 </div>
                 <div class="search-item" style="margin-bottom: 10px">
                   <span class="hzxx_span search-label" style="font-size: 14px;">联系电话：</span>
-                  <input type="text " class="hzxx_input search-input" autocomplete="off" placeholder="" name="lxfs">
-                  <input type="hidden" class="textbox-value" value="">
+                  <input v-model="form.lxfs" type="text" class="hzxx_input search-input">
                 </div>
                 <div class="search-item">
                   <span class="fl hzxx_span search-label" style="float: left;display: inline;">申请理由：</span>
-                  <!--// <input type="text" name="sqly" class="hzxx_input search-input"> -->
-                  <textarea id="sqly" class="sqly_area" name="sqly" data-exclude="true" style="border: 1px solid #E0E0E0;margin-left: 4px"/>
+                  <textarea v-model="form.sqly" class="sqly_area" data-exclude="true" style="border: 1px solid #E0E0E0;margin-left: 4px"/>
                 </div>
               </div>
             </td>
@@ -181,27 +212,73 @@
 </template>
 
 <script>
-
+import { detail } from '@/api/invoice/redTable'
 export default {
   name: 'Hzfp',
   components: {
     /* 'v-pagination': pagination*/
   },
   props: {
-    'pmfplx': {
-      type: String,
-      default: ''
+    'form': {
+      type: Object,
+      default: {}
     }
   },
   data() {
     return {
+      formdata: {
+        // 填开日期
+        tkrq: '',
+        // 申请方经办人
+        sqrmc: '',
+        // 申请单号
+        sqdh: '',
+        // 销方名称
+        xhdwmc: '',
+        // 销方税号
+        xhdwsbh: '',
+        // 购方名称
+        ghdwmc: '',
+        // 购方税号
+        ghdwsbh: '',
+        // 联系电话
+        lxfs: '',
+        // 申请理由
+        sqly: '',
+        // 原发票代码
+        yfpdm: '',
+        // 原发票号码
+        yfphm: '',
+        lines: []
+      }
     }
   },
+  mounted: function() {
+    this.detail()
+    this.$emit('getformdata', this.formdata)
+  },
   methods: {
+    detail() {
+      detail(this.form).then(res => {
+        this.formdata = res.data.hzxxb
+        console.log(res)
+      }).catch(err => {
+        this.$message.error(err)
+      })
+    }
   }
 }
 </script>
 <style type="text/css" lang="scss" scoped>
+  .hjtop li{
+    display: inline-block;
+  }
+  .formInput{
+    width: 90%;
+    margin: 5% auto;
+    text-align: center;
+    border: none;
+  }
   .hzfp_all {
     width: 1154px;
     overflow: hidden;
