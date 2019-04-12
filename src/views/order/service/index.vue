@@ -151,7 +151,7 @@
         @current-change = "handleCurrentChange"/>
     </div>
     <!--生成预制发票弹窗-->
-    <invoice-dialog :ishow="invoiceDialogVisible" :dialogTitle="dialogTitle" :buildPop="buildPop" @hideDialog="closeDialog"/>
+    <invoice-dialog :ishow="invoiceDialogVisible" :dialogTitle="dialogTitle" :buildPop="buildPop" :makePopData="makePopData" @hideDialog="closeDialog"/>
   </div>
 </template>
 <script>
@@ -195,6 +195,7 @@ export default {
       columns: [],
       operation: {},
       buildPop: {},
+      makePopData: {},
       dialogTitle: ''
     }
   },
@@ -267,6 +268,7 @@ export default {
           this.buildPop.hjse = response.data.hjse
           this.buildPop.jshj = response.data.jshj
           this.buildPop.ids = response.data.ids
+          this.buildPop = response.data
           this.loading = false
         }).catch(err => {
           this.loading = false
@@ -305,6 +307,7 @@ export default {
           this.loading = false
           this.dialogTitle = '生成预制发票'
           this.invoiceDialogVisible = true
+          this.makePopData = response.data
         }).catch(err => {
           this.loading = false
           this.$message({

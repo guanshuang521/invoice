@@ -22,7 +22,7 @@
       <el-button type="primary" icon="el-icon-edit" size="small" @click="orderDownload">订单下载</el-button>
       <el-button type="primary" icon="el-icon-circle-check" size="small" @click="showInvoiceDialog">勾选生成预制发票</el-button>
       <el-button type="primary" icon="el-icon-upload" size="small" @click="exportPos">导出</el-button>
-      <el-button type="primary" size="mini" @click="delList">删除</el-button>
+      <el-button type="primary" icon="el-icon-delete" size="small" @click="delList">删除</el-button>
     </div>
     <div class="table-container">
       <el-table
@@ -278,7 +278,7 @@ export default {
         delPosList(params).then(response => {
           this.$message({
             type: 'success',
-            message: response.message
+            message: '删除成功'
           })
           this.initTable()
           this.loading = false
@@ -438,6 +438,7 @@ export default {
           const args = Object.assign({}, this.dynamicValidateForm)
           args.ids = this.idtotal
           this.loading = true
+          console.log(args)
           dobuildInvoicePre(args).then(response => {
             this.loading = false
             this.$message({
