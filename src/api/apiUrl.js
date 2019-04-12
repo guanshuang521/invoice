@@ -6,8 +6,9 @@
 const apiPath = {
   login: {
     login: '/rbac/user/login',
+    logout: '/rbac/user/logout',
     dict: '/rbac/paramDetail/selectParamDetailsList',
-    userInfo: '/rbac/resource/findRourceByUser'
+    userInfo: '/rbac/user/getUserInfo'
   },
   // 系统管理
   system: {

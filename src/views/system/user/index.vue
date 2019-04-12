@@ -265,7 +265,6 @@ export default {
               this.$message.error(err)
               this.closeDialog()
             })
-
           } else {
             this.loading = true
             edit(this.userInfo).then(res => {

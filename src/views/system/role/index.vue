@@ -118,6 +118,7 @@
 import { arrayToTree } from '@/utils/public'
 import { getRoleList, deleteRole, insertRole, getRoleDetail, updateRole } from '@/api/system/role'
 import { getRoute } from '@/api/login'
+import { getUserId } from '@/utils/auth'
 
 export default {
   name: 'Role',
@@ -188,8 +189,8 @@ export default {
     },
     // 获取权限树数据
     getResource() {
-      getRoute({}).then(res => {
-        this.treeData = arrayToTree(res.data, 'title')
+      getRoute(getUserId()).then(res => {
+        this.treeData = arrayToTree(res.data.menus, 'title')
       })
     },
     // 查询

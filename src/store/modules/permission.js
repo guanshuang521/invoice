@@ -2,7 +2,7 @@ import { constantRouterMap } from '@/router'
 import { getRoute } from '@/api/login'
 import store from '../index'
 import { arrayToMenu } from '@/utils/public'
-
+import { getUserId } from '@/utils/auth'
 const permission = {
   state: {
     routers: [],
@@ -17,13 +17,13 @@ const permission = {
   actions: {
     GenerateRoutes({ commit }, data) {
       return new Promise((resolve, reject) => {
-        getRoute(store.getters.uid).then(res => {
+        getRoute(getUserId()).then(res => {
           // TODO
-          const accessedRouters = arrayToMenu(res.data)
-          const org = res.data.org
-          accessedRouters.concat([{ path: '*', redirect: '/404', hidden: true }])
+          const accessedRouters = arrayToMenu(res.data.menus)
+          accessedRouters.concat([{ pafth: '*', redirect: '/404', hidden: true }])
           commit('SET_ROUTERS', accessedRouters)
-          commit('SET_ORG', org)
+          commit('SET_ORG', res.data.orgInfo)
+          commit('SET_INFO', res.data.user)
           resolve()
         }).catch(error => {
           reject(error)

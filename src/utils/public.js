@@ -13,7 +13,7 @@ export function arrayToMenu(array) {
   // 获取顶级节点
   for (let i = 0; i < array.length; i++) {
     const row = array[i]
-    if (!exists(array, row.fid)) {
+    if (!exists(array, row.parentId)) {
       nodes.push({
         path: row.path,
         component: Layout,
@@ -30,7 +30,7 @@ export function arrayToMenu(array) {
     // 获取子节点
     for (let i = 0; i < array.length; i++) {
       const row = array[i]
-      if (row.fid === node.id) {
+      if (row.parentId === node.id) {
         const child = {
           path: row.path,
           name: row.name,
@@ -59,7 +59,7 @@ export function arrayToTree(array, targetField) {
   // 获取顶级节点`
   for (let i = 0; i < array.length; i++) {
     const row = array[i]
-    if (!exists(array, row.fid)) {
+    if (!exists(array, row.parentId)) {
       nodes.push({
         label: row[targetField],
         id: row.id
@@ -72,7 +72,7 @@ export function arrayToTree(array, targetField) {
     // 获取子节点
     for (let i = 0; i < array.length; i++) {
       const row = array[i]
-      if (row.fid === node.id) {
+      if (row.parentId === node.id) {
         const child = {
           label: row[targetField],
           id: row.id
@@ -88,9 +88,9 @@ export function arrayToTree(array, targetField) {
   }
   return nodes
 }
-function exists(rows, fid) {
+function exists(rows, parentId) {
   for (let i = 0; i < rows.length; i++) {
-    if (rows[i].id === fid) return true
+    if (rows[i].id === parentId) return true
   }
   return false
 }

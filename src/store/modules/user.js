@@ -1,5 +1,5 @@
 import { login, logout, getInfo } from '@/api/login'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { getToken, setToken, removeToken, setUserId, getUserId } from '@/utils/auth'
 
 const user = {
   state: {
@@ -7,16 +7,11 @@ const user = {
     name: '',
     avatar: '',
     roles: [],
-    id: '',
+    id: getUserId(),
     isAddRoute: false,
     isAutoLoadData: false,
-    org: {
-      mc: '顺丰快递公司',
-      nsrsbh: '1101011234567890000Q',
-      zcDzdh: '中国北京 13587954531',
-      khhMczh: '中国工商银行 6895758965487415',
-      kpr: '管理员'
-    }
+    org: {},
+    info: {}
   },
   mutations: {
     SET_TOKEN: (state, token) => {
@@ -39,6 +34,9 @@ const user = {
     },
     SET_ORG: (state, org) => {
       state.org = org
+    },
+    SET_INFO: (state, org) => {
+      state.info = org
     }
   },
 
@@ -47,12 +45,11 @@ const user = {
     Login({ commit }, userInfo) {
       const username = userInfo.username.trim()
       return new Promise((resolve, reject) => {
-        login(username, userInfo.password).then(response => {
-          const data = response
-          data.token = '19668890-ec09-4c8a-aef2-5d7b559c9983'
-          commit('SET_ID', data.id)
-          commit('SET_TOKEN', data.token)
-          setToken(data.token)
+        login(username, userInfo.password).then(res => {
+          commit('SET_ID', res.data.userId)
+          commit('SET_TOKEN', res.data.token)
+          setToken(res.data.token)
+          setUserId(res.data.userId)
           resolve()
         }).catch(error => {
           reject(error)
@@ -75,7 +72,7 @@ const user = {
     // 登出
     LogOut({ commit, state }) {
       return new Promise((resolve, reject) => {
-        logout(state.token).then(() => {
+        logout(state.id).then(() => {
           commit('SET_TOKEN', '')
           commit('SET_ROLES', [])
           removeToken()
