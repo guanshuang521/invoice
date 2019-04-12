@@ -26,8 +26,8 @@
             <el-option v-for="option in dictList['SYS_FPLX']" :key="option.id" :value="option.code" :label="option.name"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="邮箱" prop="gmfDzyx">
-          <el-input v-model="dynamicValidateForm.gmfDzyx" :rules="dynamicValidateForm.fplx==26?rules.gmfDzyx:[{ required: false, message: '请输入邮箱地址', trigger: 'blur' }]"/>
+        <el-form-item label="邮箱" prop="gmfDzyx" :rules="dynamicValidateForm.fplx==26?rules.gmfDzyx:[{ required: false, message: '请输入邮箱地址', trigger: 'blur' },{ type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }]">
+          <el-input v-model="dynamicValidateForm.gmfDzyx"/>
         </el-form-item>
         <el-form-item label="手机号" prop="gmfSjh">
           <el-input v-model="dynamicValidateForm.gmfSjh"/>
@@ -56,6 +56,10 @@ export default {
       default: () => false
     },
     buildPop: { // 表格数据源
+      type: Object,
+      default: () => {}
+    },
+    makePopData: { // 表格数据源
       type: Object,
       default: () => {}
     },
@@ -106,6 +110,10 @@ export default {
           args.hjje = this.buildPop.hjje
           args.hjse = this.buildPop.hjse
           args.jshj = this.buildPop.jshj
+          args.gmfDzdh = this.buildPop.gmfDzdh
+          args.gmfMc = this.buildPop.gmfMc
+          args.gmfNsrsbh = this.buildPop.gmfNsrsbh
+          args.gmfYhzh = this.buildPop.gmfYhzh
           this.loading = true
           console.log(args)
           dobuildInvoiceGmf(args).then(response => {
@@ -134,10 +142,10 @@ export default {
         if (valid) {
           this.$emit('makeInvoicePre', this.dynamicValidateForm)
           const args = Object.assign({}, this.dynamicValidateForm)
-          args.ids = this.buildPop.ids
-          args.hjje = this.buildPop.hjje
-          args.hjse = this.buildPop.hjse
-          args.jshj = this.buildPop.jshj
+          args.ids = this.makePopData.ids
+          args.hjje = this.makePopData.hjje
+          args.hjse = this.makePopData.hjse
+          args.jshj = this.makePopData.jshj
           this.loading = true
           console.log(args)
           dobuildInvoiceIds(args).then(response => {
