@@ -14,3 +14,11 @@ export function getList(data) {
     data: data
   })
 }
+// 发票找回
+export function retrieve(data) {
+  return request({
+    url: apiPath.invoice.oSpecial.retrieve,
+    method: 'post',
+    data: data
+  })
+}

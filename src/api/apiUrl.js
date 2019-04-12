@@ -134,13 +134,14 @@ const apiPath = {
 
   invoice: {
     wSpecial: {
-      list: 'invoice/search',
+      list: '/invoice/invoicePre/findAllInvoicePreByCondition',
       batchIssue: '/invoice/batchIssue',
       billSendBack: '/invoice/billSendBack',
       billDetail: 'invoice/billDetail'
     },
     oSpecial: {
-      list: '/invoice/getInvoiceListPage',
+      list: '/invoice/invoice/getInvoiceListPage',
+      retrieve: '/invoice/invoice/getInvoiceBack',
       batchIssue: '/invoice/batchIssue',
       billSendBack: '/invoice/billSendBack',
       billDetail: 'invoice/billDetail'

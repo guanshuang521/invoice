@@ -16,7 +16,7 @@
 
 <script>
 import fppm from '@/components/fppiaomian'
-import { invoice } from '@/api/invoiceOpening/opening'
+import { invoice, print } from '@/api/invoiceOpening/opening'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -34,8 +34,9 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'org'
-    ]),
+      'org',
+      'info'
+    ])
   },
   methods: {
     // 开具
@@ -46,11 +47,37 @@ export default {
         xsfMc: this.org.mc,
         xsfDzdh: this.org.zcDzdh,
         xsfYhzh: this.org.khhMczh,
-        kpr: this.org.kpr
+        kpr: this.org.kpr,
+        fplx: this.fplx, // 发票类型
+        tzpz: '00', // 特殊票种标识
+        dybz: '0', // 打印标识
+        qdbz: '0', // 清单标识
+        zfbz: '0', // 作废标识
+        kplx: '0', // 开票类型
+        fpDm: '', // 发票代码
+        fpHm: '', // 发票号码
+        hsbz: '1', // 含税标识
+        xsfId: this.org.id, // ？
+        xsfBmid: this.org.id, // ？
+        xsfBmmc: this.org.name, // ？
+        qdbs: '0', // 明细清单
+        xsfJgid: this.info.orgId, // 销售方机构id
+        xsfJgmc: this.org.name, // 销售方机构名称
+        kpzdbs: this.info.kpzdbs, // 开票终端标识 ?
+        fplxdm: this.fplx, // 发票类型代码
+        // check: true 手工开具必传
+        skfplx: '2'
       })
       invoice(args).then(res => {
         this.loading = false
         this.$message.success(res.message)
+        this.$confirm(res.message, '提示', {
+          confirmButtonText: '打印',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          print().then(res).catch(err)
+        })
       }).catch(err => {
         this.loading = false
         this.$message.error(err)

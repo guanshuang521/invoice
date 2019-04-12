@@ -1,4 +1,8 @@
-<!--子组件:票面-->
+/**
+* @author Linzb
+* @date 2019/4/12
+* @Description: 发票票面展示
+*/
 <template>
   <div class="fppm">
     <div class="edgebg leftEdge">
@@ -337,15 +341,13 @@ import globaldata from '@/utils/filter'
 // import pagination from 'components/pagination/pagination'
 
 export default {
-  name: 'Fppm',
-  components: {
-    /* 'v-pagination': pagination*/
-  },
+  name: 'FppmShow',
   props: {
     'pmfplx': {
       type: String,
       default: ''
-    }
+    },
+    ''
   },
   data() {
     return {
@@ -474,7 +476,7 @@ export default {
     },
     xsfNsrsbh() {
       this.formdata.xsfNsrsbh
-      return this.org.taxNum
+      return this.org.nsrsbh
     },
     xsfDzdh() {
       this.formdata.xsfDzdh

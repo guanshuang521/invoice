@@ -31,7 +31,6 @@
     <div class="table-container">
       <el-table
         v-loading="listLoading"
-        :key="tableKey"
         :data="dataList"
         border
         fit
@@ -98,25 +97,16 @@ export default {
       showOrderDialog: false,
       // 显示发票预览
       showBillPreview: false,
-      totalCount: 100,
       // 查询条件
       listQuery: {
-        title: '',
-        importance: '',
-        type: '',
-        sort: '',
-        limit: 10,
-        currentPage: 1
+        currentPage: 1,
+        pageSize: 10
       },
+      totalCount: 0,
       // 加载动画是否显示
       listLoading: false,
-      tableKey: '',
       // 列表数据
-      dataList: [{
-        orderNo: 1,
-        gfmc: '购方名称',
-        gfsh: '购方税号'
-      }],
+      dataList: [],
       // 勾选的列表项
       checkedItems: [],
       // 发票明细
@@ -125,6 +115,14 @@ export default {
       fplx: '004'
     }
   },
+  mounted() {
+    initList(this.listQuery).then(res => {
+      this.dataList = res.data.list
+      this.totalCount = res.data.count
+    }).catch(err => {
+      this.$message.error(err)
+    })
+  },
   methods: {
     // 发票预览
     billPreview() {
@@ -132,7 +130,14 @@ export default {
     },
     // 发票开具
     billIssue() {
-      console.log('')
+      if (this.checkedList.length === 0) {
+        this.$message({
+          type: 'error',
+          message: '请选择一条数据！'
+        })
+        return
+      }
+
     },
     // 批量开具
     batchIssue() {
@@ -193,9 +198,10 @@ export default {
     },
     // 重置
     handleReset() {
-      this.listQuery.gfmc = ''
-      this.listQuery.ddh = ''
-      this.listQuery.spmc = ''
+      this.listQuery = {
+        currentPage: 1,
+        pageSize: 10
+      }
       this.initList()
     },
     // 发票明细
@@ -223,9 +229,10 @@ export default {
     getPmData() {},
     handleSizeChange() {},
     handleCurrentChange() {},
+    // 表格选中数据发生变化
     handleSelectionChange(val) {
-      this.checkedItems = val
-      console.log(val)
+      this.checkedList = []
+      this.checkedList = val
     }
   }
 }
