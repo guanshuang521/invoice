@@ -55,7 +55,7 @@
             <el-button
               size="mini"
               type="primary"
-              @click="handleEdit(scope.row.id)">权限分配</el-button>
+              @click="handleEdit(scope.row.id)">编辑</el-button>
           </template>
         </el-table-column>
       </el-table>
