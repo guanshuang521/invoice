@@ -789,8 +789,8 @@ export default {
       this.calculateMoney(index, xmsl, xmdj, xmdjShow, hsxmdj, xmjeShow, xmje, hsxmje, sl, se, currentInput)
       // 控制输入0
       /* this.lines[index].xmsl = Number(xmsl) === 0 ? '' : xmsl
-        this.lines[index].xmdjShow = Number(xmdjShow) === 0 ? '' : xmdjShow
-        this.lines[index].xmjeShow = Number(xmjeShow) === 0 ? '' : xmjeShow*/
+          this.lines[index].xmdjShow = Number(xmdjShow) === 0 ? '' : xmdjShow
+          this.lines[index].xmjeShow = Number(xmjeShow) === 0 ? '' : xmjeShow*/
     },
     // 金额，税额计算
     calculateMoney(index, xmsl, xmdj, xmdjShow, hsxmdj, xmjeShow, xmje, hsxmje, sl, se, currentInput) {
@@ -805,26 +805,26 @@ export default {
       _thisLines[index].xmdj = hsxmdj - Number(_thisLines[index].hsxmdj * sl / (1 + sl)).toFixed(2)
       this.calculatePrice(index, xmsl, xmdj, xmdjShow, hsxmdj, xmje, xmjeShow, hsxmje, sl, currentInput)
       /* // 金额，税额控制(含税不含税两种情况)
-        // 含税
-        if (String(this.hsbz) === String(this.globalVal.enums_tax)) {
-          // 税额
-          this.lines[index].xmjeShow = this.lines[index].fphxz !== '1' ? Math.abs(xmjeShow) : '-' + Math.abs(xmjeShow)
-          this.lines[index].se = Number(xmjeShow * sl / (1 + sl)).toFixed(2)
-          // 金额
-          this.lines[index].xmje = this.lines[index].fphxz !== '1' ? Number(Math.abs(xmjeShow) - Math.abs(this.lines[index].se)).toFixed(2) : '-' + Number(Math.abs(xmjeShow) - Math.abs(this.lines[index].se)).toFixed(2)
-          this.lines[index].hsxmje = this.lines[index].fphxz !== '1' ? Number(Math.abs(xmjeShow)).toFixed(2) : '-' + Number(Math.abs(xmjeShow)).toFixed(2)
-          this.calculatePrice(index, xmsl, xmdj, xmdjShow, hsxmdj, xmje, xmjeShow, hsxmje, sl, currentInput)
-        }
-        // 不含税
-         if (String(this.hsbz) === String(globalVal.enums_noTax)) {
-              // 税额
-              this.lines[index].xmjeShow = this.lines[index].fphxz !== '1' ? Math.abs(xmjeShow) : '-' + Math.abs(xmjeShow);
-              this.lines[index].se = Number(xmjeShow * sl).toFixed(2);
-              // 金额
-              this.lines[index].xmje = this.lines[index].fphxz !== '1' ? Number(Math.abs(xmjeShow)).toFixed(2) : '-' + Number(Math.abs(xmjeShow)).toFixed(2);
-              this.lines[index].hsxmje = this.lines[index].fphxz !== '1' ? Number(Math.abs(xmjeShow) + Math.abs(this.lines[index].se)).toFixed(2) : '-' + Number(Math.abs(xmjeShow) + Math.abs(this.lines[index].se)).toFixed(2);
-              this.calculatePrice(index, xmsl, xmdj, xmdjShow, hsxmdj, xmje, xmjeShow, hsxmje, sl, currentInput);
-            }*/
+          // 含税
+          if (String(this.hsbz) === String(this.globalVal.enums_tax)) {
+            // 税额
+            this.lines[index].xmjeShow = this.lines[index].fphxz !== '1' ? Math.abs(xmjeShow) : '-' + Math.abs(xmjeShow)
+            this.lines[index].se = Number(xmjeShow * sl / (1 + sl)).toFixed(2)
+            // 金额
+            this.lines[index].xmje = this.lines[index].fphxz !== '1' ? Number(Math.abs(xmjeShow) - Math.abs(this.lines[index].se)).toFixed(2) : '-' + Number(Math.abs(xmjeShow) - Math.abs(this.lines[index].se)).toFixed(2)
+            this.lines[index].hsxmje = this.lines[index].fphxz !== '1' ? Number(Math.abs(xmjeShow)).toFixed(2) : '-' + Number(Math.abs(xmjeShow)).toFixed(2)
+            this.calculatePrice(index, xmsl, xmdj, xmdjShow, hsxmdj, xmje, xmjeShow, hsxmje, sl, currentInput)
+          }
+          // 不含税
+           if (String(this.hsbz) === String(globalVal.enums_noTax)) {
+                // 税额
+                this.lines[index].xmjeShow = this.lines[index].fphxz !== '1' ? Math.abs(xmjeShow) : '-' + Math.abs(xmjeShow);
+                this.lines[index].se = Number(xmjeShow * sl).toFixed(2);
+                // 金额
+                this.lines[index].xmje = this.lines[index].fphxz !== '1' ? Number(Math.abs(xmjeShow)).toFixed(2) : '-' + Number(Math.abs(xmjeShow)).toFixed(2);
+                this.lines[index].hsxmje = this.lines[index].fphxz !== '1' ? Number(Math.abs(xmjeShow) + Math.abs(this.lines[index].se)).toFixed(2) : '-' + Number(Math.abs(xmjeShow) + Math.abs(this.lines[index].se)).toFixed(2);
+                this.calculatePrice(index, xmsl, xmdj, xmdjShow, hsxmdj, xmje, xmjeShow, hsxmje, sl, currentInput);
+              }*/
     },
     // 处理单价
     calculatePrice(index, xmsl, xmdj, xmdjShow, hsxmdj, xmje, xmjeShow, hsxmje, sl, currentInput) {

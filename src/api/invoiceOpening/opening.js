@@ -20,3 +20,11 @@ export function invoiceEle(params) {
     data: params
   })
 }
+// 打印
+export function print(params) {
+  return request({
+    url: apiPath.invoiceOpening.opening.makeInvoicePaper,
+    method: 'post',
+    data: params
+  })
+}

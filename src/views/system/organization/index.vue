@@ -337,7 +337,7 @@ export default {
     // 初始化机构树
     initTree() {
       this.loading = true
-      getNodeList().then(res => {
+      getNodeList({}).then(res => {
         this.loading = false
         this.nodeList = res.data.list
         this.organTree = arrayToTree(res.data.list, 'orgName')

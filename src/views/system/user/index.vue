@@ -93,8 +93,11 @@
         </el-form-item>
         <el-form-item label="所属机构：" prop="kplx">
           <el-select v-model="userInfo.orgId" placeholder="请选择" style="width: 450px">
-            <el-option label="机构1" value="0"/>
-            <el-option label="机构2" value="1"/>
+            <el-option
+              v-for="item in orgIdOptions"
+              :key="item.id"
+              :label="item.orgName"
+              :value="item.id "/>
           </el-select>
         </el-form-item>
         <el-form-item label="用户状态：" prop="status" >
@@ -128,9 +131,11 @@
 </template>
 
 <script>
-import { getList, add, edit, deleteUser, getAllRoles, assignRoles } from '@/api/system/user'
+import { getList, add, edit, deleteUser, getAllRoles } from '@/api/system/user'
 import { getNodeList } from '@/api/system/organization'
 import { arrayToTree } from '@/utils/public'
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'Dashboard',
   data() {
@@ -182,9 +187,16 @@ export default {
         ]
       },
       organTreeData: [],
+      // 所属机构
+      orgIdOptions: [],
       // 所有角色列表
       roleList: []
     }
+  },
+  computed: {
+    ...mapGetters([
+      'info'
+    ])
   },
   mounted() {
     this.listLoading = true
@@ -197,15 +209,20 @@ export default {
     },
     initTree() { // 初始化机构树
       this.loading = true
-      getNodeList().then(res => {
+      getNodeList({}).then(res => {
         this.loading = false
+        this.orgIdOptions = res.data.list
         this.organTreeData = arrayToTree(res.data.list, 'orgName')
       }).catch(e => {
         this.loading = false
-        this.$message({
-          message: '网络错误！',
-          type: 'error'
-        })
+        this.$message.error(e)
+      })
+      getNodeList({ type: 2 }).then(res => {
+        this.loading = false
+        this.orgIdOptions = res.data.list
+      }).catch(err => {
+        this.loading = false
+        this.$message.error(err)
       })
     },
     initTable() { // table列表查询
@@ -254,7 +271,7 @@ export default {
             const roles = {
               roleIdList: this.userInfo.role.join(',')
             }
-            const args = Object({}, roles, this.userInfo)
+            const args = Object.assign({}, this.userInfo)
             add(args).then(res => {
               this.$message.success(res.message)
               this.loading = false

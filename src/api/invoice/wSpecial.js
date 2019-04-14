@@ -16,10 +16,11 @@ export function billSendBack() {
     method: 'post'
   })
 }
-export function initList() {
+export function initList(data) {
   return request({
-    url: apiPath.invoice.wSpecial.search,
-    method: 'post'
+    url: apiPath.invoice.wSpecial.list,
+    method: 'post',
+    data
   })
 }
 export function getBillDetail() {
