@@ -13,7 +13,7 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     if (getToken()) {
-      config.headers['X-Token'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
+      config.headers['x-access-token'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
       /* config.headers['fapiao_token'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改*/
       /* config.headers['fapiao_token'] = '1e00be39-9ddb-4673-90e6-1dd1fb8b36f0' // 让每个请求携带自定义token 请根据实际情况自行修改*/
     }
@@ -37,8 +37,8 @@ service.interceptors.response.use(
       return res
     }
     if (res.code !== '0000') {
-      // 50008:非法的token; 50012:其他客户端登录了;  50014:Token 过期了;
-      if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
+      // 90001:非法的token; 90002:其他客户端登录了;  90003:Token 过期了;
+      if (res.code === '90001' || res.code === '90002' || res.code === '90003') {
         MessageBox.confirm(
           '你已被登出，可以取消继续留在该页面，或者重新登录',
           '确定登出',
