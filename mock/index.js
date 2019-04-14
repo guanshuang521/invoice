@@ -38,13 +38,13 @@ Mock.XHR.prototype.send = function() {
 // Mock.mock(/\/user\/logout/, 'post', userAPI.logout)
 // Mock.mock(/\/resource\/findRourceByUser/, 'get', userAPI.getRoute)
 // Table
-Mock.mock(/\/table\/list/, 'get', tableAPI.list)
+// Mock.mock(/\/table\/list/, 'get', tableAPI.list)
 // System
-Mock.mock(/\/organization\/nodeDetail/, 'post', systemAPI.nodeDetail)
+// Mock.mock(/\/organization\/nodeDetail/, 'post', systemAPI.nodeDetail)
 // Mock.mock(/\/commoditye\/selectByCommodity/, 'post', infoManagementAPI.getlist) // 商品信息维护获取数据
 // Mock.mock(/\/commoditye\/insertCommodity/, 'post', infoManagementAPI.newAdd) // 商品信息维护添加数据
 // Mock.mock(/\/commoditye\/updateCommodity/, 'post', infoManagementAPI.updateda) // 商品信息编辑修改
-Mock.mock(/\/order\/list/, 'post', orderListAPI.getOrderlist)
+// Mock.mock(/\/order\/list/, 'post', orderListAPI.getOrderlist)
 // Role
 // Mock.mock(/\/role\/selectByRole/, 'post', roleAPI.selectByRole)
 // Mock.mock(/\/role\/deleteRole/, 'post', roleAPI.deleteRole)
@@ -56,13 +56,13 @@ Mock.mock(/\/order\/list/, 'post', orderListAPI.getOrderlist)
 // Mock.mock(/\/customer\/deleteCustomer/, 'post', customerAPI.deleteCustomer)
 // Mock.mock(/\/customer\/insertCustomer/, 'post', customerAPI.insertCustomer)
 // orderOpenMessage
-Mock.mock(/\/orderOpenMessage\/getTableList/, 'post', orderOpenMessageAPI.getTableList)
+// Mock.mock(/\/orderOpenMessage\/getTableList/, 'post', orderOpenMessageAPI.getTableList)
 
 // invoiceOpening 开具
-Mock.mock(/\/commodityInfo\/getList/, 'post', getListAPI.getlist)
-Mock.mock(/\/customer\/getList/, 'post', getGmfListAPI.getGmflist)
+// Mock.mock(/\/commodityInfo\/getList/, 'post', getListAPI.getlist)
+// Mock.mock(/\/customer\/getList/, 'post', getGmfListAPI.getGmflist)
 
 // invoice
-Mock.mock(/\/invoice\/billDetail/, 'post', wSpecialAPI.getBillDetail)
+// Mock.mock(/\/invoice\/billDetail/, 'post', wSpecialAPI.getBillDetail)
 
 export default Mock

@@ -8,9 +8,17 @@
 import request from '@/utils/request'
 import apiPath from '@/api/apiUrl'
 // 服务类订单管理
-export function getOrderlist(data) {
+export function getServiceOrderlist(data) {
   return request({
-    url: apiPath.order.list.erpList,
+    url: apiPath.order.list.erpFwList,
+    method: 'post',
+    data: data
+  })
+}
+// 商品类订单管理
+export function getCommodityOrderlist(data) {
+  return request({
+    url: apiPath.order.list.erpSpList,
     method: 'post',
     data: data
   })

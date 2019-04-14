@@ -100,7 +100,8 @@ export default {
       // 查询条件
       listQuery: {
         currentPage: 1,
-        pageSize: 10
+        pageSize: 10,
+        fplx: '004'
       },
       totalCount: 0,
       // 加载动画是否显示
@@ -114,14 +115,6 @@ export default {
       // 发票类型
       fplx: '004'
     }
-  },
-  mounted() {
-    initList(this.listQuery).then(res => {
-      this.dataList = res.data.list
-      this.totalCount = res.data.count
-    }).catch(err => {
-      this.$message.error(err)
-    })
   },
   methods: {
     // 发票预览
@@ -137,7 +130,6 @@ export default {
         })
         return
       }
-
     },
     // 批量开具
     batchIssue() {
@@ -188,19 +180,25 @@ export default {
     exportList() {},
     // 查询
     initList() {
-      initList().then(res => {
+      this.listLoading = true
+      initList(this.listQuery).then(res => {
+        this.listLoading = false
+        this.dataList = res.data.list
+        this.totalCount = res.data.count
       }).catch(err => {
         this.$message({
           message: err,
           type: 'error'
         })
+        this.listLoading = false
       })
     },
     // 重置
     handleReset() {
       this.listQuery = {
         currentPage: 1,
-        pageSize: 10
+        pageSize: 10,
+        fplx: '004'
       }
       this.initList()
     },
