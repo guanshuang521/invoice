@@ -88,7 +88,8 @@ export default {
         type: '',
         sort: '',
         limit: 10,
-        currentPage: 2
+        currentPage: 1,
+        fplx: '026'
       },
       calendarTypeOptions: [{ name: '1', key: '1' }],
       listLoading: false,
@@ -167,19 +168,26 @@ export default {
     },
     // 查询
     initList() {
-      initList().then(res => {
+      this.listLoading = true
+      initList(this.listQuery).then(res => {
+        this.listLoading = false
+        this.dataList = res.data.list
+        this.totalCount = res.data.count
       }).catch(err => {
         this.$message({
           message: err,
           type: 'error'
         })
+        this.listLoading = false
       })
     },
     // 重置
     handleReset() {
-      this.listQuery.gfmc = ''
-      this.listQuery.ddh = ''
-      this.listQuery.spmc = ''
+      this.listQuery = {
+        currentPage: 1,
+        pageSize: 10,
+        fplx: '026'
+      }
       this.initList()
     },
     handleSizeChange() {

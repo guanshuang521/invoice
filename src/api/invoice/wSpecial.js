@@ -20,7 +20,7 @@ export function initList(data) {
   return request({
     url: apiPath.invoice.wSpecial.list,
     method: 'post',
-    data
+    data: data
   })
 }
 export function getBillDetail() {
