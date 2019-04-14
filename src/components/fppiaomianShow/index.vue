@@ -1,8 +1,4 @@
-/**
-* @author Linzb
-* @date 2019/4/12
-* @Description: 发票票面展示
-*/
+<!--子组件:票面-->
 <template>
   <div class="fppm">
     <div class="edgebg leftEdge">
@@ -110,10 +106,10 @@
                 <input v-model="formdata.lines[index].xmsl" @blur="inputBlur(index, 'xmsl', $event)">
               </li>
               <li style="width:10%">
-                <input v-model="formdata.lines[index].xmdj" @blur="inputBlur(index, 'xmdj', $event)">
+                <input v-model="formdata.lines[index].hsxmdj" @blur="inputBlur(index, 'xmdj', $event)">
               </li>
               <li style="width:10%">
-                <input v-model="formdata.lines[index].xmje" @blur="inputBlur(index, 'xmje', $event)">
+                <input v-model="formdata.lines[index].hsxmje" @blur="inputBlur(index, 'xmje', $event)">
               </li>
               <li style="width:8%">
                 <input v-model="formdata.lines[index].sl" readOnly>
@@ -177,7 +173,7 @@
       <div class="fpmsg">
         <div class="msgText">收款人：</div>
         <div class="msgCon">
-          <input v-model="formdata.spr" class="gmfcontent" style="border: none">
+          <input v-model="formdata.skr" class="gmfcontent" style="border: none">
         </div>
         <div class="msgText">复核人：</div>
         <div class="msgCon">
@@ -341,13 +337,15 @@ import globaldata from '@/utils/filter'
 // import pagination from 'components/pagination/pagination'
 
 export default {
-  name: 'FppmShow',
+  name: 'Fppm',
+  components: {
+    /* 'v-pagination': pagination*/
+  },
   props: {
     'pmfplx': {
       type: String,
       default: ''
-    },
-    ''
+    }
   },
   data() {
     return {
@@ -471,20 +469,20 @@ export default {
       return arrayToMapField(this.dictList['SYS_SL'], 'code', 'name')
     },
     xsfMc() {
-      this.formdata.xsfMc
-      return this.org.orgName
+      this.formdata.coName
+      return this.org.coName
     },
     xsfNsrsbh() {
-      this.formdata.xsfNsrsbh
-      return this.org.nsrsbh
+      this.formdata.taxNum
+      return this.org.taxNum
     },
     xsfDzdh() {
       this.formdata.xsfDzdh
-      return this.org.zcDzdh
+      return this.org.coAddr + ' ' + this.org.coPhone
     },
     xsfYhzh() {
       this.formdata.xsfYhzh
-      return this.org.khhMczh
+      return this.org.bankName + ' ' + this.org.bankCode
     },
     kpr() {
       console.log(this.info)
@@ -504,10 +502,10 @@ export default {
             totalHjse += parseFloat(item.se)
           }
         })
-        this.formdata.hjje = totalHjje - totalHjse
-        this.formdata.hjse = totalHjse
-        this.formdata.jshjupper = getDx(totalHjje)
-        this.formdata.jshj = totalHjje
+        this.formdata.hjje = totalHjje.toFixed(2)
+        this.formdata.hjse = totalHjse.toFixed(2)
+        this.formdata.jshjupper = getDx((totalHjje + totalHjse))
+        this.formdata.jshj = Math.round(totalHjje + totalHjse).toFixed(2)
       }
     }
   },
@@ -726,10 +724,10 @@ export default {
     // 双击选择商品
     dbSelectGoods(item, index) {
       this.formdata.lines[this.goods.dialogGoodsIndex]['xmmc'] = item.spmc
-      this.formdata.lines[this.goods.dialogGoodsIndex]['spbm'] = item.spssbm
-      this.formdata.lines[this.goods.dialogGoodsIndex]['spbh'] = item.spbh
-      this.formdata.lines[this.goods.dialogGoodsIndex]['commodityId'] = item.spmc
+      this.formdata.lines[this.goods.dialogGoodsIndex]['spbm'] = item.shflbm
+      this.formdata.lines[this.goods.dialogGoodsIndex]['spbh'] = item.id
       this.formdata.lines[this.goods.dialogGoodsIndex]['sl'] = item.sl
+      this.formdata.lines[this.goods.dialogGoodsIndex]['hsxmdj'] = item.dj
       this.isgoods = false
     },
     // 确认回填税收编码
@@ -737,7 +735,7 @@ export default {
       if (this.goods.item !== '') {
         var checked = Object.assign({}, this.goods.item)
         this.formdata.lines[this.goods.dialogGoodsIndex]['xmmc'] = checked.spmc
-        this.formdata.lines[this.goods.dialogGoodsIndex]['spbm'] = checked.spssbm
+        this.formdata.lines[this.goods.dialogGoodsIndex]['spbm'] = checked.shflbm
         this.formdata.lines[this.goods.dialogGoodsIndex]['spbh'] = checked.spbh
         this.formdata.lines[this.goods.dialogGoodsIndex]['commodityId'] = checked.spmc
         this.formdata.lines[this.goods.dialogGoodsIndex]['sl'] = checked.sl
@@ -779,55 +777,54 @@ export default {
     inputBlur(index, currentInput, event) {
       const _thisLines = this.formdata.lines
       const xmsl = _thisLines[index].xmsl
-      const xmdjShow = _thisLines[index].xmdjShow
       const xmdj = _thisLines[index].xmdj
+      const xmdjShow = _thisLines[index].xmdjShow
       const hsxmdj = _thisLines[index].hsxmdj
       const xmjeShow = Number(_thisLines[index].xmjeShow)
       const xmje = Number(_thisLines[index].xmje)
       const hsxmje = Number(_thisLines[index].hsxmje)
-      // const sl = Number(_thisLines[index].sl.replace('%', '')) / 100
       const sl = Number(_thisLines[index].sl)
-
+      const se = Number(_thisLines[index].se)
       // 调用计算函数（金额，税额）
-      this.calculateMoney(index, xmsl, xmdj, xmdjShow, hsxmdj, xmje, xmjeShow, hsxmje, sl, currentInput)
-
+      this.calculateMoney(index, xmsl, xmdj, xmdjShow, hsxmdj, xmjeShow, xmje, hsxmje, sl, se, currentInput)
       // 控制输入0
       /* this.lines[index].xmsl = Number(xmsl) === 0 ? '' : xmsl
-        this.lines[index].xmdjShow = Number(xmdjShow) === 0 ? '' : xmdjShow
-        this.lines[index].xmjeShow = Number(xmjeShow) === 0 ? '' : xmjeShow*/
+          this.lines[index].xmdjShow = Number(xmdjShow) === 0 ? '' : xmdjShow
+          this.lines[index].xmjeShow = Number(xmjeShow) === 0 ? '' : xmjeShow*/
     },
     // 金额，税额计算
-    calculateMoney(index, xmsl, xmdj, xmdjShow, hsxmdj, xmje, xmjeShow, hsxmje, sl, currentInput) {
+    calculateMoney(index, xmsl, xmdj, xmdjShow, hsxmdj, xmjeShow, xmje, hsxmje, sl, se, currentInput) {
       const _thisLines = this.formdata.lines
+      // 含税金额
+      _thisLines[index].hsxmje = hsxmdj * xmsl
       // 税额
-      /* 折扣行相关
-        _thisLines[index].xmjeShow =_thisLines[index].fphxz !== '1' ? Math.abs(xmjeShow) : '-' + Math.abs(xmjeShow)*/
-      _thisLines[index].se = Number(xmje * sl / (1 + sl)).toFixed(2)
-      // 金额
-      /* _thisLines[index].xmje = _thisLines[index].fphxz !== '1' ? Number(Math.abs(xmjeShow) - Math.abs(_thisLines[index].se)).toFixed(2) : '-' + Number(Math.abs(xmjeShow) - Math.abs(_thisLines[index].se)).toFixed(2)
-        _thisLines[index].hsxmje = _thisLines[index].fphxz !== '1' ? Number(Math.abs(xmjeShow)).toFixed(2) : '-' + Number(Math.abs(xmjeShow)).toFixed(2)*/
+      _thisLines[index].se = Number(_thisLines[index].hsxmje * sl / (1 + sl)).toFixed(2)
+      // 不含税金额
+      _thisLines[index].xmje = _thisLines[index].hsxmje - _thisLines[index].se
+      // 不含税单价
+      _thisLines[index].xmdj = hsxmdj - Number(_thisLines[index].hsxmdj * sl / (1 + sl)).toFixed(2)
       this.calculatePrice(index, xmsl, xmdj, xmdjShow, hsxmdj, xmje, xmjeShow, hsxmje, sl, currentInput)
       /* // 金额，税额控制(含税不含税两种情况)
-        // 含税
-        if (String(this.hsbz) === String(this.globalVal.enums_tax)) {
-          // 税额
-          this.lines[index].xmjeShow = this.lines[index].fphxz !== '1' ? Math.abs(xmjeShow) : '-' + Math.abs(xmjeShow)
-          this.lines[index].se = Number(xmjeShow * sl / (1 + sl)).toFixed(2)
-          // 金额
-          this.lines[index].xmje = this.lines[index].fphxz !== '1' ? Number(Math.abs(xmjeShow) - Math.abs(this.lines[index].se)).toFixed(2) : '-' + Number(Math.abs(xmjeShow) - Math.abs(this.lines[index].se)).toFixed(2)
-          this.lines[index].hsxmje = this.lines[index].fphxz !== '1' ? Number(Math.abs(xmjeShow)).toFixed(2) : '-' + Number(Math.abs(xmjeShow)).toFixed(2)
-          this.calculatePrice(index, xmsl, xmdj, xmdjShow, hsxmdj, xmje, xmjeShow, hsxmje, sl, currentInput)
-        }
-        // 不含税
-         if (String(this.hsbz) === String(globalVal.enums_noTax)) {
-              // 税额
-              this.lines[index].xmjeShow = this.lines[index].fphxz !== '1' ? Math.abs(xmjeShow) : '-' + Math.abs(xmjeShow);
-              this.lines[index].se = Number(xmjeShow * sl).toFixed(2);
-              // 金额
-              this.lines[index].xmje = this.lines[index].fphxz !== '1' ? Number(Math.abs(xmjeShow)).toFixed(2) : '-' + Number(Math.abs(xmjeShow)).toFixed(2);
-              this.lines[index].hsxmje = this.lines[index].fphxz !== '1' ? Number(Math.abs(xmjeShow) + Math.abs(this.lines[index].se)).toFixed(2) : '-' + Number(Math.abs(xmjeShow) + Math.abs(this.lines[index].se)).toFixed(2);
-              this.calculatePrice(index, xmsl, xmdj, xmdjShow, hsxmdj, xmje, xmjeShow, hsxmje, sl, currentInput);
-            }*/
+          // 含税
+          if (String(this.hsbz) === String(this.globalVal.enums_tax)) {
+            // 税额
+            this.lines[index].xmjeShow = this.lines[index].fphxz !== '1' ? Math.abs(xmjeShow) : '-' + Math.abs(xmjeShow)
+            this.lines[index].se = Number(xmjeShow * sl / (1 + sl)).toFixed(2)
+            // 金额
+            this.lines[index].xmje = this.lines[index].fphxz !== '1' ? Number(Math.abs(xmjeShow) - Math.abs(this.lines[index].se)).toFixed(2) : '-' + Number(Math.abs(xmjeShow) - Math.abs(this.lines[index].se)).toFixed(2)
+            this.lines[index].hsxmje = this.lines[index].fphxz !== '1' ? Number(Math.abs(xmjeShow)).toFixed(2) : '-' + Number(Math.abs(xmjeShow)).toFixed(2)
+            this.calculatePrice(index, xmsl, xmdj, xmdjShow, hsxmdj, xmje, xmjeShow, hsxmje, sl, currentInput)
+          }
+          // 不含税
+           if (String(this.hsbz) === String(globalVal.enums_noTax)) {
+                // 税额
+                this.lines[index].xmjeShow = this.lines[index].fphxz !== '1' ? Math.abs(xmjeShow) : '-' + Math.abs(xmjeShow);
+                this.lines[index].se = Number(xmjeShow * sl).toFixed(2);
+                // 金额
+                this.lines[index].xmje = this.lines[index].fphxz !== '1' ? Number(Math.abs(xmjeShow)).toFixed(2) : '-' + Number(Math.abs(xmjeShow)).toFixed(2);
+                this.lines[index].hsxmje = this.lines[index].fphxz !== '1' ? Number(Math.abs(xmjeShow) + Math.abs(this.lines[index].se)).toFixed(2) : '-' + Number(Math.abs(xmjeShow) + Math.abs(this.lines[index].se)).toFixed(2);
+                this.calculatePrice(index, xmsl, xmdj, xmdjShow, hsxmdj, xmje, xmjeShow, hsxmje, sl, currentInput);
+              }*/
     },
     // 处理单价
     calculatePrice(index, xmsl, xmdj, xmdjShow, hsxmdj, xmje, xmjeShow, hsxmje, sl, currentInput) {

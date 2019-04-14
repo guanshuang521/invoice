@@ -77,7 +77,24 @@ export default {
   },
   methods: {
     kaijuBtn() {
-      this.dialogVisible = true
+      let checked = true
+      if (!this.form.gmfMc) {
+        this.$message.error('购方名称不能为空')
+        return
+      }
+      this.form.lines.forEach((item, key) => {
+        if (!item.xmmc) {
+          this.$message.error('第' + (key + 1) + '行商品名称不能为空')
+          checked = false
+        }
+        if (!item.xmje) {
+          this.$message.error('第' + (key + 1) + '行金额不能为空')
+          checked = false
+        }
+      })
+      if (checked) {
+        this.dialogVisible = true
+      }
     },
     // 开具
     submit() {
@@ -115,7 +132,15 @@ export default {
           invoiceEle(args).then(res => {
             this.loading = false
             this.dialogVisible = false
-            this.$message.success(res.message)
+            this.$confirm('开票成功，是否打印？', '提示', {
+              confirmButtonText: '打印',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              print().then(res).catch(err => {
+                this.$message.error(err)
+              })
+            })
           }).catch(err => {
             this.loading = false
             this.dialogVisible = false

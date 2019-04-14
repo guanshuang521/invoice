@@ -102,7 +102,6 @@
         <el-table-column label="购方名称" prop="gmfMc" align="center"/>
         <el-table-column label="购方税号" prop="gmfNsrsbh" align="center"/>
         <el-table-column label="金额（不含税）" prop="hjje" align="center"/>
-        <el-table-column label="税率" prop="sl" align="center"/>
         <el-table-column label="税额" prop="hjse" align="center"/>
         <el-table-column label="价税合计" prop="jshj" align="center"/>
         <el-table-column label="开票时间" prop="kprq" align="center"/>
