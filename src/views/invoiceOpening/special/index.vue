@@ -41,6 +41,11 @@ export default {
   methods: {
     // 开具
     kaijuBtn() {
+      // 校验用户是否有终端标识
+      if (!this.info.terminalMark) {
+        this.$message.error('当前用户没有终端标识，不能开票！')
+        return false
+      }
       // 校验
       let checked = true
       if (!this.form.gmfMc) {
@@ -66,7 +71,7 @@ export default {
           // xsfDzdh: this.org.zcDzdh,
           xsfDzdh: this.org.coAddr + ' ' + this.org.coPhone,
           xsfYhzh: this.org.bankName + ' ' + this.org.bankCode,
-          kpr: this.org.kpr,
+          kpr: this.info.userName,
           fplx: this.fplx, // 发票类型
           tzpz: '00', // 特殊票种标识
           dybz: '0', // 打印标识
@@ -82,7 +87,7 @@ export default {
           qdbs: '0', // 明细清单
           xsfJgid: this.info.orgId, // 销售方机构id
           xsfJgmc: this.org.name, // 销售方机构名称
-          kpzdbs: this.info.kpzdbs, // 开票终端标识 ?
+          kpzdbs: this.info.terminalMark, // 开票终端标识 ?
           fplxdm: this.fplx, // 发票类型代码
           check: true, // 手工开具必传
           skfplx: '2'

@@ -46,11 +46,11 @@
                 :remote-method="remoteSearch"
                 filterable
                 remote
-                clearable
                 reserve-keyword
                 allow-create
                 size="mini"
                 placeholder="请输入关键词"
+                class="gfMc readonly"
                 @change="remoteChange">
                 <el-option
                   v-for="item in gfList"
@@ -86,7 +86,6 @@
             <li style="width:10%">金额(含税)</li>
             <li style="width:8%">税率</li>
             <li style="width:8%">税额</li>
-            <li style="width:16%">操作</li>
           </ul>
           <div class="linesList">
             <!--<tr v-for="(item, index) in lines.length" :model="lines[index]" :key="item.id" :class="lines[index].fphxz === '1' ? 'discount_tr' : ''">-->
@@ -94,7 +93,6 @@
               <li style="width:5%">{{ index + 1 }}</li>
               <li style="width:20%;position: relative;">
                 <input v-model="formdata.lines[index].xmmc">
-                <button class="small_select taxNumSelectBtn" style="top:7px" @click="isGoodsDialog(index)">···</button>
               </li>
               <li style="width:8%">
                 <input v-model="formdata.lines[index].ggxh" readOnly>
@@ -117,13 +115,6 @@
               </li>
               <li style="width:8%">
                 <input v-model="formdata.lines[index].se" readOnly>
-              </li>
-              <li style="width:16%">
-                <div class="czbtn">
-                  <a class="addRow" @click="addBtn"/>
-                  <!--<a class="ywbmBtn">业务编号</a>-->
-                  <a class="delRow" @click="delBtn(index)"/>
-                </div>
               </li>
             </ul>
           </div>
@@ -337,7 +328,7 @@ import globaldata from '@/utils/filter'
 // import pagination from 'components/pagination/pagination'
 
 export default {
-  name: 'Fppm',
+  name: 'FppmShow',
   components: {
     /* 'v-pagination': pagination*/
   },
@@ -874,6 +865,10 @@ export default {
     border-color: #B2945F;
     width: 422px;
   }
+  .gfMc /deep/ .el-input__inner{
+    padding-left: 5px;
+    font-size: 14px;
+  }
   .fppm{
     display: flex;
     overflow: hidden;
@@ -1326,5 +1321,8 @@ export default {
       div:nth-child(4){
         width: 320px;}
     }
+  }
+  .readonly{
+    pointer-events: none!important;
   }
 </style>

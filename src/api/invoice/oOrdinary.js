@@ -1,7 +1,7 @@
 /**
  * @author Linzb
  * @date 2019/4/11
- * @Description: 已开专票
+ * @Description: 已开普票
  */
 import request from '@/utils/request'
 import apiPath from '@/api/apiUrl'

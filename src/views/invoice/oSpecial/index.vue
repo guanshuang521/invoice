@@ -74,13 +74,13 @@
       </el-form>
     </div>
     <div class="button-container">
-      <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="printFp">打印发票</el-button>
-      <el-button size="small" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="batchIssue">打印清单</el-button>
+      <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="openPrintFp">打印发票</el-button>
+      <el-button size="small" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="printList">打印清单</el-button>
       <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="cancel">作废</el-button>
       <el-button size="small" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="fpzhDialogVisible = true">发票找回</el-button>
-      <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="billIssue">导出</el-button>
+      <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="exportExcel">导出</el-button>
       <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="billSendBack">数据回传</el-button>
-      <el-button size="small" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="exportList">发票验证</el-button>
+      <el-button size="small" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="validate">发票验证</el-button>
     </div>
     <div class="table-container">
       <el-table
@@ -104,7 +104,11 @@
         <el-table-column label="金额（不含税）" prop="hjje" align="center"/>
         <el-table-column label="税额" prop="hjse" align="center"/>
         <el-table-column label="价税合计" prop="jshj" align="center"/>
-        <el-table-column label="开票时间" prop="kprq" align="center"/>
+        <el-table-column label="开票时间" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.kprq.substr(0, 10) }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="开票机号" prop="kpjh" align="center"/>
         <el-table-column label="清单标志" prop="qdbz" align="center">
           <template slot-scope="scope">
@@ -127,7 +131,7 @@
           label="操作"
           width="300">
           <template slot-scope="scope">
-            <el-button type="primary" size="mini">查看</el-button>
+            <el-button type="primary" size="mini" @click="checkFP">查看</el-button>
             <el-button type="primary" size="mini">作废重开</el-button>
             <el-button type="primary" size="mini">红冲发票</el-button>
           </template>
@@ -160,29 +164,63 @@
       </el-form>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button type="primary" size="mini" @click="submitRetrieve('templateForm')">确 定</el-button>
-        <el-button size="mini" @click="dialogFormVisible = false">取 消</el-button>
+        <el-button size="mini" @click="fpzhDialogVisible = false">取 消</el-button>
       </div>
     </el-dialog>
     <!--打印发票弹窗-->
-    <el-dialog :visible.sync="dyfpDialogVisible" title="打印发票信息列表" width="380px">
+    <el-dialog :visible.sync="dyfpDialogVisible" title="打印发票信息列表" width="680px">
       <el-table
         :data="checkedItems"
         border
         fit
         highlight-current-row>
-        <el-table-column label="序号" prop="gmfMc" align="center"/>
-        <el-table-column label="发票类型" prop="gmfMc" align="center"/>
-        <el-table-column label="发票代码" prop="gmfNsrsbh" align="center"/>
-        <el-table-column label="发票号码" prop="hjje" align="center"/>
+        <el-table-column prop="index" label="序号" align="center" width="50">
+          <template slot-scope="scope">
+            {{ scope.$index + 1 }}
+          </template>
+        </el-table-column>
+        <el-table-column label="发票类型" align="center">
+          <template slot-scope="scope">
+            <span>{{ SYS_FPLX[scope.row.fplx] }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="发票代码" prop="fpDm" align="center"/>
+        <el-table-column label="发票号码" prop="fpHm" align="center"/>
+      </el-table>
+      <div slot="footer" class="dialog-footer" align="center">
+        <el-button size="mini" type="primary" @click="printFp()">打印</el-button>
+      </div>
+    </el-dialog>
+    <!--发票作废弹窗-->
+    <el-dialog :visible.sync="fpzfDialogVisible" :before-close="handleCloseFpzf" title="发票作废列表" width="880px">
+      <el-table
+        :data="fpzfShowList"
+        border
+        fit
+        highlight-current-row>
+        <el-table-column prop="index" label="序号" align="center" width="50">
+          <template slot-scope="scope">
+            {{ scope.$index + 1 }}
+          </template>
+        </el-table-column>
+        <el-table-column label="发票类型" align="center">
+          <template slot-scope="scope">
+            <span>{{ SYS_FPLX[scope.row.fplx] }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="发票代码" prop="fpDm" align="center"/>
+        <el-table-column label="发票号码" prop="fpHm" align="center"/>
+        <el-table-column label="作废状态" prop="zfStatus" align="center" width="300"/>
       </el-table>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { getList, retrieve } from '@/api/invoice/oSpecial'
+import { getList, retrieve, cancel, exportAll, validate } from '@/api/invoice/oSpecial'
 import { arrayToMapField } from '@/utils/public'
 import { mapGetters } from 'vuex'
+import fppmShow from '@/components/fppiaomianShow'
 
 export default {
   name: 'OSpecial',
@@ -212,6 +250,8 @@ export default {
       fpzhDialogVisible: false,
       // 打印发票窗口是否显示
       dyfpDialogVisible: false,
+      // 发票作废窗口是否显示
+      fpzfDialogVisible: false,
       // 发票找回表单
       fpzhForm: {
         fpDm: '',
@@ -229,7 +269,9 @@ export default {
         fpDm: [
           { required: true, message: '发票代码不能为空', trigger: 'blur' }
         ]
-      }
+      },
+      // 发票作废展示列表
+      fpzfShowList: []
     }
   },
   computed: {
@@ -250,7 +292,7 @@ export default {
     }
   },
   mounted() {
-    this.initList()
+    this.$store.getters.isAutoLoadData ? this.initList() : ''
   },
   methods: {
     initList() {
@@ -274,104 +316,92 @@ export default {
         }
       })
     },
+    // 打印清单
+    printList() {},
+    // 查看发票
+    checkFP() {
+    },
     // 发票作废
     cancel() {
+      let checked = true
       if (this.checkedItems.length === 0) {
-        this.$message({
-          message: '请至少选择一条数据！',
-          type: 'error'
-        })
+        this.$message.info('请至少选择一条数据！')
         return
       }
-    },
-    printFp() {
-      if (this.checkedItems.length === 0) {
-        this.$message({
-          message: '请至少选择一条数据！',
-          type: 'error'
+      const currentMonth = (new Date().getMonth()).toString().length === 1 ? '0' + (new Date().getMonth() + 1) : (new Date().getMonth() + 1)
+      this.checkedItems.forEach(item => {
+        if (item.fpzt !== '1' && item.fpzt !== '2') {
+          this.$message.error('存在不可作废状态发票，请确认！')
+          checked = false
+        }
+        if (item.kprq.substr(5, 2) !== currentMonth) {
+          this.$message.error('存在非本月开具发票，不能作废，请确认！')
+          checked = false
+        }
+      })
+      if (checked) {
+        this.fpzfDialogVisible = true
+        this.fpzfShowList = Object.assign([], this.checkedItems)
+        this.fpzfShowList.forEach((item, key) => {
+          this.$set(this.fpzfShowList[key], 'zfStatus', '正在处理中...')
+          cancel(item).then(res => {
+            this.initList()
+            this.fpzfDialogVisible = false
+          }).catch(err => {
+            this.$set(this.fpzfShowList[key], 'zfStatus', err)
+          })
         })
+      }
+    },
+    // 打印发票弹窗
+    openPrintFp() {
+      if (this.checkedItems.length === 0) {
+        this.$message.info('请至少选择一条数据！')
         return
       }
       this.dyfpDialogVisible = true
     },
-    // 发票开具
-    billIssue() {
-      if (this.checkedItems.length === 0) {
-        this.$message({
-          message: '请至少选择一条数据！',
-          type: 'error'
-        })
-        return
-      }
+    // 打印
+    printFp() {
+      console.log('打印发票')
     },
-    // 批量开具
-    batchIssue() {
+    // 发票验证
+    validate() {
       if (this.checkedItems.length === 0) {
-        this.$message({
-          message: '请至少选择一条数据！',
-          type: 'error'
-        })
+        this.$message.info('请至少选择一条数据！')
         return
       }
-      this.$confirm('是否确认批量开具选择预制发票?', '批量开具', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        batchIssue().then(res => {
-          this.$message({
-            type: 'success',
-            message: res.msg
-          })
-        }).catch(err => {
-          this.$message({
-            type: 'error',
-            message: err.msg
-          })
-        })
-      })
-    },
-    // 预制发票退回
-    billSendBack() {
-      if (this.checkedItems.length === 0) {
-        this.$message({
-          message: '请至少选择一条数据！',
-          type: 'error'
-        })
-        return
-      }
-      this.$confirm('是否确认回退选择的预制发票？?', '预制发票回退', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        billSendBack().then(res => {
-          this.$message({
-            type: 'success',
-            message: res.msg
-          })
-        }).catch(err => {
-          this.$message({
-            type: 'error',
-            message: err.msg
-          })
-        })
+      validate({}).then(res => {
+        this.$message.success(res.message)
+      }).catch(err => {
+        this.$message.error(err)
       })
     },
     // 导出
-    exportList() {
-    },
+    exportExcel() {},
+    // 数据回传
+    billSendBack() {},
     // 重置
     handleReset() {
       this.listQuery = {
-        title: '',
-        importance: '',
-        type: '',
-        sort: '',
         currentPage: 1,
-        pageSize: 10
+        pageSize: 10,
+        gmfMc: '',
+        fpDm: '',
+        fpHm: '',
+        kprq_start: '',
+        kprq_end: '',
+        zfrq_start: '',
+        zfrq_end: '',
+        fplx: '004',
+        xsfNsrsbh: '500102020160826'
       }
       this.initList()
+    },
+    // 关闭作废窗口重新加载数据
+    handleCloseFpzf() {
+      this.initList()
+      this.fpzfDialogVisible = false
     },
     handleSizeChange(val) {
       this.listQuery.pageSize = val

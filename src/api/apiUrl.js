@@ -145,7 +145,20 @@ const apiPath = {
       retrieve: '/invoice/invoice/getInvoiceBack',
       batchIssue: '/invoice/batchIssue',
       billSendBack: '/invoice/billSendBack',
-      billDetail: 'invoice/billDetail'
+      billDetail: '/invoice/billDetail',
+      cancel: '/invoice/invoice/voidedCheck', // 作废
+      exportAll: '/invoice/invoice/exportInvoiceAll', // 发票导出
+      validate: '/invoice/invoice/validateInvoice' // 发票验证
+    },
+    oOrdinary: {
+      list: '/invoice/invoice/getInvoiceListPage',
+      retrieve: '/invoice/invoice/getInvoiceBack',
+      batchIssue: '/invoice/batchIssue',
+      billSendBack: '/invoice/billSendBack',
+      billDetail: '/invoice/billDetail',
+      cancel: '/invoice/invoice/voidedCheck', // 作废
+      exportAll: '/invoice/invoice/exportInvoiceAll', // 发票导出
+      validate: '/invoice/invoice/validateInvoice' // 发票验证
     },
     redTable: {
       list: '/invoice/invoiceHzxxb/selectByInvoiceHzxxb', // 查询

@@ -51,6 +51,7 @@
                 allow-create
                 size="mini"
                 placeholder="请输入关键词"
+                class="gfMc"
                 @change="remoteChange">
                 <el-option
                   v-for="item in gfList"
@@ -873,6 +874,10 @@ export default {
     border-left: none;
     border-color: #B2945F;
     width: 422px;
+  }
+  .gfMc /deep/ .el-input__inner{
+    padding-left: 5px;
+    font-size: 14px;
   }
   .fppm{
     display: flex;
