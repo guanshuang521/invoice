@@ -4,11 +4,11 @@
 import request from '@/utils/request'
 import apiPath from '@/api/apiUrl'
 // 获取节点列表
-export function getNodeList() {
+export function getNodeList(data) {
   return request({
     url: apiPath.system.organization.list,
     method: 'post',
-    data: {}
+    data
   })
 }
 // 获取节点详情

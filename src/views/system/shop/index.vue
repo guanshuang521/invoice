@@ -126,9 +126,9 @@
           <el-select v-model="form.orgId" placeholder="请选择" filterable>
             <el-option
               v-for="item in orgIdOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"/>
+              :key="item.id"
+              :label="item.orgName"
+              :value="item.id "/>
           </el-select>
         </el-form-item>
       </el-form>
@@ -142,6 +142,7 @@
 
 <script>
 import { getList, addStore, editData, deleteData, detailData } from '@/api/system/shop'
+import { getNodeList } from '@/api/system/organization'
 export default {
   name: 'Shop',
   data() {
@@ -178,15 +179,7 @@ export default {
         ]
       },
       // 所属组织机构
-      orgIdOptions: [
-        {
-          label: '北京',
-          value: 1
-        }, {
-          label: '青海',
-          value: 2
-        }
-      ],
+      orgIdOptions: [],
       // 是否显示门店弹窗
       showDialog: false,
       // 加载层
@@ -217,6 +210,7 @@ export default {
   },
   mounted() {
     this.$store.getters.isAutoLoadData ? this.getTableList() : ''
+    this.getOrgList()
   },
   methods: {
     // table列表查询
@@ -229,6 +223,14 @@ export default {
           type: 'error',
           message: err
         })
+      })
+    },
+    // 获取所属机构
+    getOrgList() {
+      getNodeList({ type: 2 }).then(res => {
+        this.orgIdOptions = res.data.list
+      }).catch(err => {
+        this.$message.error(err)
       })
     },
     // 点击新增/编辑按钮弹框出现

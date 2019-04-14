@@ -173,7 +173,7 @@
       <div class="fpmsg">
         <div class="msgText">收款人：</div>
         <div class="msgCon">
-          <input v-model="formdata.spr" class="gmfcontent" style="border: none">
+          <input v-model="formdata.skr" class="gmfcontent" style="border: none">
         </div>
         <div class="msgText">复核人：</div>
         <div class="msgCon">
@@ -469,20 +469,20 @@ export default {
       return arrayToMapField(this.dictList['SYS_SL'], 'code', 'name')
     },
     xsfMc() {
-      this.formdata.xsfMc
-      return this.org.orgName
+      this.formdata.coName
+      return this.org.coName
     },
     xsfNsrsbh() {
-      this.formdata.xsfNsrsbh
+      this.formdata.taxNum
       return this.org.taxNum
     },
     xsfDzdh() {
       this.formdata.xsfDzdh
-      return this.org.zcDzdh
+      return this.org.coAddr + ' ' + this.org.coPhone
     },
     xsfYhzh() {
       this.formdata.xsfYhzh
-      return this.org.khhMczh
+      return this.org.bankName + ' ' + this.org.bankCode
     },
     kpr() {
       console.log(this.info)
@@ -724,10 +724,10 @@ export default {
     // 双击选择商品
     dbSelectGoods(item, index) {
       this.formdata.lines[this.goods.dialogGoodsIndex]['xmmc'] = item.spmc
-      this.formdata.lines[this.goods.dialogGoodsIndex]['spbm'] = item.spssbm
-      this.formdata.lines[this.goods.dialogGoodsIndex]['spbh'] = item.spbh
-      this.formdata.lines[this.goods.dialogGoodsIndex]['commodityId'] = item.spmc
+      this.formdata.lines[this.goods.dialogGoodsIndex]['spbm'] = item.shflbm
+      this.formdata.lines[this.goods.dialogGoodsIndex]['spbh'] = item.id
       this.formdata.lines[this.goods.dialogGoodsIndex]['sl'] = item.sl
+      this.formdata.lines[this.goods.dialogGoodsIndex]['xmdjShow'] = item.dj
       this.isgoods = false
     },
     // 确认回填税收编码
@@ -735,7 +735,7 @@ export default {
       if (this.goods.item !== '') {
         var checked = Object.assign({}, this.goods.item)
         this.formdata.lines[this.goods.dialogGoodsIndex]['xmmc'] = checked.spmc
-        this.formdata.lines[this.goods.dialogGoodsIndex]['spbm'] = checked.spssbm
+        this.formdata.lines[this.goods.dialogGoodsIndex]['spbm'] = checked.shflbm
         this.formdata.lines[this.goods.dialogGoodsIndex]['spbh'] = checked.spbh
         this.formdata.lines[this.goods.dialogGoodsIndex]['commodityId'] = checked.spmc
         this.formdata.lines[this.goods.dialogGoodsIndex]['sl'] = checked.sl

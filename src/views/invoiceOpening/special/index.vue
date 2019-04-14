@@ -41,47 +41,69 @@ export default {
   methods: {
     // 开具
     kaijuBtn() {
-      this.loading = true
-      const args = Object.assign({}, this.form, {
-        xsfNsrsbh: this.org.nsrsbh,
-        xsfMc: this.org.mc,
-        xsfDzdh: this.org.zcDzdh,
-        xsfYhzh: this.org.khhMczh,
-        kpr: this.org.kpr,
-        fplx: this.fplx, // 发票类型
-        tzpz: '00', // 特殊票种标识
-        dybz: '0', // 打印标识
-        qdbz: '0', // 清单标识
-        zfbz: '0', // 作废标识
-        kplx: '0', // 开票类型
-        fpDm: '', // 发票代码
-        fpHm: '', // 发票号码
-        hsbz: '1', // 含税标识
-        xsfId: this.org.id, // ？
-        xsfBmid: this.org.id, // ？
-        xsfBmmc: this.org.name, // ？
-        qdbs: '0', // 明细清单
-        xsfJgid: this.info.orgId, // 销售方机构id
-        xsfJgmc: this.org.name, // 销售方机构名称
-        kpzdbs: this.info.kpzdbs, // 开票终端标识 ?
-        fplxdm: this.fplx, // 发票类型代码
-        // check: true 手工开具必传
-        skfplx: '2'
+      // 校验
+      let checked = true
+      if (!this.form.gmfMc) {
+        this.$message.error('购方名称不能为空')
+        return
+      }
+      this.form.lines.forEach((item, key) => {
+        if (!item.xmmc) {
+          this.$message.error('第' + (key + 1) + '行商品名称不能为空')
+          checked = false
+        }
+        if (!item.xmje) {
+          this.$message.error('第' + (key + 1) + '行金额不能为空')
+          checked = false
+        }
       })
-      invoice(args).then(res => {
-        this.loading = false
-        this.$message.success(res.message)
-        this.$confirm(res.message, '提示', {
-          confirmButtonText: '打印',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          print().then(res).catch(err)
+      if (checked) {
+        this.loading = true
+        const args = Object.assign({}, this.form, {
+          // xsfNsrsbh: this.org.taxNum,
+          xsfNsrsbh: this.org.taxNum,
+          xsfMc: this.org.coName,
+          // xsfDzdh: this.org.zcDzdh,
+          xsfDzdh: this.org.coAddr + ' ' + this.org.coPhone,
+          xsfYhzh: this.org.bankName + ' ' + this.org.bankCode,
+          kpr: this.org.kpr,
+          fplx: this.fplx, // 发票类型
+          tzpz: '00', // 特殊票种标识
+          dybz: '0', // 打印标识
+          qdbz: '0', // 清单标识
+          zfbz: '0', // 作废标识
+          kplx: '0', // 开票类型
+          fpDm: '', // 发票代码
+          fpHm: '', // 发票号码
+          hsbz: '1', // 含税标识
+          xsfId: this.org.id, // ？
+          xsfBmid: this.org.id, // ？
+          xsfBmmc: this.org.name, // ？
+          qdbs: '0', // 明细清单
+          xsfJgid: this.info.orgId, // 销售方机构id
+          xsfJgmc: this.org.name, // 销售方机构名称
+          kpzdbs: this.info.kpzdbs, // 开票终端标识 ?
+          fplxdm: this.fplx, // 发票类型代码
+          check: true, // 手工开具必传
+          skfplx: '2'
         })
-      }).catch(err => {
-        this.loading = false
-        this.$message.error(err)
-      })
+        invoice(args).then(res => {
+          this.loading = false
+          this.$message.success(res.message)
+          this.$confirm(res.message, '提示', {
+            confirmButtonText: '打印',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            print().then(res).catch(err => {
+              this.$message.error(err)
+            })
+          })
+        }).catch(err => {
+          this.loading = false
+          this.$message.error(err)
+        })
+      }
     },
     pmformdata: function(msg) {
       this.form = msg
