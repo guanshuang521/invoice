@@ -131,7 +131,7 @@
       </el-table>
       <el-pagination
         :current-page = "searchParams.currentPage"
-        :page-sizes = "[10, 20, 30, 40]"
+        :page-sizes = "[10, 20, 30, 50, 100]"
         :page-size = "searchParams.pageSize"
         :total = "totalCount"
         style="margin-top: 20px"
@@ -145,9 +145,10 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import { getCommodityOrderlist, generatenIvoices, buildInvoice } from '@/api/order'
+import { getCommdylist, generatenIvoices, buildInvoice } from '@/api/order'
 import invoiceDialog from '../components/invoiceDialog'
 import apiPath from '@/api/apiUrl'
+import { arrayToMapField } from '@/utils/public'
 export default {
   name: 'Dashboard',
   components: { invoiceDialog },
@@ -187,14 +188,17 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['name', 'roles'])
+    ...mapGetters(['name', 'roles', 'dictList']),
+    SYS_ERP_STATUS() { // 状态
+      return arrayToMapField(this.dictList['SYS_ERP_STATUS'], 'code', 'name')
+    }
   },
   mounted() {},
   methods: {
     // 初始化数据
     initTable() {
       this.listLoading = true
-      getCommodityOrderlist(this.searchParams).then(res => {
+      getCommdylist(this.searchParams).then(res => {
         this.loading = false
         this.total = res.data.count
         this.tableList = res.data.list

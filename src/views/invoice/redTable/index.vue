@@ -102,7 +102,7 @@
       </el-table>
       <el-pagination
         :current-page = "searchParams.currentPage"
-        :page-sizes = "[10, 50, 100 ]"
+        :page-sizes = "[10, 20, 30, 50, 100]"
         :page-size = "searchParams.pageSize"
         :total = "totalCount"
         layout = "total, sizes, prev, pager, next, jumper"

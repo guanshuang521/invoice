@@ -10,16 +10,21 @@
     <el-dialog :visible.sync="ishow" :before-close="hideDialog" :title="dialogTitle" width="450px">
       <el-form ref="dynamicValidateForm" :rules="rules" :model="dynamicValidateForm" label-width="110px" size="mini">
         <el-form-item label="选择订单数">
-          <el-input v-model="buildPop.num" disabled="disabled"/>
+          <el-input v-if="dialogTitle == '同一购方订单生成预制发票'" v-model="buildPop.num" disabled="disabled"/>
+          <el-input v-if="dialogTitle !== '同一购方订单生成预制发票'" v-model="makePopData.num" disabled="disabled"/>
         </el-form-item>
         <el-form-item label="合计金额（不含税)">
-          <el-input v-model="buildPop.hjje" disabled="disabled"/>
+          <el-input v-if="dialogTitle == '同一购方订单生成预制发票'" v-model="buildPop.hjje" disabled="disabled"/>
+          <el-input v-if="dialogTitle !== '同一购方订单生成预制发票'" v-model="makePopData.hjje" disabled="disabled"/>
         </el-form-item>
         <el-form-item label="合计税额">
-          <el-input v-model="buildPop.hjse" disabled="disabled"/>
+          <el-input v-if="dialogTitle == '同一购方订单生成预制发票'" v-model="buildPop.hjse" disabled="disabled"/>
+          <el-input v-if="dialogTitle !== '同一购方订单生成预制发票'" v-model="makePopData.hjse" disabled="disabled"/>
         </el-form-item>
         <el-form-item label="加税合计">
-          <el-input v-model="buildPop.jshj" disabled="disabled"/>
+          <el-input v-if="dialogTitle == '同一购方订单生成预制发票'" v-model="buildPop.jshj" disabled="disabled"/>
+          <el-input v-if="dialogTitle !== '同一购方订单生成预制发票'" v-model="makePopData.jshj" disabled="disabled"/>
+          <!--<el-input v-model="buildPop.jshj" disabled="disabled"/>-->
         </el-form-item>
         <el-form-item label="预制发票类型" prop="fplx">
           <el-select v-model="dynamicValidateForm.fplx" placeholder="请选择预制发票类型">

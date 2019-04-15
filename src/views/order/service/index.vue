@@ -10,7 +10,7 @@
     <div class="filter-container">
       <el-form :inline="true" :model="searchParams" class="demo-form-inline">
         <el-form-item label="购方名称">
-          <el-input v-model="searchParams.gfmc" placeholder="请输入" size="small"/>
+          <el-input v-model="searchParams.spgsqc" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="二级供应商编码">
           <el-input v-model="searchParams.ejgysbm" placeholder="请输入" size="small"/>
@@ -23,8 +23,7 @@
         </el-form-item>
         <el-form-item label="订单状态">
           <el-select v-model="searchParams.ddzt" placeholder="请选择" size="small">
-            <el-option label="已开具" value="1"/>
-            <el-option label="无开具" value="0"/>
+            <el-option v-for="item in dictList['SYS_ERP_STATUS']" :key="item.id" :label="item.name" :value="item.code"/>
           </el-select>
         </el-form-item>
         <el-form-item label="单据起号">
@@ -116,7 +115,7 @@
           label="销方税号"
           align="center"/>
         <el-table-column
-          prop="gfmc"
+          prop="spgsqc"
           label="购方名称"
           align="center"/>
         <el-table-column
@@ -142,7 +141,7 @@
       </el-table>
       <el-pagination
         :current-page = "searchParams.currentPage"
-        :page-sizes = "[10, 20, 30, 40]"
+        :page-sizes = "[10, 20, 30, 50, 100]"
         :page-size = "searchParams.pageSize"
         :total = "totalCount"
         style="margin-top: 20px"
@@ -159,6 +158,7 @@ import { mapGetters } from 'vuex'
 import { getServiceOrderlist, generatenIvoices, buildInvoice } from '@/api/order'
 import invoiceDialog from '../components/invoiceDialog'
 import apiPath from '@/api/apiUrl'
+import { arrayToMapField } from '@/utils/public'
 export default {
   name: 'Dashboard',
   components: { invoiceDialog },
@@ -168,7 +168,7 @@ export default {
       searchParams: {
         pageSize: 10,
         currentPage: 1,
-        gfmc: '',
+        spgsqc: '',
         ejgysbm: '',
         djbh: '',
         jsdh: '',
@@ -200,7 +200,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['name', 'roles'])
+    ...mapGetters(['name', 'roles', 'dictList']),
+    SYS_ERP_STATUS() { // 状态
+      return arrayToMapField(this.dictList['SYS_ERP_STATUS'], 'code', 'name')
+    }
   },
   mounted() {},
   methods: {
@@ -222,7 +225,7 @@ export default {
     // 查询重置
     reset() {
       this.searchParams = {
-        gfmc: '',
+        spgsqc: '',
         ejgysbm: '',
         djbh: '',
         jsdh: '',

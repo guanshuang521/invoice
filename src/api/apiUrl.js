@@ -100,8 +100,8 @@ const apiPath = {
   },
   order: {
     list: {
-      erpSpList: '/invoice/erpOrder/findSpErpOrderByCondition',
-      erpFwList: '/invoice/erpOrder/findFwErpOrderByCondition',
+      erpList: '/invoice/erpOrder/findFwErpOrderByCondition',
+      Commdylist: '/invoice/erpOrder/findSpErpOrderByCondition',
       delerpList: '/invoice/posOrder/deletePosOrderAndDetail',
       exportErp: '/invoice/erpOrder/exportErpOrder',
       getInvoices: '/invoice/erpOrder/biuldInvoiceByIds',
@@ -111,7 +111,7 @@ const apiPath = {
     },
     pos: {
       findList: '/invoice/posOrder/findAllPosOrderByCondition',
-      delList: '/invoice/posOrder/deletePosOrderAndDetail',
+      delList: '/invoice/posOrder/batchDeletePosOrder',
       downPos: '/invoice/posOrder/downPosOrder',
       buildInvoicePre: '/invoice/posOrder/buildInvoicePre',
       exportPosOrder: '/invoice/posOrder/exportPosOrder',

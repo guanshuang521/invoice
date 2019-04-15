@@ -10,15 +10,7 @@ import apiPath from '@/api/apiUrl'
 // 服务类订单管理
 export function getServiceOrderlist(data) {
   return request({
-    url: apiPath.order.list.erpFwList,
-    method: 'post',
-    data: data
-  })
-}
-// 商品类订单管理
-export function getCommodityOrderlist(data) {
-  return request({
-    url: apiPath.order.list.erpSpList,
+    url: apiPath.order.list.erpList,
     method: 'post',
     data: data
   })
@@ -103,6 +95,14 @@ export function dobuildInvoiceGmf(data) {
 export function dobuildInvoiceIds(data) {
   return request({
     url: apiPath.order.list.dobuildInvoiceIds,
+    method: 'post',
+    data: data
+  })
+}
+// 商品订单管理
+export function getCommdylist(data) {
+  return request({
+    url: apiPath.order.list.Commdylist,
     method: 'post',
     data: data
   })
