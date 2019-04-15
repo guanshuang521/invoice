@@ -234,6 +234,7 @@
     </el-dialog>
     <!--红冲发票弹窗-->
     <el-dialog :visible.sync="hckpDialogVisible" title="作废重开" width="1280px">
+      <span>红字信息表编号：</span><el-input v-model="hzxxbbh" placeholder="请输入" style="width: 182px"/>
       <fppmShow :formdata="fppmHckpData" :is-sph-readonly="true"/>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button type="primary" size="mini" @click="hcInvoiceSubmit">开具</el-button>
@@ -314,7 +315,9 @@ export default {
       // 作废重开数据
       fppmZfckData: {},
       // 红冲发票数据
-      fppmHckpData: {}
+      fppmHckpData: {},
+      // 红字信息表编号
+      hzxxbbh: ''
     }
   },
   computed: {
@@ -420,9 +423,9 @@ export default {
     },
     // 红冲开票提交
     hcInvoiceSubmit() {
-      debugger
       const args = Object.assign({}, this.fppmHckpData)
       this.listLoading = true
+      args.hzxxbbh = this.hzxxbbh
       invoice(args).then(res => {
         this.hckpDialogVisible = false
         this.listLoading = false
