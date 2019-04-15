@@ -4,7 +4,12 @@
  * @Description:已开专票管理
 */
 <template>
-  <div class="oSpecial-container">
+  <div
+    v-loading.fullscreen.lock="listLoading"
+    class="oSpecial-container"
+    element-loading-text="加载中"
+    element-loading-spinner="el-icon-loading"
+    element-loading-background="rgba(0, 0, 0, 0.6)">
     <div class="filter-container">
       <el-form :inline="true" :model="listQuery" class="demo-form-inline">
         <el-form-item label="购方名称">
@@ -131,9 +136,9 @@
           label="操作"
           width="300">
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click="checkFP">查看</el-button>
-            <el-button type="primary" size="mini">作废重开</el-button>
-            <el-button type="primary" size="mini">红冲发票</el-button>
+            <el-button type="primary" size="mini" @click="checkFP(scope.row)">查看</el-button>
+            <el-button type="primary" size="mini" @click="reInvoice(scope.row)">作废重开</el-button>
+            <el-button type="primary" size="mini" @click="hcInvoice(scope.row)">红冲发票</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -213,17 +218,42 @@
         <el-table-column label="作废状态" prop="zfStatus" align="center" width="300"/>
       </el-table>
     </el-dialog>
+    <!--发票查看弹窗-->
+    <el-dialog :visible.sync="fpckDialogVisible" title="发票查看" width="1280px">
+      <fppmShow :formdata="fppmShowData" :is-all-readonly="true"/>
+      <div slot="footer" class="dialog-footer" align="center">
+        <el-button type="primary" size="mini" @click="fpckDialogVisible = false">关闭</el-button>
+      </div>
+    </el-dialog>
+    <!--作废重开弹窗-->
+    <el-dialog :visible.sync="zfckDialogVisible" title="作废重开" width="1280px">
+      <fppmShow :formdata="fppmZfckData" :is-sph-readonly="true"/>
+      <div slot="footer" class="dialog-footer" align="center">
+        <el-button type="primary" size="mini" @click="reInvoiceSubmit">开具</el-button>
+      </div>
+    </el-dialog>
+    <!--红冲发票弹窗-->
+    <el-dialog :visible.sync="hckpDialogVisible" title="作废重开" width="1280px">
+      <fppmShow :formdata="fppmHckpData" :is-sph-readonly="true"/>
+      <div slot="footer" class="dialog-footer" align="center">
+        <el-button type="primary" size="mini" @click="hcInvoiceSubmit">开具</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getList, retrieve, cancel, exportAll, validate } from '@/api/invoice/oSpecial'
+import { getList, retrieve, cancel, exportAll, validate, passBackInvoice, fpDetail, reInvoice } from '@/api/invoice/oSpecial'
+import { invoice } from '@/api/invoiceOpening/opening'
 import { arrayToMapField } from '@/utils/public'
 import { mapGetters } from 'vuex'
 import fppmShow from '@/components/fppiaomianShow'
 
 export default {
   name: 'OSpecial',
+  components: {
+    fppmShow
+  },
   data() {
     return {
       // 列表总条数
@@ -240,7 +270,7 @@ export default {
         zfrq_start: '',
         zfrq_end: '',
         fplx: '004',
-        xsfNsrsbh: '500102020160826'
+        xsfNsrsbh: ''
       },
       listLoading: false,
       dataList: [],
@@ -252,6 +282,12 @@ export default {
       dyfpDialogVisible: false,
       // 发票作废窗口是否显示
       fpzfDialogVisible: false,
+      // 发票查看窗口是否显示
+      fpckDialogVisible: false,
+      // 作废重开窗口是否显示
+      zfckDialogVisible: false,
+      // 红冲窗口是否显示
+      hckpDialogVisible: false,
       // 发票找回表单
       fpzhForm: {
         fpDm: '',
@@ -271,12 +307,19 @@ export default {
         ]
       },
       // 发票作废展示列表
-      fpzfShowList: []
+      fpzfShowList: [],
+      // 发票票面展示数据
+      fppmShowData: {},
+      // 作废重开数据
+      fppmZfckData: {},
+      // 红冲发票数据
+      fppmHckpData: {}
     }
   },
   computed: {
     ...mapGetters([
-      'dictList'
+      'dictList',
+      'org'
     ]),
     SYS_FPZT() {
       return arrayToMapField(this.dictList['SYS_FPZT'], 'code', 'name')
@@ -296,6 +339,7 @@ export default {
   },
   methods: {
     initList() {
+      this.listQuery.xsfNsrsbh = this.org.taxNum
       getList(this.listQuery).then(res => {
         this.dataList = res.data.list
         this.totalCount = res.data.count
@@ -308,10 +352,15 @@ export default {
       this.$refs['fpzhForm'].validate((valid) => {
         if (valid) {
           const args = Object.assign({}, this.fpzhForm)
+          this.listLoading = true
           retrieve(args).then(res => {
+            this.listLoading = true
             this.$message.success(res.message)
             this.fpzhDialogVisible = false
             this.initList()
+          }).catch(err => {
+            this.listLoading = true
+            this.$message.error(err)
           })
         }
       })
@@ -319,7 +368,69 @@ export default {
     // 打印清单
     printList() {},
     // 查看发票
-    checkFP() {
+    checkFP(val) {
+      console.log(val)
+      fpDetail({ fpDm: val.fpDm, fpHm: val.fpHm }).then(res => {
+        console.log(res)
+        this.fpckDialogVisible = true
+        this.fppmShowData = res.data
+      }).catch(err => {
+        this.$message.error(err)
+      })
+    },
+    // 作废重开
+    reInvoice(val) {
+      fpDetail({ fpDm: val.fpDm, fpHm: val.fpHm }).then(res => {
+        this.zfckDialogVisible = true
+        this.fppmZfckData = res.data
+      }).catch(err => {
+        this.$message.error(err)
+      })
+    },
+    // 作废重开提交
+    reInvoiceSubmit() {
+      const args = Object.assign({}, this.fppmZfckData)
+      this.listLoading = true
+      reInvoice(args).then(res => {
+        this.zfckDialogVisible = false
+        this.listLoading = false
+        this.$message.success(res.message)
+        this.initList()
+      }).catch(err => {
+        this.listLoading = false
+        this.$message.error(err)
+      })
+    },
+    // 红冲开票
+    hcInvoice(val) {
+      fpDetail({ fpDm: val.fpDm, fpHm: val.fpHm }).then(res => {
+        this.hckpDialogVisible = true
+        res.data.lines.forEach(item => {
+          if (item.hsxmdj > 0) {
+            item.hsxmdj = -item.hsxmdj
+          }
+          if (item.xmsl > 0) {
+            item.xmsl = -item.xmsl
+          }
+        })
+        this.fppmHckpData = res.data
+      }).catch(err => {
+        this.$message.error(err)
+      })
+    },
+    // 红冲开票提交
+    hcInvoiceSubmit() {
+      const args = Object.assign({}, this.fppmHckpData)
+      this.listLoading = true
+      invoice(args).then(res => {
+        this.hckpDialogVisible = false
+        this.listLoading = false
+        this.$message.success(res.message)
+        this.initList()
+      }).catch(err => {
+        this.listLoading = false
+        this.$message.error(err)
+      })
     },
     // 发票作废
     cancel() {
@@ -344,10 +455,13 @@ export default {
         this.fpzfShowList = Object.assign([], this.checkedItems)
         this.fpzfShowList.forEach((item, key) => {
           this.$set(this.fpzfShowList[key], 'zfStatus', '正在处理中...')
+          this.listLoading = true
           cancel(item).then(res => {
             this.initList()
+            this.listLoading = false
             this.fpzfDialogVisible = false
           }).catch(err => {
+            this.listLoading = false
             this.$set(this.fpzfShowList[key], 'zfStatus', err)
           })
         })
@@ -367,20 +481,69 @@ export default {
     },
     // 发票验证
     validate() {
+      function sortBy(field) {
+        return function(a, b) {
+          return a[field] - b[field]
+        }
+      }
       if (this.checkedItems.length === 0) {
         this.$message.info('请至少选择一条数据！')
         return
       }
-      validate({}).then(res => {
-        this.$message.success(res.message)
-      }).catch(err => {
-        this.$message.error(err)
+      // 验证规则：发票代码一样，发票号码需连续
+      this.checkedItems.sort(sortBy('fpHm'))
+      let valid = true
+      const defaultFpDm = this.checkedItems[0].fpDm
+      this.checkedItems.reduce((pre, curr) => {
+        if (pre && parseFloat(pre.fpHm) !== parseFloat(curr.fpHm) - 1) {
+          this.$message.error('发票号码需连续！')
+          valid = false
+        }
       })
+      this.checkedItems.forEach(item => {
+        if (item.fpDm !== defaultFpDm) {
+          this.$message.error('发票代码需一致！')
+          valid = false
+        }
+      })
+      if (valid) {
+        this.checkedItems.forEach(item => {
+          validate({ fpqqlshStr: item.fpqqlsh }).then(res => {
+            this.$message.success(res.message)
+          }).catch(err => {
+            this.$message.error(err)
+          })
+        })
+      }
     },
     // 导出
-    exportExcel() {},
+    exportExcel() {
+      this.$confirm('确定导出?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        exportAll(this.listQuery).then().catch()
+      })
+    },
     // 数据回传
-    billSendBack() {},
+    billSendBack() {
+      this.$confirm('确定数据回传?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.loading = true
+        passBackInvoice(this.listQuery).then(res => {
+          this.loading = false
+          this.$message.success(res.message)
+          this.initTable()
+        }).catch(err => {
+          this.loading = false
+          this.$message.error(err)
+        })
+      })
+    },
     // 重置
     handleReset() {
       this.listQuery = {

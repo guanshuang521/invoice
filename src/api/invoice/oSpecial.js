@@ -46,3 +46,27 @@ export function validate(data) {
     data
   })
 }
+// 数据回传
+export function passBackInvoice(data) {
+  return request({
+    url: apiPath.invoice.oSpecial.passBackInvoice,
+    method: 'post',
+    data
+  })
+}
+// 获取发票详情
+export function fpDetail(data) {
+  return request({
+    url: apiPath.invoice.oSpecial.fpDetail,
+    method: 'post',
+    data
+  })
+}
+// 发票作废重开
+export function reInvoice(data) {
+  return request({
+    url: apiPath.invoice.oSpecial.reInvoice,
+    method: 'post',
+    data
+  })
+}
