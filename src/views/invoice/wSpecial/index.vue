@@ -144,8 +144,6 @@ export default {
     // 查询
     initList() {
       this.listLoading = true
-      console.log(this.org.nsrsbh)
-      debugger
       const args = Object.assign({}, this.listQuery, {
         xsfNsrsbh: this.org.taxNum,
         fplx: this.$store.getters.fplx_gen
