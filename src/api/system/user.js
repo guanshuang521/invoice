@@ -11,6 +11,14 @@ export function getList(data) {
     data: data
   })
 }
+// 获取所有角色列表
+export function getAllList(data) {
+  return request({
+    url: apiPath.system.user.AllRolelist,
+    method: 'post',
+    data
+  })
+}
 // 新增数据
 export function add(data) {
   return request({
@@ -60,7 +68,7 @@ export function assignRoles(data) {
 // 获取所有角色
 export function getAllRoles(data) {
   return request({
-    url: apiPath.system.user.roleList,
+    url: apiPath.system.user.list,
     method: 'post',
     data
   })

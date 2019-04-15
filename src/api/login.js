@@ -22,17 +22,18 @@ export function getInfo(token) {
   })
 }
 
-export function logout() {
+export function logout(userId) {
   return request({
-    url: '/user/logout',
-    method: 'post'
+    url: apiPath.login.logout,
+    method: 'get',
+    params: { userId }
   })
 }
 // 获取有权限的路由
-export function getRoute(id) {
+export function getRoute(userId) {
   return request({
     url: apiPath.login.userInfo,
     method: 'get',
-    params: { id }
+    params: { userId }
   })
 }

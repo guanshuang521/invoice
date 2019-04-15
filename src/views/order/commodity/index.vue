@@ -89,11 +89,11 @@
           label="二级供应商编码"
           align="center"/>
         <el-table-column
-          prop="je"
+          prop="hjje"
           label="金额（不含税）"
           align="center"/>
         <el-table-column
-          prop="sj"
+          prop="hjse"
           label="税额"
           align="center"/>
         <el-table-column

@@ -6,8 +6,9 @@
 const apiPath = {
   login: {
     login: '/rbac/user/login',
+    logout: '/rbac/user/logout',
     dict: '/rbac/paramDetail/selectParamDetailsList',
-    userInfo: '/rbac/resource/findRourceByUser'
+    userInfo: '/rbac/user/getUserInfo'
   },
   // 系统管理
   system: {
@@ -33,6 +34,7 @@ const apiPath = {
     user: {
       nodeList: '/rbac/user/getRoleList', // 获取权限树
       list: '/rbac/user/selectAll', // 获取用户列表
+      AllRolelist: '/rbac/user/selectByRole', // 获取所有角色列表
       add: '/rbac/user/insertUser', // 新增数据
       edit: '/rbac/user/updateUser', // 修改数据
       save: '/rbac/system/user/save.do', // 用户保存
@@ -134,16 +136,30 @@ const apiPath = {
 
   invoice: {
     wSpecial: {
-      list: 'invoice/search',
+      list: '/invoice/invoicePre/findAllInvoicePreByCondition',
       batchIssue: '/invoice/batchIssue',
       billSendBack: '/invoice/billSendBack',
       billDetail: 'invoice/billDetail'
     },
     oSpecial: {
-      list: '/invoice/getInvoiceListPage',
+      list: '/invoice/invoice/getInvoiceListPage',
+      retrieve: '/invoice/invoice/getInvoiceBack',
       batchIssue: '/invoice/batchIssue',
       billSendBack: '/invoice/billSendBack',
-      billDetail: 'invoice/billDetail'
+      billDetail: '/invoice/billDetail',
+      cancel: '/invoice/invoice/voidedCheck', // 作废
+      exportAll: '/invoice/invoice/exportInvoiceAll', // 发票导出
+      validate: '/invoice/invoice/validateInvoice' // 发票验证
+    },
+    oOrdinary: {
+      list: '/invoice/invoice/getInvoiceListPage',
+      retrieve: '/invoice/invoice/getInvoiceBack',
+      batchIssue: '/invoice/batchIssue',
+      billSendBack: '/invoice/billSendBack',
+      billDetail: '/invoice/billDetail',
+      cancel: '/invoice/invoice/voidedCheck', // 作废
+      exportAll: '/invoice/invoice/exportInvoiceAll', // 发票导出
+      validate: '/invoice/invoice/validateInvoice' // 发票验证
     },
     redTable: {
       list: '/invoice/invoiceHzxxb/selectByInvoiceHzxxb', // 查询
