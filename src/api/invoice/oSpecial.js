@@ -34,7 +34,7 @@ export function cancel(data) {
 export function exportAll(data) {
   return request({
     url: apiPath.invoice.oSpecial.exportAll,
-    method: 'post',
+    method: 'get',
     data
   })
 }
@@ -66,6 +66,14 @@ export function fpDetail(data) {
 export function reInvoice(data) {
   return request({
     url: apiPath.invoice.oSpecial.reInvoice,
+    method: 'post',
+    data
+  })
+}
+// 发票打印
+export function printFP(data) {
+  return request({
+    url: '/print',
     method: 'post',
     data
   })

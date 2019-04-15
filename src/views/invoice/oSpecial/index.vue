@@ -16,7 +16,7 @@
           <el-input v-model="listQuery.gmfMc" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="商品名称">
-          <el-input v-model="listQuery.ddh" placeholder="请输入" size="small"/>
+          <el-input v-model="listQuery.xmmc" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="发票代码">
           <el-input v-model="listQuery.fpDm" placeholder="请输入" size="small"/>
@@ -243,7 +243,7 @@
 </template>
 
 <script>
-import { getList, retrieve, cancel, exportAll, validate, passBackInvoice, fpDetail, reInvoice } from '@/api/invoice/oSpecial'
+import { getList, retrieve, cancel, exportAll, validate, passBackInvoice, fpDetail, reInvoice, printFP } from '@/api/invoice/oSpecial'
 import { invoice } from '@/api/invoiceOpening/opening'
 import { arrayToMapField } from '@/utils/public'
 import { mapGetters } from 'vuex'
@@ -262,6 +262,7 @@ export default {
       listQuery: {
         currentPage: 1,
         pageSize: 10,
+        xmmc: '',
         gmfMc: '',
         fpDm: '',
         fpHm: '',
@@ -319,7 +320,8 @@ export default {
   computed: {
     ...mapGetters([
       'dictList',
-      'org'
+      'org',
+      'info'
     ]),
     SYS_FPZT() {
       return arrayToMapField(this.dictList['SYS_FPZT'], 'code', 'name')
@@ -406,12 +408,12 @@ export default {
       fpDetail({ fpDm: val.fpDm, fpHm: val.fpHm }).then(res => {
         this.hckpDialogVisible = true
         res.data.lines.forEach(item => {
-          if (item.hsxmdj > 0) {
-            item.hsxmdj = -item.hsxmdj
-          }
-          if (item.xmsl > 0) {
-            item.xmsl = -item.xmsl
-          }
+          item.hjje = -item.hjje
+          item.hjse = -item.hjse
+          item.jshj = -item.jshj
+          item.se = -item.se
+          item.hsxmje = -item.hsxmje
+          item.xmje = -item.xmje
         })
         this.fppmHckpData = res.data
       }).catch(err => {
@@ -420,6 +422,7 @@ export default {
     },
     // 红冲开票提交
     hcInvoiceSubmit() {
+      debugger
       const args = Object.assign({}, this.fppmHckpData)
       this.listLoading = true
       invoice(args).then(res => {
@@ -469,15 +472,35 @@ export default {
     },
     // 打印发票弹窗
     openPrintFp() {
-      if (this.checkedItems.length === 0) {
-        this.$message.info('请至少选择一条数据！')
+      if (this.checkedItems.length !== 1) {
+        this.$message.info('请选择一条数据！')
         return
       }
       this.dyfpDialogVisible = true
     },
     // 打印
     printFp() {
-      console.log('打印发票')
+      this.checkedItems[0]
+      const xml = `<?xml version="1.0" encoding="gbk"?>
+    <business id="20004"comment="发票打印">
+        <body yylxdm="1">
+        <kpzdbs>${this.info.terminalMark}</kpzdbs>
+        <fplxdm>${this.checkedItems[0].fplx}</fplxdm>
+        <fpdm>${this.checkedItems[0].fpDm}</fpdm>
+        <fphm>${this.checkedItems[0].fpHm}</fphm>
+        <dylx>0</dylx>
+        <dyfs>1</dyfs>
+        </body>
+      </business>`
+      console.log(xml)
+      const Base64 = require('js-base64').Base64
+      const args = '<content>' + Base64.encode(xml) + '</content>'
+      console.log(args)
+      printFP(args).then(res => {
+        this.$message.success(res)
+      }).catch(err => {
+        this.$message.error(err)
+      })
     },
     // 发票验证
     validate() {
@@ -523,7 +546,19 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        exportAll(this.listQuery).then().catch()
+        exportAll(this.listQuery).then(res => {
+          const content = res
+          const blob = new Blob([content])
+          const fileName = '项目信息表.xls'
+          if ('download' in document.createElement('a')) { // 非IE下载
+            const elink = document.createElement('a')
+            elink.download = fileName
+            elink.style.display = 'none'
+            elink.href = URL.createObjectURL(blob)
+            document.body.appendChild(elink)
+            elink.click()
+          }
+        }).catch()
       })
     },
     // 数据回传
@@ -549,6 +584,7 @@ export default {
       this.listQuery = {
         currentPage: 1,
         pageSize: 10,
+        xmmc: '',
         gmfMc: '',
         fpDm: '',
         fpHm: '',
