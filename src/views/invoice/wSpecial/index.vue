@@ -113,8 +113,7 @@ export default {
       // 查询条件
       listQuery: {
         currentPage: 1,
-        pageSize: 10,
-        fplx: this.$store.getters.fplx_spe
+        pageSize: 10
       },
       totalCount: 0,
       // 加载动画是否显示
@@ -132,8 +131,7 @@ export default {
   computed: {
     ...mapGetters([
       'dictList',
-      'org',
-      'info'
+      'org'
     ]),
     SYS_FPLX() {
       return arrayToMapField(this.dictList['SYS_FPLX'], 'code', 'name')
@@ -146,7 +144,13 @@ export default {
     // 查询
     initList() {
       this.listLoading = true
-      initTableList(this.listQuery).then(res => {
+      console.log(this.org.nsrsbh)
+      debugger
+      const args = Object.assign({}, this.listQuery, {
+        xsfNsrsbh: this.org.taxNum,
+        fplx: this.$store.getters.fplx_gen
+      })
+      initTableList(args).then(res => {
         this.listLoading = false
         this.dataList = res.data.list
         this.totalCount = res.data.count
@@ -163,7 +167,6 @@ export default {
       this.listQuery = {
         currentPage: 1,
         pageSize: 10,
-        fplx: this.$store.getters.fplx_spe,
         gmfMc: '',
         djbh: '',
         xmmc: ''
