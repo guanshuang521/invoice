@@ -23,9 +23,9 @@
       </el-form>
     </div>
     <div class="button-container">
-      <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="billIssue">开具发票</el-button>
-      <el-button size="small" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="batchIssue">批量开具</el-button>
-      <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="billSendBack">预制发票回退</el-button>
+      <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="invoice">开具发票</el-button>
+      <el-button size="small" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="batchInvoice">批量开具</el-button>
+      <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="backInvoicePre">预制发票回退</el-button>
       <el-button size="small" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="exportList">导出</el-button>
     </div>
     <div class="table-container">
@@ -55,9 +55,9 @@
           label="操作"
           width="300">
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click="billPreview">发票预览</el-button>
-            <el-button type="primary" size="mini" @click="billDetail">发票明细</el-button>
-            <el-button type="primary" size="mini" @click="orderDetail">订单明细</el-button>
+            <el-button type="primary" size="mini" @click="billPreview(scope.row)">发票预览</el-button>
+            <el-button type="primary" size="mini" @click="billDetail(scope.row)">发票明细</el-button>
+            <el-button type="primary" size="mini" @click="orderDetail(scope.row)">订单明细</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -83,7 +83,7 @@
 </template>
 
 <script>
-import { batchIssue, billSendBack, initList, getBillDetail } from '@/api/invoice/wSpecial'
+import {initTableList, invoice, batchInvoice, backInvoicePre, exportData, getOrderDetail} from '@/api/invoice/inovicePre'
 import BillDetail from '@/components/invoice/billDetail'
 import OrderDetail from '@/components/invoice/orderDetail'
 import fppm from '@/components/fppiaomian'
@@ -102,7 +102,7 @@ export default {
       listQuery: {
         currentPage: 1,
         pageSize: 10,
-        fplx: '004'
+        fplx: this.$store.getters.fplx_spe
       },
       totalCount: 0,
       // 加载动画是否显示
@@ -110,79 +110,18 @@ export default {
       // 列表数据
       dataList: [],
       // 勾选的列表项
-      checkedItems: [],
+      checkedList: [],
       // 发票明细
       billList: [],
       // 发票类型
-      fplx: '004'
+      fplx: this.$store.getters.fplx_spe
     }
   },
   methods: {
-    // 发票预览
-    billPreview() {
-      this.showBillPreview = true
-    },
-    // 发票开具
-    billIssue() {
-      if (this.checkedList.length === 0) {
-        this.$message({
-          type: 'error',
-          message: '请选择一条数据！'
-        })
-        return
-      }
-    },
-    // 批量开具
-    batchIssue() {
-      if (this.checkedItems.length === 0) {
-        this.$message.info('请至少选择一条数据！')
-        return
-      }
-      this.$confirm('是否确认批量开具选择预制发票?', '批量开具', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        batchIssue().then(res => {
-          this.$message.success(res.messgae)
-        }).catch(err => {
-          this.$message.error(err)
-        })
-      })
-    },
-    // 预制发票退回
-    billSendBack() {
-      if (this.checkedItems.length === 0) {
-        this.$message({
-          message: '请至少选择一条数据！',
-          type: 'error'
-        })
-        return
-      }
-      this.$confirm('是否确认回退选择的预制发票?', '预制发票回退', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        billSendBack().then(res => {
-          this.$message({
-            type: 'success',
-            message: res.msg
-          })
-        }).catch(err => {
-          this.$message({
-            type: 'error',
-            message: err.msg
-          })
-        })
-      })
-    },
-    // 导出
-    exportList() {},
     // 查询
     initList() {
       this.listLoading = true
-      initList(this.listQuery).then(res => {
+      initTableList(this.listQuery).then(res => {
         this.listLoading = false
         this.dataList = res.data.list
         this.totalCount = res.data.count
@@ -199,27 +138,115 @@ export default {
       this.listQuery = {
         currentPage: 1,
         pageSize: 10,
-        fplx: '004',
+        fplx: this.$store.getters.fplx_spe,
         gmfMc: '',
         djbh: '',
         xmmc: ''
       }
       this.initList()
     },
-    // 发票明细
-    billDetail() {
-      this.showBillDialog = true
-      getBillDetail().then(res => {
-        this.showBillDialog = true
-      }).catch(err => {
+    // 发票开具
+    invoice() {
+      if (this.checkedList && this.checkedList.length === 1) {
+        this.$confirm('确认要开具发票吗?', '确认开票', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          invoice(this.checkedList[0]).then(res => {
+            if (res.code === '0000') {
+              initTableList()
+            } else {
+              this.$message.success(res.messgae)
+            }
+          }).catch(err => {
+            this.$message.error(err)
+          })
+        })
+      } else {
+        this.$message({
+          type: 'error',
+          message: '请选择一条数据！'
+        })
+      }
+    },
+    // 批量开具
+    batchInvoice() {
+      if (this.checkedList.length === 0) {
+        this.$message.info('请至少选择一条数据！')
+        return
+      }
+      this.$confirm('是否确认批量开具选择预制发票?', '批量开具', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        batchInvoice().then(res => {
+          this.$message.success(res.messgae)
+        }).catch(err => {
+          this.$message.error(err)
+        })
+      })
+    },
+    // 预制发票退回
+    backInvoicePre() {
+      if (this.checkedList.length === 0) {
+        this.$message({
+          message: '请至少选择一条数据！',
+          type: 'error'
+        })
+        return
+      }
+      this.$confirm('是否确认回退选择的预制发票?', '预制发票回退', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        const idArr = []
+        this.checkedList.forEach(function(item) {
+          idArr.push(item.id)
+        })
+        backInvoicePre(idArr.join(',')).then(res => {
+          this.$message({
+            type: 'success',
+            message: res.msg
+          })
+        }).catch(err => {
+          this.$message({
+            type: 'error',
+            message: err.msg
+          })
+        })
+      })
+    },
+    // 导出
+    exportList() {
+      exportData(this.listQuery).catch(err => {
         this.$message({
           message: err,
           type: 'error'
         })
       })
+    }, // 发票预览
+    billPreview(rowData) {
+      this.showBillPreview = true
+    },
+    // 发票明细
+    billDetail(rowData) {
+      this.showBillDialog = true
     },
     // 订单明细
-    orderDetail() {
+    orderDetail(rowData) {
+      const orderParam = {
+        id: rowData.id
+      }
+      getOrderDetail(orderParam).catch(err => {
+        this.$message({
+          message: err,
+          type: 'error'
+        })
+        this.listLoading = false
+      })
       this.showOrderDialog = true
     },
     // 关闭订单明细
