@@ -135,6 +135,12 @@ const apiPath = {
   },
 
   invoice: {
+    invoicePre: {
+      list: '/invoice/invoicePre/findAllInvoicePreByCondition',
+      backInvoicePre: '/invoice/invoicePre/backInvoicePre',
+      exportInvoicePre: '/invoice/invoicePre/exportInvoicePre',
+      orderDetail: 'invoice/invoicePre/viewInvoicePreOrder'
+    },
     wSpecial: {
       list: '/invoice/invoicePre/findAllInvoicePreByCondition',
       batchIssue: '/invoice/batchIssue',
