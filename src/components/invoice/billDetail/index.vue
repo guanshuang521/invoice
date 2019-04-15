@@ -61,8 +61,8 @@
     </el-table>
     <el-pagination
       :total="totalCount"
-      :current-page="currentPage"
-      :page-sizes="[10, 20, 30, 50, 100]"
+      :current-page="searchParams.currentPage"
+      :page-sizes="[10, 50, 100]"
       :page-size="pageSize"
       layout="total, sizes, prev, pager, next, jumper"
       style="margin-top: 20px"
@@ -72,6 +72,7 @@
 </template>
 
 <script>
+import { getOrderDetail } from '@/api/invoice/inovicePre'
 export default {
   name: 'BillDetail',
   props: {
@@ -79,21 +80,21 @@ export default {
       type: Boolean,
       default: false
     },
-    'tableData': {
-      type: [Array, Object],
-      required: true
-    },
-    'totalCount': {
-      type: Number,
-      default: 0
-    },
-    'currentPage': {
-      type: Number,
-      default: 1
-    },
-    'pageSize': {
-      type: Number,
-      default: 10
+    'currentFpId': {
+      type: String,
+      default: ''
+    }
+  },
+  data() {
+    return {
+      searchParams: {
+        currentPage: 1,
+        pageSize: 10
+      },
+      // 订单列表
+      tableData: [],
+      // 列表条数
+      totalCount: 0
     }
   },
   computed: {
@@ -106,11 +107,24 @@ export default {
     }
   },
   methods: {
+    initList() {
+      getOrderDetail({ id: this.currentFpId }).then(res => {
+        this.tableData = res.data.list
+      }).catch(err => {
+        this.$message.error(err)
+      })
+    },
     closeDialog() {
       this.$emit('close-dialog', false)
     },
-    handleSizeChange() {},
-    handleCurrentChange() {}
+    handleSizeChange(val) {
+      this.searchParams.pageSize = val
+      this.initList()
+    },
+    handleCurrentChange(val) {
+      this.searchParams.currentPage = val
+      this.initList()
+    }
   }
 }
 </script>

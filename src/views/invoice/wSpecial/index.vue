@@ -79,7 +79,7 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"/>
     </div>
-    <Bill-detail :show-dialog="showBillDialog" :table-data="fppmShowData" @close-dialog="closeBillDetail"/>
+    <Bill-detail :show-dialog="showBillDialog" :current-fp-id="currentFpId" @close-dialog="closeBillDetail"/>
     <Order-detail :show-dialog="showOrderDialog" :table-data="billList" @close-dialog="closeBillDetail"/>
     <!--发票查看弹窗-->
     <el-dialog :visible.sync="showBillPreview" title="发票查看" width="1280px">
@@ -92,7 +92,7 @@
 </template>
 
 <script>
-import { initTableList, invoice, batchInvoice, backInvoicePre, exportData, getOrderDetail } from '@/api/invoice/inovicePre'
+import { initTableList, invoice, batchInvoice, backInvoicePre, exportData } from '@/api/invoice/inovicePre'
 import BillDetail from '@/components/invoice/billDetail'
 import OrderDetail from '@/components/invoice/orderDetail'
 import { arrayToMapField } from '@/utils/public'
@@ -128,7 +128,9 @@ export default {
       // 发票类型
       fplx: this.$store.getters.fplx_spe,
       // 订单明细
-      billList: []
+      billList: [],
+      // 当前订单ID
+      currentFpId: ''
     }
   },
   computed: {
@@ -265,6 +267,7 @@ export default {
     },
     // 订单明细
     orderDetail(rowData) {
+      this.currentFpId = rowData.id
       const orderParam = {
         id: rowData.id
       }
