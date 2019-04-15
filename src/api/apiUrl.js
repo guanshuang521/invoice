@@ -33,7 +33,7 @@ const apiPath = {
     // 用户管理
     user: {
       nodeList: '/rbac/user/getRoleList', // 获取权限树
-      list: '/rbac/user/selectAll', // 获取用户列表
+      list: '/rbac/userInfo/selectByUserInfo', // 获取用户列表
       AllRolelist: '/rbac/user/selectByRole', // 获取所有角色列表
       add: '/rbac/user/insertUser', // 新增数据
       edit: '/rbac/user/updateUser', // 修改数据
@@ -103,7 +103,10 @@ const apiPath = {
       erpList: '/invoice/erpOrder/findFwErpOrderByCondition',
       Commdylist: '/invoice/erpOrder/findSpErpOrderByCondition',
       delerpList: '/invoice/posOrder/deletePosOrderAndDetail',
-      exportErp: '/invoice/erpOrder/exportErpOrder',
+      // 服务类导出
+      exportErp: '/invoice/erpOrder/exportFwErpOrder',
+      // 商品导出
+      exportCommidyErp: '/invoice/erpOrder/exportSpErpOrder',
       getInvoices: '/invoice/erpOrder/biuldInvoiceByIds',
       buildInvoice: '/invoice/erpOrder/biuldInvoiceByGmf',
       dobuildInvoiceGmf: '/invoice/erpOrder/doBiuldInvoiceByGmf',

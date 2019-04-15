@@ -16,13 +16,10 @@
           <el-input v-model="searchParams.ejgysbm" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="费用单据编号">
-          <el-input v-model="searchParams.djbh" placeholder="请输入" size="small"/>
-        </el-form-item>
-        <el-form-item label="结算单号">
-          <el-input v-model="searchParams.jsdh" placeholder="请输入" size="small"/>
+          <el-input v-model="searchParams.fydjbh" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="订单状态">
-          <el-select v-model="searchParams.ddzt" placeholder="请选择" size="small">
+          <el-select v-model="searchParams.status" placeholder="请选择" size="small">
             <el-option v-for="item in dictList['SYS_ERP_STATUS']" :key="item.id" :label="item.name" :value="item.code"/>
           </el-select>
         </el-form-item>
@@ -79,10 +76,6 @@
           label="单据编号"
           align="center"/>
         <el-table-column
-          prop="jsdh"
-          label="结算单号"
-          align="center"/>
-        <el-table-column
           prop="sjlx"
           label="数据类型"
           align="center"/>
@@ -91,7 +84,7 @@
           label="单据类型"
           align="center"/>
         <el-table-column
-          prop="djbh"
+          prop="fydjbh"
           label="费用单据编号"
           align="center"/>
         <el-table-column
@@ -159,6 +152,7 @@ import { getServiceOrderlist, generatenIvoices, buildInvoice } from '@/api/order
 import invoiceDialog from '../components/invoiceDialog'
 import apiPath from '@/api/apiUrl'
 import { arrayToMapField } from '@/utils/public'
+import { getToken } from '@/utils/auth'
 export default {
   name: 'Dashboard',
   components: { invoiceDialog },
@@ -170,9 +164,8 @@ export default {
         currentPage: 1,
         spgsqc: '',
         ejgysbm: '',
-        djbh: '',
-        jsdh: '',
-        ddzt: '',
+        fydjbh: '',
+        status: '',
         startDjbh: '',
         endDjbh: '',
         startDate: '',
@@ -212,8 +205,8 @@ export default {
       this.listLoading = true
       getServiceOrderlist(this.searchParams).then(res => {
         this.loading = false
-        this.total = res.data.count
         this.tableList = res.data.list
+        this.totalCount = res.data.count
       }).catch(err => {
         this.$message({
           message: err,
@@ -227,9 +220,8 @@ export default {
       this.searchParams = {
         spgsqc: '',
         ejgysbm: '',
-        djbh: '',
-        jsdh: '',
-        ddzt: '',
+        fydjbh: '',
+        status: '',
         startDjbh: '',
         endDjbh: '',
         startDate: '',
@@ -321,8 +313,9 @@ export default {
       })
     },
     exportData() { // 导出数据
-      const args = Object.assign({}, this.searchParams)
-      const url = apiPath.order.list.exportErp + '?' + args
+      // const args = Object.assign({}, this.searchParams)
+      const token = getToken()
+      const url = apiPath.order.list.exportErp + '?spgsqc=' + this.searchParams.spgsqc + '&ejgysbm=' + this.searchParams.ejgysbm + '&startDjbh=' + this.searchParams.startDjbh + '&endDjbh=' + this.searchParams.endDjbh + '&startDate=' + this.searchParams.startDate + '&endtDate=' + this.searchParams.endDate + '&status=' + this.searchParams.status + '&fydjbh=' + this.searchParams.fydjbh + '&x-access-token=' + token
       window.open(url)
     },
     // 关闭弹窗

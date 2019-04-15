@@ -55,7 +55,7 @@
           label="折扣金额"
           align="center"/>
         <el-table-column
-          prop="ddzt"
+          prop="SYS_POS_DDZT[ddzt]"
           label="订单状态"
           align="center"/>
         <el-table-column
@@ -134,6 +134,7 @@ import { mapGetters } from 'vuex'
 import { getPoslist, delPosList, downPosOrder, buildInvoicePre, dobuildInvoicePre } from '@/api/order'
 import { getAllCustomer } from '@/api/system/infoMaintenance'
 import apiPath from '@/api/apiUrl'
+import { arrayToMapField } from '@/utils/public'
 export default {
   name: 'Dashboard',
   data() {
@@ -212,11 +213,15 @@ export default {
       num: '',
       hjje: '',
       hjse: '',
-      jshj: ''
+      jshj: '',
+      ddzt: ''
     }
   },
   computed: {
-    ...mapGetters(['name', 'roles', 'dictList'])
+    ...mapGetters(['name', 'roles', 'dictList']),
+    SYS_POS_DDZT() { // 税率
+      return arrayToMapField(this.dictList['SYS_POS_DDZT'], 'code', 'name')
+    }
   },
   mounted() {
   },
