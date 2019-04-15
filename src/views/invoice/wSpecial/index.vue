@@ -51,7 +51,11 @@
         <el-table-column label="发票代码" prop="fpDm" align="center"/>
         <el-table-column label="发票号码" prop="fpHm" align="center"/>
         <el-table-column label="开票日期" prop="kprq" align="center"/>
-        <el-table-column label="开票状态" prop="kpzt" align="center"/>
+        <el-table-column label="开票状态" prop="kpzt" align="center">
+          <template slot-scope="scope">
+            <span>{{ SYS_KPZT[scope.row.kpzt] }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="开票提示" prop="bz" align="center"/>
         <el-table-column
           align="center"
@@ -75,13 +79,12 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"/>
     </div>
-    <Bill-detail :show-dialog="showBillDialog" :table-data="billList" @close-dialog="closeBillDetail"/>
-    <Order-detail :show-dialog="showOrderDialog" :table-data="billList" @close-dialog="closeBillDetail"/>
-    <el-dialog
-      :visible.sync="showBillPreview"
-      width="1200px"
-      custom-class="fpyl">
-      <fppm :pmfplx="fplx" @getformdata="getPmData"/>
+    <!--发票查看弹窗-->
+    <el-dialog :visible.sync="showBillPreview" title="发票查看" width="1280px">
+      <fppmShow :formdata="fppmShowData" :is-all-readonly="true"/>
+      <div slot="footer" class="dialog-footer" align="center">
+        <el-button type="primary" size="mini" @click="showBillPreview = false">关闭</el-button>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -91,12 +94,12 @@ import { initTableList, invoice, batchInvoice, backInvoicePre, exportData, getOr
 import BillDetail from '@/components/invoice/billDetail'
 import OrderDetail from '@/components/invoice/orderDetail'
 import { arrayToMapField } from '@/utils/public'
-import fppm from '@/components/fppiaomian'
+import fppmShow from '@/components/fppiaomianShow'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'WSpecial',
-  components: { BillDetail, OrderDetail, fppm },
+  components: { BillDetail, OrderDetail, fppmShow },
   data() {
     return {
       // 显示发票明细弹窗
@@ -119,7 +122,7 @@ export default {
       // 勾选的列表项
       checkedList: [],
       // 发票明细
-      billList: [],
+      fppmShowData: [],
       // 发票类型
       fplx: this.$store.getters.fplx_spe
     }
@@ -130,17 +133,11 @@ export default {
       'org',
       'info'
     ]),
-    SYS_FPZT() {
-      return arrayToMapField(this.dictList['SYS_FPZT'], 'code', 'name')
-    },
     SYS_FPLX() {
       return arrayToMapField(this.dictList['SYS_FPLX'], 'code', 'name')
     },
-    SYS_QDBZ() {
-      return arrayToMapField(this.dictList['SYS_QDBZ'], 'code', 'name')
-    },
-    SYS_DYBZ() {
-      return arrayToMapField(this.dictList['SYS_DYBZ'], 'code', 'name')
+    SYS_KPZT() {
+      return arrayToMapField(this.dictList['SYS_KPZT'], 'code', 'name')
     }
   },
   methods: {
@@ -255,6 +252,7 @@ export default {
       })
     }, // 发票预览
     billPreview(rowData) {
+      this.fppmShowData = rowData
       this.showBillPreview = true
     },
     // 发票明细
