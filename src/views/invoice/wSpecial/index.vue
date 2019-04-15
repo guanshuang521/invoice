@@ -126,8 +126,6 @@ export default {
       fppmShowData: [],
       // 发票类型
       fplx: this.$store.getters.fplx_spe,
-      // 订单明细
-      billList: [],
       // 当前订单ID
       currentFpId: 0
     }
@@ -271,17 +269,6 @@ export default {
     orderDetail(rowData) {
       this.currentFpId = rowData.id
       this.showOrderDialog = true
-      // return false
-      // const orderParam = {
-      //   id: rowData.id
-      // }
-      // getOrderDetail(orderParam).catch(err => {
-      //   this.$message({
-      //     message: err,
-      //     type: 'error'
-      //   })
-      //   this.listLoading = false
-      // })
     },
     // 关闭订单明细
     closeBillDetail(val) {
