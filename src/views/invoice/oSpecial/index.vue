@@ -367,8 +367,6 @@ export default {
         }
       })
     },
-    // 打印清单
-    printList() {},
     // 查看发票
     checkFP(val) {
       console.log(val)
@@ -472,46 +470,14 @@ export default {
     },
     // 打印发票弹窗
     openPrintFp() {
-      if (this.checkedItems.length !== 1) {
-        this.$message.info('请选择一条数据！')
+      if (this.checkedItems.length === 0) {
+        this.$message.info('请至少选择一条数据！')
         return
       }
-      this.dyfpDialogVisible = true
-    },
-    // 打印
-    printFp() {
-      this.checkedItems[0]
-      const xml = `<?xml version="1.0" encoding="gbk"?>
-    <business id="20004"comment="发票打印">
-        <body yylxdm="1">
-        <kpzdbs>${this.info.terminalMark}</kpzdbs>
-        <fplxdm>${this.checkedItems[0].fplx}</fplxdm>
-        <fpdm>${this.checkedItems[0].fpDm}</fpdm>
-        <fphm>${this.checkedItems[0].fpHm}</fphm>
-        <dylx>0</dylx>
-        <dyfs>1</dyfs>
-        </body>
-      </business>`
-      console.log(xml)
-      const Base64 = require('js-base64').Base64
-      const args = '<content>' + Base64.encode(xml) + '</content>'
-      console.log(args)
-      printFP(args).then(res => {
-        this.$message.success(res)
-      }).catch(err => {
-        this.$message.error(err)
-      })
-    },
-    // 发票验证
-    validate() {
       function sortBy(field) {
         return function(a, b) {
           return a[field] - b[field]
         }
-      }
-      if (this.checkedItems.length === 0) {
-        this.$message.info('请至少选择一条数据！')
-        return
       }
       // 验证规则：发票代码一样，发票号码需连续
       this.checkedItems.sort(sortBy('fpHm'))
@@ -530,14 +496,63 @@ export default {
         }
       })
       if (valid) {
-        this.checkedItems.forEach(item => {
-          validate({ fpqqlshStr: item.fpqqlsh }).then(res => {
-            this.$message.success(res.message)
-          }).catch(err => {
-            this.$message.error(err)
-          })
-        })
+        this.dyfpDialogVisible = true
       }
+    },
+    // 打印
+    printFp() {
+      this.checkedItems.forEach(item => {
+        const xml = `<?xml version="1.0" encoding="gbk"?>
+    <business id="20004"comment="发票打印">
+        <body yylxdm="1">
+        <kpzdbs>${this.info.terminalMark}</kpzdbs>
+        <fplxdm>${item.fplx}</fplxdm>
+        <fpdm>${item.fpDm}</fpdm>
+        <fphm>${item.fpHm}</fphm>
+        <dylx>0</dylx>
+        <dyfs>1</dyfs>
+        </body>
+      </business>`
+        const Base64 = require('js-base64').Base64
+        const args = '<content>' + Base64.encode(xml) + '</content>'
+        printFP(args).then()
+      })
+    },
+    // 打印清单
+    printList() {
+      if (this.checkedItems.length !== 1) {
+        this.$message.info('请选择一条数据！')
+        return
+      }
+      const xml = `<?xml version="1.0" encoding="gbk"?>
+        <business id="20004"comment="发票打印">
+        <body yylxdm="1">
+        <kpzdbs>${this.info.terminalMark}</kpzdbs>
+        <fplxdm>${this.checkedItems[0].fplx}</fplxdm>
+        <fpdm>${this.checkedItems[0].fpDm}</fpdm>
+        <fphm>${this.checkedItems[0].fpHm}</fphm>
+        <dylx>1</dylx>
+        <dyfs>1</dyfs>
+        </body>
+      </business>`
+      console.log(xml)
+      const Base64 = require('js-base64').Base64
+      const args = '<content>' + Base64.encode(xml) + '</content>'
+      printFP(args).then()
+    },
+    // 发票验证
+    validate() {
+      if (this.checkedItems.length === 0) {
+        this.$message.info('请至少选择一条数据！')
+        return
+      }
+      this.checkedItems.forEach(item => {
+        validate({ fpqqlshStr: item.fpqqlsh }).then(res => {
+          this.$message.success(res.message)
+        }).catch(err => {
+          this.$message.error(err)
+        })
+      })
     },
     // 导出
     exportExcel() {
