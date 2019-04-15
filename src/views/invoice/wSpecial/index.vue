@@ -259,26 +259,21 @@ export default {
     },
     // 发票明细
     billDetail(rowData) {
-      this.fppmShowData = rowData.lines
       this.showBillDialog = true
     },
     // 订单明细
     orderDetail(rowData) {
       const orderParam = {
-        id: rowData.id,
-        currentPage: 1,
-        pageSize: 10
+        id: rowData.id
       }
-      getOrderDetail(orderParam).then(res => {
-        this.fppmShowData = res.data.list
-        this.showOrderDialog = true
-      }).catch(err => {
+      getOrderDetail(orderParam).catch(err => {
         this.$message({
           message: err,
           type: 'error'
         })
         this.listLoading = false
       })
+      this.showOrderDialog = true
     },
     // 关闭订单明细
     closeBillDetail(val) {
