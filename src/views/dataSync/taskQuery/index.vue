@@ -81,7 +81,7 @@
     <div class="page-box">
       <el-pagination
         :current-page="searchParams.currentPage"
-        :page-sizes="[1, 10, 50, 100]"
+        :page-sizes="[10, 20, 30, 50, 100]"
         :page-size="10"
         :total="total"
         layout="total, sizes, prev, pager, next, jumper"

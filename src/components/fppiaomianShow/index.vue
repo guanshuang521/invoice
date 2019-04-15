@@ -234,7 +234,16 @@
         </ul>
       </div>
 
-      <el-pagination :current-page="gmfmcList.currentPage" :page-sizes="[1, 5, 10, 20,50,100]" :page-size="gmfmcList.pageSize" :total="gmfmcList.totalCount" layout="total, sizes, prev, pager, next, jumper" @size-change="handleSizeChange($event,'isgmfmc')" @current-change="handleCurrentChange($event,'isgmfmc')" @prev-click="prePageChange($event,'isgmfmc')" @next-click="nextPageChange($event,'isgmfmc')"/>
+      <el-pagination
+        :current-page="gmfmcList.currentPage"
+        :page-sizes="[10, 20, 30, 50, 100]"
+        :page-size="gmfmcList.pageSize"
+        :total="gmfmcList.totalCount"
+        layout="total, sizes, prev, pager, next, jumper"
+        @size-change="handleSizeChange($event,'isgmfmc')"
+        @current-change="handleCurrentChange($event,'isgmfmc')"
+        @prev-click="prePageChange($event,'isgmfmc')"
+        @next-click="nextPageChange($event,'isgmfmc')"/>
       <div class="dialogbutton-box">
         <button class="bluebtn" @click="selectUser">确认</button>
       </div>
@@ -310,7 +319,17 @@
         </ul>
       </div>
 
-      <el-pagination :current-page="goods.currentPage" :page-sizes="[10, 50, 100]" :page-size="goods.pageSize" :total="goods.totalCount" layout="total, sizes, prev, pager, next, jumper" style="margin: 20px auto" @size-change="handleSizeChange($event,'isgoods')" @current-change="handleCurrentChange($event,'isgoods')" @prev-click="prePageChange($event,'isgoods')" @next-click="nextPageChange($event,'isgoods')"/>
+      <el-pagination
+        :current-page="goods.currentPage"
+        :page-sizes="[10, 20, 30, 50, 100]"
+        :page-size="goods.pageSize"
+        :total="goods.totalCount"
+        layout="total, sizes, prev, pager, next, jumper"
+        style="margin: 20px auto"
+        @size-change="handleSizeChange($event,'isgoods')"
+        @current-change="handleCurrentChange($event,'isgoods')"
+        @prev-click="prePageChange($event,'isgoods')"
+        @next-click="nextPageChange($event,'isgoods')"/>
       <div class="dialogbutton-box">
         <button class="bluebtn" @click="selectGoods">确认</button>
       </div>

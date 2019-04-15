@@ -8,13 +8,13 @@
     <div class="filter-container">
       <el-form :inline="true" :model="listQuery" class="demo-form-inline">
         <el-form-item label="购方名称">
-          <el-input v-model="listQuery.gfmc" placeholder="请输入" size="small"/>
+          <el-input v-model="listQuery.gmfMc" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="订单号">
-          <el-input v-model="listQuery.ddh" placeholder="请输入" size="small"/>
+          <el-input v-model="listQuery.djbh" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="商品名称">
-          <el-input v-model="listQuery.spmc" placeholder="请输入" size="small"/>
+          <el-input v-model="listQuery.xmmc" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item>
           <el-button size="small" type="primary" icon="el-icon-search" @click="initList">查询</el-button>
@@ -39,16 +39,17 @@
         @selection-change="handleSelectionChange">
         style="width: 100%;">
         <el-table-column type="selection" width="35"/>
-        <el-table-column label="订单号" prop="orderNo" align="center"/>
-        <el-table-column label="购方名称" prop="gfmc" align="center"/>
-        <el-table-column label="购方税号" prop="gfsh" align="center"/>
+        <el-table-column label="购方名称" prop="gmfMc" align="center"/>
+        <el-table-column label="购方税号" prop="gmfNsrsbh" align="center"/>
         <el-table-column label="发票类型" prop="fplx" align="center"/>
-        <el-table-column label="金额（不含税）" prop="je" align="center"/>
-        <el-table-column label="税率" prop="sl" align="center"/>
-        <el-table-column label="税额" prop="se" align="center"/>
+        <el-table-column label="合计金额" prop="hjje" align="center"/>
+        <el-table-column label="合计税额" prop="hjse" align="center"/>
         <el-table-column label="价税合计" prop="jshj" align="center"/>
+        <el-table-column label="发票代码" prop="fpDm" align="center"/>
+        <el-table-column label="发票号码" prop="fpHm" align="center"/>
+        <el-table-column label="开票日期" prop="kprq" align="center"/>
         <el-table-column label="开票状态" prop="kpzt" align="center"/>
-        <el-table-column label="开票提示" prop="kpts" align="center"/>
+        <el-table-column label="开票提示" prop="bz" align="center"/>
         <el-table-column
           align="center"
           fixed="right"
@@ -63,7 +64,7 @@
       </el-table>
       <el-pagination
         :current-page="listQuery.currentPage"
-        :page-sizes="[10, 50, 100]"
+        :page-sizes="[10, 20, 30, 50, 100]"
         :page-size="100"
         :total="totalCount"
         layout="total, sizes, prev, pager, next, jumper"
@@ -80,7 +81,7 @@ export default {
   name: 'WOrdinary',
   data() {
     return {
-      totalCount: 100,
+      totalCount: 0,
       placeholder: '请输入',
       listQuery: {
         title: '',
@@ -95,11 +96,7 @@ export default {
       listLoading: false,
       list: [{ id: 1 }],
       tableKey: '',
-      dataList: [{
-        orderNo: 1,
-        gfmc: '购方名称',
-        gfsh: '购方税号'
-      }],
+      dataList: [],
       // 勾选的列表项
       checkedItems: []
     }
