@@ -3,7 +3,17 @@
 @import './transition.scss';
 @import './element-ui.scss';
 @import './sidebar.scss';
-
+.el-dialog{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: 0 !important;
+  transform: translate(-50%, -50%);
+  max-height: calc(100% - 30px);
+  max-width: calc(100% - 30px);
+  display: flex;
+  flex-direction: column;
+}
 .el-dialog__body{
     padding: 20px!important;
 }
@@ -24,7 +34,7 @@
             font-size: 14px;
         }
         .search_input{
-            width: 135px;    
+            width: 135px;
             display: inline-block;
             vertical-align: top;
             line-height: 30px;
@@ -58,7 +68,7 @@
             margin-right: 10px;
         }
         .search_input{
-            width: 135px;    
+            width: 135px;
             display: inline-block;
             vertical-align: top;
             line-height: 30px;
