@@ -99,3 +99,11 @@ export function dobuildInvoiceIds(data) {
     data: data
   })
 }
+// 商品订单管理
+export function getCommdylist(data) {
+  return request({
+    url: apiPath.order.list.Commdylist,
+    method: 'post',
+    data: data
+  })
+}

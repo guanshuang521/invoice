@@ -23,8 +23,7 @@
         </el-form-item>
         <el-form-item label="订单状态">
           <el-select v-model="searchParams.ddzt" placeholder="请选择" size="small">
-            <el-option label="已开具" value="1"/>
-            <el-option label="无开具" value="0"/>
+            <el-option v-for="item in dictList['SYS_ERP_STATUS']" :key="item.id" :label="item.name" :value="item.code"/>
           </el-select>
         </el-form-item>
         <el-form-item label="单据起号">
@@ -159,6 +158,7 @@ import { mapGetters } from 'vuex'
 import { getOrderlist, generatenIvoices, buildInvoice } from '@/api/order'
 import invoiceDialog from '../components/invoiceDialog'
 import apiPath from '@/api/apiUrl'
+import { arrayToMapField } from '@/utils/public'
 export default {
   name: 'Dashboard',
   components: { invoiceDialog },
@@ -200,7 +200,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['name', 'roles'])
+    ...mapGetters(['name', 'roles', 'dictList']),
+    SYS_ERP_STATUS() { // 状态
+      return arrayToMapField(this.dictList['SYS_ERP_STATUS'], 'code', 'name')
+    }
   },
   mounted() {},
   methods: {
