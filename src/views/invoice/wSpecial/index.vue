@@ -259,6 +259,7 @@ export default {
     },
     // 发票明细
     billDetail(rowData) {
+      this.fppmShowData = rowData.lines
       this.showBillDialog = true
     },
     // 订单明细
