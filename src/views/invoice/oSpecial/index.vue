@@ -425,7 +425,7 @@ export default {
     hcInvoiceSubmit() {
       const args = Object.assign({}, this.fppmHckpData)
       this.listLoading = true
-      args.hzxxbbh = this.hzxxbbh
+      args.xxbbh = this.hzxxbbh
       invoice(args).then(res => {
         this.hckpDialogVisible = false
         this.listLoading = false

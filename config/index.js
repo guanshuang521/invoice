@@ -24,9 +24,9 @@ module.exports = {
         changeOrigin: true
       },
       '/invoice':{
-        target: 'http://192.168.7.50:50008', //测试环境
+        // target: 'http://192.168.7.50:50008', //测试环境
         // target: 'http://192.168.2.253:8080', //测试环境
-        // target: 'http://192.168.2.240:8080',
+        target: 'http://192.168.2.240:8080',
         changeOrigin: true
       },
       '/print':{
