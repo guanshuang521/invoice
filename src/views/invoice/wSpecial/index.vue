@@ -199,7 +199,10 @@ export default {
       this.listQuery = {
         currentPage: 1,
         pageSize: 10,
-        fplx: '004'
+        fplx: '004',
+        gmfMc: '',
+        djbh: '',
+        xmmc: ''
       }
       this.initList()
     },

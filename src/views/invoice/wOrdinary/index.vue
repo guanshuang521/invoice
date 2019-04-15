@@ -183,7 +183,10 @@ export default {
       this.listQuery = {
         currentPage: 1,
         pageSize: 10,
-        fplx: '007'
+        fplx: '007',
+        gmfMc: '',
+        djbh: '',
+        xmmc: ''
       }
       this.initList()
     },
