@@ -145,7 +145,7 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import { getCommodityOrderlist, generatenIvoices, buildInvoice } from '@/api/order'
+import { getCommdylist, generatenIvoices, buildInvoice } from '@/api/order'
 import invoiceDialog from '../components/invoiceDialog'
 import apiPath from '@/api/apiUrl'
 export default {
@@ -194,7 +194,7 @@ export default {
     // 初始化数据
     initTable() {
       this.listLoading = true
-      getCommodityOrderlist(this.searchParams).then(res => {
+      getCommdylist(this.searchParams).then(res => {
         this.loading = false
         this.total = res.data.count
         this.tableList = res.data.list

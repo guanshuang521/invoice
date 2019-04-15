@@ -15,14 +15,6 @@ export function getServiceOrderlist(data) {
     data: data
   })
 }
-// 商品类订单管理
-export function getCommodityOrderlist(data) {
-  return request({
-    url: apiPath.order.list.erpSpList,
-    method: 'post',
-    data: data
-  })
-}
 export function generatenIvoices(data) {
   return request({
     url: apiPath.order.list.getInvoices,
@@ -103,6 +95,14 @@ export function dobuildInvoiceGmf(data) {
 export function dobuildInvoiceIds(data) {
   return request({
     url: apiPath.order.list.dobuildInvoiceIds,
+    method: 'post',
+    data: data
+  })
+}
+// 商品订单管理
+export function getCommdylist(data) {
+  return request({
+    url: apiPath.order.list.Commdylist,
     method: 'post',
     data: data
   })

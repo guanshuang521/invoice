@@ -100,8 +100,8 @@ const apiPath = {
   },
   order: {
     list: {
-      erpSpList: '/invoice/erpOrder/findSpErpOrderByCondition',
-      erpFwList: '/invoice/erpOrder/findFwErpOrderByCondition',
+      erpList: '/invoice/erpOrder/findFwErpOrderByCondition',
+      Commdylist: '/invoice/erpOrder/findSpErpOrderByCondition',
       delerpList: '/invoice/posOrder/deletePosOrderAndDetail',
       exportErp: '/invoice/erpOrder/exportErpOrder',
       getInvoices: '/invoice/erpOrder/biuldInvoiceByIds',
