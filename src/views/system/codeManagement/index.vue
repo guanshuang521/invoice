@@ -127,6 +127,7 @@
 <script>
 import { commodictList } from '@/api/system/codeManagement'
 import apiPath from '@/api/apiUrl'
+import { getToken } from '@/utils/auth'
 export default {
   data() {
     return {
@@ -183,7 +184,6 @@ export default {
         // 商品或服务名称
         spmc: '',
         ssflbm: '',
-        spmc: '',
         currentPage: 1,
         pageSize: 10
       }
@@ -200,10 +200,12 @@ export default {
     },
     exportData() { // 导出数据
       const url = apiPath.system.codeManagement.exportData + '?spbm=' + this.searchParams.spbm + '&spmc=' + this.searchParams.spmc
-      window.open(url)
+      const downurl = url + '&x-access-token=' + getToken()
+      window.open(downurl)
     },
     exportModle() { // 导出模板
-      window.open(apiPath.system.codeManagement.exportModle)
+      const downurl = apiPath.system.codeManagement.exportModle + '?x-access-token=' + getToken()
+      window.open(downurl)
     },
     handleSelectionChange(val) { // 表格选中数据发生变化
       this.checkedList = val

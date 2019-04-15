@@ -263,6 +263,7 @@
 import { commodictList, AddData, editData, getAllCommodityTypes } from '@/api/system/infoManagement'
 import apiPath from '@/api/apiUrl'
 import { arrayToMapField } from '@/utils/public'
+import { getToken } from '@/utils/auth'
 import { mapGetters } from 'vuex'
 export default{
   name: 'InfoManagement',
@@ -418,10 +419,12 @@ export default{
     },
     exportData() { // 导出数据
       const url = apiPath.system.InfoManagement.exportData + '?spbm=' + this.searchParams.spbm + '&spmc=' + this.searchParams.spmc
-      window.open(url)
+      const downurl = url + '&x-access-token=' + getToken()
+      window.open(downurl)
     },
     exportModle() { // 导出模板
-      window.open(apiPath.system.InfoManagement.exportModle)
+      const downurl = apiPath.system.InfoManagement.exportModle + '?x-access-token=' + getToken()
+      window.open(downurl)
     },
     addClick() { // 添加
       this.dialogVisible = true
