@@ -111,7 +111,7 @@ const apiPath = {
     },
     pos: {
       findList: '/invoice/posOrder/findAllPosOrderByCondition',
-      delList: '/invoice/posOrder/deletePosOrderAndDetail',
+      delList: '/invoice/posOrder/batchDeletePosOrder',
       downPos: '/invoice/posOrder/downPosOrder',
       buildInvoicePre: '/invoice/posOrder/buildInvoicePre',
       exportPosOrder: '/invoice/posOrder/exportPosOrder',

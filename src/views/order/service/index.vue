@@ -10,7 +10,7 @@
     <div class="filter-container">
       <el-form :inline="true" :model="searchParams" class="demo-form-inline">
         <el-form-item label="购方名称">
-          <el-input v-model="searchParams.gfmc" placeholder="请输入" size="small"/>
+          <el-input v-model="searchParams.spgsqc" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="二级供应商编码">
           <el-input v-model="searchParams.ejgysbm" placeholder="请输入" size="small"/>
@@ -115,7 +115,7 @@
           label="销方税号"
           align="center"/>
         <el-table-column
-          prop="gfmc"
+          prop="spgsqc"
           label="购方名称"
           align="center"/>
         <el-table-column
@@ -168,7 +168,7 @@ export default {
       searchParams: {
         pageSize: 10,
         currentPage: 1,
-        gfmc: '',
+        spgsqc: '',
         ejgysbm: '',
         djbh: '',
         jsdh: '',
@@ -225,7 +225,7 @@ export default {
     // 查询重置
     reset() {
       this.searchParams = {
-        gfmc: '',
+        spgsqc: '',
         ejgysbm: '',
         djbh: '',
         jsdh: '',
