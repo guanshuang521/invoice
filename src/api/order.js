@@ -29,6 +29,13 @@ export function exportERP(data) {
     data: data
   })
 }
+export function exportCommidyErp(data) {
+  return request({
+    url: apiPath.order.list.exportCommidyErp,
+    method: 'post',
+    data: data
+  })
+}
 export function buildInvoice(data) {
   return request({
     url: apiPath.order.list.buildInvoice,

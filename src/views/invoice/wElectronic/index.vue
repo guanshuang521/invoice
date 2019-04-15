@@ -111,8 +111,7 @@ export default {
       // 查询条件
       listQuery: {
         currentPage: 1,
-        pageSize: 10,
-        fplx: this.$store.getters.fplx_ele
+        pageSize: 10
       },
       totalCount: 0,
       // 加载动画是否显示
@@ -144,7 +143,11 @@ export default {
     // 查询
     initList() {
       this.listLoading = true
-      initTableList(this.listQuery).then(res => {
+      const args = Object.assign({}, this.listQuery, {
+        xsfNsrsbh: this.org.taxNum,
+        fplx: this.$store.getters.fplx_gen
+      })
+      initTableList(args).then(res => {
         this.listLoading = false
         this.dataList = res.data.list
         this.totalCount = res.data.count
@@ -161,7 +164,6 @@ export default {
       this.listQuery = {
         currentPage: 1,
         pageSize: 10,
-        fplx: this.$store.getters.fplx_ele,
         gmfMc: '',
         djbh: '',
         xmmc: ''
