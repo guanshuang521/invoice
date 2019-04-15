@@ -145,7 +145,7 @@ export default {
       this.listLoading = true
       const args = Object.assign({}, this.listQuery, {
         xsfNsrsbh: this.org.taxNum,
-        fplx: this.$store.getters.fplx_gen
+        fplx: this.$store.getters.fplx_ele
       })
       initTableList(args).then(res => {
         this.listLoading = false

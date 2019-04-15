@@ -129,9 +129,7 @@ export default {
       // 勾选的列表项
       checkedList: [],
       // 发票明细
-      fppmShowData: [],
-      // 发票类型
-      fplx: this.$store.getters.fplx_gen
+      fppmShowData: []
     }
   },
   computed: {
