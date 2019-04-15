@@ -34,7 +34,7 @@ export function cancel(data) {
 export function exportAll(data) {
   return request({
     url: apiPath.invoice.oSpecial.exportAll,
-    method: 'post',
+    method: 'get',
     data
   })
 }
@@ -42,6 +42,38 @@ export function exportAll(data) {
 export function validate(data) {
   return request({
     url: apiPath.invoice.oSpecial.validate,
+    method: 'post',
+    data
+  })
+}
+// 数据回传
+export function passBackInvoice(data) {
+  return request({
+    url: apiPath.invoice.oSpecial.passBackInvoice,
+    method: 'post',
+    data
+  })
+}
+// 获取发票详情
+export function fpDetail(data) {
+  return request({
+    url: apiPath.invoice.oSpecial.fpDetail,
+    method: 'post',
+    data
+  })
+}
+// 发票作废重开
+export function reInvoice(data) {
+  return request({
+    url: apiPath.invoice.oSpecial.reInvoice,
+    method: 'post',
+    data
+  })
+}
+// 发票打印
+export function printFP(data) {
+  return request({
+    url: '/print',
     method: 'post',
     data
   })

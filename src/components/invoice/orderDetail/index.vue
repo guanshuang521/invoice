@@ -19,48 +19,48 @@
         </template>
       </el-table-column>
       <el-table-column
-        prop="date"
-        label="订单号"
+        prop="djbh"
+        label="订单编号"
         align="center"
         width="150"/>
       <el-table-column
-        prop="date"
+        prop="xmmc"
         label="品名"
         align="center"
-        width="120"/>
+        width="150"/>
       <el-table-column
-        prop="date"
+        prop="ggxh"
         label="规格型号"
         align="center"
         width="120"/>
       <el-table-column
-        prop="date"
+        prop="dw"
         label="单位"
         align="center"
         width="120"/>
       <el-table-column
-        prop="date"
+        prop="xmsl"
         label="数量"
         align="center"
         width="120"/>
       <el-table-column
-        prop="date"
+        prop="xmdj"
         label="单价"
         align="center"
         width="120"/>
       <el-table-column
-        prop="date"
-        label="含税金额"
+        prop="xmje"
+        label="金额"
         align="center"
         width="120"/>
       <el-table-column
-        prop="date"
-        label="备注"
+        prop="sl"
+        label="税率"
         align="center"
         width="120"/>
       <el-table-column
-        prop="date"
-        label="发票类型"
+        prop="se"
+        label="税额"
         align="center"
         width="120"/>
     </el-table>

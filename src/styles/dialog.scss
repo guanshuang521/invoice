@@ -3,7 +3,6 @@
 @import './transition.scss';
 @import './element-ui.scss';
 @import './sidebar.scss';
-
 .el-dialog__body{
     padding: 20px!important;
 }
@@ -24,7 +23,7 @@
             font-size: 14px;
         }
         .search_input{
-            width: 135px;    
+            width: 135px;
             display: inline-block;
             vertical-align: top;
             line-height: 30px;
@@ -58,7 +57,7 @@
             margin-right: 10px;
         }
         .search_input{
-            width: 135px;    
+            width: 135px;
             display: inline-block;
             vertical-align: top;
             line-height: 30px;

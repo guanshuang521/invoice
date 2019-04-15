@@ -141,6 +141,7 @@ import { getCustomerList, deleteCustomer, insertCustomer } from '@/api/system/in
 import apiPath from '@/api/apiUrl'
 import { arrayToMapField } from '@/utils/public'
 import { mapGetters } from 'vuex'
+import { getToken } from '@/utils/auth'
 export default {
   name: 'InfoMaintenance',
   data() {
@@ -295,7 +296,8 @@ export default {
       })
     },
     exportModle() { // 导出模板
-      window.open(apiPath.system.customer.exportModle)
+      const downurl = apiPath.system.customer.exportModle + '?x-access-token=' + getToken()
+      window.open(downurl)
     },
     importExcel() {
       this.dialogVisible2 = true

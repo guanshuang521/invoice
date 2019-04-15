@@ -15,7 +15,7 @@
         <li/>
       </ul>
     </div>
-    <div class="pm_all">
+    <div :class="{readonly: isAllReadonly}" class="pm_all">
       <div class="fpTitle">
         <div class="fpTitleLeft">
           <img v-if="formdata.fplx == this.$store.getters.fplx_ele" src="../../assets/common/logo_dian.png">
@@ -46,11 +46,12 @@
                 :remote-method="remoteSearch"
                 filterable
                 remote
+                clearable
                 reserve-keyword
                 allow-create
                 size="mini"
                 placeholder="请输入关键词"
-                class="gfMc readonly"
+                class="gfMc"
                 @change="remoteChange">
                 <el-option
                   v-for="item in gfList"
@@ -75,7 +76,7 @@
           <div class="tbT mmqText">密<br>码<br>区</div>
           <div class="tbT mmqTable"/>
         </div>
-        <div class="tableLines">
+        <div :class="{readonly: isSphReadonly}" class="tableLines">
           <ul class="linesTitle">
             <li style="width:5%">行号</li>
             <li style="width:20%">货物或应税劳务、服务名称</li>
@@ -135,7 +136,7 @@
             <li style="width:30%">￥{{ formdata.jshj }}</li>
           </ul>
         </div>
-        <div class="tableBottom">
+        <div :class="{readonly: isSphReadonly}" class="tableBottom">
           <div class="tbB xsfText">销<br>售<br>方</div>
           <div class="tbB xsfTable">
             <div class="tbmc">
@@ -352,79 +353,27 @@ export default {
     /* 'v-pagination': pagination*/
   },
   props: {
+    'formdata': {
+      type: Object,
+      default: {}
+    },
     'pmfplx': {
       type: String,
       default: ''
+    },
+    'isAllReadonly': {
+      type: Boolean,
+      default: false
+    },
+    'isSphReadonly': {
+      type: Boolean,
+      default: false
     }
   },
   data() {
     return {
       dataConversion: dataConversion,
       globaldata: globaldata,
-      // 票面form信息
-      formdata: {
-        fpqqlsh: '',
-        fplx: this.pmfplx,
-        bmb_bbh: '',
-        zsfs: '',
-        // 销方信息
-        xsfNsrsbh: '',
-        xsfMc: '',
-        xsfDzdh: '',
-        xsfYhzh: '',
-        // 购方信息
-        gmfNsrsbh: '',
-        gmfMc: '',
-        gmfDzdh: '',
-        gmfYhzh: '',
-        gmfSjh: '',
-        gmfDzyx: '',
-        kpr: '',
-        fhr: '',
-        skr: '',
-        yfp_dm: '',
-        yfp_hm: '',
-        jshj: '',
-        jshjupper: '',
-        hjje: '',
-        hjse: '',
-        kce: '',
-        bz: '',
-        hylx: '',
-        tspz: '',
-        ent_id: '',
-        od_no: '',
-        od_lsh: '',
-        wd_id: '',
-        kpzh: '',
-        lines: [
-          {
-            num: '1', // 序号
-            commodityId: '', // 商品编号
-            fphxz: '0', // 0 正常行,1折扣行,2被折扣行
-            yhzcbs: '0', // 优惠政策标识  0：不使用，1：使用
-            lslbs: '', // 零税率标识，空：非零税率， 1：免税，2：不征收，3 普通零税率
-            spmc: '', // 商品名称
-            spbh: '', // 商品编号
-            spbm: '', // 商品编码
-            xmmc: '', // 项目名称
-            zxbm: '', // 自行编码
-            ggxh: '', // 规格型号
-            dw: '', // 单位
-            xmsl: '', // 项目数量
-            hsxmdj: '', // 含税项目单价
-            xmdjShow: '', // 前端显示项目单价
-            xmdj: '', // 不含税项目单价
-            hsxmje: '', // 含税项目金额
-            xmjeShow: '', // 前端显示项目金额
-            xmje: '', // 不含税项目金额
-            sl: '', // 税率
-            se: '', // 税额
-            ywbh: '', // 业务编号
-            zzstsgl: '' // 增值税特殊管理
-          }
-        ]
-      },
       kprq: '',
       isgoods: false, // 选择税收编码弹窗显示
       isgmfmcDialog: false, // 选择购买方名称弹窗显示
@@ -882,7 +831,7 @@ export default {
     border-top: none;
     border-left: none;
     border-color: #B2945F;
-    width: 422px;
+    width: 514px;
   }
   .gfMc /deep/ .el-input__inner{
     padding-left: 5px;

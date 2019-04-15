@@ -19,55 +19,46 @@
         </template>
       </el-table-column>
       <el-table-column
-        prop="date"
+        prop="xmmc"
         label="品名"
         align="center"
         width="150"/>
       <el-table-column
-        prop="date"
+        prop="ggxh"
         label="规格型号"
         align="center"
         width="120"/>
       <el-table-column
-        prop="date"
+        prop="dw"
         label="单位"
         align="center"
         width="120"/>
       <el-table-column
-        prop="date"
+        prop="xmsl"
         label="数量"
         align="center"
         width="120"/>
       <el-table-column
-        prop="date"
+        prop="xmdj"
         label="单价"
         align="center"
         width="120"/>
       <el-table-column
-        prop="date"
+        prop="xmje"
         label="金额"
         align="center"
         width="120"/>
       <el-table-column
-        prop="date"
+        prop="sl"
         label="税率"
         align="center"
         width="120"/>
       <el-table-column
-        prop="date"
+        prop="se"
         label="税额"
         align="center"
         width="120"/>
     </el-table>
-    <el-pagination
-      :total="totalCount"
-      :current-page="currentPage"
-      :page-sizes="[10, 20, 30, 50, 100]"
-      :page-size="pageSize"
-      layout="total, sizes, prev, pager, next, jumper"
-      style="margin-top: 20px"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"/>
   </el-dialog>
 </template>
 
@@ -82,18 +73,6 @@ export default {
     'tableData': {
       type: [Array, Object],
       required: true
-    },
-    'totalCount': {
-      type: Number,
-      default: 0
-    },
-    'currentPage': {
-      type: Number,
-      default: 1
-    },
-    'pageSize': {
-      type: Number,
-      default: 10
     }
   },
   computed: {
@@ -109,8 +88,10 @@ export default {
     closeDialog() {
       this.$emit('close-dialog', false)
     },
-    handleSizeChange() {},
-    handleCurrentChange() {}
+    handleSizeChange() {
+    },
+    handleCurrentChange() {
+    }
   }
 }
 </script>
