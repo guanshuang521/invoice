@@ -79,6 +79,8 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"/>
     </div>
+    <Bill-detail :show-dialog="showBillDialog" :table-data="fppmShowData" @close-dialog="closeBillDetail"/>
+    <Order-detail :show-dialog="showOrderDialog" :table-data="billList" @close-dialog="closeBillDetail"/>
     <!--发票查看弹窗-->
     <el-dialog :visible.sync="showBillPreview" title="发票查看" width="1280px">
       <fppmShow :formdata="fppmShowData" :is-all-readonly="true"/>
@@ -124,7 +126,9 @@ export default {
       // 发票明细
       fppmShowData: [],
       // 发票类型
-      fplx: this.$store.getters.fplx_spe
+      fplx: this.$store.getters.fplx_spe,
+      // 订单明细
+      billList: []
     }
   },
   computed: {
