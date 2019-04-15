@@ -24,21 +24,14 @@
       </el-form>
     </div>
     <div class="button-container">
-      <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="billIssue">开具发票
-      </el-button>
-      <el-button size="small" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit"
-                 @click="batchIssue">批量开具
-      </el-button>
-      <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="billSendBack">预制发票回退
-      </el-button>
-      <el-button size="small" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit"
-                 @click="exportList">导出
-      </el-button>
+      <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="invoice">开具发票</el-button>
+      <el-button size="small" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="batchInvoice">批量开具</el-button>
+      <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="backInvoicePre">预制发票回退</el-button>
+      <el-button size="small" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="exportList">导出</el-button>
     </div>
     <div class="table-container">
       <el-table
         v-loading="listLoading"
-        :key="tableKey"
         :data="dataList"
         border
         fit
@@ -48,14 +41,22 @@
         <el-table-column type="selection" width="35"/>
         <el-table-column label="购方名称" prop="gmfMc" align="center"/>
         <el-table-column label="购方税号" prop="gmfNsrsbh" align="center"/>
-        <el-table-column label="发票类型" prop="fplx" align="center"/>
+        <el-table-column label="发票类型" prop="fplx" align="center">
+          <template slot-scope="scope">
+            <span>{{ SYS_FPLX[scope.row.fplx] }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="合计金额" prop="hjje" align="center"/>
         <el-table-column label="合计税额" prop="hjse" align="center"/>
         <el-table-column label="价税合计" prop="jshj" align="center"/>
         <el-table-column label="发票代码" prop="fpDm" align="center"/>
         <el-table-column label="发票号码" prop="fpHm" align="center"/>
         <el-table-column label="开票日期" prop="kprq" align="center"/>
-        <el-table-column label="开票状态" prop="kpzt" align="center"/>
+        <el-table-column label="开票状态" prop="kpzt" align="center">
+          <template slot-scope="scope">
+            <span>{{ SYS_KPZT[scope.row.kpzt] }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="开票提示" prop="bz" align="center"/>
         <el-table-column
           align="center"
@@ -63,9 +64,9 @@
           label="操作"
           width="300">
           <template slot-scope="scope">
-            <el-button type="primary" size="mini">发票预览</el-button>
-            <el-button type="primary" size="mini">发票明细</el-button>
-            <el-button type="primary" size="mini">订单明细</el-button>
+            <el-button type="primary" size="mini" @click="billPreview(scope.row)">发票预览</el-button>
+            <el-button type="primary" size="mini" @click="billDetail(scope.row)">发票明细</el-button>
+            <el-button type="primary" size="mini" @click="orderDetail(scope.row)">订单明细</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -79,6 +80,13 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"/>
     </div>
+    <!--发票查看弹窗-->
+    <el-dialog :visible.sync="showBillPreview" title="发票查看" width="1280px">
+      <fppmShow :formdata="fppmShowData" :is-all-readonly="true"/>
+      <div slot="footer" class="dialog-footer" align="center">
+        <el-button type="primary" size="mini" @click="showBillPreview = false">关闭</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -93,11 +101,13 @@ import {
 } from '@/api/invoice/inovicePre'
 import BillDetail from '@/components/invoice/billDetail'
 import OrderDetail from '@/components/invoice/orderDetail'
-import fppm from '@/components/fppiaomian'
+import { arrayToMapField } from '@/utils/public'
+import fppmShow from '@/components/fppiaomianShow'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'WOrdinary',
-  components: { BillDetail, OrderDetail, fppm },
+  components: { BillDetail, OrderDetail, fppmShow },
   data() {
     return {
       // 显示发票明细弹窗
@@ -120,9 +130,22 @@ export default {
       // 勾选的列表项
       checkedList: [],
       // 发票明细
-      billList: [],
+      fppmShowData: [],
       // 发票类型
       fplx: this.$store.getters.fplx_gen
+    }
+  },
+  computed: {
+    ...mapGetters([
+      'dictList',
+      'org',
+      'info'
+    ]),
+    SYS_FPLX() {
+      return arrayToMapField(this.dictList['SYS_FPLX'], 'code', 'name')
+    },
+    SYS_KPZT() {
+      return arrayToMapField(this.dictList['SYS_KPZT'], 'code', 'name')
     }
   },
   methods: {
@@ -237,6 +260,7 @@ export default {
       })
     }, // 发票预览
     billPreview(rowData) {
+      this.fppmShowData = rowData
       this.showBillPreview = true
     },
     // 发票明细
