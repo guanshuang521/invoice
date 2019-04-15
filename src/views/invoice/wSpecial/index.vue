@@ -79,6 +79,8 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"/>
     </div>
+    <Bill-detail :show-dialog="showBillDialog" :table-data="fppmShowData" @close-dialog="closeBillDetail"/>
+    <Order-detail :show-dialog="showOrderDialog" :table-data="fppmShowData" @close-dialog="closeBillDetail"/>
     <!--发票查看弹窗-->
     <el-dialog :visible.sync="showBillPreview" title="发票查看" width="1280px">
       <fppmShow :formdata="fppmShowData" :is-all-readonly="true"/>
@@ -257,21 +259,26 @@ export default {
     },
     // 发票明细
     billDetail(rowData) {
+      this.fppmShowData = rowData.lines
       this.showBillDialog = true
     },
     // 订单明细
     orderDetail(rowData) {
       const orderParam = {
-        id: rowData.id
+        id: rowData.id,
+        currentPage: 1,
+        pageSize: 10
       }
-      getOrderDetail(orderParam).catch(err => {
+      getOrderDetail(orderParam).then(res => {
+        this.fppmShowData = res.data.list
+        this.showOrderDialog = true
+      }).catch(err => {
         this.$message({
           message: err,
           type: 'error'
         })
         this.listLoading = false
       })
-      this.showOrderDialog = true
     },
     // 关闭订单明细
     closeBillDetail(val) {
