@@ -90,7 +90,6 @@
             <li style="width:16%">操作</li>
           </ul>
           <div class="linesList">
-            <!--<tr v-for="(item, index) in lines.length" :model="lines[index]" :key="item.id" :class="lines[index].fphxz === '1' ? 'discount_tr' : ''">-->
             <ul v-for="(item, index) in formdata.lines" :key="item.id" class="linesConten">
               <li style="width:5%">{{ index + 1 }}</li>
               <li style="width:20%;position: relative;">
@@ -114,7 +113,6 @@
               </li>
               <li style="width:8%">
                 <input v-model="formdata.lines[index].sl" readOnly>
-                <!--{{dataConversion(formdata.lines[index].sl, globaldata.globaldata.fapiaoSL)}}-->
               </li>
               <li style="width:8%">
                 <input v-model="formdata.lines[index].se" readOnly>
@@ -805,27 +803,6 @@ export default {
       // 不含税单价
       _thisLines[index].xmdj = hsxmdj - Number(_thisLines[index].hsxmdj * sl / (1 + sl)).toFixed(2)
       this.calculatePrice(index, xmsl, xmdj, xmdjShow, hsxmdj, xmje, xmjeShow, hsxmje, sl, currentInput)
-      /* // 金额，税额控制(含税不含税两种情况)
-        // 含税
-        if (String(this.hsbz) === String(this.globalVal.enums_tax)) {
-          // 税额
-          this.lines[index].xmjeShow = this.lines[index].fphxz !== '1' ? Math.abs(xmjeShow) : '-' + Math.abs(xmjeShow)
-          this.lines[index].se = Number(xmjeShow * sl / (1 + sl)).toFixed(2)
-          // 金额
-          this.lines[index].xmje = this.lines[index].fphxz !== '1' ? Number(Math.abs(xmjeShow) - Math.abs(this.lines[index].se)).toFixed(2) : '-' + Number(Math.abs(xmjeShow) - Math.abs(this.lines[index].se)).toFixed(2)
-          this.lines[index].hsxmje = this.lines[index].fphxz !== '1' ? Number(Math.abs(xmjeShow)).toFixed(2) : '-' + Number(Math.abs(xmjeShow)).toFixed(2)
-          this.calculatePrice(index, xmsl, xmdj, xmdjShow, hsxmdj, xmje, xmjeShow, hsxmje, sl, currentInput)
-        }
-        // 不含税
-         if (String(this.hsbz) === String(globalVal.enums_noTax)) {
-              // 税额
-              this.lines[index].xmjeShow = this.lines[index].fphxz !== '1' ? Math.abs(xmjeShow) : '-' + Math.abs(xmjeShow);
-              this.lines[index].se = Number(xmjeShow * sl).toFixed(2);
-              // 金额
-              this.lines[index].xmje = this.lines[index].fphxz !== '1' ? Number(Math.abs(xmjeShow)).toFixed(2) : '-' + Number(Math.abs(xmjeShow)).toFixed(2);
-              this.lines[index].hsxmje = this.lines[index].fphxz !== '1' ? Number(Math.abs(xmjeShow) + Math.abs(this.lines[index].se)).toFixed(2) : '-' + Number(Math.abs(xmjeShow) + Math.abs(this.lines[index].se)).toFixed(2);
-              this.calculatePrice(index, xmsl, xmdj, xmdjShow, hsxmdj, xmje, xmjeShow, hsxmje, sl, currentInput);
-            }*/
     },
     // 处理单价
     calculatePrice(index, xmsl, xmdj, xmdjShow, hsxmdj, xmje, xmjeShow, hsxmje, sl, currentInput) {
