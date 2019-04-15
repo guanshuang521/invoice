@@ -40,7 +40,11 @@
         <el-table-column type="selection" width="35"/>
         <el-table-column label="购方名称" prop="gmfMc" align="center"/>
         <el-table-column label="购方税号" prop="gmfNsrsbh" align="center"/>
-        <el-table-column label="发票类型" prop="fplx" align="center"/>
+        <el-table-column label="发票类型" prop="fplx" align="center">
+          <template slot-scope="scope">
+            <span>{{ SYS_FPLX[scope.row.fplx] }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="合计金额" prop="hjje" align="center"/>
         <el-table-column label="合计税额" prop="hjse" align="center"/>
         <el-table-column label="价税合计" prop="jshj" align="center"/>
@@ -83,10 +87,13 @@
 </template>
 
 <script>
-import {initTableList, invoice, batchInvoice, backInvoicePre, exportData, getOrderDetail} from '@/api/invoice/inovicePre'
+import { initTableList, invoice, batchInvoice, backInvoicePre, exportData, getOrderDetail } from '@/api/invoice/inovicePre'
 import BillDetail from '@/components/invoice/billDetail'
 import OrderDetail from '@/components/invoice/orderDetail'
+import { arrayToMapField } from '@/utils/public'
 import fppm from '@/components/fppiaomian'
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'WSpecial',
   components: { BillDetail, OrderDetail, fppm },
@@ -115,6 +122,25 @@ export default {
       billList: [],
       // 发票类型
       fplx: this.$store.getters.fplx_spe
+    }
+  },
+  computed: {
+    ...mapGetters([
+      'dictList',
+      'org',
+      'info'
+    ]),
+    SYS_FPZT() {
+      return arrayToMapField(this.dictList['SYS_FPZT'], 'code', 'name')
+    },
+    SYS_FPLX() {
+      return arrayToMapField(this.dictList['SYS_FPLX'], 'code', 'name')
+    },
+    SYS_QDBZ() {
+      return arrayToMapField(this.dictList['SYS_QDBZ'], 'code', 'name')
+    },
+    SYS_DYBZ() {
+      return arrayToMapField(this.dictList['SYS_DYBZ'], 'code', 'name')
     }
   },
   methods: {
