@@ -12,7 +12,7 @@
     <el-table
       :data="tableData"
       border
-      style="width: 1000px">
+      style="width: 1000px;max-height: 600px;overflow-y: scroll">
       <el-table-column prop="index" label="" align="center" width="50">
         <template slot-scope="scope">
           {{ scope.$index + 1 }}

@@ -12,7 +12,7 @@
     <el-table
       :data="tableData"
       border
-      style="width: 1000px">
+      style="width: 1000px;max-height: 600px;overflow-y: scroll">
       <el-table-column prop="index" label="" align="center" width="50">
         <template slot-scope="scope">
           {{ scope.$index + 1 }}
@@ -66,9 +66,9 @@
     </el-table>
     <el-pagination
       :total="totalCount"
-      :current-page="currentPage"
-      :page-sizes="[10, 20, 30, 50, 100]"
-      :page-size="pageSize"
+      :current-page="searchParams.currentPage"
+      :page-sizes="[10, 50, 100]"
+      :page-size="searchParams.pageSize"
       layout="total, sizes, prev, pager, next, jumper"
       style="margin-top: 20px"
       @size-change="handleSizeChange"
@@ -77,6 +77,8 @@
 </template>
 
 <script>
+import { getOrderDetail } from '@/api/invoice/inovicePre'
+
 export default {
   name: 'OrderDetail',
   props: {
@@ -84,21 +86,20 @@ export default {
       type: Boolean,
       default: false
     },
-    'tableData': {
-      type: [Array, Object],
-      required: true
-    },
-    'totalCount': {
+    'currentFpId': {
       type: Number,
       default: 0
-    },
-    'currentPage': {
-      type: Number,
-      default: 1
-    },
-    'pageSize': {
-      type: Number,
-      default: 10
+    }
+  },
+  data() {
+    return {
+      searchParams: {
+        currentPage: 1,
+        pageSize: 10
+      },
+      totalCount: 0,
+      tableData: [],
+      currentId: ''
     }
   },
   computed: {
@@ -110,12 +111,36 @@ export default {
       }
     }
   },
+  watch: {
+    currentFpId(newVal, oldVal) {
+      this.currentId = newVal
+      this.initList()
+      console.log(newVal + '/' + oldVal)
+    }
+  },
   methods: {
+    initList() {
+      console.log(this.currentId)
+      const args = Object.assign({}, this.searchParams, { id: this.currentId })
+      getOrderDetail(args).then(res => {
+        this.tableData = res.data.list
+        this.totalCount = res.data.total
+      }).catch(err => {
+        this.$message.error(err)
+      })
+    },
     closeDialog() {
       this.$emit('close-dialog', false)
     },
-    handleSizeChange() {},
-    handleCurrentChange() {}
+    handleSizeChange(val) {
+      this.searchParams.currentPage = 1
+      this.searchParams.pageSize = val
+      this.initList()
+    },
+    handleCurrentChange(val) {
+      this.searchParams.currentPage = val
+      this.initList()
+    }
   }
 }
 </script>

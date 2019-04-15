@@ -80,7 +80,7 @@
         @current-change="handleCurrentChange"/>
     </div>
     <Bill-detail :show-dialog="showBillDialog" :table-data="fppmShowData" @close-dialog="closeBillDetail"/>
-    <Order-detail :show-dialog="showOrderDialog" :table-data="fppmShowData" @close-dialog="closeBillDetail"/>
+    <Order-detail :show-dialog="showOrderDialog" :current-fp-id="currentFpId" @close-dialog="closeBillDetail"/>
     <!--发票查看弹窗-->
     <el-dialog :visible.sync="showBillPreview" title="发票查看" width="1280px">
       <fppmShow :formdata="fppmShowData" :is-all-readonly="true"/>
@@ -92,7 +92,7 @@
 </template>
 
 <script>
-import { initTableList, invoice, batchInvoice, backInvoicePre, exportData, getOrderDetail } from '@/api/invoice/inovicePre'
+import { initTableList, invoice, batchInvoice, backInvoicePre, exportData } from '@/api/invoice/inovicePre'
 import BillDetail from '@/components/invoice/billDetail'
 import OrderDetail from '@/components/invoice/orderDetail'
 import { arrayToMapField } from '@/utils/public'
@@ -125,7 +125,11 @@ export default {
       // 发票明细
       fppmShowData: [],
       // 发票类型
-      fplx: this.$store.getters.fplx_spe
+      fplx: this.$store.getters.fplx_spe,
+      // 订单明细
+      billList: [],
+      // 当前订单ID
+      currentFpId: 0
     }
   },
   computed: {
@@ -265,17 +269,19 @@ export default {
     },
     // 订单明细
     orderDetail(rowData) {
-      const orderParam = {
-        id: rowData.id
-      }
-      getOrderDetail(orderParam).catch(err => {
-        this.$message({
-          message: err,
-          type: 'error'
-        })
-        this.listLoading = false
-      })
+      this.currentFpId = rowData.id
       this.showOrderDialog = true
+      // return false
+      // const orderParam = {
+      //   id: rowData.id
+      // }
+      // getOrderDetail(orderParam).catch(err => {
+      //   this.$message({
+      //     message: err,
+      //     type: 'error'
+      //   })
+      //   this.listLoading = false
+      // })
     },
     // 关闭订单明细
     closeBillDetail(val) {
