@@ -79,8 +79,8 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"/>
     </div>
-    <Bill-detail :show-dialog="showBillDialog" :current-fp-id="currentFpId" @close-dialog="closeBillDetail"/>
-    <Order-detail :show-dialog="showOrderDialog" :table-data="billList" @close-dialog="closeBillDetail"/>
+    <Bill-detail :show-dialog="showBillDialog" :table-data="fppmShowData" @close-dialog="closeBillDetail"/>
+    <Order-detail :show-dialog="showOrderDialog" :current-fp-id="currentFpId" @close-dialog="closeBillDetail"/>
     <!--发票查看弹窗-->
     <el-dialog :visible.sync="showBillPreview" title="发票查看" width="1280px">
       <fppmShow :formdata="fppmShowData" :is-all-readonly="true"/>
@@ -130,7 +130,7 @@ export default {
       // 订单明细
       billList: [],
       // 当前订单ID
-      currentFpId: ''
+      currentFpId: 0
     }
   },
   computed: {
@@ -263,22 +263,24 @@ export default {
     },
     // 发票明细
     billDetail(rowData) {
+      this.fppmShowData = rowData.lines
       this.showBillDialog = true
     },
     // 订单明细
     orderDetail(rowData) {
       this.currentFpId = rowData.id
-      const orderParam = {
-        id: rowData.id
-      }
-      getOrderDetail(orderParam).catch(err => {
-        this.$message({
-          message: err,
-          type: 'error'
-        })
-        this.listLoading = false
-      })
       this.showOrderDialog = true
+      // return false
+      // const orderParam = {
+      //   id: rowData.id
+      // }
+      // getOrderDetail(orderParam).catch(err => {
+      //   this.$message({
+      //     message: err,
+      //     type: 'error'
+      //   })
+      //   this.listLoading = false
+      // })
     },
     // 关闭订单明细
     closeBillDetail(val) {
