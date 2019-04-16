@@ -133,6 +133,7 @@ import { getList, add, edit, deleteUser, getAllRoles } from '@/api/system/user'
 import { getNodeList } from '@/api/system/organization'
 import { arrayToTree } from '@/utils/public'
 import { mapGetters } from 'vuex'
+import md5 from 'js-md5'
 
 export default {
   name: 'Dashboard',
@@ -269,7 +270,9 @@ export default {
             const roles = {
               roleIdList: this.userInfo.role.join(',')
             }
-            console.log(this.userInfo);
+            const password = md5(this.userInfo.password)
+            this.userInfo.password = password
+            console.log(this.userInfo)
             const args = Object.assign({}, this.userInfo)
             add(args).then(res => {
               this.$message.success(res.message)
