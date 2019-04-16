@@ -116,12 +116,14 @@
         </el-table-column>
       </el-table>
     </el-dialog>
+    <download-or-print :show="xzdyDialogVisible" :fp-data="fpdata" @closeDialog="closePrint"/>
   </div>
 </template>
 
 <script>
 import { initTableList, backInvoicePre, exportData } from '@/api/invoice/inovicePre'
-import { invoice, print } from '@/api/invoiceOpening/opening'
+import { invoice } from '@/api/invoiceOpening/opening'
+import downloadOrPrint from '@/components/downloadOrPrintBill'
 import BillDetail from '@/components/invoice/billDetail'
 import OrderDetail from '@/components/invoice/orderDetail'
 import { arrayToMapField } from '@/utils/public'
@@ -130,7 +132,12 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'WSpecial',
-  components: { BillDetail, OrderDetail, fppmShow },
+  components: {
+    BillDetail,
+    OrderDetail,
+    fppmShow,
+    downloadOrPrint
+  },
   data() {
     return {
       // 控制弹窗点击空白位置不关闭
@@ -160,7 +167,11 @@ export default {
       // 批量开具发票数据
       branchInviceData: [],
       // 当前订单ID
-      currentFpId: 0
+      currentFpId: 0,
+      // 下载打印窗口是否显示
+      xzdyDialogVisible: false,
+      // 发票信息
+      fpdata: {}
     }
   },
   computed: {
@@ -215,10 +226,13 @@ export default {
           type: 'warning'
         }).then(() => {
           invoice(this.checkedList[0]).then(res => {
-            if (res.code === '0000') {
-              initTableList()
-            } else {
-              this.$message.success(res.messgae)
+            this.xzdyDialogVisible = true
+            this.fpdata = {
+              type: 'print',
+              fpDm: res.data.fpDm,
+              fpHm: res.data.fpHm,
+              fpqqlsh: res.data.fpqqlsh,
+              jym: res.data.jym
             }
           }).catch(err => {
             this.$message.error(err)
@@ -297,7 +311,11 @@ export default {
     },
     // 导出
     exportList() {
-      exportData(this.listQuery).catch(err => {
+      const args = Object.assign({}, this.listQuery, {
+        xsfNsrsbh: this.org.taxNum,
+        fplx: this.$store.getters.fplx_spe
+      })
+      exportData(args).catch(err => {
         this.$message({
           message: err,
           type: 'error'
@@ -326,6 +344,10 @@ export default {
     closeBranchInvoice() {
       this.initList()
       this.showBranchInvice = false
+    },
+    // 关闭打印弹窗
+    closePrint(data) {
+      this.xzdyDialogVisible = data
     },
     handleSizeChange() {},
     handleCurrentChange() {},
