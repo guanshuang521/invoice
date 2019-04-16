@@ -70,6 +70,7 @@
     <!-- 新增弹窗 -->
     <el-dialog
       :visible.sync="dialogVisible"
+      :close-on-click-modal="closeOnClickModal"
       :before-close="() => handleClose('form')"
       title="新增购方信息"
       width="650px"
@@ -113,6 +114,7 @@
     </el-dialog>
     <!-- 导入弹窗 -->
     <el-dialog
+      :close-on-click-modal="closeOnClickModal"
       :visible.sync="dialogVisible2"
       title="客户基础信息导入"
       width="350px"
@@ -160,6 +162,8 @@ export default {
       }
     }
     return {
+      // 控制弹窗点击空白位置不关闭
+      closeOnClickModal: false,
       // 列表
       list: [],
       // 加载层

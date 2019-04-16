@@ -88,7 +88,7 @@
         </el-table>
       </el-tab-pane>
     </el-tabs>
-    <el-dialog :visible.sync="dialogVisible" :title="dialogTitle" width="640px" custom-class="showPop dialog-wapper pub-min-pop">
+    <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="dialogVisible" :title="dialogTitle" width="640px" custom-class="showPop dialog-wapper pub-min-pop">
       <el-form ref="dataSyncForm" :inline="true" :rules="dataSyncFormRules" :model="dataSyncForm" class="form" label-width="100px" size="mini">
         <el-form-item label="数据类型" prop="dataType" >
           <el-select v-model="dataSyncForm.dataType" placeholder="请选择" style="width: 170px">
@@ -171,6 +171,8 @@ export default {
   },
   data: function() {
     return {
+      // 控制弹窗点击空白位置不关闭
+      closeOnClickModal: false,
       // 手工同步表单
       manualForm: {
         dataType: '',

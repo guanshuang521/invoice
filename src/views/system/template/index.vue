@@ -103,7 +103,7 @@
         @current-change = "handleCurrentChange"/>
     </div>
     <!--新增规则弹框-->
-    <el-dialog :visible.sync="dialogFormVisible" :title="dialogTitle" width="620px">
+    <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="dialogFormVisible" :title="dialogTitle" width="620px">
       <el-form ref="templateForm" :model="templateForm" :rules="rules" :inline="isInline" size="mini" label-width="140px">
         <el-form-item label="模板名称：" prop="ruleName">
           <el-input v-model="templateForm.ruleName "/>
@@ -174,6 +174,8 @@ export default {
   name: 'Template',
   data() {
     return {
+      // 控制弹窗点击空白位置不关闭
+      closeOnClickModal: false,
       // 弹窗标题
       dialogTitle: '',
       // 加载层

@@ -88,6 +88,7 @@
     </div>
     <!-- 导入弹窗 -->
     <el-dialog
+      :close-on-click-modal="closeOnClickModal"
       :visible.sync="dialogVisible2"
       :before-close="handleClose"
       title="客户基础信息导入"
@@ -111,6 +112,7 @@
     </el-dialog>
     <!--导入模板下载-->
     <el-dialog
+      :close-on-click-modal="closeOnClickModal"
       :visible.sync="dialogVisible3"
       :before-close="handleClose"
       title="税收分类编码导入模板.xlsx"
@@ -131,6 +133,8 @@ import { getToken } from '@/utils/auth'
 export default {
   data() {
     return {
+      // 控制弹窗点击空白位置不关闭
+      closeOnClickModal: false,
       searchParams: {
         // 商品分类
         sign: '',

@@ -109,7 +109,7 @@
         @size-change = "handleSizeChange"
         @current-change = "handleCurrentChange"/>
     </div>
-    <el-dialog :visible.sync="dialogVisible" title="红字信息表申请" width="380px">
+    <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="dialogVisible" title="红字信息表申请" width="380px">
       <el-form ref="form" :model="form" label-width="82x">
         <el-form-item label="原发票代码：">
           <el-input v-model="form.fpdm" size="small" style="width: 240px"/>
@@ -122,7 +122,7 @@
         <el-button type="primary" size="mini" @click="redTableOpen">下一步</el-button>
       </span>
     </el-dialog>
-    <el-dialog :visible.sync="dialogRedTableVisible" title="红字信息表填开-申请" width="1200px">
+    <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="dialogRedTableVisible" title="红字信息表填开-申请" width="1200px">
       <red-table v-if="dialogRedTableVisible" :form="form" @getformdata="getInfo"/>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" size="mini" @click="save">保存</el-button>
@@ -139,6 +139,8 @@ export default {
   components: { redTable },
   data() {
     return {
+      // 控制弹窗点击空白位置不关闭
+      closeOnClickModal: false,
       // 查询条件
       searchParams: {
         ghdwmc: '',

@@ -81,6 +81,7 @@
         @current-change = "handleCurrentChange"/>
     </div>
     <el-dialog
+      :close-on-click-modal="closeOnClickModal"
       :visible.sync="dialogVisible"
       :before-close="hideDialog"
       width="620px"
@@ -142,6 +143,8 @@ export default {
   name: 'Dashboard',
   data() {
     return {
+      // 控制弹窗点击空白位置不关闭
+      closeOnClickModal: false,
       // 列表查询参数
       searchParams: {
         pageSize: 10,
