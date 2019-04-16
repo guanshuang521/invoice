@@ -93,14 +93,8 @@
 </template>
 
 <script>
-import {
-  initTableList,
-  invoice,
-  batchInvoice,
-  backInvoicePre,
-  exportData,
-  getOrderDetail
-} from '@/api/invoice/inovicePre'
+import { initTableList, backInvoicePre, exportData } from '@/api/invoice/inovicePre'
+import { invoice, print } from '@/api/invoiceOpening/opening'
 import BillDetail from '@/components/invoice/billDetail'
 import OrderDetail from '@/components/invoice/orderDetail'
 import { arrayToMapField } from '@/utils/public'
@@ -190,6 +184,7 @@ export default {
         }).then(() => {
           invoice(this.checkedList[0]).then(res => {
             if (res.code === '0000') {
+              // TODO
               initTableList()
             } else {
               this.$message.success(res.messgae)
@@ -216,11 +211,6 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        batchInvoice().then(res => {
-          this.$message.success(res.messgae)
-        }).catch(err => {
-          this.$message.error(err)
-        })
       })
     },
     // 预制发票退回
