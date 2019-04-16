@@ -21,8 +21,8 @@ export function backInvoicePre(ids) {
 }
 export function exportData(data) {
   const params = ['x-access-token=' + getToken()]
-  for (const item in data) {
-    params.push(item + '=' + data[item])
+  for (const key in data) {
+    params.push(key + '=' + data[key])
   }
   window.open(apiPath.invoice.invoicePre.exportInvoicePre + '?' + params.join('&'))
 }

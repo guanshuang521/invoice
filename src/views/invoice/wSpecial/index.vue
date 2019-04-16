@@ -88,6 +88,34 @@
         <el-button type="primary" size="mini" @click="showBillPreview = false">关闭</el-button>
       </div>
     </el-dialog>
+    <!--发票批量开具弹窗-->
+    <el-dialog :visible.sync="showBranchInvice" :before-close="closeBranchInvoice" title="批量开具发票" width="880px">
+      <el-table
+        :data="branchInviceData"
+        border
+        fit
+        highlight-current-row>
+        <el-table-column prop="index" label="序号" align="center" width="50">
+          <template slot-scope="scope">
+            {{ scope.$index + 1 }}
+          </template>
+        </el-table-column>
+        <el-table-column label="发票类型" align="center">
+          <template slot-scope="scope">
+            <span>{{ SYS_FPLX[scope.row.fplx] }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="购方信息" prop="gmfMc" align="center"/>
+        <el-table-column label="价税合计" prop="jshj" align="center"/>
+        <el-table-column label="开具状态" prop="kpStatus" align="center" width="300">
+          <template slot-scope="scope">
+            <span v-html="scope.row.kpStatus">
+              {{ scope.row.kpStatus }}
+            </span>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-dialog>
   </div>
 </template>
 
@@ -111,6 +139,8 @@ export default {
       showOrderDialog: false,
       // 显示发票预览
       showBillPreview: false,
+      // 显示批量开票弹窗
+      showBranchInvice: false,
       // 查询条件
       listQuery: {
         currentPage: 1,
@@ -125,8 +155,8 @@ export default {
       checkedList: [],
       // 发票明细
       fppmShowData: [],
-      // 发票类型
-      fplx: this.$store.getters.fplx_spe,
+      // 批量开具发票数据
+      branchInviceData: [],
       // 当前订单ID
       currentFpId: 0
     }
@@ -201,16 +231,36 @@ export default {
     },
     // 批量开具
     batchInvoice() {
+      let checked = true
       if (this.checkedList.length === 0) {
         this.$message.info('请至少选择一条数据！')
         return
       }
-      this.$confirm('是否确认批量开具选择预制发票?', '批量开具', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
+      this.checkedList.forEach(item => {
+        if (item.kpzt === 1) {
+          this.$message.error('存在已开具的预制发票，请确认！')
+          checked = false
+        }
       })
+      if (checked) {
+        this.showBranchInvice = true
+        this.branchInviceData = Object.assign([], this.checkedList)
+        this.branchInviceData.forEach((item, key) => {
+          this.$set(this.branchInviceData[key], 'kpStatus', '正在处理中...')
+          this.listLoading = true
+          invoice(item).then(res => {
+            if (res.code === '0000') {
+              this.$set(this.branchInviceData[key], 'kpStatus', '<span style="color:green">开具成功</span>')
+            } else {
+              this.$set(this.branchInviceData[key], 'kpStatus', '<span style="color:red">' + res.message + '</span>')
+            }
+            this.listLoading = false
+          }).catch(err => {
+            this.listLoading = false
+            this.$set(this.branchInviceData[key], 'kpStatus', '<span style="color:red">' + err + '</span>')
+          })
+        })
+      }
     },
     // 预制发票退回
     backInvoicePre() {
@@ -227,7 +277,7 @@ export default {
         type: 'warning'
       }).then(() => {
         const idArr = []
-        this.checkedList.forEach(function(item) {
+        this.checkedList.forEach(item => {
           idArr.push(item.id)
         })
         backInvoicePre(idArr.join(',')).then(res => {
@@ -271,8 +321,10 @@ export default {
       this.showBillDialog = val
       this.showOrderDialog = val
     },
-    // 订单预览
-    getPmData() {},
+    closeBranchInvoice() {
+      this.initList()
+      this.showBranchInvice = false
+    },
     handleSizeChange() {},
     handleCurrentChange() {},
     // 表格选中数据发生变化
