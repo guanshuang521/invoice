@@ -12,8 +12,7 @@
         </el-form-item>
         <el-form-item label="角色">
           <el-select v-model="searchParams.role" placeholder="请选择" size="small">
-            <el-option label="角色1" value="shanghai"/>
-            <el-option label="角色2" value="beijing"/>
+            <el-option v-for="option in dictList['SYS_FPLX']" :key="option.id" :value="option.code" :label="option.name"/>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -195,7 +194,7 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'info'
+      'info', 'dictList'
     ])
   },
   mounted() {

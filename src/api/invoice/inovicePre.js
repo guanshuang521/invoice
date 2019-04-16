@@ -12,20 +12,6 @@ export function initTableList(data) {
     data: data
   })
 }
-export function invoice(params) {
-  return request({
-    url: apiPath.invoiceOpening.opening.makeInvoicePaper,
-    method: 'post',
-    data: params
-  })
-}
-export function batchInvoice(data) {
-  return request({
-    url: apiPath.invoice.wSpecial.list,
-    method: 'post',
-    data: data
-  })
-}
 export function backInvoicePre(ids) {
   return request({
     url: apiPath.invoice.invoicePre.backInvoicePre,
@@ -35,8 +21,8 @@ export function backInvoicePre(ids) {
 }
 export function exportData(data) {
   const params = ['x-access-token=' + getToken()]
-  for (const item in data) {
-    params.push(item + '=' + data[item])
+  for (const key in data) {
+    params.push(key + '=' + data[key])
   }
   window.open(apiPath.invoice.invoicePre.exportInvoicePre + '?' + params.join('&'))
 }

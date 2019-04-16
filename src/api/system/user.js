@@ -68,7 +68,7 @@ export function assignRoles(data) {
 // 获取所有角色
 export function getAllRoles(data) {
   return request({
-    url: apiPath.system.user.list,
+    url: apiPath.system.user.AllRolelist,
     method: 'post',
     data
   })
