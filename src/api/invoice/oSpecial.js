@@ -79,3 +79,11 @@ export function printFP(data) {
     data
   })
 }
+// 发票推送
+export function sendMsg(data) {
+  return request({
+    url: apiPath.invoice.oSpecial.sendMsg,
+    method: 'post',
+    data
+  })
+}
