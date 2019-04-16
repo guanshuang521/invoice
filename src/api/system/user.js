@@ -51,10 +51,11 @@ export function deleteUser(data) {
   })
 }
 // 获取用户详情
-export function getUserDetail() {
+export function getUserDetail(data) {
   return request({
     url: apiPath.system.user.detail,
-    method: 'get'
+    method: 'post',
+    data
   })
 }
 // 用户关联角色
@@ -69,6 +70,13 @@ export function assignRoles(data) {
 export function getAllRoles(data) {
   return request({
     url: apiPath.system.user.roleList,
+    method: 'post',
+    data
+  })
+}
+export function selectTerminalsList(data) {
+  return request({
+    url: apiPath.system.user.selectTerminalsList,
     method: 'post',
     data
   })

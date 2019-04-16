@@ -138,6 +138,7 @@ import { getPoslist, delPosList, downPosOrder, buildInvoicePre, dobuildInvoicePr
 import { getAllCustomer } from '@/api/system/infoMaintenance'
 import apiPath from '@/api/apiUrl'
 import { arrayToMapField } from '@/utils/public'
+import { getToken } from '@/utils/auth'
 export default {
   name: 'Dashboard',
   data() {
@@ -254,7 +255,8 @@ export default {
       this.initTable()
     },
     exportPos() {
-      const url = apiPath.order.pos.exportPosOrder + '?djbh=' + this.searchParams.djbh
+      const token = getToken()
+      const url = apiPath.order.pos.exportPosOrder + '?djbh=' + this.searchParams.djbh + '&x-access-token=' + token
       window.open(url)
       // exportPosOrder(this.searchParams, { responseType: 'arraybuffer' }).then(response => {
       //   const blob = new Blob([response], { type: 'application/vnd.ms-excel' })
@@ -353,6 +355,7 @@ export default {
           type: 'success',
           message: '删除成功!'
         })
+        this.initTable()
       }).catch(() => {
         this.$message({
           type: 'info',
