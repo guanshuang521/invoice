@@ -88,14 +88,14 @@
     <Bill-detail :show-dialog="showBillDialog" :table-data="fppmShowData" @close-dialog="closeBillDetail"/>
     <Order-detail :show-dialog="showOrderDialog" :current-fp-id="currentFpId" @close-dialog="closeBillDetail"/>
     <!--发票查看弹窗-->
-    <el-dialog :visible.sync="showBillPreview" title="发票查看" width="1280px">
+    <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="showBillPreview" title="发票查看" width="1280px">
       <fppmShow :formdata="fppmShowData" :is-all-readonly="true"/>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button type="primary" size="mini" @click="showBillPreview = false">关闭</el-button>
       </div>
     </el-dialog>
     <!--发票批量开具弹窗-->
-    <el-dialog :visible.sync="showBranchInvice" :before-close="closeBranchInvoice" title="批量开具发票" width="880px">
+    <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="showBranchInvice" :before-close="closeBranchInvoice" title="批量开具发票" width="880px">
       <el-table
         :data="branchInviceData"
         border
@@ -122,13 +122,14 @@
         </el-table-column>
       </el-table>
     </el-dialog>
-
+    <download-or-print :show="xzdyDialogVisible" :fp-data="fpdata" @closeDialog="closeDownload"/>
   </div>
 </template>
 
 <script>
 import { initTableList, backInvoicePre, exportData } from '@/api/invoice/inovicePre'
 import { invoiceEle } from '@/api/invoiceOpening/opening'
+import downloadOrPrint from '@/components/downloadOrPrintBill'
 import BillDetail from '@/components/invoice/billDetail'
 import OrderDetail from '@/components/invoice/orderDetail'
 import { arrayToMapField } from '@/utils/public'
@@ -136,9 +137,16 @@ import fppmShow from '@/components/fppiaomianShow'
 import { mapGetters } from 'vuex'
 export default {
   name: 'WElectronic',
-  components: { BillDetail, OrderDetail, fppmShow },
+  components: {
+    BillDetail,
+    OrderDetail,
+    fppmShow,
+    downloadOrPrint
+  },
   data() {
     return {
+      // 控制弹窗点击空白位置不关闭
+      closeOnClickModal: false,
       // 显示发票明细弹窗
       showBillDialog: false,
       // 显示订单明细弹窗
@@ -164,7 +172,11 @@ export default {
       // 批量开具发票数据
       branchInviceData: [],
       // 当前订单ID
-      currentFpId: 0
+      currentFpId: 0,
+      // 下载打印窗口是否显示
+      xzdyDialogVisible: false,
+      // 发票信息
+      fpdata: {}
     }
   },
   computed: {
@@ -221,7 +233,14 @@ export default {
         }).then(() => {
           invoiceEle(this.checkedList[0]).then(res => {
             if (res.code === '0000') {
-              initTableList()
+              this.xzdyDialogVisible = true
+              this.fpdata = {
+                type: 'download',
+                fpDm: res.data.fpDm,
+                fpHm: res.data.fpHm,
+                fpqqlsh: res.data.fpqqlsh,
+                jym: res.data.jym
+              }
             } else {
               this.$message.success(res.messgae)
             }
@@ -302,7 +321,11 @@ export default {
     },
     // 导出
     exportList() {
-      exportData(this.listQuery).catch(err => {
+      const args = Object.assign({}, this.listQuery, {
+        xsfNsrsbh: this.org.taxNum,
+        fplx: this.$store.getters.fplx_ele
+      })
+      exportData(args).catch(err => {
         this.$message({
           message: err,
           type: 'error'
@@ -332,8 +355,9 @@ export default {
       this.initList()
       this.showBranchInvice = false
     },
-    // 订单预览
-    getPmData() {
+    // 关闭下载弹窗
+    closeDownload(msg) {
+      this.xzdyDialogVisible = msg
     },
     handleSizeChange() {
     },

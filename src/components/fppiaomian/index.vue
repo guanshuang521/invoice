@@ -204,7 +204,7 @@
     </div>
 
     <!--选择税收编码dialog-->
-    <el-dialog :visible.sync="isgoods" :before-close="closeIsGoods" title="选择税收编码" width="800px" class="goodsDialog">
+    <el-dialog :visible.sync="isgoods" :close-on-click-modal="closeOnClickModal" :before-close="closeIsGoods" title="选择税收编码" width="800px" class="goodsDialog">
       <div class="dialog_item">
         <div class="search_item">
           <div class="search_label">商品税收编码：</div>
@@ -278,6 +278,8 @@ export default {
   },
   data() {
     return {
+      // 控制弹窗点击空白位置不关闭
+      closeOnClickModal: false,
       dataConversion: dataConversion,
       globaldata: globaldata,
       // 票面form信息
@@ -631,6 +633,10 @@ export default {
       this.formdata.lines[this.goods.dialogGoodsIndex]['spbh'] = item.id
       this.formdata.lines[this.goods.dialogGoodsIndex]['sl'] = item.sl
       this.formdata.lines[this.goods.dialogGoodsIndex]['hsxmdj'] = item.dj
+      // 清空数量、金额、税额
+      this.formdata.lines[this.goods.dialogGoodsIndex]['xmsl'] = ''
+      this.formdata.lines[this.goods.dialogGoodsIndex]['hsxmje'] = ''
+      this.formdata.lines[this.goods.dialogGoodsIndex]['se'] = ''
       this.isgoods = false
     },
     // 确认回填税收编码
@@ -642,6 +648,10 @@ export default {
         this.formdata.lines[this.goods.dialogGoodsIndex]['spbh'] = checked.spbh
         this.formdata.lines[this.goods.dialogGoodsIndex]['commodityId'] = checked.spmc
         this.formdata.lines[this.goods.dialogGoodsIndex]['sl'] = checked.sl
+        // 清空数量、金额、税额
+        this.formdata.lines[this.goods.dialogGoodsIndex]['xmsl'] = ''
+        this.formdata.lines[this.goods.dialogGoodsIndex]['hsxmje'] = ''
+        this.formdata.lines[this.goods.dialogGoodsIndex]['se'] = ''
         this.isgoods = false
       }
     },

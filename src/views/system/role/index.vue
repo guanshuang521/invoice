@@ -74,6 +74,7 @@
     <!-- 新增弹窗 -->
     <el-dialog
       :title="dialogType === 'add' && '新增角色' || dialogType === 'edit' && '权限分配' || ''"
+      :close-on-click-modal="closeOnClickModal"
       :visible.sync="dialogVisible"
       :before-close="() => handleClose('form')"
       width="600px"
@@ -124,6 +125,8 @@ export default {
   name: 'Role',
   data() {
     return {
+      // 控制弹窗点击空白位置不关闭
+      closeOnClickModal: false,
       enable: 1,
       // 表单行内显示
       isInline: true,
@@ -237,20 +240,24 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           var params = JSON.parse(JSON.stringify(this.form))
+          params.roleId = params.id
+          delete params.id
           params.resourceId = this.resourceId
           updateRole(params).then(response => {
             this.fetchData()
             this.dialogVisible = false
             this.dialogType = ''
             this.$refs[formName].resetFields()
+          }).catch(err => {
+            this.$message.error(err)
           })
         }
       })
     },
     // 删除数据
     delRole() {
-      if (this.checkedList.length === 0) {
-        this.$message.error('至少选择一条数据')
+      if (this.checkedList.length !== 1) {
+        this.$message.info('请选择一条数据操作！')
         return false
       }
       this.$confirm('确定要删除选择的数据吗?', '提示', {

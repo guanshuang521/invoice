@@ -8,7 +8,7 @@
     v-loading.fullscreen.lock="listLoading"
     element-loading-text="加载中"
     element-loading-spinner="el-icon-loading"
-    element-loading-background="rgba(0, 0, 0, 0.8)"
+    element-loading-background="rgba(0, 0, 0, 0.6)"
     class="infoMaintenance-container">
     <div class="filter-container">
       <el-form :inline="true" :model="searchParams" class="demo-form-inline">
@@ -70,6 +70,7 @@
     <!-- 新增弹窗 -->
     <el-dialog
       :visible.sync="dialogVisible"
+      :close-on-click-modal="closeOnClickModal"
       :before-close="() => handleClose('form')"
       title="新增购方信息"
       width="650px"
@@ -93,7 +94,7 @@
         <el-form-item label="邮箱：" prop="yx">
           <el-input v-model="form.yx" placeholder="请输入"/>
         </el-form-item>
-        <el-form-item label="详细地址：" prop="khdz" style="width: 540px">
+        <el-form-item label="详细地址：" prop="khdz" style="width: 596px">
           <el-input v-model="form.khdz" placeholder="请输入" class="detailAddress"/>
         </el-form-item>
         <el-form-item label="开户银行：">
@@ -113,13 +114,13 @@
     </el-dialog>
     <!-- 导入弹窗 -->
     <el-dialog
+      :close-on-click-modal="closeOnClickModal"
       :visible.sync="dialogVisible2"
       title="客户基础信息导入"
       width="350px"
       custom-class="add-customer">
       <el-upload
         ref="upload"
-        :before-upload="beforeUpload"
         :on-preview="handlePreview"
         :on-remove="handleRemove"
         :file-list="fileList"
@@ -160,6 +161,8 @@ export default {
       }
     }
     return {
+      // 控制弹窗点击空白位置不关闭
+      closeOnClickModal: false,
       // 列表
       list: [],
       // 加载层
@@ -195,7 +198,8 @@ export default {
           { required: true, message: '购方名称不能为空', trigger: 'blur' }
         ],
         khsh: [
-          { required: true, message: '购方税号不能为空', trigger: 'blur' }
+          { required: true, message: '购方税号不能为空', trigger: 'blur' },
+          { min: 15, max: 20, type: 'string', message: '长度在 15 到 20 之间', trigger: 'blur' }
         ],
         yx: [
           { required: true, validator: yxFilter, trigger: 'blur' }
@@ -371,8 +375,8 @@ export default {
       }
       .detailAddress{
        /deep/ .el-input__inner{
-          width: 420px;
-          max-width: 420px;
+          width: 474px;
+          max-width: 474px;
         }
       }
       .button-container {

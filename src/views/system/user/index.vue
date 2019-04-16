@@ -72,7 +72,7 @@
         @current-change="handleCurrentChange"/>
     </div>
     <!--新增编辑用户弹窗-->
-    <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" :lock-scroll="true" width="640px" custom-class="showPop dialog-wapper pub-min-pop">
+    <el-dialog :title="dialogTitle" :close-on-click-modal="closeOnClickModal" :visible.sync="dialogVisible" :lock-scroll="true" width="640px" custom-class="showPop dialog-wapper pub-min-pop">
       <el-form ref="userForm" :inline="true" :model="userInfo" :rules="userRules" class="form" label-width="100px" size="mini">
         <el-form-item label="账号：" prop="userCode" >
           <el-input v-model="userInfo.userCode" placeholder="请输入"/>
@@ -147,6 +147,8 @@ export default {
   name: 'Dashboard',
   data() {
     return {
+      // 控制弹窗点击空白位置不关闭
+      closeOnClickModal: false,
       // 加载动画
       listLoading: false,
       // 查询条件

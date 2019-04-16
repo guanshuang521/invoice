@@ -137,8 +137,9 @@
           width="300">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="checkFP(scope.row)">查看</el-button>
-            <el-button type="primary" size="mini" @click="reInvoice(scope.row)">作废重开</el-button>
-            <el-button type="primary" size="mini" @click="hcInvoice(scope.row)">红冲发票</el-button>
+            <el-button v-if="parseInt(scope.row.fpzt) == 1" type="primary" size="mini" @click="reInvoice(scope.row)">作废重开</el-button>
+            <el-button v-if="parseInt(scope.row.fpzt) == 4" type="primary" size="mini" @click="reInvoice(scope.row)">重开</el-button>
+            <el-button v-if="parseInt(scope.row.fpzt) == 1 && parseInt(scope.row.kplx) == 0" type="primary" size="mini" @click="hcInvoice(scope.row)">红冲发票</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -153,7 +154,7 @@
         @current-change="handleCurrentChange"/>
     </div>
     <!--发票找回弹窗-->
-    <el-dialog :visible.sync="fpzhDialogVisible" title="发票找回" width="380px">
+    <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="fpzhDialogVisible" title="发票找回" width="380px">
       <el-form ref="fpzhForm" :model="fpzhForm" :rules="fpzhFormRules" size="mini" label-width="100px">
         <el-form-item label="发票类型：" prop="fplx">
           <el-select v-model="fpzhForm.fplx" placeholder="请选择" size="small">
@@ -173,7 +174,7 @@
       </div>
     </el-dialog>
     <!--打印发票弹窗-->
-    <el-dialog :visible.sync="dyfpDialogVisible" title="打印发票信息列表" width="680px">
+    <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="dyfpDialogVisible" title="打印发票信息列表" width="680px">
       <el-table
         :data="checkedItems"
         border
@@ -197,7 +198,7 @@
       </div>
     </el-dialog>
     <!--发票作废弹窗-->
-    <el-dialog :visible.sync="fpzfDialogVisible" :before-close="handleCloseFpzf" title="发票作废列表" width="880px">
+    <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="fpzfDialogVisible" :before-close="handleCloseFpzf" title="发票作废列表" width="880px">
       <el-table
         :data="fpzfShowList"
         border
@@ -219,21 +220,21 @@
       </el-table>
     </el-dialog>
     <!--发票查看弹窗-->
-    <el-dialog :visible.sync="fpckDialogVisible" title="发票查看" width="1280px">
+    <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="fpckDialogVisible" title="发票查看" width="1280px">
       <fppmShow :formdata="fppmShowData" :readonly="true"/>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button type="primary" size="mini" @click="fpckDialogVisible = false">关闭</el-button>
       </div>
     </el-dialog>
     <!--作废重开弹窗-->
-    <el-dialog :visible.sync="zfckDialogVisible" title="作废重开" width="1280px">
+    <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="zfckDialogVisible" title="作废重开" width="1280px">
       <fppmShow :formdata="fppmZfckData" :readonly="false"/>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button type="primary" size="mini" @click="reInvoiceSubmit">开具</el-button>
       </div>
     </el-dialog>
     <!--红冲发票弹窗-->
-    <el-dialog :visible.sync="hckpDialogVisible" title="红冲开票" width="1280px">
+    <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="hckpDialogVisible" title="红冲开票" width="1280px">
       <el-form ref="hcfpForm" :model="hcfpForm" :rules="hcfpFormRules" size="mini" label-width="130px">
         <el-form-item label="红字信息表编号：" prop="hzxxbbh" size="small" style="margin-bottom: 0">
           <el-input v-model="hcfpForm.hzxxbbh" placeholder="请输入" style="width: 182px"/>
@@ -261,6 +262,8 @@ export default {
   },
   data() {
     return {
+      // 控制弹窗点击空白位置不关闭
+      closeOnClickModal: false,
       // 列表总条数
       totalCount: 0,
       // 列表查询条件
@@ -316,6 +319,8 @@ export default {
       fpzfShowList: [],
       // 发票票面展示数据
       fppmShowData: {},
+      // 作废重开原始数据
+      fppmZfckDataBefore: {},
       // 作废重开数据
       fppmZfckData: {},
       // 红冲发票数据
@@ -395,14 +400,21 @@ export default {
     reInvoice(val) {
       fpDetail({ fpDm: val.fpDm, fpHm: val.fpHm }).then(res => {
         this.zfckDialogVisible = true
-        this.fppmZfckData = res.data
+        this.fppmZfckDataBefore = JSON.parse(JSON.stringify(res.data))
+        this.fppmZfckData = JSON.parse(JSON.stringify(res.data))
       }).catch(err => {
         this.$message.error(err)
       })
     },
     // 作废重开提交
     reInvoiceSubmit() {
-      const args = Object.assign({}, this.fppmZfckData)
+      const args = Object.assign({}, this.fppmZfckDataBefore)
+      args.zfInvoice = Object.assign({}, this.fppmZfckData, {
+        zflx: 1,
+        zfr: this.info.userName,
+        zfyy: '',
+        check: true
+      })
       this.listLoading = true
       reInvoice(args).then(res => {
         this.zfckDialogVisible = false
@@ -579,7 +591,8 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        exportAll()
+        this.listQuery.xsfNsrsbh = this.org.taxNum
+        exportAll(this.listQuery)
       })
     },
     // 数据回传
@@ -614,7 +627,7 @@ export default {
         zfrq_start: '',
         zfrq_end: '',
         fplx: '004',
-        xsfNsrsbh: '500102020160826'
+        xsfNsrsbh: this.org.taxNum
       }
       this.initList()
     },

@@ -11,16 +11,6 @@ export function getNodeList(data) {
     data
   })
 }
-// 获取节点详情
-// export function getNodeDetail(nodeId) {
-//   return request({
-//     url: apiPath.system.organization.nodeDetail,
-//     method: 'post',
-//     data: {
-//       nodeId
-//     }
-//   })
-// }
 // 删除节点
 export function deleteNode(nodeId) {
   return request({
@@ -63,8 +53,16 @@ export function deleteTerminal(data) {
     data: data
   })
 }
+// 新增终端
+export function addTerminal(data) {
+  return request({
+    url: apiPath.system.organization.addTerminal,
+    method: 'post',
+    data: data
+  })
+}
 // 修改终端
-export function updateterminal(data) {
+export function updateTerminal(data) {
   return request({
     url: apiPath.system.organization.updateTerminal,
     method: 'post',

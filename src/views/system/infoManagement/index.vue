@@ -8,7 +8,7 @@
     v-loading.fullscreen.lock="loading"
     element-loading-text="加载中"
     element-loading-spinner="el-icon-loading"
-    element-loading-background="rgba(0, 0, 0, 0.8)"
+    element-loading-background="rgba(0, 0, 0, 0.6)"
     class="infoManagement-container">
     <div class="filter-container">
       <el-form :inline="true" :model="searchParams" class="demo-form-inline">
@@ -224,6 +224,7 @@
     <!--设置税收分类编码-->
     <el-dialog
       :visible.sync="dialogVisible1"
+      :close-on-click-modal="closeOnClickModal"
       :before-close="handleClose"
       title="新增商品税收编码转换"
       width="700px"
@@ -245,6 +246,7 @@
     </el-dialog>
     <!--导入Excel-->
     <el-dialog
+      :close-on-click-modal="closeOnClickModal"
       :visible.sync="dialogVisible2"
       :before-close="handleClose"
       title="商品税收编码转换文件导入(大小不能超过100k)"
@@ -278,6 +280,7 @@ export default{
   name: 'InfoManagement',
   data() {
     return {
+      // 控制弹窗点击空白位置不关闭
       closeOnClickModal: false,
       isInline: true,
       loading: false, // loading
@@ -405,6 +408,9 @@ export default{
           this.form.shflbm = item.shflbm
           this.form.sl = item.sl
           this.form.sfxsyhzc = item.sfxsyhzc
+          this.form.lslbs = item.lslbs
+          this.form.mslx = item.mslx
+          this.form.yhzclx = item.yhzclx
         }
       })
     },

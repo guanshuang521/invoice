@@ -90,6 +90,7 @@
         @current-change="handleCurrentChange"/>
     </div>
     <el-dialog
+      :close-on-click-modal="closeOnClickModal"
       :visible.sync="dialogVisible"
       :before-close="handleClose"
       title="订单信息"
@@ -115,6 +116,8 @@ export default {
   },
   data() {
     return {
+      // 控制弹窗点击空白位置不关闭
+      closeOnClickModal: false,
       value: '',
       searchParams: {
         dataType: '',

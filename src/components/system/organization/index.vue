@@ -2,7 +2,7 @@
   <div class="dashboard-editor-container add-edit-info-container">
     <el-form ref="form" :model="terminalInfo" :rules="terminalRules" class="form" label-width="100px" size="mini">
       <el-form-item label="所属税号：" prop="taxNum" >
-        <el-input v-model="terminalInfo.taxNum" placeholder="请输入"/>
+        <el-input v-model="terminalInfo.taxNum" :disabled="true" placeholder="请输入"/>
       </el-form-item>
       <el-form-item label="终端标识：" prop="terminalMark" >
         <el-input v-model="terminalInfo.terminalMark" placeholder="请输入"/>
@@ -45,26 +45,14 @@ export default {
   data() {
     return {
       terminalRules: {
-        sssh: [
+        taxNum: [
           { required: true, message: '请输入所属税号', trigger: 'blur' }
         ],
-        zdbz: [
+        terminalMark: [
           { required: true, message: '请输入终端标识', trigger: 'blur' }
         ],
-        zdmc: [
+        terminalName: [
           { required: true, message: '请输入终端名称', trigger: 'blur' }
-        ],
-        zddz: [
-          { required: true, message: '请输入终端地址', trigger: 'blur' }
-        ],
-        zddkh: [
-          { required: true, message: '请输入终端端口号', trigger: 'blur' }
-        ],
-        jqbh: [
-          { required: true, message: '请输入机器编号', trigger: 'blur' }
-        ],
-        kplx: [
-          { required: true, message: '请选择开票类型', trigger: 'blur' }
         ]
       }
     }

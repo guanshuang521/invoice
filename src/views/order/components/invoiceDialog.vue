@@ -7,7 +7,7 @@
  -->
 <template>
   <div class="invoice_dialog" >
-    <el-dialog :visible.sync="ishow" :before-close="hideDialog" :title="dialogTitle" width="450px">
+    <el-dialog :visible.sync="ishow" :close-on-click-modal="closeOnClickModal" :before-close="hideDialog" :title="dialogTitle" width="450px">
       <el-form ref="dynamicValidateForm" :rules="rules" :model="dynamicValidateForm" label-width="110px" size="mini">
         <el-form-item label="选择订单数">
           <el-input v-if="dialogTitle == '同一购方订单生成预制发票'" v-model="buildPop.num" disabled="disabled"/>
@@ -31,7 +31,7 @@
             <el-option v-for="option in dictList['SYS_FPLX']" :key="option.id" :value="option.code" :label="option.name"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="邮箱" prop="gmfDzyx" :rules="dynamicValidateForm.fplx==26?rules.gmfDzyx:[{ required: false, message: '请输入邮箱地址', trigger: 'blur' },{ type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }]">
+        <el-form-item :rules="dynamicValidateForm.fplx==26?rules.gmfDzyx:[{ required: false, message: '请输入邮箱地址', trigger: 'blur' },{ type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }]" label="邮箱" prop="gmfDzyx">
           <el-input v-model="dynamicValidateForm.gmfDzyx"/>
         </el-form-item>
         <el-form-item label="手机号" prop="gmfSjh">
@@ -75,6 +75,8 @@ export default {
   },
   data() {
     return {
+      // 控制弹窗点击空白位置不关闭
+      closeOnClickModal: false,
       // 弹窗标题
       dynamicValidateForm: {
         ids: '',

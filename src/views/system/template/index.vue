@@ -9,7 +9,7 @@
     class="template-container"
     element-loading-text="加载中"
     element-loading-spinner="el-icon-loading"
-    element-loading-background="rgba(0, 0, 0, 0.8)">
+    element-loading-background="rgba(0, 0, 0, 0.6)">
     <div class="button-container">
       <el-button type="primary" size="mini" class="dashboard-button" @click="openDialog">新增</el-button>
       <el-button type="primary" size="mini" class="dashboard-button" @click="templateDelete">删除</el-button>
@@ -103,7 +103,7 @@
         @current-change = "handleCurrentChange"/>
     </div>
     <!--新增规则弹框-->
-    <el-dialog :visible.sync="dialogFormVisible" :title="dialogTitle" width="620px">
+    <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="dialogFormVisible" :title="dialogTitle" width="620px">
       <el-form ref="templateForm" :model="templateForm" :rules="rules" :inline="isInline" size="mini" label-width="140px">
         <el-form-item label="模板名称：" prop="ruleName">
           <el-input v-model="templateForm.ruleName "/>
@@ -174,6 +174,8 @@ export default {
   name: 'Template',
   data() {
     return {
+      // 控制弹窗点击空白位置不关闭
+      closeOnClickModal: false,
       // 弹窗标题
       dialogTitle: '',
       // 加载层

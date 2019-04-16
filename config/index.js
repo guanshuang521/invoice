@@ -11,29 +11,26 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/rbac':{
-        // target: 'http://192.168.7.50:50009', //测试环境
-        target: 'http://192.168.4.128:8080',
+        target: 'http://192.168.7.50:50009', //测试环境
+        // target: 'http://192.168.2.188:8090', //越哥
         // pathRewrite:{
         //   '^/rbac': '/'
         // },
         changeOrigin: true
       },
       '/invoiceJob':{
-        // target: 'http://192.168.2.130:8090',
-        target: 'http://192.168.7.50:50008', //测试环境
+        // target: 'http://192.168.7.50:50008', //测试环境
+        target: 'http://192.168.2.130:8080',
         changeOrigin: true
       },
       '/invoice':{
-        // target: 'http://192.168.7.50:50008', //测试环境
+        target: 'http://192.168.7.50:50008', //测试环境
         // target: 'http://192.168.2.188:8080', //越哥
-        target: 'http://192.168.2.240:8080', //宋闰鑫
-        // target: 'http://192.168.2.240:8080',
+        // target: 'http://192.168.2.240:8080', //宋闰鑫
         changeOrigin: true
       },
       '/print':{
         target: 'http://127.0.0.1:2999', //测试环境
-        // target: 'http://192.168.2.253:8080', //测试环境
-        // target: 'http://192.168.2.240:8080',
         changeOrigin: true
       }
     },

@@ -130,7 +130,7 @@
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="checkFP(scope.row)">查看</el-button>
             <el-button type="primary" size="mini" @click="sendMsg(scope.row)">推送</el-button>
-            <el-button type="primary" size="mini" @click="hcInvoice(scope.row)">红冲发票</el-button>
+            <el-button v-if="parseInt(scope.row.fpzt) == 1 && parseInt(scope.row.kplx) == 0" type="primary" size="mini" @click="hcInvoice(scope.row)">红冲发票</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -145,7 +145,7 @@
         @current-change="handleCurrentChange"/>
     </div>
     <!--发票找回弹窗-->
-    <el-dialog :visible.sync="fpzhDialogVisible" title="发票找回" width="380px">
+    <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="fpzhDialogVisible" title="发票找回" width="380px">
       <el-form ref="fpzhForm" :model="fpzhForm" :rules="fpzhFormRules" size="mini" label-width="100px">
         <el-form-item label="发票类型：" prop="fplx">
           <el-select v-model="fpzhForm.fplx" placeholder="请选择" size="small">
@@ -165,21 +165,21 @@
       </div>
     </el-dialog>
     <!--发票查看弹窗-->
-    <el-dialog :visible.sync="fpckDialogVisible" title="发票查看" width="1280px">
+    <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="fpckDialogVisible" title="发票查看" width="1280px">
       <fppmShow :formdata="fppmShowData" :is-all-readonly="true"/>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button type="primary" size="mini" @click="fpckDialogVisible = false">关闭</el-button>
       </div>
     </el-dialog>
     <!--作废重开弹窗-->
-    <el-dialog :visible.sync="zfckDialogVisible" title="作废重开" width="1280px">
+    <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="zfckDialogVisible" title="作废重开" width="1280px">
       <fppmShow :formdata="fppmZfckData" :is-sph-readonly="true"/>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button type="primary" size="mini" @click="reInvoiceSubmit">开具</el-button>
       </div>
     </el-dialog>
     <!--红冲发票弹窗-->
-    <el-dialog :visible.sync="hckpDialogVisible" title="作废重开" width="1280px">
+    <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="hckpDialogVisible" title="作废重开" width="1280px">
       <span>红字信息表编号：</span><el-input v-model="hzxxbbh" placeholder="请输入" style="width: 182px"/>
       <fppmShow :formdata="fppmHckpData" :is-sph-readonly="true"/>
       <div slot="footer" class="dialog-footer" align="center">
@@ -222,6 +222,7 @@ export default {
   },
   data() {
     return {
+      // 控制弹窗点击空白位置不关闭
       closeOnClickModal: false,
       // 列表总条数
       totalCount: 0,
@@ -280,6 +281,8 @@ export default {
       fpzfShowList: [],
       // 发票票面展示数据
       fppmShowData: {},
+      // 作废重开原始数据
+      fppmZfckDataBefore: {},
       // 作废重开数据
       fppmZfckData: {},
       // 红冲发票数据
@@ -370,14 +373,20 @@ export default {
     reInvoice(val) {
       fpDetail({ fpDm: val.fpDm, fpHm: val.fpHm }).then(res => {
         this.zfckDialogVisible = true
-        this.fppmZfckData = res.data
+        this.fppmZfckDataBefore = JSON.parse(JSON.stringify(res.data))
+        this.fppmZfckData = JSON.parse(JSON.stringify(res.data))
       }).catch(err => {
         this.$message.error(err)
       })
     },
     // 作废重开提交
     reInvoiceSubmit() {
-      const args = Object.assign({}, this.fppmZfckData)
+      const args = Object.assign({}, this.fppmZfckDataBefore)
+      args.zfInvoice = Object.assign({}, this.fppmZfckData, {
+        zflx: 1,
+        zfr: this.info.userName,
+        zfyy: ''
+      })
       this.listLoading = true
       reInvoice(args).then(res => {
         this.zfckDialogVisible = false
@@ -459,19 +468,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        exportAll(this.listQuery).then(res => {
-          const content = res
-          const blob = new Blob([content])
-          const fileName = '项目信息表.xls'
-          if ('download' in document.createElement('a')) { // 非IE下载
-            const elink = document.createElement('a')
-            elink.download = fileName
-            elink.style.display = 'none'
-            elink.href = URL.createObjectURL(blob)
-            document.body.appendChild(elink)
-            elink.click()
-          }
-        }).catch()
+        exportAll(this.listQuery)
       })
     },
     // 数据回传
@@ -482,6 +479,7 @@ export default {
         type: 'warning'
       }).then(() => {
         this.loading = true
+        this.listQuery.xsfNsrsbh = this.org.taxNum
         passBackInvoice(this.listQuery).then(res => {
           this.loading = false
           this.$message.success(res.message)
@@ -505,8 +503,7 @@ export default {
         kprq_end: '',
         zfrq_start: '',
         zfrq_end: '',
-        fplx: '026',
-        xsfNsrsbh: '500102020160826'
+        fplx: '026'
       }
       this.initList()
     },

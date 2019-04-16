@@ -80,10 +80,6 @@
           label="单据类型"
           align="center"/>
         <el-table-column
-          prop="djbh"
-          label="费用单据编号"
-          align="center"/>
-        <el-table-column
           prop="ejgysbm"
           label="二级供应商编码"
           align="center"/>
@@ -123,6 +119,13 @@
           prop="csrq"
           label="传输日期"
           align="center"/>
+        <el-table-column
+          label="订单状态"
+          align="center">
+          <template slot-scope="scope">
+            {{ SYS_ERP_STATUS[scope.row.status] }}
+          </template>
+        </el-table-column>
         <el-table-column
           prop="bz"
           label="备注"
@@ -203,10 +206,7 @@ export default {
         this.totalCount = res.data.count
         this.tableList = res.data.list
       }).catch(err => {
-        this.$message({
-          message: err,
-          type: 'error'
-        })
+        this.$message.error(err)
         this.listLoading = false
       })
     },
@@ -261,10 +261,7 @@ export default {
           this.loading = false
         }).catch(err => {
           this.loading = false
-          this.$message({
-            type: 'error',
-            message: err.message
-          })
+          this.$message.error(err)
         })
       })
     },
@@ -299,10 +296,7 @@ export default {
           this.makePopData = response.data
         }).catch(err => {
           this.loading = false
-          this.$message({
-            type: 'error',
-            message: err.message
-          })
+          this.$message.error(err)
         })
       })
     },
