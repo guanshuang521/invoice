@@ -150,6 +150,7 @@
       :visible.sync="dialogVisible"
       :before-close="handleClose"
       :title="dialogType === 'adds' && '新增' || dialogType === 'edit' && '编辑' || ''"
+      :close-on-click-modal="closeOnClickModal"
       width="740px"
       custom-class="add-customer">
       <el-form ref="form" :inline="isInline" :rules="rules" :model="form" label-width="140px" size="mini">
@@ -277,6 +278,7 @@ export default{
   name: 'InfoManagement',
   data() {
     return {
+      closeOnClickModal: false,
       isInline: true,
       loading: false, // loading
       list: [],

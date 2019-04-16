@@ -14,6 +14,7 @@
     <!--推送弹窗-->
     <el-dialog
       :visible.sync="dialogVisible"
+      :close-on-click-modal="closeOnClickModal"
       title="发票推送"
       width="400px">
       <el-form ref="sendForm" :model="sendForm" :rules="sendFormRules" label-width="100px" class="demo-ruleForm">
@@ -29,7 +30,7 @@
         <el-button @click="dialogVisible = false">取 消</el-button>
       </div>
     </el-dialog>
-    <download-or-print :show="xzdyDialogVisible" :fp-data="fpdata" @closeDialog="closeDownload(data)"/>
+    <download-or-print :show="xzdyDialogVisible" :fp-data="fpdata" @closeDialog="closeDownload"/>
   </div>
 </template>
 
@@ -47,6 +48,7 @@ export default {
   },
   data() {
     return {
+      closeOnClickModal: false,
       fplx: this.$store.getters.fplx_ele, // 电票 026
       // 开具数据
       form: {},
@@ -121,7 +123,7 @@ export default {
             kplx: '0', // 开票类型
             fpDm: '', // 发票代码
             fpHm: '', // 发票号码
-            hsbz: '1', // 含税标识
+            hsbz: '0', // 含税标识
             xsfId: this.org.id, // ？
             xsfBmid: this.org.id, // ？
             xsfBmmc: this.org.name, // ？
@@ -157,8 +159,9 @@ export default {
       this.form = msg
     },
     // 关闭下载弹窗
-    closeDownload(data) {
-      this.xzdyDialogVisible = data
+    closeDownload(msg) {
+      console.log(msg)
+      this.xzdyDialogVisible = msg
     }
   }
 }
