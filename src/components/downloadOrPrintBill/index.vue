@@ -72,7 +72,11 @@ export default {
       printFP(args).then()
     },
     download() {
-      download().then(res => {
+      download({
+        fpDm: this.fpData.fpDm,
+        fpHm: this.fpData.fpHm,
+        jym: this.fpData.jym
+      }).then(res => {
         this.$emit('closeDialog', false)
         this.$message.success(res.message)
       }).catch(err => {
