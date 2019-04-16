@@ -135,7 +135,9 @@ const apiPath = {
       // 开具电票
       makeEInvoice: '/invoice/invoice/makeEInvoice',
       // 下载
-      download: ''
+      download: '/invoice/invoice/downloadSinglePdf',
+      // 发送邮件
+      invoiceSent: '/invoice/invoice/sendEInoviceEmail'
     }
   },
 
