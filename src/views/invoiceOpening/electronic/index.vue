@@ -137,7 +137,6 @@ export default {
             this.loading = false
             this.dialogVisible = false
             console.log(res)
-            debugger
             this.xzdyDialogVisible = true
             this.fpdata = {
               type: 'download',

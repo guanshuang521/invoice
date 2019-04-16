@@ -7,10 +7,10 @@
   <el-dialog :visible.sync="show" title="开具成功" width="400px" custom-class="showPop dialog-wapper pub-min-pop">
     <el-form label-width="120px" size="mini" style="margin: 20px 40px 0 0">
       <el-form-item label="发票代码:" prop="orgCode">
-        <el-input v-model="fpData.fpDm"/>
+        <el-input v-model="fpData.fpDm" readonly/>
       </el-form-item>
       <el-form-item label="发票号码:" prop="orgName">
-        <el-input v-model="fpData.fpHm"/>
+        <el-input v-model="fpData.fpHm" readonly/>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer" align="center">
