@@ -95,7 +95,7 @@
         <el-form-item label="合计税额">
           <el-input v-model="hjse" disabled="disabled"/>
         </el-form-item>
-        <el-form-item label="加税合计">
+        <el-form-item label="价税合计">
           <el-input v-model="jshj" disabled="disabled"/>
         </el-form-item>
         <el-form-item label="预制发票类型" prop="fplx">
