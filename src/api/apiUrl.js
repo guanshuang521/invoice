@@ -20,6 +20,7 @@ const apiPath = {
       addNode: '/rbac/organization/insertOrganization',
       terminalList: '/rbac/terminal/selectByTerminal',
       deleteTerminal: '/rbac/terminal/deleteTerminal',
+      addTerminal: '/rbac/terminal/insertTerminal',
       updateTerminal: '/rbac/terminal/updateTerminal'
     },
     // 门店管理

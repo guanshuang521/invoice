@@ -408,6 +408,9 @@ export default{
           this.form.shflbm = item.shflbm
           this.form.sl = item.sl
           this.form.sfxsyhzc = item.sfxsyhzc
+          this.form.lslbs = item.lslbs
+          this.form.mslx = item.mslx
+          this.form.yhzclx = item.yhzclx
         }
       })
     },

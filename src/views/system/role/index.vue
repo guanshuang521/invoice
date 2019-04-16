@@ -246,14 +246,16 @@ export default {
             this.dialogVisible = false
             this.dialogType = ''
             this.$refs[formName].resetFields()
+          }).catch(err => {
+            this.$message.error(err)
           })
         }
       })
     },
     // 删除数据
     delRole() {
-      if (this.checkedList.length === 0) {
-        this.$message.error('至少选择一条数据')
+      if (this.checkedList.length !== 1) {
+        this.$message.info('请选择一条数据操作！')
         return false
       }
       this.$confirm('确定要删除选择的数据吗?', '提示', {

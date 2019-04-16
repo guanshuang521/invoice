@@ -94,7 +94,7 @@
         <el-form-item label="邮箱：" prop="yx">
           <el-input v-model="form.yx" placeholder="请输入"/>
         </el-form-item>
-        <el-form-item label="详细地址：" prop="khdz" style="width: 540px">
+        <el-form-item label="详细地址：" prop="khdz" style="width: 596px">
           <el-input v-model="form.khdz" placeholder="请输入" class="detailAddress"/>
         </el-form-item>
         <el-form-item label="开户银行：">
@@ -121,7 +121,6 @@
       custom-class="add-customer">
       <el-upload
         ref="upload"
-        :before-upload="beforeUpload"
         :on-preview="handlePreview"
         :on-remove="handleRemove"
         :file-list="fileList"
@@ -199,7 +198,8 @@ export default {
           { required: true, message: '购方名称不能为空', trigger: 'blur' }
         ],
         khsh: [
-          { required: true, message: '购方税号不能为空', trigger: 'blur' }
+          { required: true, message: '购方税号不能为空', trigger: 'blur' },
+          { min: 15, max: 20, type: 'number', message: '长度在 15 到 20 之间', trigger: 'blur' }
         ],
         yx: [
           { required: true, validator: yxFilter, trigger: 'blur' }
@@ -375,8 +375,8 @@ export default {
       }
       .detailAddress{
        /deep/ .el-input__inner{
-          width: 420px;
-          max-width: 420px;
+          width: 474px;
+          max-width: 474px;
         }
       }
       .button-container {

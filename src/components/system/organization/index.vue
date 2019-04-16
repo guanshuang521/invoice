@@ -45,26 +45,14 @@ export default {
   data() {
     return {
       terminalRules: {
-        sssh: [
+        taxNum: [
           { required: true, message: '请输入所属税号', trigger: 'blur' }
         ],
-        zdbz: [
+        terminalMark: [
           { required: true, message: '请输入终端标识', trigger: 'blur' }
         ],
-        zdmc: [
+        terminalName: [
           { required: true, message: '请输入终端名称', trigger: 'blur' }
-        ],
-        zddz: [
-          { required: true, message: '请输入终端地址', trigger: 'blur' }
-        ],
-        zddkh: [
-          { required: true, message: '请输入终端端口号', trigger: 'blur' }
-        ],
-        jqbh: [
-          { required: true, message: '请输入机器编号', trigger: 'blur' }
-        ],
-        kplx: [
-          { required: true, message: '请选择开票类型', trigger: 'blur' }
         ]
       }
     }

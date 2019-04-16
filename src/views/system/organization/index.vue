@@ -86,6 +86,12 @@
                 <el-form-item label="银行账号" prop="bankCode">
                   <el-input v-model="codeMaintenanceForm.bankCode"/>
                 </el-form-item>
+                <el-form-item label="地址" prop="coAddr">
+                  <el-input v-model="codeMaintenanceForm.coAddr"/>
+                </el-form-item>
+                <el-form-item label="电话" prop="coPhone">
+                  <el-input v-model="codeMaintenanceForm.coPhone"/>
+                </el-form-item>
                 <el-form-item label="专票限额" prop="expertLimit">
                   <el-input v-model="codeMaintenanceForm.expertLimit" type="number"/>
                 </el-form-item>
@@ -98,12 +104,6 @@
                 <el-form-item label="商品行数" prop="maxOrderNum">
                   <el-input v-model.number="codeMaintenanceForm.maxOrderNum" type="number"/>
                 </el-form-item>
-                <el-form-item label="地址" prop="coAddr">
-                  <el-input v-model="codeMaintenanceForm.coAddr"/>
-                </el-form-item>
-                <el-form-item label="电话" prop="coPhone">
-                  <el-input v-model="codeMaintenanceForm.coPhone"/>
-                </el-form-item>
                 <el-form-item>
                   <el-button type="primary" icon="el-icon-check" @click="submitCodeMaintence('codeMaintenanceForm')">保存</el-button>
                 </el-form-item>
@@ -111,6 +111,7 @@
             </el-tab-pane>
             <el-tab-pane v-if="currentNodeType === 2" name="fourth" label="税号关联终端">
               <template>
+                <el-button type="primary" size="mini" style="margin-bottom: 20px" @click="addTerminal">新增</el-button>
                 <el-table
                   :data="codeRelevanceTerminalList"
                   border
@@ -162,16 +163,16 @@
     <!--创建和编辑终端-->
     <el-dialog :close-on-click-modal="closeOnClickModal" :title="dialogTitle" :visible.sync="dialogVisiblity" :lock-scroll="true" width="500px" custom-class="showPop dialog-wapper pub-min-pop">
       <dialog-detail ref="dialog" :terminal-info="terminalInfo" :key="terminalInfo.id"/>
-      <span slot="footer" class="dialog-footer" >
+      <div slot="footer" class="dialog-footer" align="center">
         <el-button v-loading.fullscreen.lock="fullscreenLoading" type="primary" size="mini" @click="saveTerminal">保存</el-button>
         <el-button v-loading.fullscreen.lock="fullscreenLoading" size="mini" @click="dialogVisiblity = !dialogVisiblity">取消</el-button>
-      </span>
+      </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { getNodeList, deleteNode, updateNode, addNode, terminalList, deleteTerminal, updateterminal } from '@/api/system/organization'
+import { getNodeList, deleteNode, updateNode, addNode, terminalList, deleteTerminal, addTerminal, updateTerminal } from '@/api/system/organization'
 import dialogDetail from '@/components/system/organization'
 import { arrayToTree, arrayToMapField } from '@/utils/public'
 import { mapGetters } from 'vuex'
@@ -310,7 +311,9 @@ export default {
       terminalQueryParams: {
         currentPage: 1,
         pageSize: 10
-      }
+      },
+      // 终端弹窗类型
+      terminalType: ''
     }
   },
   computed: {
@@ -422,7 +425,7 @@ export default {
       this.$refs[data].validate((valid) => {
         if (valid) {
           const args = Object.assign({}, this.addNodeForm)
-          args.fid = this.$refs.organTree.getCurrentNode().id
+          args.parentId = this.$refs.organTree.getCurrentNode().id
           addNode(args).then(res => {
             this.$refs[data].resetFields()
             this.$message.success(res.message)
@@ -498,28 +501,62 @@ export default {
     modifyTerminal(data) {
       this.dialogVisiblity = true
       this.dialogTitle = '修改终端信息'
+      this.terminalType = 'edit'
       this.terminalInfo = Object.assign({}, data)
       this.terminalInfo.invoiceType = this.terminalInfo.invoiceType.split(',')
+    },
+    addTerminal() {
+      this.dialogVisiblity = true
+      this.dialogTitle = '新增终端信息'
+      this.terminalType = 'add'
+      this.terminalInfo = {
+        taxNum: '',
+        terminalMark: '',
+        terminalName: '',
+        terminalIp: '',
+        terminalPort: '',
+        machineCode: '',
+        invoiceType: []
+      }
     },
     // 修改终端保存
     saveTerminal() {
       this.$refs.dialog.$refs.form.validate((valid) => {
         if (valid) {
-          const args = Object.assign({}, this.terminalInfo)
-          args.invoiceType = args.invoiceType.join(',')
-          updateterminal(args).then(res => {
-            this.$message({
-              type: 'success',
-              message: res.message
+          if (this.terminalType === 'add') {
+            const args = Object.assign({}, this.terminalInfo)
+            args.invoiceType = args.invoiceType.join(',')
+            args.orgId = this.currentNodeDetail.orgCode
+            addTerminal(args).then(res => {
+              this.$message({
+                type: 'success',
+                message: res.message
+              })
+              this.dialogVisiblity = false
+              this.getTerminal()
+            }).catch(err => {
+              this.$message({
+                type: 'error',
+                message: err
+              })
             })
-            this.dialogVisiblity = false
-            this.getTerminal()
-          }).catch(err => {
-            this.$message({
-              type: 'error',
-              message: err
+          } else {
+            const args = Object.assign({}, this.terminalInfo)
+            args.invoiceType = args.invoiceType.join(',')
+            updateTerminal(args).then(res => {
+              this.$message({
+                type: 'success',
+                message: res.message
+              })
+              this.dialogVisiblity = false
+              this.getTerminal()
+            }).catch(err => {
+              this.$message({
+                type: 'error',
+                message: err
+              })
             })
-          })
+          }
         }
       })
     },
