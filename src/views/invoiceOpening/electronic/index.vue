@@ -6,7 +6,7 @@
     element-loading-spinner="el-icon-loading"
     element-loading-background="rgba(0, 0, 0, 0.8)">
     <form>
-      <button class="bluebtn" style="margin: 20px 0 0 20px" @click="kaijuBtn">确认开具</button>
+      <button class="bluebtn" style="margin: 20px 0 0 20px" @click.prevent="kaijuBtn">确认开具</button>
       <div class="specialPm">
         <fppm :pmfplx="fplx" @getformdata="pmformdata"/>
       </div>
@@ -14,6 +14,7 @@
     <!--推送弹窗-->
     <el-dialog
       :visible.sync="dialogVisible"
+      :close-on-click-modal="closeOnClickModal"
       title="发票推送"
       width="400px">
       <el-form ref="sendForm" :model="sendForm" :rules="sendFormRules" label-width="100px" class="demo-ruleForm">
@@ -29,21 +30,25 @@
         <el-button @click="dialogVisible = false">取 消</el-button>
       </div>
     </el-dialog>
+    <download-or-print :show="xzdyDialogVisible" :fp-data="fpdata" @closeDialog="closeDownload"/>
   </div>
 </template>
 
 <script>
 import fppm from '@/components/fppiaomian'
+import downloadOrPrint from '@/components/downloadOrPrintBill'
 import { invoiceEle } from '@/api/invoiceOpening/opening'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'Special',
   components: {
-    fppm
+    fppm,
+    downloadOrPrint
   },
   data() {
     return {
+      closeOnClickModal: false,
       fplx: this.$store.getters.fplx_ele, // 电票 026
       // 开具数据
       form: {},
@@ -61,12 +66,13 @@ export default {
         sjh: [
           {
             pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号码', trigger: 'blur'
-          },
-          {
-            required: true, message: '手机号码不能为空', trigger: 'blur'
           }
         ]
-      }
+      },
+      // 下载打印窗口是否显示
+      xzdyDialogVisible: false,
+      // 发票信息
+      fpdata: {}
     }
   },
   computed: {
@@ -132,15 +138,15 @@ export default {
           invoiceEle(args).then(res => {
             this.loading = false
             this.dialogVisible = false
-            this.$confirm('开票成功，是否打印？', '提示', {
-              confirmButtonText: '打印',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
-              print().then(res).catch(err => {
-                this.$message.error(err)
-              })
-            })
+            console.log(res)
+            this.xzdyDialogVisible = true
+            this.fpdata = {
+              type: 'download',
+              fpDm: res.data.fpDm,
+              fpHm: res.data.fpHm,
+              fpqqlsh: res.data.fpqqlsh,
+              jym: res.data.jym
+            }
           }).catch(err => {
             this.loading = false
             this.dialogVisible = false
@@ -151,6 +157,11 @@ export default {
     },
     pmformdata: function(msg) {
       this.form = msg
+    },
+    // 关闭下载弹窗
+    closeDownload(msg) {
+      console.log(msg)
+      this.xzdyDialogVisible = msg
     }
   }
 }

@@ -133,7 +133,9 @@ const apiPath = {
       // 开具纸票
       makeInvoicePaper: '/invoice/invoice/makeInvoicePaper',
       // 开具电票
-      makeEInvoice: '/invoice/invoice/makeEInvoice'
+      makeEInvoice: '/invoice/invoice/makeEInvoice',
+      // 下载
+      download: '/invoice/invoice/downloadSinglePdf'
     }
   },
 
@@ -161,7 +163,8 @@ const apiPath = {
       validate: '/invoice/invoice/validateInvoice', // 发票验证
       passBackInvoice: '/invoice/invoice/passBackInvoice', // 数据回传
       fpDetail: '/invoice/invoice/getInvoiceByHmDm', // 获取发票详情
-      reInvoice: '/invoice/invoice/voidedCheckAndReInvoice' // 发票作废重开
+      reInvoice: '/invoice/invoice/voidedCheckAndReInvoice', // 发票作废重开
+      sendMsg: '/invoice/invoice/sendEInoviceEmail' // 发票推送
     },
     oOrdinary: {
       list: '/invoice/invoice/getInvoiceListPage',

@@ -186,11 +186,30 @@
         <el-button type="primary" size="mini" @click="hcInvoiceSubmit">开具</el-button>
       </div>
     </el-dialog>
+    <!--推送弹窗-->
+    <el-dialog
+      :visible.sync="tsdialogVisible"
+      :close-on-click-modal="closeOnClickModal"
+      title="发票推送"
+      width="400px">
+      <el-form ref="sendForm" :model="sendForm" :rules="sendFormRules" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="邮箱" prop="gmfDzyx">
+          <el-input v-model="sendForm.gmfDzyx" type="text" size="mini"/>
+        </el-form-item>
+        <el-form-item label="手机号" prop="sjh">
+          <el-input v-model="sendForm.sjh" type="text" size="mini"/>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" size="mini" class="dialog-footer" align="center">
+        <el-button type="primary" @click="sendMsgSubmit">提 交</el-button>
+        <el-button @click="dialogVisible = false">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getList, retrieve, cancel, exportAll, validate, passBackInvoice, fpDetail, reInvoice, printFP } from '@/api/invoice/oSpecial'
+import { getList, retrieve, exportAll, validate, passBackInvoice, fpDetail, reInvoice, sendMsg } from '@/api/invoice/oSpecial'
 import { invoice } from '@/api/invoiceOpening/opening'
 import { arrayToMapField } from '@/utils/public'
 import { mapGetters } from 'vuex'
@@ -203,6 +222,7 @@ export default {
   },
   data() {
     return {
+      closeOnClickModal: false,
       // 列表总条数
       totalCount: 0,
       // 列表查询条件
@@ -236,6 +256,8 @@ export default {
       zfckDialogVisible: false,
       // 红冲窗口是否显示
       hckpDialogVisible: false,
+      // 推送窗口是否显示
+      tsdialogVisible: false,
       // 发票找回表单
       fpzhForm: {
         fpDm: '',
@@ -263,7 +285,24 @@ export default {
       // 红冲发票数据
       fppmHckpData: {},
       // 红字信息表编号
-      hzxxbbh: ''
+      hzxxbbh: '',
+      // 推送表单
+      sendForm: {
+        sjh: '',
+        fpDm: '',
+        fpHm: '',
+        gmfDzyx: ''
+      },
+      sendFormRules: {
+        gmfDzyx: [{
+          required: true, message: '邮箱不能为空', trigger: 'blur'
+        }],
+        sjh: [
+          {
+            pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号码', trigger: 'blur'
+          }
+        ]
+      }
     }
   },
   computed: {
@@ -383,7 +422,22 @@ export default {
       })
     },
     // 推送
-    sendMsg() {},
+    sendMsg(data) {
+      this.tsdialogVisible = true
+      this.sendForm.fpDm = data.fpDm
+      this.sendForm.fpHm = data.fpHm
+    },
+    sendMsgSubmit() {
+      this.$refs['sendForm'].validate((valid) => {
+        if (valid) {
+          sendMsg(this.sendForm).then(res => {
+            this.$message.success(res.message)
+          }).catch(err => {
+            this.$message.error(err)
+          })
+        }
+      })
+    },
     // 发票验证
     validate() {
       if (this.checkedItems.length === 0) {

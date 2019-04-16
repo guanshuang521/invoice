@@ -18,15 +18,21 @@
         </el-form-item>
         <el-form-item>
           <el-button size="small" type="primary" icon="el-icon-search" @click="initList">查询</el-button>
-          <el-button size="small" style="margin-left: 10px" type="primary" icon="el-icon-edit" @click="handleReset">重置</el-button>
+          <el-button size="small" style="margin-left: 10px" type="primary" icon="el-icon-edit" @click="handleReset">重置
+          </el-button>
         </el-form-item>
       </el-form>
     </div>
     <div class="button-container">
       <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="invoice">开具发票</el-button>
-      <el-button size="small" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="batchInvoice">批量开具</el-button>
-      <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="backInvoicePre">预制发票回退</el-button>
-      <el-button size="small" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="exportList">导出</el-button>
+      <el-button size="small" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit"
+                 @click="batchInvoice">批量开具
+      </el-button>
+      <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="backInvoicePre">预制发票回退
+      </el-button>
+      <el-button size="small" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit"
+                 @click="exportList">导出
+      </el-button>
     </div>
     <div class="table-container">
       <el-table
@@ -88,17 +94,46 @@
         <el-button type="primary" size="mini" @click="showBillPreview = false">关闭</el-button>
       </div>
     </el-dialog>
+    <!--发票批量开具弹窗-->
+    <el-dialog :visible.sync="showBranchInvice" :before-close="closeBranchInvoice" title="批量开具发票" width="880px">
+      <el-table
+        :data="branchInviceData"
+        border
+        fit
+        highlight-current-row>
+        <el-table-column prop="index" label="序号" align="center" width="50">
+          <template slot-scope="scope">
+            {{ scope.$index + 1 }}
+          </template>
+        </el-table-column>
+        <el-table-column label="发票类型" align="center">
+          <template slot-scope="scope">
+            <span>{{ SYS_FPLX[scope.row.fplx] }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="购方信息" prop="gmfMc" align="center"/>
+        <el-table-column label="价税合计" prop="jshj" align="center"/>
+        <el-table-column label="开具状态" prop="kpStatus" align="center" width="300">
+          <template slot-scope="scope">
+            <span v-html="scope.row.kpStatus">
+              {{ scope.row.kpStatus }}
+            </span>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-dialog>
+
   </div>
 </template>
 
 <script>
-import {initTableList, invoice, batchInvoice, backInvoicePre, exportData, getOrderDetail} from '@/api/invoice/inovicePre'
+import { initTableList, backInvoicePre, exportData } from '@/api/invoice/inovicePre'
+import { invoiceEle } from '@/api/invoiceOpening/opening'
 import BillDetail from '@/components/invoice/billDetail'
 import OrderDetail from '@/components/invoice/orderDetail'
 import { arrayToMapField } from '@/utils/public'
 import fppmShow from '@/components/fppiaomianShow'
 import { mapGetters } from 'vuex'
-
 export default {
   name: 'WElectronic',
   components: { BillDetail, OrderDetail, fppmShow },
@@ -110,6 +145,8 @@ export default {
       showOrderDialog: false,
       // 显示发票预览
       showBillPreview: false,
+      // 显示批量开票弹窗
+      showBranchInvice: false,
       // 查询条件
       listQuery: {
         currentPage: 1,
@@ -124,6 +161,8 @@ export default {
       checkedList: [],
       // 发票明细
       fppmShowData: [],
+      // 批量开具发票数据
+      branchInviceData: [],
       // 当前订单ID
       currentFpId: 0
     }
@@ -180,7 +219,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          invoice(this.checkedList[0]).then(res => {
+          invoiceEle(this.checkedList[0]).then(res => {
             if (res.code === '0000') {
               initTableList()
             } else {
@@ -199,21 +238,36 @@ export default {
     },
     // 批量开具
     batchInvoice() {
+      let checked = true
       if (this.checkedList.length === 0) {
         this.$message.info('请至少选择一条数据！')
         return
       }
-      this.$confirm('是否确认批量开具选择预制发票?', '批量开具', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        batchInvoice().then(res => {
-          this.$message.success(res.messgae)
-        }).catch(err => {
-          this.$message.error(err)
-        })
+      this.checkedList.forEach(item => {
+        if (item.kpzt === 1) {
+          this.$message.error('存在已开具的预制发票，请确认！')
+          checked = false
+        }
       })
+      if (checked) {
+        this.showBranchInvice = true
+        this.branchInviceData = Object.assign([], this.checkedList)
+        this.branchInviceData.forEach((item, key) => {
+          this.$set(this.branchInviceData[key], 'kpStatus', '正在处理中...')
+          this.listLoading = true
+          invoiceEle(item).then(res => {
+            if (res.code === '0000') {
+              this.$set(this.branchInviceData[key], 'kpStatus', '<span style="color:green">开具成功</span>')
+            } else {
+              this.$set(this.branchInviceData[key], 'kpStatus', '<span style="color:red">' + res.message + '</span>')
+            }
+            this.listLoading = false
+          }).catch(err => {
+            this.listLoading = false
+            this.$set(this.branchInviceData[key], 'kpStatus', '<span style="color:red">' + err + '</span>')
+          })
+        })
+      }
     },
     // 预制发票退回
     backInvoicePre() {
@@ -274,10 +328,17 @@ export default {
       this.showBillDialog = val
       this.showOrderDialog = val
     },
+    closeBranchInvoice() {
+      this.initList()
+      this.showBranchInvice = false
+    },
     // 订单预览
-    getPmData() {},
-    handleSizeChange() {},
-    handleCurrentChange() {},
+    getPmData() {
+    },
+    handleSizeChange() {
+    },
+    handleCurrentChange() {
+    },
     // 表格选中数据发生变化
     handleSelectionChange(val) {
       this.checkedList = []
@@ -288,15 +349,17 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-.wSpecial {
-  &-container{
-    margin: 30px;
-    .filter-container{
-      margin-bottom: 20px;
-    }
-    .button-container{
-      margin-bottom: 20px;
+  .wSpecial {
+    &-container {
+      margin: 30px;
+
+      .filter-container {
+        margin-bottom: 20px;
+      }
+
+      .button-container {
+        margin-bottom: 20px;
+      }
     }
   }
-}
 </style>

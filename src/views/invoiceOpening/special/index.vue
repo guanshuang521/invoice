@@ -6,30 +6,37 @@
     element-loading-spinner="el-icon-loading"
     element-loading-background="rgba(0, 0, 0, 0.8)">
     <form>
-      <button class="bluebtn" style="margin: 20px 0 0 20px" @click="kaijuBtn">确认开具</button>
+      <button class="bluebtn" style="margin: 20px 0 0 20px" @click.prevent="kaijuBtn">确认开具</button>
       <div class="specialPm">
         <fppm :pmfplx="fplx" @getformdata="pmformdata"/>
       </div>
     </form>
+    <download-or-print :show="xzdyDialogVisible" :fp-data="fpdata"/>
   </div>
 </template>
 
 <script>
 import fppm from '@/components/fppiaomian'
+import downloadOrPrint from '@/components/downloadOrPrintBill'
 import { invoice, print } from '@/api/invoiceOpening/opening'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'Special',
   components: {
-    fppm
+    fppm,
+    downloadOrPrint
   },
   data() {
     return {
       fplx: this.$store.getters.fplx_spe, // 专票 004
       // 开具数据
       form: {},
-      loading: false
+      loading: false,
+      // 下载打印窗口是否显示
+      xzdyDialogVisible: false,
+      // 发票信息
+      fpdata: {}
     }
   },
   computed: {
@@ -80,7 +87,7 @@ export default {
           kplx: '0', // 开票类型
           fpDm: '', // 发票代码
           fpHm: '', // 发票号码
-          hsbz: '1', // 含税标识
+          hsbz: '0', // 含税标识
           xsfId: this.org.id, // ？
           xsfBmid: this.org.id, // ？
           xsfBmmc: this.org.name, // ？
@@ -94,16 +101,15 @@ export default {
         })
         invoice(args).then(res => {
           this.loading = false
-          this.$message.success(res.message)
-          this.$confirm(res.message, '提示', {
-            confirmButtonText: '打印',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            print().then(res).catch(err => {
-              this.$message.error(err)
-            })
-          })
+          console.log(res)
+          this.xzdyDialogVisible = true
+          this.fpdata = {
+            type: 'print',
+            fpDm: res.data.fpDm,
+            fpHm: res.data.fpHm,
+            fpqqlsh: res.data.fpqqlsh,
+            jym: res.data.jym
+          }
         }).catch(err => {
           this.loading = false
           this.$message.error(err)
