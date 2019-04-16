@@ -37,12 +37,17 @@
         <el-table-column type="selection" width="35"/>
         <el-table-column label="用户名称" prop="userName" align="center"/>
         <el-table-column label="账号" prop="userCode" align="center"/>
-        <el-table-column label="密码" prop="password" align="center"/>
         <el-table-column label="复核人" prop="reviewer" align="center"/>
         <el-table-column label="收款人" prop="receiver" align="center"/>
         <el-table-column label="所属机构" prop="orgId" align="center"/>
         <el-table-column label="终端号" prop="terminalId" align="center"/>
-        <el-table-column label="用户状态" prop="status" align="center"/>
+        <el-table-column
+          label="用户状态"
+          align="center">
+          <template slot-scope="scope">
+            {{ SYS_QYZT[scope.row.status] }}
+          </template>
+        </el-table-column>
         <el-table-column label="上次登录IP" prop="modifiedId" align="center" width="100"/>
         <el-table-column label="最后登录时间" prop="modifiedTime" align="center" width="120"/>
         <el-table-column
@@ -52,6 +57,7 @@
           width="120">
           <template slot-scope="scope">
             <el-button type="primary" size="small" @click="editUser(scope.row)">编辑</el-button>
+            <el-button type="primary" size="small" @click="resetPassword(scope.row)">重置密码</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -71,7 +77,7 @@
         <el-form-item label="账号：" prop="userCode" >
           <el-input v-model="userInfo.userCode" placeholder="请输入"/>
         </el-form-item>
-        <el-form-item label="密码：" prop="password" >
+        <el-form-item v-if="showPrise" label="密码：" prop="password">
           <el-input v-model="userInfo.password" placeholder="请输入"/>
         </el-form-item>
         <el-form-item label="用户名：" prop="userName" >
@@ -90,8 +96,8 @@
         <el-form-item label="复核人：" prop="checker" >
           <el-input v-model="userInfo.reviewer" placeholder="请输入"/>
         </el-form-item>
-        <el-form-item label="所属机构：" prop="kplx">
-          <el-select v-model="userInfo.orgId" placeholder="请选择" style="width: 450px">
+        <el-form-item label="所属机构：" prop="orgId" >
+          <el-select v-model="userInfo.orgId" placeholder="请选择" style="width: 450px" @change="changeSsjg">
             <el-option
               v-for="item in orgIdOptions"
               :key="item.id"
@@ -100,7 +106,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="用户状态：" prop="status" >
-          <el-select v-model="userInfo.status" placeholder="请选择" style="width: 170px">
+          <el-select v-model="SYS_QYZT[userInfo.status]" placeholder="请选择" style="width: 170px">
             <el-option v-for="option in dictList['SYS_QYZT']" :key="option.id" :value="option.code" :label="option.name"/>
           </el-select>
         </el-form-item>
@@ -111,6 +117,7 @@
           <div class="authTree">
             <el-tree
               ref="organTree"
+              :default-checked-keys="authArray"
               :data="organTreeData"
               class="filter-tree"
               default-expand-all
@@ -129,10 +136,12 @@
 </template>
 
 <script>
-import { getList, add, edit, deleteUser, getAllRoles } from '@/api/system/user'
+import { getList, add, edit, deleteUser, getAllRoles, getUserDetail, selectTerminalsList } from '@/api/system/user'
 import { getNodeList } from '@/api/system/organization'
 import { arrayToTree } from '@/utils/public'
 import { mapGetters } from 'vuex'
+import md5 from 'js-md5'
+import { arrayToMapField } from '@/utils/public'
 
 export default {
   name: 'Dashboard',
@@ -161,6 +170,7 @@ export default {
       dialogType: '',
       // 弹窗是否显示
       dialogVisible: false,
+      showPrise: true,
       // 新增用户表单
       userInfo: {
         userCode: '',
@@ -170,7 +180,8 @@ export default {
         reviewer: '',
         status: '',
         terminalId: '',
-        auth: []
+        auth: '',
+        role: ''
       },
       userRules: {
         userCode: [
@@ -184,19 +195,28 @@ export default {
         ],
         role: [
           { required: true, message: '请选择角色', trigger: 'blur' }
+        ],
+        orgId: [
+          { required: true, message: '请输入账号', trigger: 'blur' }
         ]
       },
       organTreeData: [],
       // 所属机构
       orgIdOptions: [],
       // 所有角色列表
-      roleList: []
+      roleList: [],
+      treeArray: [],
+      authArray: [],
+      dialogVisible2: false
     }
   },
   computed: {
     ...mapGetters([
       'info', 'dictList'
-    ])
+    ]),
+    SYS_QYZT() { // 税率
+      return arrayToMapField(this.dictList['SYS_QYZT'], 'code', 'name')
+    }
   },
   mounted() {
     this.listLoading = true
@@ -204,6 +224,35 @@ export default {
     this.handleRoleList()
   },
   methods: {
+    changeSsjg() {
+      console.log(this.userInfo.orgId)
+      const params = {
+        orgId: this.userInfo.orgId
+      }
+      this.loading = true
+      selectTerminalsList(params).then(response => {
+        this.loading = false
+        console.log(response.data.list)
+        this.userInfo.terminalId = response.data.list.taxNum
+      }).catch(err => {
+        this.loading = false
+        this.$message({
+          type: 'error',
+          message: err.message
+        })
+      })
+      // this.commodityTypes.forEach(item => {
+      //   // if (item.id === this.form.shflmc) {
+      //   //   this.form.shflbm = item.shflbm
+      //   //   this.form.sl = item.sl
+      //   //   this.form.sfxsyhzc = item.sfxsyhzc
+      //   // }
+      // })
+    },
+    resetPassword() {
+      this.dialogVisible2 = true
+    },
+    surePassword() {},
     closeDialog() {
       this.dialogVisible = false
     },
@@ -258,21 +307,24 @@ export default {
         reviewer: '',
         status: '',
         terminalId: '',
-        role: []
+        role: '',
+        auth: ''
       }
       this.initTree()
     },
     addUser() { // 新增用户保存
-      this.userInfo.auth = JSON.parse(JSON.stringify(this.$refs.organTree.getCheckedKeys()))
+      this.showPrise = true
+      const userInfoauth = JSON.parse(JSON.stringify(this.$refs.organTree.getCheckedKeys()))
+      this.userInfo.auth = userInfoauth.join(',')
       this.$refs['userForm'].validate((valid) => {
         if (valid) {
           if (this.dialogType === 'addUser') {
             this.loading = true
-            const roles = {
-              roleIdList: this.userInfo.role.join(',')
-            }
-            console.log(this.userInfo);
+            const password = md5(this.userInfo.password)
+            this.userInfo.password = password
+            this.userInfo.role = this.userInfo.role.join(',')
             const args = Object.assign({}, this.userInfo)
+            console.log(this.userInfo)
             add(args).then(res => {
               this.$message.success(res.message)
               this.loading = false
@@ -342,9 +394,26 @@ export default {
     editUser(row) { // 编辑用户
       this.dialogTitle = '编辑用户'
       this.dialogType = 'editUser'
+      this.showPrise = false
       this.dialogVisible = true
       this.initTree()
-      this.userInfo = row
+      const params = {
+        id: row.id
+      }
+      this.loading = true
+      getUserDetail(params).then(res => {
+        this.loading = false
+        this.userInfo = res.data
+        this.userInfo.role = res.data.userRoleList
+        this.treeArray = res.data.userOrgList
+        this.treeArray.forEach(item => {
+          this.authArray.push(item.id)
+        })
+      }).catch(err => {
+        this.listLoading = false
+        this.$message.error(err)
+      })
+      // this.userInfo = row
     },
     // 列表勾选
     handleSelectionChange(val) {
@@ -371,7 +440,6 @@ export default {
       getAllRoles({}).then(res => {
         this.listLoading = false
         this.roleList = res.data.list
-        this.$message.success(res)
       }).catch(err => {
         this.listLoading = false
         this.$message.error(err)

@@ -505,12 +505,13 @@ export default {
       this.terminalInfo = Object.assign({}, data)
       this.terminalInfo.invoiceType = this.terminalInfo.invoiceType.split(',')
     },
+    // 新增终端
     addTerminal() {
       this.dialogVisiblity = true
       this.dialogTitle = '新增终端信息'
       this.terminalType = 'add'
       this.terminalInfo = {
-        taxNum: '',
+        taxNum: this.currentNodeDetail.taxNum,
         terminalMark: '',
         terminalName: '',
         terminalIp: '',

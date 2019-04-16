@@ -2,7 +2,7 @@
   <div class="dashboard-editor-container add-edit-info-container">
     <el-form ref="form" :model="terminalInfo" :rules="terminalRules" class="form" label-width="100px" size="mini">
       <el-form-item label="所属税号：" prop="taxNum" >
-        <el-input v-model="terminalInfo.taxNum" placeholder="请输入"/>
+        <el-input v-model="terminalInfo.taxNum" :disabled="true" placeholder="请输入"/>
       </el-form-item>
       <el-form-item label="终端标识：" prop="terminalMark" >
         <el-input v-model="terminalInfo.terminalMark" placeholder="请输入"/>

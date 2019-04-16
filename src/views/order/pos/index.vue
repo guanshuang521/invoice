@@ -139,6 +139,7 @@ import { getPoslist, delPosList, downPosOrder, buildInvoicePre, dobuildInvoicePr
 import { getAllCustomer } from '@/api/system/infoMaintenance'
 import apiPath from '@/api/apiUrl'
 import { arrayToMapField } from '@/utils/public'
+import { getToken } from '@/utils/auth'
 export default {
   name: 'Dashboard',
   data() {
@@ -240,10 +241,7 @@ export default {
         this.totalCount = res.data.count
         this.tableList = res.data.list
       }).catch(err => {
-        this.$message({
-          message: err,
-          type: 'error'
-        })
+        this.$message.error(err)
         this.listLoading = false
       })
     },
@@ -257,18 +255,9 @@ export default {
       this.initTable()
     },
     exportPos() {
-      const url = apiPath.order.pos.exportPosOrder + '?djbh=' + this.searchParams.djbh
+      const token = getToken()
+      const url = apiPath.order.pos.exportPosOrder + '?djbh=' + this.searchParams.djbh + '&x-access-token=' + token
       window.open(url)
-      // exportPosOrder(this.searchParams, { responseType: 'arraybuffer' }).then(response => {
-      //   const blob = new Blob([response], { type: 'application/vnd.ms-excel' })
-      //   const objectUrl = URL.createObjectURL(blob)
-      //   window.location.href = objectUrl
-      // }).catch(err => {
-      //   this.$message({
-      //     type: 'error',
-      //     message: err.message
-      //   })
-      // })
     },
     delList() { // 删除数据
       if (this.checkedList.length === 0) {
@@ -315,20 +304,10 @@ export default {
           djbh: value
         }
         downPosOrder(params).then(response => {
-          this.$message({
-            type: 'success',
-            message: response.message
-          })
+          this.$message.success(response.message)
+          this.initTable()
         }).catch(err => {
-          this.$message({
-            type: 'error',
-            message: err.message
-          })
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '取消输入'
+          this.$message.error(err)
         })
       })
     },
@@ -356,11 +335,15 @@ export default {
           type: 'success',
           message: '删除成功!'
         })
+<<<<<<< HEAD
+        this.initTable()
       }).catch(() => {
         this.$message({
           type: 'info',
           message: '已取消删除'
         })
+=======
+>>>>>>> 313d2773f8b1571a2e0f997dad07ed2ff8c5e682
       })
     },
     // 生成预制发票
@@ -417,10 +400,7 @@ export default {
           console.log(this.idtotal)
         }).catch(err => {
           this.loading = false
-          this.$message({
-            type: 'error',
-            message: err.message
-          })
+          this.$message.error(err)
         })
       })
     },
@@ -459,10 +439,7 @@ export default {
             this.dialogVisible = false
           }).catch(err => {
             this.loading = false
-            this.$message({
-              type: 'error',
-              message: err.message
-            })
+            this.$message.error(err)
           })
         } else {
           console.log('error submit!!')

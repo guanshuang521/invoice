@@ -8,7 +8,7 @@
     v-loading.fullscreen.lock="listLoading"
     element-loading-text="加载中"
     element-loading-spinner="el-icon-loading"
-    element-loading-background="rgba(0, 0, 0, 0.8)"
+    element-loading-background="rgba(0, 0, 0, 0.6)"
     class="infoMaintenance-container">
     <div class="filter-container">
       <el-form :inline="true" :model="searchParams" class="demo-form-inline">
@@ -199,7 +199,7 @@ export default {
         ],
         khsh: [
           { required: true, message: '购方税号不能为空', trigger: 'blur' },
-          { min: 15, max: 20, type: 'number', message: '长度在 15 到 20 之间', trigger: 'blur' }
+          { min: 15, max: 20, type: 'string', message: '长度在 15 到 20 之间', trigger: 'blur' }
         ],
         yx: [
           { required: true, validator: yxFilter, trigger: 'blur' }
