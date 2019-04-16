@@ -46,8 +46,8 @@ export function saveUser() {
 export function deleteUser(data) {
   return request({
     url: apiPath.system.user.delete,
-    method: 'get',
-    params: data
+    method: 'post',
+    data: data
   })
 }
 // 获取用户详情
@@ -68,7 +68,7 @@ export function assignRoles(data) {
 // 获取所有角色
 export function getAllRoles(data) {
   return request({
-    url: apiPath.system.user.AllRolelist,
+    url: apiPath.system.user.roleList,
     method: 'post',
     data
   })

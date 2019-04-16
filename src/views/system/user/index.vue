@@ -12,7 +12,7 @@
         </el-form-item>
         <el-form-item label="角色">
           <el-select v-model="searchParams.role" placeholder="请选择" size="small">
-            <el-option v-for="option in dictList['SYS_FPLX']" :key="option.id" :value="option.code" :label="option.name"/>
+            <el-option v-for="item in roleList" :key="item.id" :label="item.roleName" :value="item.id"/>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -66,7 +66,7 @@
         @current-change="handleCurrentChange"/>
     </div>
     <!--新增编辑用户弹窗-->
-    <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" :lock-scroll="true" width="640px" custom-class="showPop dialog-wapper pub-min-pop">
+    <el-dialog :title="dialogTitle" :close-on-click-modal="closeOnClickModal" :visible.sync="dialogVisible" :lock-scroll="true" width="640px" custom-class="showPop dialog-wapper pub-min-pop">
       <el-form ref="userForm" :inline="true" :model="userInfo" :rules="userRules" class="form" label-width="100px" size="mini">
         <el-form-item label="账号：" prop="userCode" >
           <el-input v-model="userInfo.userCode" placeholder="请输入"/>
@@ -101,8 +101,7 @@
         </el-form-item>
         <el-form-item label="用户状态：" prop="status" >
           <el-select v-model="userInfo.status" placeholder="请选择" style="width: 170px">
-            <el-option label="状态1" value="0"/>
-            <el-option label="状态2" value="1"/>
+            <el-option v-for="option in dictList['SYS_QYZT']" :key="option.id" :value="option.code" :label="option.name"/>
           </el-select>
         </el-form-item>
         <el-form-item label="终端号：" prop="terminalCode" >
@@ -139,6 +138,8 @@ export default {
   name: 'Dashboard',
   data() {
     return {
+      // 控制弹窗点击空白位置不关闭
+      closeOnClickModal: false,
       // 加载动画
       listLoading: false,
       // 查询条件
@@ -270,6 +271,7 @@ export default {
             const roles = {
               roleIdList: this.userInfo.role.join(',')
             }
+            console.log(this.userInfo);
             const args = Object.assign({}, this.userInfo)
             add(args).then(res => {
               this.$message.success(res.message)

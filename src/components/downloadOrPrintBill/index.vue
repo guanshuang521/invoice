@@ -48,6 +48,7 @@ export default {
   },
   data() {
     return {
+      // 控制弹窗点击空白位置不关闭
       closeOnClickModal: false
     }
   },
@@ -72,7 +73,13 @@ export default {
       printFP(args).then()
     },
     download() {
-      download().then(res => {
+      console.log(this.fpData)
+      const args = {
+        fpDm: this.fpData.fpDm,
+        fpHm: this.fpData.fpHm,
+        jym: this.fpData.jym
+      }
+      download(args).then(res => {
         this.$emit('closeDialog', false)
         this.$message.success(res.message)
       }).catch(err => {

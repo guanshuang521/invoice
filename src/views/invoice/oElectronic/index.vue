@@ -145,7 +145,7 @@
         @current-change="handleCurrentChange"/>
     </div>
     <!--发票找回弹窗-->
-    <el-dialog :visible.sync="fpzhDialogVisible" title="发票找回" width="380px">
+    <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="fpzhDialogVisible" title="发票找回" width="380px">
       <el-form ref="fpzhForm" :model="fpzhForm" :rules="fpzhFormRules" size="mini" label-width="100px">
         <el-form-item label="发票类型：" prop="fplx">
           <el-select v-model="fpzhForm.fplx" placeholder="请选择" size="small">
@@ -165,21 +165,21 @@
       </div>
     </el-dialog>
     <!--发票查看弹窗-->
-    <el-dialog :visible.sync="fpckDialogVisible" title="发票查看" width="1280px">
+    <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="fpckDialogVisible" title="发票查看" width="1280px">
       <fppmShow :formdata="fppmShowData" :is-all-readonly="true"/>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button type="primary" size="mini" @click="fpckDialogVisible = false">关闭</el-button>
       </div>
     </el-dialog>
     <!--作废重开弹窗-->
-    <el-dialog :visible.sync="zfckDialogVisible" title="作废重开" width="1280px">
+    <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="zfckDialogVisible" title="作废重开" width="1280px">
       <fppmShow :formdata="fppmZfckData" :is-sph-readonly="true"/>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button type="primary" size="mini" @click="reInvoiceSubmit">开具</el-button>
       </div>
     </el-dialog>
     <!--红冲发票弹窗-->
-    <el-dialog :visible.sync="hckpDialogVisible" title="作废重开" width="1280px">
+    <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="hckpDialogVisible" title="作废重开" width="1280px">
       <span>红字信息表编号：</span><el-input v-model="hzxxbbh" placeholder="请输入" style="width: 182px"/>
       <fppmShow :formdata="fppmHckpData" :is-sph-readonly="true"/>
       <div slot="footer" class="dialog-footer" align="center">
@@ -193,8 +193,8 @@
       title="发票推送"
       width="400px">
       <el-form ref="sendForm" :model="sendForm" :rules="sendFormRules" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="邮箱" prop="yx">
-          <el-input v-model="sendForm.yx" type="text" size="mini"/>
+        <el-form-item label="邮箱" prop="gmfDzyx">
+          <el-input v-model="sendForm.gmfDzyx" type="text" size="mini"/>
         </el-form-item>
         <el-form-item label="手机号" prop="sjh">
           <el-input v-model="sendForm.sjh" type="text" size="mini"/>
@@ -222,6 +222,8 @@ export default {
   },
   data() {
     return {
+      // 控制弹窗点击空白位置不关闭
+      closeOnClickModal: false,
       // 列表总条数
       totalCount: 0,
       // 列表查询条件
@@ -287,8 +289,20 @@ export default {
       hzxxbbh: '',
       // 推送表单
       sendForm: {
-        yx: '',
-        sjh: ''
+        sjh: '',
+        fpDm: '',
+        fpHm: '',
+        gmfDzyx: ''
+      },
+      sendFormRules: {
+        gmfDzyx: [{
+          required: true, message: '邮箱不能为空', trigger: 'blur'
+        }],
+        sjh: [
+          {
+            pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号码', trigger: 'blur'
+          }
+        ]
       }
     }
   },
@@ -409,11 +423,21 @@ export default {
       })
     },
     // 推送
-    sendMsg() {
+    sendMsg(data) {
       this.tsdialogVisible = true
+      this.sendForm.fpDm = data.fpDm
+      this.sendForm.fpHm = data.fpHm
     },
     sendMsgSubmit() {
-      sendMsg().then().catch()
+      this.$refs['sendForm'].validate((valid) => {
+        if (valid) {
+          sendMsg(this.sendForm).then(res => {
+            this.$message.success(res.message)
+          }).catch(err => {
+            this.$message.error(err)
+          })
+        }
+      })
     },
     // 发票验证
     validate() {

@@ -97,6 +97,7 @@
     <!--新增/编辑弹框-->
     <el-dialog
       v-if="showDialog"
+      :close-on-click-modal="closeOnClickModal"
       :visible.sync="showDialog"
       :title="type === 'add' && '新增' || type === 'edit' && '编辑' || ''"
       width="500px">
@@ -147,6 +148,8 @@ export default {
   name: 'Shop',
   data() {
     return {
+      // 控制弹窗点击空白位置不关闭
+      closeOnClickModal: false,
       // 数据总条数
       totalCount: 0,
       // 查询参数

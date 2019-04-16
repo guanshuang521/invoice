@@ -74,6 +74,7 @@
     <!-- 新增弹窗 -->
     <el-dialog
       :title="dialogType === 'add' && '新增角色' || dialogType === 'edit' && '权限分配' || ''"
+      :close-on-click-modal="closeOnClickModal"
       :visible.sync="dialogVisible"
       :before-close="() => handleClose('form')"
       width="600px"
@@ -124,6 +125,8 @@ export default {
   name: 'Role',
   data() {
     return {
+      // 控制弹窗点击空白位置不关闭
+      closeOnClickModal: false,
       enable: 1,
       // 表单行内显示
       isInline: true,

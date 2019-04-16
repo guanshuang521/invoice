@@ -111,6 +111,7 @@ export default {
             jym: res.data.jym
           }
         }).catch(err => {
+          this.loading = false
           this.$message.error(err)
         })
       }

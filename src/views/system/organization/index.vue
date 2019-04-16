@@ -160,7 +160,7 @@
       </el-col>
     </el-row>
     <!--创建和编辑终端-->
-    <el-dialog :title="dialogTitle" :visible.sync="dialogVisiblity" :lock-scroll="true" width="500px" custom-class="showPop dialog-wapper pub-min-pop">
+    <el-dialog :close-on-click-modal="closeOnClickModal" :title="dialogTitle" :visible.sync="dialogVisiblity" :lock-scroll="true" width="500px" custom-class="showPop dialog-wapper pub-min-pop">
       <dialog-detail ref="dialog" :terminal-info="terminalInfo" :key="terminalInfo.id"/>
       <span slot="footer" class="dialog-footer" >
         <el-button v-loading.fullscreen.lock="fullscreenLoading" type="primary" size="mini" @click="saveTerminal">保存</el-button>
@@ -182,6 +182,8 @@ export default {
   },
   data() {
     return {
+      // 控制弹窗点击空白位置不关闭
+      closeOnClickModal: false,
       // 遮罩层
       loading: false,
       // 机构树检索关键字

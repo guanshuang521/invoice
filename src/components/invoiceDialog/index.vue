@@ -8,6 +8,7 @@
     <el-dialog
       :visible.sync="dialogVisible"
       :before-close="handleClose"
+      :close-on-click-modal="closeOnClickModal"
       title="开具"
       width="600px">
       <span slot="footer" class="dialog-footer">
@@ -19,7 +20,13 @@
 
 <script>
 export default {
-  name: 'Index'
+  name: 'Index',
+  data() {
+    return {
+      // 控制弹窗点击空白位置不关闭
+      closeOnClickModal: false
+    }
+  }
 }
 </script>
 
