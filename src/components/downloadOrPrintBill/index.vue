@@ -72,11 +72,13 @@ export default {
       printFP(args).then()
     },
     download() {
-      download({
+      console.log(this.fpData)
+      const args = {
         fpDm: this.fpData.fpDm,
         fpHm: this.fpData.fpHm,
         jym: this.fpData.jym
-      }).then(res => {
+      }
+      download(args).then(res => {
         this.$emit('closeDialog', false)
         this.$message.success(res.message)
       }).catch(err => {

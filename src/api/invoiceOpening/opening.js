@@ -35,5 +35,5 @@ export function download(data) {
   for (const key in data) {
     params.push(key + '=' + data[key])
   }
-  window.open(apiPath.invoice.invoicePre.exportInvoicePre + '?' + params.join('&'))
+  window.open(apiPath.invoiceOpening.opening.download + '?' + params.join('&'))
 }
