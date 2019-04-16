@@ -119,10 +119,12 @@
       custom-class="add-customer">
       <el-upload
         ref="upload"
+        :before-upload="beforeUpload"
         :on-preview="handlePreview"
         :on-remove="handleRemove"
         :file-list="fileList"
         :auto-upload="false"
+        :headers="headers"
         :on-error="uploadError"
         :on-success="uploadSuccess"
         :action="uploadPath()"
@@ -208,6 +210,11 @@ export default {
     ...mapGetters([
       'dictList'
     ]),
+    headers() {
+      return {
+        'x-access-token': getToken()
+      }
+    },
     invoiceTypeObj() {
       console.log(arrayToMapField(this.dictList['SYS_FPLX'], 'code', 'name'))
       return arrayToMapField(this.dictList['SYS_FPLX'], 'code', 'name')
@@ -246,6 +253,9 @@ export default {
     },
     addCustomer() {
       this.dialogVisible = true
+    },
+    getToken() {
+      return getToken
     },
     addCustomerFn(form) { // 添加购方信息
       this.$refs[form].validate((valid) => {
@@ -328,7 +338,8 @@ export default {
         message: res.message,
         type: res.code === '0000' ? 'success' : 'error'
       })
-      res.code === '0000' ? this.dialogVisible2 = false : this.$refs.upload.clearFiles()
+      this.$refs.upload.clearFiles()
+      this.dialogVisible2 = false
       this.initTable()
     },
     uploadError(res, file, fileList) { // 上传错误
