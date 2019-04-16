@@ -12,14 +12,13 @@
         <el-form-item label="购方名称">
           <el-input v-model="searchParams.billingCode" placeholder="请输入" size="small"/>
         </el-form-item>
-        <el-form-item label="费用单据编号">
-          <el-input v-model="searchParams.djbh" placeholder="请输入" size="small"/>
-        </el-form-item>
         <el-form-item label="二级供应商编码">
           <el-input v-model="searchParams.billingCode" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="订单状态">
-          <el-input v-model="searchParams.ddzt" placeholder="请输入" size="small"/>
+          <el-select v-model="searchParams.status" placeholder="请选择" size="small">
+            <el-option v-for="item in dictList['SYS_ERP_STATUS']" :key="item.id" :label="item.name" :value="item.code"/>
+          </el-select>
         </el-form-item>
         <el-form-item label="单据起号">
           <el-input v-model="searchParams.startDjbh" placeholder="请输入" size="small"/>
@@ -52,7 +51,7 @@
     <div class="button-container">
       <el-button type="primary" icon="el-icon-edit" size="small" @click="createPreInvoice">同一购方订单生成预制发票</el-button>
       <el-button type="primary" icon="el-icon-circle-check" size="small" @click="checkCreateInvoice">勾选订单生成预制发票</el-button>
-      <el-button type="primary" icon="el-icon-upload" size="small">导出</el-button>
+      <el-button type="primary" icon="el-icon-upload" size="small" @click="exportData">导出</el-button>
     </div>
     <div class="table-container">
       <el-table
@@ -105,7 +104,7 @@
           label="销方税号"
           align="center"/>
         <el-table-column
-          prop="gfmc"
+          prop="spgsqc"
           label="购方名称"
           align="center"/>
         <el-table-column
@@ -140,7 +139,7 @@
         @current-change = "handleCurrentChange"/>
     </div>
     <!--生成预制发票弹窗-->
-    <invoice-dialog :ishow="invoiceDialogVisible" :buildPop="buildPop" @hideDialog="closeDialog"/>
+    <invoice-dialog :ishow="invoiceDialogVisible" :dialogTitle="dialogTitle" :buildPop="buildPop" :makePopData="makePopData" @hideDialog="closeDialog"/>
   </div>
 </template>
 <script>
@@ -149,6 +148,7 @@ import { getCommdylist, generatenIvoices, buildInvoice } from '@/api/order'
 import invoiceDialog from '../components/invoiceDialog'
 import apiPath from '@/api/apiUrl'
 import { arrayToMapField } from '@/utils/public'
+import { getToken } from '@/utils/auth'
 export default {
   name: 'Dashboard',
   components: { invoiceDialog },
@@ -158,10 +158,9 @@ export default {
       searchParams: {
         pageSize: 10,
         currentPage: 1,
-        gfmc: '',
+        spgsqc: '',
         ejgysbm: '',
-        djbh: '',
-        ddzt: '',
+        status: '',
         startDjbh: '',
         endDjbh: '',
         startDate: '',
@@ -184,6 +183,7 @@ export default {
       columns: [],
       operation: {},
       buildPop: {},
+      makePopData: {},
       dialogTitle: ''
     }
   },
@@ -200,7 +200,7 @@ export default {
       this.listLoading = true
       getCommdylist(this.searchParams).then(res => {
         this.loading = false
-        this.total = res.data.count
+        this.totalCount = res.data.count
         this.tableList = res.data.list
       }).catch(err => {
         this.$message({
@@ -213,10 +213,9 @@ export default {
     // 查询重置
     reset() {
       this.searchParams = {
-        gfmc: '',
+        spgsqc: '',
         ejgysbm: '',
-        djbh: '',
-        ddzt: '',
+        status: '',
         startDjbh: '',
         endDjbh: '',
         startDate: '',
@@ -258,6 +257,7 @@ export default {
           this.buildPop.hjse = response.data.hjse
           this.buildPop.jshj = response.data.jshj
           this.buildPop.ids = response.data.ids
+          this.buildPop = response.data
           this.loading = false
         }).catch(err => {
           this.loading = false
@@ -296,6 +296,7 @@ export default {
           this.loading = false
           this.dialogTitle = '生成预制发票'
           this.invoiceDialogVisible = true
+          this.makePopData = response.data
         }).catch(err => {
           this.loading = false
           this.$message({
@@ -306,8 +307,8 @@ export default {
       })
     },
     exportData() { // 导出数据
-      const args = Object.assign({}, this.searchParams)
-      const url = apiPath.order.list.exportErp + '?' + args
+      const token = getToken()
+      const url = apiPath.order.list.exportCommidyErp + '?spgsqc=' + this.searchParams.spgsqc + '&ejgysbm=' + this.searchParams.ejgysbm + '&startDjbh=' + this.searchParams.startDjbh + '&endDjbh=' + this.searchParams.endDjbh + '&startDate=' + this.searchParams.startDate + '&endtDate=' + this.searchParams.endDate + '&status=' + this.searchParams.status + '&x-access-token=' + token
       window.open(url)
     },
     // 关闭弹窗

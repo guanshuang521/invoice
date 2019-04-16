@@ -151,6 +151,10 @@ export default {
           args.hjje = this.makePopData.hjje
           args.hjse = this.makePopData.hjse
           args.jshj = this.makePopData.jshj
+          args.gmfDzdh = this.makePopData.gmfDzdh
+          args.gmfMc = this.makePopData.gmfMc
+          args.gmfNsrsbh = this.makePopData.gmfNsrsbh
+          args.gmfYhzh = this.makePopData.gmfYhzh
           this.loading = true
           console.log(args)
           dobuildInvoiceIds(args).then(response => {

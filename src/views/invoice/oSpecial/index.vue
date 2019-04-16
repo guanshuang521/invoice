@@ -233,8 +233,12 @@
       </div>
     </el-dialog>
     <!--红冲发票弹窗-->
-    <el-dialog :visible.sync="hckpDialogVisible" title="作废重开" width="1280px">
-      <span>红字信息表编号：</span><el-input v-model="hzxxbbh" placeholder="请输入" style="width: 182px"/>
+    <el-dialog :visible.sync="hckpDialogVisible" title="红冲开票" width="1280px">
+      <el-form ref="hcfpForm" :model="hcfpForm" :rules="hcfpFormRules" size="mini" label-width="130px">
+        <el-form-item label="红字信息表编号：" prop="hzxxbbh" size="small">
+          <el-input v-model="hcfpForm.hzxxbbh" placeholder="请输入" style="width: 182px"/>
+        </el-form-item>
+      </el-form>
       <fppmShow :formdata="fppmHckpData" :is-sph-readonly="true"/>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button type="primary" size="mini" @click="hcInvoiceSubmit">开具</el-button>
@@ -316,8 +320,15 @@ export default {
       fppmZfckData: {},
       // 红冲发票数据
       fppmHckpData: {},
-      // 红字信息表编号
-      hzxxbbh: ''
+      // 红字信息表表单
+      hcfpForm: {
+        hzxxbbh: ''
+      },
+      hcfpFormRules: {
+        hzxxbbh: [
+          { required: true, message: '红字信息表编号不能为空', trigger: 'blur' }
+        ]
+      }
     }
   },
   computed: {
@@ -423,17 +434,21 @@ export default {
     },
     // 红冲开票提交
     hcInvoiceSubmit() {
-      const args = Object.assign({}, this.fppmHckpData)
-      this.listLoading = true
-      args.xxbbh = this.hzxxbbh
-      invoice(args).then(res => {
-        this.hckpDialogVisible = false
-        this.listLoading = false
-        this.$message.success(res.message)
-        this.initList()
-      }).catch(err => {
-        this.listLoading = false
-        this.$message.error(err)
+      this.$refs['hcfpForm'].validate((valid) => {
+        if (valid) {
+          const args = Object.assign({}, this.fppmHckpData)
+          this.listLoading = true
+          args.xxbbh = this.hcfpForm.hzxxbbh
+          invoice(args).then(res => {
+            this.hckpDialogVisible = false
+            this.listLoading = false
+            this.$message.success(res.message)
+            this.initList()
+          }).catch(err => {
+            this.listLoading = false
+            this.$message.error(err)
+          })
+        }
       })
     },
     // 发票作废
@@ -516,6 +531,7 @@ export default {
         <dyfs>1</dyfs>
         </body>
       </business>`
+        console.log(xml)
         const Base64 = require('js-base64').Base64
         const args = '<content>' + Base64.encode(xml) + '</content>'
         printFP(args).then()
@@ -564,19 +580,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        exportAll(this.listQuery).then(res => {
-          const content = res
-          const blob = new Blob([content])
-          const fileName = '项目信息表.xls'
-          if ('download' in document.createElement('a')) { // 非IE下载
-            const elink = document.createElement('a')
-            elink.download = fileName
-            elink.style.display = 'none'
-            elink.href = URL.createObjectURL(blob)
-            document.body.appendChild(elink)
-            elink.click()
-          }
-        }).catch()
+        exportAll()
       })
     },
     // 数据回传

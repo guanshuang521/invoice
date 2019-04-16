@@ -5,6 +5,7 @@
  */
 import request from '@/utils/request'
 import apiPath from '@/api/apiUrl'
+import { getToken } from '@/utils/auth'
 
 // 获取表格列表
 export function getList(data) {
@@ -32,11 +33,11 @@ export function cancel(data) {
 }
 // 发票导出
 export function exportAll(data) {
-  return request({
-    url: apiPath.invoice.oSpecial.exportAll,
-    method: 'get',
-    data
-  })
+  const params = ['x-access-token=' + getToken()]
+  for (const item in data) {
+    params.push(item + '=' + data[item])
+  }
+  window.open(apiPath.invoice.invoicePre.exportInvoicePre + '?' + params.join('&'))
 }
 // 发票验证
 export function validate(data) {
