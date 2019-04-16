@@ -317,7 +317,11 @@ export default {
     },
     // 导出
     exportList() {
-      exportData(this.listQuery).catch(err => {
+      const args = Object.assign({}, this.listQuery, {
+        xsfNsrsbh: this.org.taxNum,
+        fplx: this.$store.getters.fplx_gen
+      })
+      exportData(args).catch(err => {
         this.$message({
           message: err,
           type: 'error'
