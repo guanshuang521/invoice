@@ -94,7 +94,7 @@
               <li style="width:5%">{{ index + 1 }}</li>
               <li style="width:20%;position: relative;">
                 <input v-model="formdata.lines[index].xmmc">
-                <button class="small_select taxNumSelectBtn" style="top:7px" @click="isGoodsDialog(index)">···</button>
+                <a class="small_select taxNumSelectBtn" style="top:7px" @click="isGoodsDialog(index)">···</a>
               </li>
               <li style="width:8%">
                 <input v-model="formdata.lines[index].ggxh" readOnly>
@@ -203,95 +203,6 @@
       </ul>
     </div>
 
-    <!--选择购买方名称dialog-->
-    <el-dialog :visible.sync="isgmfmcDialog" title="选择购买方名称" width="810px" class="gmfmcDialog">
-      <div class="dialog_item">
-        <div class="search_item">
-          <div class="search_label">客户编码：</div>
-          <input v-model="gmfmcList.khbh" class="search_input" type="text">
-        </div>
-        <div class="search_item">
-          <div class="search_label">客户名称：</div>
-          <input v-model="gmfmcList.khmc" class="search_input" type="text">
-        </div>
-        <div class="search_item">
-          <div class="search_label">税号：</div>
-          <input v-model="gmfmcList.khsh" class="search_input" type="text">
-        </div>
-        <div class="bluebtn" @click="getGmfList">查询</div>
-        <div class="bluebtn" @click="addGmf">新增</div>
-      </div>
-
-      <div class="list-table-container">
-        <ul class="dialog_goodsList_ul">
-          <li>
-            <div/>
-            <div>客户名称</div>
-            <div>客户编码</div>
-            <div>纳税人识别号</div>
-          </li>
-          <li v-for="(item, index) in gmfmcList.list" :key="item.id" @dblclick="dbSelectUser(item,index)">
-            <div>
-              <input v-model="gmfmcList.item" :value="item" type="radio" name="userId">
-              {{ index + 1 }}
-            </div>
-            <div>{{ item.khmc }}</div>
-            <div>{{ item.khbh }}</div>
-            <div>{{ item.gmfmcList }}</div>
-          </li>
-        </ul>
-      </div>
-
-      <el-pagination
-        :current-page="gmfmcList.currentPage"
-        :page-sizes="[10, 20, 30, 50, 100]"
-        :page-size="gmfmcList.pageSize"
-        :total="gmfmcList.totalCount"
-        layout="total, sizes, prev, pager, next, jumper"
-        @size-change="handleSizeChange($event,'isgmfmc')"
-        @current-change="handleCurrentChange($event,'isgmfmc')"
-        @prev-click="prePageChange($event,'isgmfmc')"
-        @next-click="nextPageChange($event,'isgmfmc')"/>
-      <div class="dialogbutton-box">
-        <button class="bluebtn" @click="selectUser">确认</button>
-      </div>
-    </el-dialog>
-
-    <!--添加客户信息dialog-->
-    <el-dialog :visible.sync="isyhxx" title="添加客户信息">
-      <div class="search_items">
-        <div class="search_item">
-          <div class="search_label"><span class="required">*</span>客户编号：</div>
-          <input v-model="userList.khbh" class="search_input" type="text">
-        </div>
-        <div class="search_item">
-          <div class="search_label"><span class="required">*</span>客户名称：</div>
-          <input v-model="userList.khmc" class="search_input" type="text">
-        </div>
-        <div class="search_item">
-          <div class="search_label">客户税号：</div>
-          <input v-model="userList.khsh" class="search_input" type="text">
-        </div>
-        <div class="search_item">
-          <div class="search_label">地址电话：</div>
-          <input v-model="userList.dzdh" class="search_input" type="text">
-        </div>
-        <div class="search_item">
-          <div class="search_label">银行账号：</div>
-          <input v-model="userList.yhzh" class="search_input" type="text">
-        </div>
-        <div class="search_item">
-          <div class="search_label">备注：</div>
-          <input v-model="userList.bz" class="search_input" type="text">
-        </div>
-
-        <div class="dialogbutton-box">
-          <button class="bluebtn" @click="addUser">确认</button>
-          <button class="bluebtn" @click="isyhxx = false">取消</button>
-        </div>
-      </div>
-    </el-dialog>
-
     <!--选择税收编码dialog-->
     <el-dialog :visible.sync="isgoods" :before-close="closeIsGoods" title="选择税收编码" width="800px" class="goodsDialog">
       <div class="dialog_item">
@@ -339,7 +250,7 @@
         @prev-click="prePageChange($event,'isgoods')"
         @next-click="nextPageChange($event,'isgoods')"/>
       <div class="dialogbutton-box">
-        <button class="bluebtn" @click="selectGoods">确认</button>
+        <a class="bluebtn" @click="selectGoods">确认</a>
       </div>
     </el-dialog>
   </div>
@@ -528,6 +439,7 @@ export default {
     }
   },
   mounted: function() {
+    this.getGoodList()
     this.kprq = getDate(new Date().getTime(), 'yyyy年MM月dd日')
     // 计算所有 明细项 金额、税额 合计
     if (this.formdata.hjje) {
@@ -632,33 +544,6 @@ export default {
         }
       })
     },
-    // 查询购买方名称列表
-    getGmfList() {
-      // this.isyhxx = true;
-      const requestData = {
-        'currentPage': '' + this.gmfmcList.pageNum,
-        'pageSize': '' + this.gmfmcList.pageSize,
-        'flag': 0,
-        'skfplx': this.pmfplx,
-        'spssbm': this.gmfmcList.spssbm,
-        'spmc': this.gmfmcList.spmc
-      }
-      getGmfList(requestData).then(res => {
-        this.gmfmcList.list = res.data.list
-        this.gmfmcList.totalCount = res.data.count
-        this.gmfmcList.pageSize = res.data.pageSize
-        this.gmfmcList.currentPage = res.data.currentPage
-      }).catch(err => {
-        this.$message({
-          message: err,
-          type: 'error'
-        })
-      })
-    },
-    // 新增购买方用户信息
-    addGmf() {
-      this.isyhxx = true
-    },
     handleSizeChange(data, type) {
       if (type === 'isgoods') {
         const args = {
@@ -723,7 +608,7 @@ export default {
         this.getGmfmcList()
       }
     },
-    isGoodsDialog(index) {
+    getGoodList() {
       const args = {
         currentPage: this.goods.currentPage,
         pageSize: this.goods.pageSize,
@@ -736,6 +621,8 @@ export default {
       }).catch(err => {
         this.$message.error(err)
       })
+    },
+    isGoodsDialog(index) {
       this.isgoods = true
       this.goods.dialogGoodsIndex = index
     },
@@ -806,9 +693,6 @@ export default {
       // 调用计算函数（金额，税额）
       this.calculateMoney(index, xmsl, xmdj, xmdjShow, hsxmdj, xmjeShow, xmje, hsxmje, sl, se, currentInput)
       // 控制输入0
-      /* this.lines[index].xmsl = Number(xmsl) === 0 ? '' : xmsl
-        this.lines[index].xmdjShow = Number(xmdjShow) === 0 ? '' : xmdjShow
-        this.lines[index].xmjeShow = Number(xmjeShow) === 0 ? '' : xmjeShow*/
     },
     // 金额，税额计算
     calculateMoney(index, xmsl, xmdj, xmdjShow, hsxmdj, xmjeShow, xmje, hsxmje, sl, se, currentInput) {
