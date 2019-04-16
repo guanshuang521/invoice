@@ -12,7 +12,7 @@
         </el-form-item>
         <el-form-item label="角色">
           <el-select v-model="searchParams.role" placeholder="请选择" size="small">
-            <el-option v-for="option in dictList['SYS_FPLX']" :key="option.id" :value="option.code" :label="option.name"/>
+            <el-option v-for="item in roleList" :key="item.id" :label="item.roleName" :value="item.id"/>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -101,8 +101,7 @@
         </el-form-item>
         <el-form-item label="用户状态：" prop="status" >
           <el-select v-model="userInfo.status" placeholder="请选择" style="width: 170px">
-            <el-option label="状态1" value="0"/>
-            <el-option label="状态2" value="1"/>
+            <el-option v-for="option in dictList['SYS_QYZT']" :key="option.id" :value="option.code" :label="option.name"/>
           </el-select>
         </el-form-item>
         <el-form-item label="终端号：" prop="terminalCode" >
@@ -272,6 +271,7 @@ export default {
             const roles = {
               roleIdList: this.userInfo.role.join(',')
             }
+            console.log(this.userInfo);
             const args = Object.assign({}, this.userInfo)
             add(args).then(res => {
               this.$message.success(res.message)
