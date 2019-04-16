@@ -4,169 +4,129 @@
  * @Description:已开发票查询
 */
 <template>
-  <div class="openInvoice-container">
+  <div class="invoiceList-container">
     <div class="filter-container">
-      <el-form :inline="true" :model="searchParams" class="demo-form-inline">
+      <el-form :inline="true" :model="listQuery" class="demo-form-inline">
         <el-form-item label="购方名称">
-          <el-input v-model="searchParams.userName" placeholder="请输入" size="small"/>
+          <el-input v-model="listQuery.gmfMc" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="商品名称">
-          <el-input v-model="searchParams.userName" placeholder="请输入" size="small"/>
+          <el-input v-model="listQuery.xmmc" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="发票代码">
-          <el-input v-model="searchParams.userName" placeholder="请输入" size="small"/>
+          <el-input v-model="listQuery.fpDm" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="发票号码">
-          <el-input v-model="searchParams.userName" placeholder="请输入" size="small"/>
+          <el-input v-model="listQuery.fpHm" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="发票类型">
-          <el-select v-model="searchParams.role" placeholder="请选择" size="small">
-            <el-option label="增值税专用发票" value="shanghai"/>
-            <el-option label="增值税普通发票" value="beijing"/>
-            <el-option label="增值税电子发票" value="dianzi"/>
+          <el-select v-model="listQuery.fplx" placeholder="请选择" size="small">
+            <el-option label="增值税专用发票" value="004"/>
+            <el-option label="增值税普通发票" value="007"/>
+            <el-option label="增值税电子发票" value="026"/>
           </el-select>
         </el-form-item>
         <el-form-item label="发票状态">
-          <el-select v-model="searchParams.role" placeholder="请选择" size="small">
-            <el-option label="正常" value="shanghai"/>
-            <el-option label="作废" value="beijing"/>
-            <el-option label="红冲" value="dianzi"/>
-          </el-select>
+          <el-option v-for="item in dictList['SYS_FPZT']" :key="item.id" :label="item.name" :value="item.code"/>
         </el-form-item>
         <el-form-item label="打印状态">
-          <el-select v-model="searchParams.role" placeholder="请选择" size="small">
-            <el-option label="未打印" value="shanghai"/>
-            <el-option label="已打印" value="beijing"/>
+          <el-select v-model="listQuery.dyzt" placeholder="请选择" size="small">
+            <el-option label="未打印" value="0"/>
+            <el-option label="已打印" value="1"/>
           </el-select>
         </el-form-item>
         <el-form-item label="税率">
-          <el-select v-model="searchParams.role" placeholder="请选择" size="small">
-            <el-option label="3%" value="shanghai"/>
-            <el-option label="6%" value="beijing"/>
-            <el-option label="10%" value="dianzi"/>
-            <el-option label="11%" value="shanghai"/>
-            <el-option label="16%" value="beijing"/>
-            <el-option label="17%" value="dianzi"/>
+          <el-select v-model="listQuery.role" placeholder="请选择" size="small">
+            <el-option v-for="item in dictList['SYS_SL']" :key="item.id" :label="item.name" :value="item.code"/>
           </el-select>
         </el-form-item>
         <el-form-item label="开票日期起">
           <el-date-picker
-            v-model="listQuery.spmc"
+            v-model="listQuery.kprq_start"
             type="date"
             size="small"
             class="filter-item"
-            placeholder="开票日期起"/>
+            placeholder="请选择"/>
         </el-form-item>
         <el-form-item label="开票日期止">
           <el-date-picker
-            v-model="listQuery.spmc"
+            v-model="listQuery.kprq_end"
             type="date"
             size="small"
             class="filter-item"
-            placeholder="开票日期止"/>
-        </el-form-item>
-        <el-form-item label="开票日期起">
-          <el-date-picker
-            v-model="listQuery.spmc"
-            type="date"
-            size="small"
-            class="filter-item"
-            placeholder="开票日期起"/>
-        </el-form-item>
-        <el-form-item label="作废日期止">
-          <el-date-picker
-            v-model="listQuery.spmc"
-            type="date"
-            size="small"
-            class="filter-item"
-            placeholder="作废日期止"/>
+            placeholder="请选择"/>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" size="small" @click="initTable">查询</el-button>
-          <el-button type="primary" size="small" @click="reset">重置</el-button>
+          <el-button type="primary" size="small" @click="initList">查询</el-button>
+          <el-button type="primary" size="small" @click="handleReset">重置</el-button>
         </el-form-item>
       </el-form>
     </div>
     <div class="button-container">
-      <el-button type="primary" size="mini" @click="importExcel">导入Excel</el-button>
+      <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="exportExcel">导出</el-button>
     </div>
     <div class="table-container">
       <el-table
         v-loading="listLoading"
-        :data="list"
-        element-loading-text="Loading"
+        :data="dataList"
         border
         fit
         highlight-current-row
         @selection-change="handleSelectionChange">
-        <el-table-column
-          type="selection"
-          align="center"
-          width="34px"/>
-        <el-table-column align="center" width="31px">
+        style="width: 100%;">
+        <el-table-column type="selection" width="35"/>
+        <el-table-column label="发票代码" prop="fpDm" align="center"/>
+        <el-table-column label="发票号码" prop="fpHm" align="center"/>
+        <el-table-column label="发票类型" prop="fplx" align="center">
           <template slot-scope="scope">
-            {{ scope.$index + 1 }}
+            <span>{{ SYS_FPLX[scope.row.fplx] }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="发票代码" align="center">
-          <template slot-scope="scope">
-            {{ scope.row.djsh }}
-          </template>
-        </el-table-column>
-        <el-table-column label="发票号码" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.xfmc }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="发票类型" align="center">
-          <template slot-scope="scope">
-            {{ scope.row.xfsh }}
-          </template>
-        </el-table-column>
-        <el-table-column label="购方名称" align="center">
-          <template slot-scope="scope">
-            {{ scope.row.gfmc }}
-          </template>
-        </el-table-column>
-        <el-table-column label="购方税号" align="center">
-          <template slot-scope="scope">
-            {{ scope.row.gfsh }}
-          </template>
-        </el-table-column>
-        <el-table-column label="金额（不含税）" align="center">
-          <template slot-scope="scope">
-            {{ scope.row.je }}
-          </template>
-        </el-table-column>
-        <el-table-column label="税率" align="center">
-          <template slot-scope="scope">
-            {{ scope.row.se }}
-          </template>
-        </el-table-column>
-        <el-table-column label="税额" align="center">
-          <template slot-scope="scope">
-            {{ scope.row.se }}
-          </template>
-        </el-table-column>
-        <el-table-column label="价税合计" align="center">
-          <template slot-scope="scope">
-            {{ scope.row.jshj }}
-          </template>
-        </el-table-column>
+        <el-table-column label="购方名称" prop="gmfMc" align="center"/>
+        <el-table-column label="购方税号" prop="gmfNsrsbh" align="center"/>
+        <el-table-column label="金额（不含税）" prop="hjje" align="center"/>
+        <el-table-column label="税额" prop="hjse" align="center"/>
+        <el-table-column label="价税合计" prop="jshj" align="center"/>
         <el-table-column label="开票时间" align="center">
           <template slot-scope="scope">
-            {{ scope.row.ddzt }}
+            <span>{{ scope.row.kprq.substr(0, 10) }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center">
+        <el-table-column label="开票机号" prop="kpjh" align="center"/>
+        <el-table-column label="清单标志" prop="qdbz" align="center">
           <template slot-scope="scope">
-            <el-button
-              size="mini"
-              type="primary"
-              @click="handleEdit(scope.$index, scope.row)">发票信息</el-button>
+            <span>{{ SYS_QDBZ[scope.row.qdbz] }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="发票状态" prop="fpzt" align="center">
+          <template slot-scope="scope">
+            <span>{{ SYS_FPZT[scope.row.fpzt] }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="打印状态" prop="dybz" align="center">
+          <template slot-scope="scope">
+            <span>{{ SYS_DYBZ[scope.row.dybz] }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          align="center"
+          fixed="right"
+          label="操作"
+          width="100">
+          <template slot-scope="scope">
+            <el-button type="primary" size="mini" @click="checkFP(scope.row)">查看</el-button>
           </template>
         </el-table-column>
       </el-table>
+      <el-pagination
+        :current-page="listQuery.currentPage"
+        :page-sizes="[10, 20, 30, 50, 100]"
+        :page-size="listQuery.pageSize"
+        :total="totalCount"
+        layout="total, sizes, prev, pager, next, jumper"
+        style="margin-top: 20px"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"/>
     </div>
     <div class="page-box">
       <el-pagination
@@ -180,229 +140,139 @@
         <!-- <span></span> -->
       </el-pagination>
     </div>
-    <el-dialog
-      :close-on-click-modal="closeOnClickModal"
-      :visible.sync="dialogVisible"
-      :before-close="handleClose"
-      title="发票信息"
-      width="750px"
-      custom-class="add-customer">
-      <open-invoice/>
+    <!--发票查看弹窗-->
+    <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="fpckDialogVisible" title="发票查看" width="1280px">
+      <fppmShow :formdata="fppmShowData" :readonly="true"/>
+      <div slot="footer" class="dialog-footer" align="center">
+        <el-button type="primary" size="mini" @click="fpckDialogVisible = false">关闭</el-button>
+      </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
+import { getList, fpDetail } from '@/api/invoice/oSpecial'
+import { arrayToMapField } from '@/utils/public'
 import { mapGetters } from 'vuex'
-import { getTableList } from '@/api/queryStatistics/orderOpenMessage'
-import openInvoice from '@/components/queryStatistics/openInvoice'
+import fppmShow from '@/components/fppiaomianShow'
+
 export default {
-  name: 'OpenInvoice',
+  name: 'OSpecial',
   components: {
-    openInvoice
+    fppmShow
   },
   data() {
     return {
       // 控制弹窗点击空白位置不关闭
       closeOnClickModal: false,
-      value: '',
-      searchParams: {
-        userName: '',
-        role: '',
+      // 列表总条数
+      totalCount: 0,
+      // 列表查询条件
+      listQuery: {
         currentPage: 1,
-        pageSize: 10
+        pageSize: 10,
+        xmmc: '',
+        gmfMc: '',
+        fpDm: '',
+        fpHm: '',
+        kprq_start: '',
+        kprq_end: '',
+        zfrq_start: '',
+        zfrq_end: ''
       },
-      options: [{
-        value: '01',
-        label: '费用单据'
-      }, {
-        value: '02',
-        label: '结算单据'
-      }, {
-        value: '03',
-        label: '开票号'
-      }],
-      listQuery: [
-        {
-          djsh: '管理员',
-          xfmc: 1,
-          gfmc: '北京市丰台科技园',
-          xfsh: '12433323454',
-          gfsh: '23543212343',
-          je: '北京银行中关村支行',
-          se: '123444321234567876',
-          jshj: 0,
-          ddzt: 0
-        }
-      ],
-      list: [
-        {
-          djsh: '管理员',
-          xfmc: 1,
-          gfmc: '北京市丰台科技园',
-          xfsh: '12433323454',
-          gfsh: '23543212343',
-          je: '北京银行中关村支行',
-          se: '123444321234567876',
-          jshj: 0,
-          ddzt: 0
-        }
-      ],
       listLoading: false,
-      searchs: {
-        customerName: '',
-        customerTaxNumber: ''
-      },
-      checkedList: [],
-      currentPage: 1,
-      pageSize: 25,
-      total: 1000,
-      dialogVisible: false,
-      dialogType: '',
-      form: {
-        customerName: '',
-        customerTaxNumber: '',
-        address: '',
-        email: '',
-        contacts: '',
-        contactNumber: '',
-        phone: '',
-        bank: '',
-        bankAccount: ''
-      }
+      dataList: [],
+      fppmShowData: [],
+      // 发票查看窗口是否显示
+      fpckDialogVisible: false
     }
   },
   computed: {
     ...mapGetters([
-      'name',
-      'roles'
-    ])
+      'dictList',
+      'org'
+    ]),
+    SYS_FPZT() {
+      return arrayToMapField(this.dictList['SYS_FPZT'], 'code', 'name')
+    },
+    SYS_FPLX() {
+      return arrayToMapField(this.dictList['SYS_FPLX'], 'code', 'name')
+    },
+    SYS_QDBZ() {
+      return arrayToMapField(this.dictList['SYS_QDBZ'], 'code', 'name')
+    },
+    SYS_DYBZ() {
+      return arrayToMapField(this.dictList['SYS_DYBZ'], 'code', 'name')
+    }
   },
   mounted() {
-  },
-  created() {
-    // this.fetchData()
-    this.getTableList()
+    this.$store.getters.isAutoLoadData ? this.initList() : ''
   },
   methods: {
-    change(a) {
-      this.dialogVisible = false
-    },
-    fetchData() { // 获取数据
-      this.listLoading = true
-      // getList(this.listQuery).then(response => {
-      //   this.list = response.data.items
-      //   this.listLoading = false
-      // })
-    },
-    initTable() {},
-    reset() { // 重置
-      this.searchs = {
-        customerName: '',
-        customerTaxNumber: ''
-      }
-    },
-    handleSelectionChange(val) { // 表格选中数据发生变化
-      this.checkedList = val
-    },
-    addCustomer() {
-      this.dialogVisible = true
-    },
-    addRoleFn() {
-      this.dialogVisible = false
-    },
-    delCustomer() { // 删除数据
-      this.$confirm('确定要删除选择的数据吗?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消'
-        // type: 'warning',
-        // center: true
-      }).then(() => {
-        console.log(this.checkedList)
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
-        })
+    // 查询
+    initList() {
+      this.listQuery.xsfNsrsbh = this.org.taxNum
+      getList(this.listQuery).then(res => {
+        this.dataList = res.data.list
+        this.totalCount = res.data.count
+      }).catch(err => {
+        this.$message.error(err)
       })
     },
-    downloadExcel() { // 下载
-      // this.dialogVisible = true
+    // 重置
+    handleReset() {
+      this.listQuery = {
+        currentPage: 1,
+        pageSize: 10,
+        xmmc: '',
+        gmfMc: '',
+        fpDm: '',
+        fpHm: '',
+        kprq_start: '',
+        kprq_end: '',
+        zfrq_start: '',
+        zfrq_end: ''
+      }
+      this.initList()
     },
-    importExcel() {
-      this.dialogVisible2 = true
+    // 查看发票
+    checkFP(val) {
+      fpDetail({ fpDm: val.fpDm, fpHm: val.fpHm }).then(res => {
+        console.log(res)
+        this.fpckDialogVisible = true
+        this.fppmShowData = res.data
+      }).catch(err => {
+        this.$message.error(err)
+      })
     },
     handleSizeChange(val) {
-      // console.log(`每页 ${val} 条`)
+      this.listQuery.pageSize = val
+      this.initList()
     },
     handleCurrentChange(val) {
-      // console.log(`当前页: ${val}`)
+      this.listQuery.currentPage = val
+      this.initList()
     },
-    handleClose() { // 关闭弹窗
-      this.dialogVisible = false
-      this.dialogVisible2 = false
-    },
-    submitUpload() {
-      this.$refs.upload.submit()
-    },
-    handleRemove(file, fileList) {
-      console.log(file, fileList)
-    },
-    handlePreview(file) {
-      console.log(file)
-    },
-    handleEdit(index, row) {
-      this.dialogVisible = true
-    },
-    getTableList() {
-      getTableList().then(res => {
-        if (res.code === 20000) {
-          this.list = res.data
-        }
-      })
+    handleSelectionChange(val) {
+      this.checkedItems = val
     }
   }
 }
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-  .dashboard {
-    &-container {
-      margin: 30px;
-      .search-box {
-        .search-item {
-          // float: left;
-          display: inline-block;
-          span {
-            font-size: 14px;
-          }
-        }
-      }
-      .button-box {
-        margin-top: 10px;
-        margin-bottom: 10px;
-      }
-    }
-    &-text {
-      font-size: 30px;
-      line-height: 46px;
-    }
-  }
-</style>
-<style rel="stylesheet/scss" lang="scss" scoped>
-  .openInvoice{
-    &-container {
+  .invoiceList {
+    &-container{
       margin: 30px;
       .filter-container{
-        .filter-item{
-          margin: 0 10px 20px 0;
-        }
-        /deep/ .el-input{
-          width: 220px;
-        }
+        margin-bottom: 20px;
       }
       .button-container{
         margin-bottom: 20px;
       }
+    }
+    /deep/ .el-dialog__body{
+      padding: 0!important;
     }
   }
 </style>
