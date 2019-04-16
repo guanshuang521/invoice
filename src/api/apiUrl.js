@@ -5,10 +5,10 @@
  */
 const apiPath = {
   login: {
-    login: '/rbac/user/login',
-    logout: '/rbac/user/logout',
+    login: '/rbac/userInfo/login',
+    logout: '/rbac/userInfo/logout',
     dict: '/rbac/paramDetail/selectParamDetailsList',
-    userInfo: '/rbac/user/getUserInfo'
+    userInfo: '/rbac/userInfo/getUserInfo'
   },
   // 系统管理
   system: {
@@ -35,12 +35,12 @@ const apiPath = {
       nodeList: '/rbac/user/getRoleList', // 获取权限树
       list: '/rbac/userInfo/selectByUserInfo', // 获取用户列表
       AllRolelist: '/rbac/user/selectByRole', // 获取所有角色列表
-      add: '/rbac/user/insertUser', // 新增数据
-      edit: '/rbac/user/updateUser', // 修改数据
+      add: '/rbac/userInfo/insertUserInfo', // 新增数据
+      edit: '/rbac/userInfo/updateUserInfo', // 修改数据
       save: '/rbac/system/user/save.do', // 用户保存
-      delete: '/rbac/user/deleteTicketList', // 删除用户
-      detail: '/rbac/system/user/detail.do', // 获取用户详情
-      roleList: '/rbac/role/selectByRoleList', // 查询全部角色列表
+      delete: '/rbac/userInfo/deleteUserInfo', // 删除用户
+      detail: '/rbac/userInfo/selectUserInfoView', // 获取用户详情
+      roleList: '/rbac/role/selectRoleList', // 查询全部角色列表
       assignRole: '/rbac/user/assignRole' // 用户关联角色
     },
     // 角色权限管理
