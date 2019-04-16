@@ -42,7 +42,7 @@ export default {
     kaijuBtn() {
       this.loading = true
       const args = Object.assign({}, this.form, {
-        xsfNsrsbh: this.org.nsrsbh,
+        xsfNsrsbh: this.org.taxNum,
         xsfMc: this.org.mc,
         xsfDzdh: this.org.zcDzdh,
         xsfYhzh: this.org.khhMczh,

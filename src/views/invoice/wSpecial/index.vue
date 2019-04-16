@@ -80,7 +80,7 @@
         @current-change="handleCurrentChange"/>
     </div>
     <Bill-detail :show-dialog="showBillDialog" :table-data="fppmShowData" @close-dialog="closeBillDetail"/>
-    <Order-detail :show-dialog="showOrderDialog" :table-data="fppmShowData" @close-dialog="closeBillDetail"/>
+    <Order-detail :show-dialog="showOrderDialog" :current-fp-id="currentFpId" @close-dialog="closeBillDetail"/>
     <!--发票查看弹窗-->
     <el-dialog :visible.sync="showBillPreview" title="发票查看" width="1280px">
       <fppmShow :formdata="fppmShowData" :is-all-readonly="true"/>
@@ -92,7 +92,7 @@
 </template>
 
 <script>
-import { initTableList, invoice, batchInvoice, backInvoicePre, exportData, getOrderDetail } from '@/api/invoice/inovicePre'
+import { initTableList, invoice, batchInvoice, backInvoicePre, exportData } from '@/api/invoice/inovicePre'
 import BillDetail from '@/components/invoice/billDetail'
 import OrderDetail from '@/components/invoice/orderDetail'
 import { arrayToMapField } from '@/utils/public'
@@ -113,8 +113,7 @@ export default {
       // 查询条件
       listQuery: {
         currentPage: 1,
-        pageSize: 10,
-        fplx: this.$store.getters.fplx_spe
+        pageSize: 10
       },
       totalCount: 0,
       // 加载动画是否显示
@@ -126,14 +125,15 @@ export default {
       // 发票明细
       fppmShowData: [],
       // 发票类型
-      fplx: this.$store.getters.fplx_spe
+      fplx: this.$store.getters.fplx_spe,
+      // 当前订单ID
+      currentFpId: 0
     }
   },
   computed: {
     ...mapGetters([
       'dictList',
-      'org',
-      'info'
+      'org'
     ]),
     SYS_FPLX() {
       return arrayToMapField(this.dictList['SYS_FPLX'], 'code', 'name')
@@ -146,7 +146,11 @@ export default {
     // 查询
     initList() {
       this.listLoading = true
-      initTableList(this.listQuery).then(res => {
+      const args = Object.assign({}, this.listQuery, {
+        xsfNsrsbh: this.org.taxNum,
+        fplx: this.$store.getters.fplx_spe
+      })
+      initTableList(args).then(res => {
         this.listLoading = false
         this.dataList = res.data.list
         this.totalCount = res.data.count
@@ -163,7 +167,6 @@ export default {
       this.listQuery = {
         currentPage: 1,
         pageSize: 10,
-        fplx: this.$store.getters.fplx_spe,
         gmfMc: '',
         djbh: '',
         xmmc: ''
@@ -264,16 +267,7 @@ export default {
     },
     // 订单明细
     orderDetail(rowData) {
-      const orderParam = {
-        id: rowData.id
-      }
-      getOrderDetail(orderParam).catch(err => {
-        this.$message({
-          message: err,
-          type: 'error'
-        })
-        this.listLoading = false
-      })
+      this.currentFpId = rowData.id
       this.showOrderDialog = true
     },
     // 关闭订单明细
