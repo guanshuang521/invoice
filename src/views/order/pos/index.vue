@@ -55,9 +55,12 @@
           label="折扣金额"
           align="center"/>
         <el-table-column
-          prop="SYS_POS_DDZT[ddzt]"
           label="订单状态"
-          align="center"/>
+          align="center">
+          <template slot-scope="scope">
+            {{ SYS_POS_DDZT[scope.row.ddzt] }}
+          </template>
+        </el-table-column>
         <el-table-column
           prop="rksj"
           label="下载时间"
@@ -231,7 +234,7 @@ export default {
       this.listLoading = true
       getPoslist(this.searchParams).then(res => {
         this.loading = false
-        this.total = res.data.count
+        this.totalCount = res.data.count
         this.tableList = res.data.list
       }).catch(err => {
         this.$message({
