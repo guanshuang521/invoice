@@ -193,8 +193,8 @@
       title="发票推送"
       width="400px">
       <el-form ref="sendForm" :model="sendForm" :rules="sendFormRules" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="邮箱" prop="yx">
-          <el-input v-model="sendForm.yx" type="text" size="mini"/>
+        <el-form-item label="邮箱" prop="gmfDzyx">
+          <el-input v-model="sendForm.gmfDzyx" type="text" size="mini"/>
         </el-form-item>
         <el-form-item label="手机号" prop="sjh">
           <el-input v-model="sendForm.sjh" type="text" size="mini"/>
@@ -222,6 +222,7 @@ export default {
   },
   data() {
     return {
+      closeOnClickModal: false,
       // 列表总条数
       totalCount: 0,
       // 列表查询条件
@@ -287,8 +288,20 @@ export default {
       hzxxbbh: '',
       // 推送表单
       sendForm: {
-        yx: '',
-        sjh: ''
+        sjh: '',
+        fpDm: '',
+        fpHm: '',
+        gmfDzyx: ''
+      },
+      sendFormRules: {
+        gmfDzyx: [{
+          required: true, message: '邮箱不能为空', trigger: 'blur'
+        }],
+        sjh: [
+          {
+            pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号码', trigger: 'blur'
+          }
+        ]
       }
     }
   },
@@ -409,11 +422,21 @@ export default {
       })
     },
     // 推送
-    sendMsg() {
+    sendMsg(data) {
       this.tsdialogVisible = true
+      this.sendForm.fpDm = data.fpDm
+      this.sendForm.fpHm = data.fpHm
     },
     sendMsgSubmit() {
-      sendMsg().then().catch()
+      this.$refs['sendForm'].validate((valid) => {
+        if (valid) {
+          sendMsg(this.sendForm).then(res => {
+            this.$message.success(res.message)
+          }).catch(err => {
+            this.$message.error(err)
+          })
+        }
+      })
     },
     // 发票验证
     validate() {

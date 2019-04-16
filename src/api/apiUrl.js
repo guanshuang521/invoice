@@ -135,7 +135,7 @@ const apiPath = {
       // 开具电票
       makeEInvoice: '/invoice/invoice/makeEInvoice',
       // 下载
-      download: ''
+      download: '/invoice/invoice/downloadSinglePdf'
     }
   },
 
@@ -164,7 +164,7 @@ const apiPath = {
       passBackInvoice: '/invoice/invoice/passBackInvoice', // 数据回传
       fpDetail: '/invoice/invoice/getInvoiceByHmDm', // 获取发票详情
       reInvoice: '/invoice/invoice/voidedCheckAndReInvoice', // 发票作废重开
-      sendMsg: '/invoice/invoice/sendMsg' // 发票推送
+      sendMsg: '/invoice/invoice/sendEInoviceEmail' // 发票推送
     },
     oOrdinary: {
       list: '/invoice/invoice/getInvoiceListPage',
