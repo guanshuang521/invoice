@@ -124,7 +124,7 @@ export default {
             kplx: '0', // 开票类型
             fpDm: '', // 发票代码
             fpHm: '', // 发票号码
-            hsbz: '1', // 含税标识
+            hsbz: '0', // 含税标识
             xsfId: this.org.id, // ？
             xsfBmid: this.org.id, // ？
             xsfBmmc: this.org.name, // ？

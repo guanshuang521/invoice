@@ -137,7 +137,7 @@
           width="300">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="checkFP(scope.row)">查看</el-button>
-            <el-button type="primary" size="mini" @click="reInvoice(scope.row)">作废重开</el-button>
+            <el-button v-if="scope.row.fpzt !== '4'" type="primary" size="mini" @click="reInvoice(scope.row)">作废重开</el-button>
             <el-button type="primary" size="mini" @click="hcInvoice(scope.row)">红冲发票</el-button>
           </template>
         </el-table-column>
@@ -313,6 +313,8 @@ export default {
       fpzfShowList: [],
       // 发票票面展示数据
       fppmShowData: {},
+      // 作废重开原始数据
+      fppmZfckDataBefore: {},
       // 作废重开数据
       fppmZfckData: {},
       // 红冲发票数据
@@ -384,14 +386,20 @@ export default {
     reInvoice(val) {
       fpDetail({ fpDm: val.fpDm, fpHm: val.fpHm }).then(res => {
         this.zfckDialogVisible = true
-        this.fppmZfckData = res.data
+        this.fppmZfckData = JSON.parse(JSON.stringify(res.data))
+        this.fppmZfckDataBefore = JSON.parse(JSON.stringify(res.data))
       }).catch(err => {
         this.$message.error(err)
       })
     },
     // 作废重开提交
     reInvoiceSubmit() {
-      const args = Object.assign({}, this.fppmZfckData)
+      const args = Object.assign({}, this.fppmZfckDataBefore)
+      args.zfInvoice = Object.assign({}, this.fppmZfckData, {
+        zflx: 1,
+        zfr: this.info.userName,
+        zfyy: ''
+      })
       this.listLoading = true
       reInvoice(args).then(res => {
         this.zfckDialogVisible = false
