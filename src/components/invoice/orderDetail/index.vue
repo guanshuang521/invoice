@@ -6,6 +6,7 @@
 <template>
   <el-dialog
     :visible.sync="show"
+    :close-on-click-modal="closeOnClickModal"
     title="订单明细"
     width="1120px"
     @close="closeDialog">
@@ -93,6 +94,8 @@ export default {
   },
   data() {
     return {
+      // 控制弹窗点击空白位置不关闭
+      closeOnClickModal: false,
       searchParams: {
         currentPage: 1,
         pageSize: 10

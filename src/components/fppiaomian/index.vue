@@ -204,7 +204,7 @@
     </div>
 
     <!--选择税收编码dialog-->
-    <el-dialog :visible.sync="isgoods" :before-close="closeIsGoods" title="选择税收编码" width="800px" class="goodsDialog">
+    <el-dialog :visible.sync="isgoods" :close-on-click-modal="closeOnClickModal" :before-close="closeIsGoods" title="选择税收编码" width="800px" class="goodsDialog">
       <div class="dialog_item">
         <div class="search_item">
           <div class="search_label">商品税收编码：</div>
@@ -278,6 +278,8 @@ export default {
   },
   data() {
     return {
+      // 控制弹窗点击空白位置不关闭
+      closeOnClickModal: false,
       dataConversion: dataConversion,
       globaldata: globaldata,
       // 票面form信息

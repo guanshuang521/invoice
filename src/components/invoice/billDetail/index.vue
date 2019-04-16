@@ -6,6 +6,7 @@
 <template>
   <el-dialog
     :visible.sync="show"
+    :close-on-click-modal="closeOnClickModal"
     title="发票明细"
     width="1070px"
     @close="closeDialog">
@@ -73,6 +74,12 @@ export default {
     'tableData': {
       type: [Array, Object],
       required: true
+    }
+  },
+  data() {
+    return {
+      // 控制弹窗点击空白位置不关闭
+      closeOnClickModal: false
     }
   },
   computed: {

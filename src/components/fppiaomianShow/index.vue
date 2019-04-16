@@ -197,7 +197,7 @@
     </div>
 
     <!--选择购买方名称dialog-->
-    <el-dialog :visible.sync="isgmfmcDialog" title="选择购买方名称" width="810px" class="gmfmcDialog">
+    <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="isgmfmcDialog" title="选择购买方名称" width="810px" class="gmfmcDialog">
       <div class="dialog_item">
         <div class="search_item">
           <div class="search_label">客户编码：</div>
@@ -251,7 +251,7 @@
     </el-dialog>
 
     <!--添加客户信息dialog-->
-    <el-dialog :visible.sync="isyhxx" title="添加客户信息">
+    <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="isyhxx" title="添加客户信息">
       <div class="search_items">
         <div class="search_item">
           <div class="search_label"><span class="required">*</span>客户编号：</div>
@@ -286,7 +286,7 @@
     </el-dialog>
 
     <!--选择税收编码dialog-->
-    <el-dialog :visible.sync="isgoods" :before-close="closeIsGoods" title="选择税收编码" width="800px" class="goodsDialog">
+    <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="isgoods" :before-close="closeIsGoods" title="选择税收编码" width="800px" class="goodsDialog">
       <div class="dialog_item">
         <div class="search_item">
           <div class="search_label">商品税收编码：</div>
@@ -368,6 +368,8 @@ export default {
   },
   data() {
     return {
+      // 控制弹窗点击空白位置不关闭
+      closeOnClickModal: false,
       dataConversion: dataConversion,
       globaldata: globaldata,
       kprq: '',

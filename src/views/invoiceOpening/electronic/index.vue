@@ -48,6 +48,7 @@ export default {
   },
   data() {
     return {
+      // 控制弹窗点击空白位置不关闭
       closeOnClickModal: false,
       fplx: this.$store.getters.fplx_ele, // 电票 026
       // 开具数据
