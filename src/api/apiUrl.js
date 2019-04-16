@@ -50,7 +50,8 @@ const apiPath = {
       deleteRole: '/rbac/role/deleteRole', // 角色信息删除
       insertRole: '/rbac/role/insertRole', // 角色信息新增
       detail: '/rbac/role/selectRoleInfo', // 获取角色信息
-      updateRole: '/rbac/role/updateRole' // 角色信息编辑
+      updateRole: '/rbac/role/updateRole', // 角色信息编辑
+      getRources: '/rbac/menu/selectResourcesList' // 获取所有菜单
     },
     // 开票规则模板
     template: {
