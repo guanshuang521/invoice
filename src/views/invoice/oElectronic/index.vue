@@ -460,19 +460,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        exportAll(this.listQuery).then(res => {
-          const content = res
-          const blob = new Blob([content])
-          const fileName = '项目信息表.xls'
-          if ('download' in document.createElement('a')) { // 非IE下载
-            const elink = document.createElement('a')
-            elink.download = fileName
-            elink.style.display = 'none'
-            elink.href = URL.createObjectURL(blob)
-            document.body.appendChild(elink)
-            elink.click()
-          }
-        }).catch()
+        exportAll(this.listQuery)
       })
     },
     // 数据回传
@@ -483,6 +471,7 @@ export default {
         type: 'warning'
       }).then(() => {
         this.loading = true
+        this.listQuery.xsfNsrsbh = this.org.taxNum
         passBackInvoice(this.listQuery).then(res => {
           this.loading = false
           this.$message.success(res.message)
@@ -506,8 +495,7 @@ export default {
         kprq_end: '',
         zfrq_start: '',
         zfrq_end: '',
-        fplx: '026',
-        xsfNsrsbh: '500102020160826'
+        fplx: '026'
       }
       this.initList()
     },

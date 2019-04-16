@@ -581,7 +581,8 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        exportAll()
+        this.listQuery.xsfNsrsbh = this.org.taxNum
+        exportAll(this.listQuery)
       })
     },
     // 数据回传
@@ -616,7 +617,7 @@ export default {
         zfrq_start: '',
         zfrq_end: '',
         fplx: '004',
-        xsfNsrsbh: '500102020160826'
+        xsfNsrsbh: this.org.taxNum
       }
       this.initList()
     },

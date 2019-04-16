@@ -315,6 +315,7 @@ export default {
         xsfNsrsbh: this.org.taxNum,
         fplx: this.$store.getters.fplx_spe
       })
+      debugger
       exportData(args).catch(err => {
         this.$message({
           message: err,

@@ -37,7 +37,7 @@ export function exportAll(data) {
   for (const item in data) {
     params.push(item + '=' + data[item])
   }
-  window.open(apiPath.invoice.invoicePre.exportInvoicePre + '?' + params.join('&'))
+  window.open(apiPath.invoice.oSpecial.exportAll + '?' + params.join('&'))
 }
 // 发票验证
 export function validate(data) {
