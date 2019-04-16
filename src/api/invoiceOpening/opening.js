@@ -28,3 +28,11 @@ export function print(params) {
     data: params
   })
 }
+// 电票下载
+export function download(data) {
+  return request({
+    url: apiPath.invoiceOpening.opening.download,
+    method: 'post',
+    data
+  })
+}

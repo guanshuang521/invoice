@@ -220,14 +220,14 @@
     </el-dialog>
     <!--发票查看弹窗-->
     <el-dialog :visible.sync="fpckDialogVisible" title="发票查看" width="1280px">
-      <fppmShow :formdata="fppmShowData" :is-all-readonly="true"/>
+      <fppmShow :formdata="fppmShowData" :readonly="true"/>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button type="primary" size="mini" @click="fpckDialogVisible = false">关闭</el-button>
       </div>
     </el-dialog>
     <!--作废重开弹窗-->
     <el-dialog :visible.sync="zfckDialogVisible" title="作废重开" width="1280px">
-      <fppmShow :formdata="fppmZfckData" :is-sph-readonly="true"/>
+      <fppmShow :formdata="fppmZfckData" :readonly="false"/>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button type="primary" size="mini" @click="reInvoiceSubmit">开具</el-button>
       </div>
@@ -235,12 +235,12 @@
     <!--红冲发票弹窗-->
     <el-dialog :visible.sync="hckpDialogVisible" title="红冲开票" width="1280px">
       <el-form ref="hcfpForm" :model="hcfpForm" :rules="hcfpFormRules" size="mini" label-width="130px">
-        <el-form-item label="红字信息表编号：" prop="hzxxbbh" size="small">
+        <el-form-item label="红字信息表编号：" prop="hzxxbbh" size="small" style="margin-bottom: 0">
           <el-input v-model="hcfpForm.hzxxbbh" placeholder="请输入" style="width: 182px"/>
         </el-form-item>
       </el-form>
-      <fppmShow :formdata="fppmHckpData" :is-sph-readonly="true"/>
-      <div slot="footer" class="dialog-footer" align="center">
+      <fppmShow :formdata="fppmHckpData" :readonly="false"/>
+      <div slot="footer" class="dialog-footer" align="center" style="padding-top: 0">
         <el-button type="primary" size="mini" @click="hcInvoiceSubmit">开具</el-button>
       </div>
     </el-dialog>
@@ -383,7 +383,6 @@ export default {
     },
     // 查看发票
     checkFP(val) {
-      console.log(val)
       fpDetail({ fpDm: val.fpDm, fpHm: val.fpHm }).then(res => {
         console.log(res)
         this.fpckDialogVisible = true
@@ -649,6 +648,9 @@ export default {
       .button-container{
         margin-bottom: 20px;
       }
+    }
+    /deep/ .el-dialog__body{
+      padding: 0!important;
     }
   }
 </style>

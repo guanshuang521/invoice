@@ -15,7 +15,7 @@
         <li/>
       </ul>
     </div>
-    <div :class="{readonly: isAllReadonly}" class="pm_all">
+    <div class="pm_all">
       <div class="fpTitle">
         <div class="fpTitleLeft">
           <img v-if="formdata.fplx == this.$store.getters.fplx_ele" src="../../assets/common/logo_dian.png">
@@ -36,7 +36,7 @@
         </div>
       </div>
       <div class="fpTable">
-        <div class="tableTop">
+        <div :class="{readonly: readonly}" class="tableTop">
           <div class="tbT gmfText">购<br>买<br>方</div>
           <div class="tbT gmfTable">
             <div class="tbmc">
@@ -44,9 +44,9 @@
               <el-select
                 v-model="formdata.gmfMc"
                 :remote-method="remoteSearch"
+                :clearable="!readonly"
                 filterable
                 remote
-                clearable
                 reserve-keyword
                 allow-create
                 size="mini"
@@ -76,7 +76,7 @@
           <div class="tbT mmqText">密<br>码<br>区</div>
           <div class="tbT mmqTable"/>
         </div>
-        <div :class="{readonly: isSphReadonly}" class="tableLines">
+        <div class="tableLines">
           <ul class="linesTitle">
             <li style="width:5%">行号</li>
             <li style="width:20%">货物或应税劳务、服务名称</li>
@@ -93,7 +93,7 @@
             <ul v-for="(item, index) in formdata.lines" :key="item.id" class="linesConten">
               <li style="width:5%">{{ index + 1 }}</li>
               <li style="width:20%;position: relative;">
-                <input v-model="formdata.lines[index].xmmc">
+                <input v-model="formdata.lines[index].xmmc" class="readonly">
               </li>
               <li style="width:8%">
                 <input v-model="formdata.lines[index].ggxh" readOnly>
@@ -102,13 +102,13 @@
                 <input v-model="formdata.lines[index].dw" readOnly>
               </li>
               <li style="width:9%">
-                <input v-model="formdata.lines[index].xmsl" @blur="inputBlur(index, 'xmsl', $event)">
+                <input v-model="formdata.lines[index].xmsl" class="readonly" @blur="inputBlur(index, 'xmsl', $event)">
               </li>
               <li style="width:10%">
-                <input v-model="formdata.lines[index].hsxmdj" @blur="inputBlur(index, 'xmdj', $event)">
+                <input v-model="formdata.lines[index].hsxmdj" class="readonly" @blur="inputBlur(index, 'xmdj', $event)">
               </li>
               <li style="width:10%">
-                <input v-model="formdata.lines[index].hsxmje" @blur="inputBlur(index, 'xmje', $event)">
+                <input v-model="formdata.lines[index].hsxmje" class="readonly" @blur="inputBlur(index, 'xmje', $event)">
               </li>
               <li style="width:8%">
                 <input v-model="formdata.lines[index].sl" readOnly>
@@ -136,7 +136,7 @@
             <li style="width:30%">￥{{ formdata.jshj }}</li>
           </ul>
         </div>
-        <div :class="{readonly: isSphReadonly}" class="tableBottom">
+        <div :class="{readonly: readonly}" class="tableBottom">
           <div class="tbB xsfText">销<br>售<br>方</div>
           <div class="tbB xsfTable">
             <div class="tbmc">
@@ -361,13 +361,9 @@ export default {
       type: String,
       default: ''
     },
-    'isAllReadonly': {
+    'readonly': {
       type: Boolean,
-      default: false
-    },
-    'isSphReadonly': {
-      type: Boolean,
-      default: false
+      default: true
     }
   },
   data() {
@@ -1221,7 +1217,6 @@ export default {
     width: 100%;
     height: auto;
     font-size: 12px;
-    margin: 10px auto 20px;
     color: #4DA1FF;
     p{
       line-height: 18px;

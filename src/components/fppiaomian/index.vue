@@ -103,13 +103,13 @@
                 <input v-model="formdata.lines[index].dw" readOnly>
               </li>
               <li style="width:9%">
-                <input v-model="formdata.lines[index].xmsl" @blur="inputBlur(index, 'xmsl', $event)">
+                <input v-model="formdata.lines[index].xmsl" type="number" @blur="inputBlur(index, 'xmsl', $event)">
               </li>
               <li style="width:10%">
-                <input v-model="formdata.lines[index].hsxmdj" @blur="inputBlur(index, 'xmdj', $event)">
+                <input v-model="formdata.lines[index].hsxmdj" type="number" @blur="inputBlur(index, 'xmdj', $event)">
               </li>
               <li style="width:10%">
-                <input v-model="formdata.lines[index].hsxmje" @blur="inputBlur(index, 'xmje', $event)">
+                <input v-model="formdata.lines[index].hsxmje" type="number" @blur="inputBlur(index, 'xmje', $event)">
               </li>
               <li style="width:8%">
                 <input v-model="formdata.lines[index].sl" readOnly>
@@ -414,7 +414,6 @@ export default {
       return this.org.bankName + ' ' + this.org.bankCode
     },
     kpr() {
-      console.log(this.info)
       return this.info.userName
     }
   },
@@ -422,7 +421,6 @@ export default {
     'formdata.lines': {
       deep: true,
       handler(newValue, oldValue) {
-        console.log(newValue)
         let totalHjje = 0
         let totalHjse = 0
         newValue.forEach(item => {
@@ -697,15 +695,23 @@ export default {
     // 金额，税额计算
     calculateMoney(index, xmsl, xmdj, xmdjShow, hsxmdj, xmjeShow, xmje, hsxmje, sl, se, currentInput) {
       const _thisLines = this.formdata.lines
-      // 含税金额
-      _thisLines[index].hsxmje = hsxmdj * xmsl
-      // 税额
-      _thisLines[index].se = Number(_thisLines[index].hsxmje * sl / (1 + sl)).toFixed(2)
-      // 不含税金额
-      _thisLines[index].xmje = _thisLines[index].hsxmje - _thisLines[index].se
-      // 不含税单价
-      _thisLines[index].xmdj = hsxmdj - Number(_thisLines[index].hsxmdj * sl / (1 + sl)).toFixed(2)
-      this.calculatePrice(index, xmsl, xmdj, xmdjShow, hsxmdj, xmje, xmjeShow, hsxmje, sl, currentInput)
+      if (currentInput === 'xmje') {
+        _thisLines[index].hsxmdj = ''
+        _thisLines[index].xmdj = ''
+        _thisLines[index].xmsl = ''
+        _thisLines[index].se = Number(_thisLines[index].hsxmje * sl / (1 + sl)).toFixed(2)
+        _thisLines[index].xmje = _thisLines[index].hsxmje - _thisLines[index].se
+      } else {
+        // 含税金额
+        _thisLines[index].hsxmje = hsxmdj * xmsl
+        // 税额
+        _thisLines[index].se = Number(_thisLines[index].hsxmje * sl / (1 + sl)).toFixed(2)
+        // 不含税金额
+        _thisLines[index].xmje = _thisLines[index].hsxmje - _thisLines[index].se
+        // 不含税单价
+        _thisLines[index].xmdj = hsxmdj - Number(_thisLines[index].hsxmdj * sl / (1 + sl)).toFixed(2)
+      }
+      // this.calculatePrice(index, xmsl, xmdj, xmdjShow, hsxmdj, xmje, xmjeShow, hsxmje, sl, currentInput)
     },
     // 处理单价
     calculatePrice(index, xmsl, xmdj, xmdjShow, hsxmdj, xmje, xmjeShow, hsxmje, sl, currentInput) {
@@ -714,7 +720,8 @@ export default {
       if (Number(xmsl) !== 0 && Number(xmdj) !== 0) {
         // 如果是金额输入框
         if (currentInput === 'xmje' && Number(xmje) !== 0) {
-          _thisLines[index].xmdj = Math.abs(this.dealWithDataShow(xmje / xmsl))
+          _thisLines[index].hsxmdj = 0
+          _thisLines[index].xmsl = 0
           // _thisLines[index].hsxmdj = Math.abs(this.dealWithDataShow(hsxmje / xmsl));
         } else {
           _thisLines[index].xmje = Number(xmdj * xmsl).toFixed(2)
@@ -1143,7 +1150,6 @@ export default {
     width: 100%;
     height: auto;
     font-size: 12px;
-    margin: 10px auto 20px;
     color: #4DA1FF;
     p{
       line-height: 18px;

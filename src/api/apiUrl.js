@@ -133,7 +133,9 @@ const apiPath = {
       // 开具纸票
       makeInvoicePaper: '/invoice/invoice/makeInvoicePaper',
       // 开具电票
-      makeEInvoice: '/invoice/invoice/makeEInvoice'
+      makeEInvoice: '/invoice/invoice/makeEInvoice',
+      // 下载
+      download: ''
     }
   },
 
