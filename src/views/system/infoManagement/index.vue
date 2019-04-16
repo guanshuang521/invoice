@@ -8,7 +8,7 @@
     v-loading.fullscreen.lock="loading"
     element-loading-text="加载中"
     element-loading-spinner="el-icon-loading"
-    element-loading-background="rgba(0, 0, 0, 0.8)"
+    element-loading-background="rgba(0, 0, 0, 0.6)"
     class="infoManagement-container">
     <div class="filter-container">
       <el-form :inline="true" :model="searchParams" class="demo-form-inline">

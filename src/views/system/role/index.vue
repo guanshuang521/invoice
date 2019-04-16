@@ -240,6 +240,8 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           var params = JSON.parse(JSON.stringify(this.form))
+          params.roleId = params.id
+          delete params.id
           params.resourceId = this.resourceId
           updateRole(params).then(response => {
             this.fetchData()

@@ -9,7 +9,7 @@
     class="template-container"
     element-loading-text="加载中"
     element-loading-spinner="el-icon-loading"
-    element-loading-background="rgba(0, 0, 0, 0.8)">
+    element-loading-background="rgba(0, 0, 0, 0.6)">
     <div class="button-container">
       <el-button type="primary" size="mini" class="dashboard-button" @click="openDialog">新增</el-button>
       <el-button type="primary" size="mini" class="dashboard-button" @click="templateDelete">删除</el-button>
