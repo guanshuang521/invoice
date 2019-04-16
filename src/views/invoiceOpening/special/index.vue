@@ -11,7 +11,7 @@
         <fppm :pmfplx="fplx" @getformdata="pmformdata"/>
       </div>
     </form>
-    <download-or-print :show="xzdyDialogVisible" :fp-data="fpdata"/>
+    <download-or-print :show="xzdyDialogVisible" :fp-data="fpdata" @closeDialog="closeDownload"/>
   </div>
 </template>
 
@@ -118,6 +118,11 @@ export default {
     },
     pmformdata: function(msg) {
       this.form = msg
+    },
+    // 关闭下载弹窗
+    closeDownload(msg) {
+      console.log(msg)
+      this.xzdyDialogVisible = msg
     }
   }
 }

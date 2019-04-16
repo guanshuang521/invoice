@@ -19,7 +19,8 @@ module.exports = {
         changeOrigin: true
       },
       '/invoiceJob':{
-        target: 'http://192.168.7.50:50008', //测试环境
+        // target: 'http://192.168.7.50:50008', //测试环境
+        target: 'http://192.168.2.130:8080',
         changeOrigin: true
       },
       '/invoice':{

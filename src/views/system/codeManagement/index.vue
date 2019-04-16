@@ -200,7 +200,7 @@ export default {
       this.getList()
     },
     exportData() { // 导出数据
-      const url = apiPath.system.codeManagement.exportData + '?spbm=' + this.searchParams.spbm + '&spmc=' + this.searchParams.spmc
+      const url = apiPath.system.codeManagement.exportData + '?shflbm=' + this.searchParams.shflbm + '&spmc=' + this.searchParams.spmc
       const downurl = url + '&x-access-token=' + getToken()
       window.open(downurl)
     },

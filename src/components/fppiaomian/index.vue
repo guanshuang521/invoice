@@ -633,6 +633,10 @@ export default {
       this.formdata.lines[this.goods.dialogGoodsIndex]['spbh'] = item.id
       this.formdata.lines[this.goods.dialogGoodsIndex]['sl'] = item.sl
       this.formdata.lines[this.goods.dialogGoodsIndex]['hsxmdj'] = item.dj
+      // 清空数量、金额、税额
+      this.formdata.lines[this.goods.dialogGoodsIndex]['xmsl'] = ''
+      this.formdata.lines[this.goods.dialogGoodsIndex]['hsxmje'] = ''
+      this.formdata.lines[this.goods.dialogGoodsIndex]['se'] = ''
       this.isgoods = false
     },
     // 确认回填税收编码
@@ -644,6 +648,10 @@ export default {
         this.formdata.lines[this.goods.dialogGoodsIndex]['spbh'] = checked.spbh
         this.formdata.lines[this.goods.dialogGoodsIndex]['commodityId'] = checked.spmc
         this.formdata.lines[this.goods.dialogGoodsIndex]['sl'] = checked.sl
+        // 清空数量、金额、税额
+        this.formdata.lines[this.goods.dialogGoodsIndex]['xmsl'] = ''
+        this.formdata.lines[this.goods.dialogGoodsIndex]['hsxmje'] = ''
+        this.formdata.lines[this.goods.dialogGoodsIndex]['se'] = ''
         this.isgoods = false
       }
     },
