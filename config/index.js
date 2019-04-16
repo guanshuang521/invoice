@@ -29,12 +29,6 @@ module.exports = {
         // target: 'http://192.168.2.253:8080', //测试环境
         // target: 'http://192.168.2.240:8080',
         changeOrigin: true
-      },
-      '/print':{
-        target: 'http://127.0.0.1:2999', //测试环境
-        // target: 'http://192.168.2.253:8080', //测试环境
-        // target: 'http://192.168.2.240:8080',
-        changeOrigin: true
       }
     },
 
