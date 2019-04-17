@@ -45,3 +45,10 @@ export function updateRole(data) {
     data
   })
 }
+// 获取可以分配的菜单路由
+export function getRources() {
+  return request({
+    url: apiPath.system.role.getRources,
+    method: 'get'
+  })
+}
