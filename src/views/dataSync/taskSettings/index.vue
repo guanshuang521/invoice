@@ -277,11 +277,8 @@ export default {
       this.$refs['manualForm'].validate((valid) => {
         if (valid) {
           this.loading = true
-          submitSync(this.manualForm).then(res => {
-            this.manualForm = {
-              dataType: '',
-              dataSource: ''
-            }
+          const args = Object.assign({}, this.manualForm)
+          submitSync(args).then(res => {
             this.loading = false
             this.$message.success(res.message)
           }).catch(err => {
