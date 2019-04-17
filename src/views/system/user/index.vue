@@ -253,7 +253,7 @@ export default {
       }).then(() => {
         const params = {
           id: row.id,
-          newpassword: '88888888'
+          newPassword: md5('88888888')
         }
         updatePassword(params).then(res => {
           this.$message({
@@ -425,10 +425,7 @@ export default {
         this.userInfo.role = res.data.userRoleList
         this.userInfo.auth = res.data.userOrgList
         this.treeArray = res.data.userOrgList
-        this.treeArray.forEach(item => {
-          console.log(item.id)
-          this.authArray.push(item.id)
-          console.log(this.authArray)
+        this.treeArray.forEach((item) => {
         })
       }).catch(err => {
         this.listLoading = false
