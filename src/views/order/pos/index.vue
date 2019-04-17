@@ -101,7 +101,7 @@
           <el-input v-model="jshj" disabled="disabled"/>
         </el-form-item>
         <el-form-item label="预制发票类型" prop="fplx">
-          <el-select v-model="dynamicValidateForm.fplx" placeholder="请选择预制发票类型">
+          <el-select v-model="dynamicValidateForm.fplx" placeholder="请选择预制发票类型" style="width: 100%">
             <el-option v-for="option in dictList['SYS_FPLX']" :key="option.id" :value="option.code" :label="option.name"/>
           </el-select>
         </el-form-item>

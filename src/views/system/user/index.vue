@@ -54,7 +54,7 @@
           align="center"
           fixed="right"
           label="操作"
-          width="120">
+          width="200">
           <template slot-scope="scope">
             <el-button type="primary" size="small" @click="editUser(scope.row)">编辑</el-button>
             <el-button type="primary" size="small" @click="resetPassword(scope.row)">重置密码</el-button>

@@ -27,6 +27,7 @@
         <el-form-item label="开票日期起">
           <el-date-picker
             v-model="listQuery.kprq_start"
+            value-format="yyyy-MM-dd"
             type="date"
             size="small"
             class="filter-item"
@@ -35,6 +36,7 @@
         <el-form-item label="开票日期止">
           <el-date-picker
             v-model="listQuery.kprq_end"
+            value-format="yyyy-MM-dd"
             type="date"
             size="small"
             class="filter-item"
@@ -43,6 +45,7 @@
         <el-form-item label="作废日期起">
           <el-date-picker
             v-model="listQuery.zfrq_start"
+            value-format="yyyy-MM-dd"
             type="date"
             size="small"
             class="filter-item"
@@ -51,6 +54,7 @@
         <el-form-item label="作废日期止">
           <el-date-picker
             v-model="listQuery.zfrq_end"
+            value-format="yyyy-MM-dd"
             type="date"
             size="small"
             class="filter-item"

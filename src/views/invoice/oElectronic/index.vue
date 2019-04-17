@@ -27,6 +27,7 @@
         <el-form-item label="开票日期起">
           <el-date-picker
             v-model="listQuery.kprq_start"
+            value-format="yyyy-MM-dd"
             type="date"
             size="small"
             class="filter-item"
@@ -35,22 +36,7 @@
         <el-form-item label="开票日期止">
           <el-date-picker
             v-model="listQuery.kprq_end"
-            type="date"
-            size="small"
-            class="filter-item"
-            placeholder="请选择"/>
-        </el-form-item>
-        <el-form-item label="作废日期起">
-          <el-date-picker
-            v-model="listQuery.zfrq_start"
-            type="date"
-            size="small"
-            class="filter-item"
-            placeholder="请选择"/>
-        </el-form-item>
-        <el-form-item label="作废日期止">
-          <el-date-picker
-            v-model="listQuery.zfrq_end"
+            value-format="yyyy-MM-dd"
             type="date"
             size="small"
             class="filter-item"
@@ -210,7 +196,7 @@
 
 <script>
 import { getList, retrieve, exportAll, validate, passBackInvoice, fpDetail, reInvoice, sendMsg } from '@/api/invoice/oSpecial'
-import { invoice } from '@/api/invoiceOpening/opening'
+import { invoiceEle } from '@/api/invoiceOpening/opening'
 import { arrayToMapField } from '@/utils/public'
 import { mapGetters } from 'vuex'
 import fppmShow from '@/components/fppiaomianShow'
@@ -409,6 +395,7 @@ export default {
           item.se = -item.se
           item.hsxmje = -item.hsxmje
           item.xmje = -item.xmje
+          item.xmsl = -item.xmsl
         })
         this.fppmHckpData = res.data
       }).catch(err => {
@@ -420,7 +407,7 @@ export default {
       const args = Object.assign({}, this.fppmHckpData)
       this.listLoading = true
       args.hzxxbbh = this.hzxxbbh
-      invoice(args).then(res => {
+      invoiceEle(args).then(res => {
         this.hckpDialogVisible = false
         this.listLoading = false
         this.$message.success(res.message)
