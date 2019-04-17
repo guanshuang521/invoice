@@ -12,7 +12,7 @@ module.exports = {
     proxyTable: {
       '/rbac':{
         // target: 'http://192.168.7.50:50009', //测试环境
-        target: 'http://192.168.4.128:8080', //越哥
+        target: 'http://192.168.2.188:8090', //越哥
         // pathRewrite:{
         //   '^/rbac': '/'
         // },

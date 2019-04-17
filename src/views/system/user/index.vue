@@ -111,7 +111,10 @@
           </el-select>
         </el-form-item>
         <el-form-item label="终端号：" prop="terminalCode" >
-          <el-input v-model="userInfo.terminalId" placeholder="请输入"/>
+          <el-select v-model="userInfo.terminalId" placeholder="请选择">
+            <el-option v-for="option in terminalInfo" :key="option.id" :value="option.taxNum" :label="option.taxNum"/>
+          </el-select>
+          <!--<el-input v-model="userInfo.terminalId" placeholder="请输入"/>-->
         </el-form-item>
         <el-form-item label="数据权限：" prop="auth" >
           <div class="authTree">
@@ -207,7 +210,7 @@ export default {
       roleList: [],
       treeArray: [],
       authArray: [],
-      dialogVisible2: false
+      terminalInfo: ''
     }
   },
   computed: {
@@ -233,7 +236,7 @@ export default {
       selectTerminalsList(params).then(response => {
         this.loading = false
         console.log(response.data.list)
-        this.userInfo.terminalId = response.data.list.taxNum
+        this.terminalInfo = response.data.list
       }).catch(err => {
         this.loading = false
         this.$message({
@@ -241,22 +244,16 @@ export default {
           message: err.message
         })
       })
-      // this.commodityTypes.forEach(item => {
-      //   // if (item.id === this.form.shflmc) {
-      //   //   this.form.shflbm = item.shflbm
-      //   //   this.form.sl = item.sl
-      //   //   this.form.sfxsyhzc = item.sfxsyhzc
-      //   // }
-      // })
     },
-    resetPassword() {
+    resetPassword(row) {
       this.$confirm('确定要重置密码吗?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
         const params = {
-          password: '88888888'
+          id: row.id,
+          newpassword: '88888888'
         }
         updatePassword(params).then(res => {
           this.$message({
@@ -426,9 +423,12 @@ export default {
         this.loading = false
         this.userInfo = res.data
         this.userInfo.role = res.data.userRoleList
+        this.userInfo.auth = res.data.userOrgList
         this.treeArray = res.data.userOrgList
         this.treeArray.forEach(item => {
+          console.log(item.id)
           this.authArray.push(item.id)
+          console.log(this.authArray)
         })
       }).catch(err => {
         this.listLoading = false
