@@ -117,12 +117,13 @@
             size="mini"
             placeholder="请输入关键词"
             class="gfMc"
+            style="width: 100%"
             @change="remoteChange">
             <el-option
               v-for="item in gfmcData"
               :key="item.value"
               :label="item.khmc"
-              :value="item.id"/>
+              :value="item.khmc"/>
           </el-select>
         </el-form-item>
         <el-form-item label="购方税号" prop="gmfNsrsbh">

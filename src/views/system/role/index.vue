@@ -93,6 +93,7 @@
           <div class="tree-container">
             <el-tree
               ref="tree2"
+              :key="form.id"
               :data="treeData"
               :props="defaultProps"
               :filter-node-method="filterNode"
@@ -147,6 +148,7 @@ export default {
       dialogType: '',
       // 弹窗表单
       form: {
+        id: '',
         roleName: '',
         status: '',
         resourceIds: []
@@ -217,6 +219,8 @@ export default {
     addRole() {
       this.dialogVisible = true
       this.dialogType = 'add'
+      this.form.id = 0
+      this.form.resourceIds = []
     },
     // 添加角色提交
     addRoleFn(formName) { // 添加角色

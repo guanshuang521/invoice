@@ -39,7 +39,7 @@
         <el-table-column label="账号" prop="userCode" align="center"/>
         <el-table-column label="复核人" prop="reviewer" align="center"/>
         <el-table-column label="收款人" prop="receiver" align="center"/>
-        <el-table-column label="所属机构" prop="orgId" align="center"/>
+        <el-table-column label="所属机构" prop="orgName" align="center"/>
         <el-table-column label="终端号" prop="terminalId" align="center"/>
         <el-table-column
           label="用户状态"
@@ -261,6 +261,7 @@ export default {
       getNodeList({}).then(res => {
         this.loading = false
         this.orgIdOptions = res.data.list
+        this.organTreeData = {}
         this.organTreeData = arrayToTree(res.data.list, 'orgName')
       }).catch(e => {
         this.loading = false
