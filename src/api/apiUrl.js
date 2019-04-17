@@ -43,7 +43,8 @@ const apiPath = {
       detail: '/rbac/userInfo/selectUserInfoView', // 获取用户详情
       roleList: '/rbac/role/selectRoleList', // 查询全部角色列表
       assignRole: '/rbac/user/assignRole', // 用户关联角色
-      selectTerminalsList: '/rbac/terminal/selectTerminalsList '
+      selectTerminalsList: '/rbac/terminal/selectTerminalsList',
+      updatePassword: '/rbac/userInfo/updatePassword'
     },
     // 角色权限管理
     role: {

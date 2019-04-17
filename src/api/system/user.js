@@ -81,4 +81,11 @@ export function selectTerminalsList(data) {
     data
   })
 }
+export function updatePassword(data) {
+  return request({
+    url: apiPath.system.user.updatePassword,
+    method: 'post',
+    data
+  })
+}
 

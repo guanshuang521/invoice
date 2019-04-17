@@ -335,15 +335,12 @@ export default {
           type: 'success',
           message: '删除成功!'
         })
-<<<<<<< HEAD
         this.initTable()
       }).catch(() => {
         this.$message({
           type: 'info',
           message: '已取消删除'
         })
-=======
->>>>>>> 313d2773f8b1571a2e0f997dad07ed2ff8c5e682
       })
     },
     // 生成预制发票

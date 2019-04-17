@@ -54,7 +54,7 @@
           align="center"
           fixed="right"
           label="操作"
-          width="120">
+          width="200">
           <template slot-scope="scope">
             <el-button type="primary" size="small" @click="editUser(scope.row)">编辑</el-button>
             <el-button type="primary" size="small" @click="resetPassword(scope.row)">重置密码</el-button>
@@ -136,7 +136,7 @@
 </template>
 
 <script>
-import { getList, add, edit, deleteUser, getAllRoles, getUserDetail, selectTerminalsList } from '@/api/system/user'
+import { getList, add, edit, deleteUser, getAllRoles, getUserDetail, selectTerminalsList, updatePassword } from '@/api/system/user'
 import { getNodeList } from '@/api/system/organization'
 import { arrayToTree } from '@/utils/public'
 import { mapGetters } from 'vuex'
@@ -250,9 +250,30 @@ export default {
       // })
     },
     resetPassword() {
-      this.dialogVisible2 = true
+      this.$confirm('确定要重置密码吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        const params = {
+          password: '88888888'
+        }
+        updatePassword(params).then(res => {
+          this.$message({
+            type: 'success',
+            message: '重置密码成功!'
+          })
+        }).catch(err => {
+          this.listLoading = false
+          this.$message.error(err)
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     },
-    surePassword() {},
     closeDialog() {
       this.dialogVisible = false
     },
