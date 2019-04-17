@@ -192,7 +192,7 @@ const apiPath = {
   // 数据同步
   dataSync: {
     taskQuery: {
-      getList: 'invoiceJob/scheduleJob/queryScheduleJobList',
+      getList: 'invoiceJob/scheduleJob/queryScheduleJobLogList',
       exportExcel: 'invoiceJob/scheduleJobLog/exportScheduleJobLog'
     },
     taskSetting: {

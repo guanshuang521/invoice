@@ -57,7 +57,7 @@
                   v-for="item in gfList"
                   :key="item.value"
                   :label="item.khmc"
-                  :value="item.id"/>
+                  :value="item.khmc"/>
               </el-select>
             </div>
             <div class="tbnsrsbh">

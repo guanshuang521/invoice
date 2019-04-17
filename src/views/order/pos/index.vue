@@ -84,6 +84,7 @@
       :close-on-click-modal="closeOnClickModal"
       :visible.sync="dialogVisible"
       :before-close="hideDialog"
+      title="勾选生成预制发票"
       width="620px"
       custom-class="add-customer">
       <el-form ref="dynamicValidateForm" :rules="rules" :model="dynamicValidateForm" label-width="110px" size="mini">
@@ -100,14 +101,29 @@
           <el-input v-model="jshj" disabled="disabled"/>
         </el-form-item>
         <el-form-item label="预制发票类型" prop="fplx">
-          <el-select v-model="dynamicValidateForm.fplx" placeholder="请选择预制发票类型">
+          <el-select v-model="dynamicValidateForm.fplx" placeholder="请选择预制发票类型" style="width: 100%">
             <el-option v-for="option in dictList['SYS_FPLX']" :key="option.id" :value="option.code" :label="option.name"/>
           </el-select>
         </el-form-item>
         <el-form-item label="购方名称" prop="gmfMc">
-          <el-select v-model="dynamicValidateForm.gmfMc" :remote-method="remoteSearch" placeholder="请选择购方名称">
-            <el-option v-for="item in gfmcData" :key="item.value" :label="item.khmc" :value="item.id"/>
-            <!--<el-option v-for="option in gfmcData" :key="option.id" :value="option.id" :label="option.text"/>-->
+          <el-select
+            v-model="dynamicValidateForm.gmfMc"
+            :remote-method="remoteSearch"
+            filterable
+            remote
+            clearable
+            reserve-keyword
+            allow-create
+            size="mini"
+            placeholder="请输入关键词"
+            class="gfMc"
+            style="width: 100%"
+            @change="remoteChange">
+            <el-option
+              v-for="item in gfmcData"
+              :key="item.value"
+              :label="item.khmc"
+              :value="item.khmc"/>
           </el-select>
         </el-form-item>
         <el-form-item label="购方税号" prop="gmfNsrsbh">
@@ -119,7 +135,7 @@
         <el-form-item label="开户行及账号" >
           <el-input v-model="dynamicValidateForm.gmfYhzh" />
         </el-form-item>
-        <el-form-item label="邮箱" prop="gmfDzyx" :rules="dynamicValidateForm.fplx==26?rules.gmfDzyx:[{ required: false, message: '请输入邮箱地址', trigger: 'blur' },{ type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }]">
+        <el-form-item :rules="dynamicValidateForm.fplx==26?rules.gmfDzyx:[{ required: false, message: '请输入邮箱地址', trigger: 'blur' },{ type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }]" label="邮箱" prop="gmfDzyx">
           <el-input v-model="dynamicValidateForm.gmfDzyx"/>
         </el-form-item>
         <el-form-item label="手机号" prop="gmfSjh">
@@ -154,20 +170,7 @@ export default {
       },
       // 列表数据
       tableList: [],
-      gfmcData: [
-        {
-          id: 0,
-          text: '中国移动'
-        },
-        {
-          id: 1,
-          text: '中国联通'
-        },
-        {
-          id: 2,
-          text: '中国电信'
-        }
-      ],
+      gfmcData: [],
       // 列表总条数
       totalCount: 0,
       idtotal: '',
@@ -356,6 +359,15 @@ export default {
         this.gfmcData = res.data.list
       }).catch(err => {
         this.$message.error(err)
+      })
+    },
+    remoteChange(val) {
+      this.gfmcData.forEach(item => {
+        if (item.id === val) {
+          this.dynamicValidateForm.gmfNsrsbh = item.khsh
+          this.dynamicValidateForm.gmfDzdh = item.khdz + ' ' + item.lxdh
+          this.dynamicValidateForm.gmfYhzh = item.yhzh
+        }
       })
     },
     // 勾选生成预制发票
