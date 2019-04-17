@@ -200,10 +200,7 @@ export default {
         this.dataList = res.data.list
         this.totalCount = res.data.count
       }).catch(err => {
-        this.$message({
-          message: err,
-          type: 'error'
-        })
+        this.$message.error(err)
         this.listLoading = false
       })
     },
@@ -227,7 +224,8 @@ export default {
           type: 'warning'
         }).then(() => {
           const invoiceData = this.checkedList[0]
-          invoiceData.kpzdbs = this.info.kpzdbs
+          invoiceData.kpzdbs = this.info.terminalMark
+          invoiceData.kpr = this.info.userName
           invoice(invoiceData).then(res => {
             this.xzdyDialogVisible = true
             this.fpdata = {
@@ -267,7 +265,8 @@ export default {
         this.branchInviceData.forEach((item, key) => {
           this.$set(this.branchInviceData[key], 'kpStatus', '正在处理中...')
           this.listLoading = true
-          item.kpzdbs = this.info.kpzdbs
+          item.kpzdbs = this.info.terminalMark
+          item.kpr = this.info.userName
           invoice(item).then(res => {
             if (res.code === '0000') {
               this.$set(this.branchInviceData[key], 'kpStatus', '<span style="color:green">开具成功</span>')
@@ -301,15 +300,10 @@ export default {
           idArr.push(item.id)
         })
         backInvoicePre(idArr.join(',')).then(res => {
-          this.$message({
-            type: 'success',
-            message: res.msg
-          })
+          this.$message.success(res)
+          this.initList()
         }).catch(err => {
-          this.$message({
-            type: 'error',
-            message: err.msg
-          })
+          this.$message.error(err)
         })
       })
     },
@@ -321,10 +315,7 @@ export default {
       })
       debugger
       exportData(args).catch(err => {
-        this.$message({
-          message: err,
-          type: 'error'
-        })
+        this.$message.error(err)
       })
     }, // 发票预览
     billPreview(rowData) {
