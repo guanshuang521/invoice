@@ -205,10 +205,7 @@ export default {
         this.dataList = res.data.list
         this.totalCount = res.data.count
       }).catch(err => {
-        this.$message({
-          message: err,
-          type: 'error'
-        })
+        this.$message.error(err)
         this.listLoading = false
       })
     },
@@ -307,15 +304,10 @@ export default {
           idArr.push(item.id)
         })
         backInvoicePre(idArr.join(',')).then(res => {
-          this.$message({
-            type: 'success',
-            message: res.msg
-          })
+          this.$message.success(res)
+          this.initList()
         }).catch(err => {
-          this.$message({
-            type: 'error',
-            message: err.msg
-          })
+          this.$message.error(err)
         })
       })
     },
@@ -326,10 +318,7 @@ export default {
         fplx: this.$store.getters.fplx_ele
       })
       exportData(args).catch(err => {
-        this.$message({
-          message: err,
-          type: 'error'
-        })
+        this.$message.error(err)
       })
     }, // 发票预览
     billPreview(rowData) {
