@@ -256,7 +256,8 @@ export default {
         cancelButtonText: '取消'
       }).then(() => {
         const params = {
-          id: this.checkedList.join()
+          id: this.checkedList.join(),
+          djlx: 'CEI费用'
         }
         this.loading = true
         buildInvoice(params).then(response => {
@@ -296,7 +297,8 @@ export default {
         cancelButtonText: '取消'
       }).then(() => {
         const params = {
-          ids: this.checkedList.join(',')
+          ids: this.checkedList.join(','),
+          djlx: 'CEI费用'
         }
         this.loading = true
         generatenIvoices(params).then(response => {

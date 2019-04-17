@@ -39,7 +39,11 @@
         <el-table-column label="账号" prop="userCode" align="center"/>
         <el-table-column label="复核人" prop="reviewer" align="center"/>
         <el-table-column label="收款人" prop="receiver" align="center"/>
-        <el-table-column label="所属机构" prop="orgName" align="center"/>
+        <el-table-column label="所属机构" align="center">
+          <template slot-scope="scope">
+            {{ scope.row.orgInfo && scope.row.orgInfo.orgName ?scope.row.orgInfo.orgName:'' }}
+          </template>
+        </el-table-column>
         <el-table-column label="终端号" prop="terminalId" align="center"/>
         <el-table-column
           label="用户状态"
@@ -117,6 +121,7 @@
           <div class="authTree">
             <el-tree
               ref="organTree"
+              :key="userInfo.id"
               :default-checked-keys="authArray"
               :data="organTreeData"
               class="filter-tree"
@@ -181,7 +186,7 @@ export default {
         status: '',
         terminalId: '',
         auth: '',
-        role: ''
+        role: []
       },
       userRules: {
         userCode: [
@@ -205,7 +210,6 @@ export default {
       orgIdOptions: [],
       // 所有角色列表
       roleList: [],
-      treeArray: [],
       authArray: [],
       dialogVisible2: false
     }
@@ -301,6 +305,7 @@ export default {
       this.dialogType = 'addUser'
       this.dialogVisible = true
       this.userInfo = {
+        id: 0,
         userCode: '',
         password: '',
         userName: '',
@@ -308,10 +313,11 @@ export default {
         reviewer: '',
         status: '',
         terminalId: '',
-        role: '',
+        role: [],
         auth: ''
       }
       this.initTree()
+      this.authArray = []
     },
     addUser() { // 新增用户保存
       this.showPrise = true
@@ -323,8 +329,8 @@ export default {
             this.loading = true
             const password = md5(this.userInfo.password)
             this.userInfo.password = password
-            this.userInfo.role = this.userInfo.role.join(',')
             const args = Object.assign({}, this.userInfo)
+            args.role = args.role.join(',')
             console.log(this.userInfo)
             add(args).then(res => {
               this.$message.success(res.message)
@@ -338,7 +344,9 @@ export default {
             })
           } else {
             this.loading = true
-            edit(this.userInfo).then(res => {
+            const args = Object.assign({}, this.userInfo)
+            args.role = args.role.join(',')
+            edit(args).then(res => {
               this.loading = false
               this.$message({
                 message: res.message,
@@ -404,12 +412,17 @@ export default {
       this.loading = true
       getUserDetail(params).then(res => {
         this.loading = false
-        this.userInfo = res.data
-        this.userInfo.role = res.data.userRoleList
-        this.treeArray = res.data.userOrgList
-        this.treeArray.forEach(item => {
-          this.authArray.push(item.id)
+        this.userInfo = JSON.parse(JSON.stringify(res.data))
+        const roleList = []
+        res.data.userRoleList.forEach(item => {
+          roleList.push(item.id)
         })
+        this.userInfo.role = roleList
+        const authList = []
+        res.data.userOrgList.forEach(item => {
+          authList.push(item.id)
+        })
+        this.authArray = authList
       }).catch(err => {
         this.listLoading = false
         this.$message.error(err)
