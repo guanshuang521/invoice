@@ -115,7 +115,10 @@
           </el-select>
         </el-form-item>
         <el-form-item label="终端号：" prop="terminalCode" >
-          <el-input v-model="userInfo.terminalId" placeholder="请输入"/>
+          <el-select v-model="userInfo.terminalId" placeholder="请选择">
+            <el-option v-for="option in terminalInfo" :key="option.id" :value="option.taxNum" :label="option.taxNum"/>
+          </el-select>
+          <!--<el-input v-model="userInfo.terminalId" placeholder="请输入"/>-->
         </el-form-item>
         <el-form-item label="数据权限：" prop="auth" >
           <div class="authTree">
@@ -141,7 +144,7 @@
 </template>
 
 <script>
-import { getList, add, edit, deleteUser, getAllRoles, getUserDetail, selectTerminalsList } from '@/api/system/user'
+import { getList, add, edit, deleteUser, getAllRoles, getUserDetail, selectTerminalsList, updatePassword } from '@/api/system/user'
 import { getNodeList } from '@/api/system/organization'
 import { arrayToTree } from '@/utils/public'
 import { mapGetters } from 'vuex'
@@ -211,7 +214,7 @@ export default {
       // 所有角色列表
       roleList: [],
       authArray: [],
-      dialogVisible2: false
+      terminalInfo: ''
     }
   },
   computed: {
@@ -237,7 +240,7 @@ export default {
       selectTerminalsList(params).then(response => {
         this.loading = false
         console.log(response.data.list)
-        this.userInfo.terminalId = response.data.list.taxNum
+        this.terminalInfo = response.data.list
       }).catch(err => {
         this.loading = false
         this.$message({
@@ -245,18 +248,33 @@ export default {
           message: err.message
         })
       })
-      // this.commodityTypes.forEach(item => {
-      //   // if (item.id === this.form.shflmc) {
-      //   //   this.form.shflbm = item.shflbm
-      //   //   this.form.sl = item.sl
-      //   //   this.form.sfxsyhzc = item.sfxsyhzc
-      //   // }
-      // })
     },
-    resetPassword() {
-      this.dialogVisible2 = true
+    resetPassword(row) {
+      this.$confirm('确定要重置密码吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        const params = {
+          id: row.id,
+          newPassword: md5('88888888')
+        }
+        updatePassword(params).then(res => {
+          this.$message({
+            type: 'success',
+            message: '重置密码成功!'
+          })
+        }).catch(err => {
+          this.listLoading = false
+          this.$message.error(err)
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     },
-    surePassword() {},
     closeDialog() {
       this.dialogVisible = false
     },
