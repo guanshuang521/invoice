@@ -216,12 +216,6 @@ export default {
     exportExcel() { // 下载
       // openPostWindow(apiPath.dataSync.taskQuery.exportExcel, this.searchParams)
       exportExcel(this.searchParams)
-        .then(response => {
-          console.log(response)
-        })
-        .catch(e => {
-          console.log('error:' + e)
-        })
     },
     handleSizeChange(val) { // 改变单页数据
       this.searchParams.pageSize = val

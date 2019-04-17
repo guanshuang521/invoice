@@ -165,8 +165,7 @@
       </div>
     </el-dialog>
     <!--红冲发票弹窗-->
-    <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="hckpDialogVisible" title="作废重开" width="1280px">
-      <span>红字信息表编号：</span><el-input v-model="hzxxbbh" placeholder="请输入" style="width: 182px"/>
+    <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="hckpDialogVisible" title="红冲开票" width="1280px">
       <fppmShow :formdata="fppmHckpData" :is-sph-readonly="true"/>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button type="primary" size="mini" @click="hcInvoiceSubmit">开具</el-button>
@@ -273,8 +272,6 @@ export default {
       fppmZfckData: {},
       // 红冲发票数据
       fppmHckpData: {},
-      // 红字信息表编号
-      hzxxbbh: '',
       // 推送表单
       sendForm: {
         sjh: '',
@@ -406,7 +403,9 @@ export default {
     hcInvoiceSubmit() {
       const args = Object.assign({}, this.fppmHckpData)
       this.listLoading = true
-      args.hzxxbbh = this.hzxxbbh
+      args.kplx = 1
+      args.yFpdm = args.fpDm
+      args.yFphm = args.fpHm
       invoiceEle(args).then(res => {
         this.hckpDialogVisible = false
         this.listLoading = false

@@ -441,6 +441,7 @@ export default {
           item.se = -item.se
           item.hsxmje = -item.hsxmje
           item.xmje = -item.xmje
+          item.xmsl = -item.xmsl
         })
         this.fppmHckpData = res.data
       }).catch(err => {
@@ -453,6 +454,9 @@ export default {
         if (valid) {
           const args = Object.assign({}, this.fppmHckpData)
           this.listLoading = true
+          args.kplx = 1
+          args.yFpdm = args.fpDm
+          args.yFphm = args.fpHm
           args.xxbbh = this.hcfpForm.hzxxbbh
           invoice(args).then(res => {
             this.hckpDialogVisible = false
