@@ -227,7 +227,9 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          invoice(this.checkedList[0]).then(res => {
+          const invoiceData = this.checkedList[0]
+          invoiceData.kpzdbs = this.info.kpzdbs
+          invoice(invoiceData).then(res => {
             if (res.code === '0000') {
               this.xzdyDialogVisible = true
               this.fpdata = {
@@ -270,6 +272,7 @@ export default {
         this.branchInviceData.forEach((item, key) => {
           this.$set(this.branchInviceData[key], 'kpStatus', '正在处理中...')
           this.listLoading = true
+          item.kpzdbs = this.info.kpzdbs
           invoice(item).then(res => {
             if (res.code === '0000') {
               this.$set(this.branchInviceData[key], 'kpStatus', '<span style="color:green">开具成功</span>')
