@@ -34,6 +34,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { changePassword } from '@/api/app'
+import md5 from 'js-md5'
 
 export default {
   data() {
@@ -75,8 +76,13 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'showChangePassword'
-    ])
+      'showChangePassword',
+      'info'
+    ]),
+    userInfo() {
+      this.xgmmForm.id
+      return this.info.id
+    }
   },
   methods: {
     // 修改密码提交
@@ -84,9 +90,14 @@ export default {
       this.$refs['xgmmForm'].validate((valid) => {
         if (valid) {
           this.loading = true
-          changePassword(this.xgmmForm).then(res => {
+          this.xgmmForm.id = this.userInfo
+          this.xgmmForm.oldPassword = md5(this.xgmmForm.oldPassword)
+          this.xgmmForm.newPassword = md5(this.xgmmForm.newPassword)
+          const args = Object.assign({}, this.xgmmForm)
+          delete args.confirmPassword
+          changePassword(args).then(res => {
             this.loading = false
-            this.$message.error(res.message)
+            this.$message.success(res.message)
             this.closeDialog()
           }).catch(err => {
             this.loading = false
