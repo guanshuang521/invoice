@@ -26,10 +26,16 @@ import '@/permission' // permission control
  */
 import '../mock' // simulation data
 import request from '@/utils/request'
+import * as filters from '@/filters/index'
 
 Vue.use(ElementUI, { locale })
 
 Vue.config.productionTip = false
+
+// 注册全局公用过滤器
+Object.keys(filters).forEach(key => {
+  Vue.filter(key, filters[key])
+})
 
 new Vue({
   el: '#app',
