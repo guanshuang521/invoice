@@ -101,21 +101,21 @@
         @selection-change="handleSelectionChange">
         style="width: 100%;">
         <el-table-column type="selection" width="35"/>
-        <el-table-column label="发票代码" prop="fpDm" align="center"/>
-        <el-table-column label="发票号码" prop="fpHm" align="center"/>
+        <el-table-column label="发票代码" prop="fpDm" align="center" width="100"/>
+        <el-table-column label="发票号码" prop="fpHm" align="center" width="100"/>
         <el-table-column label="发票类型" prop="fplx" align="center">
           <template slot-scope="scope">
             <span>{{ SYS_FPLX[scope.row.fplx] }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="购方名称" prop="gmfMc" align="center"/>
-        <el-table-column label="购方税号" prop="gmfNsrsbh" align="center"/>
-        <el-table-column label="金额（不含税）" prop="hjje" align="center"/>
+        <el-table-column label="购方名称" prop="gmfMc" align="center" width="220"/>
+        <el-table-column label="购方税号" prop="gmfNsrsbh" align="center" width="160"/>
+        <el-table-column label="金额（不含税）" prop="hjje" align="center" width="100"/>
         <el-table-column label="税额" prop="hjse" align="center"/>
         <el-table-column label="价税合计" prop="jshj" align="center"/>
-        <el-table-column label="开票时间" align="center">
+        <el-table-column label="开票时间" align="center" width="160">
           <template slot-scope="scope">
-            <span>{{ scope.row.kprq.substr(0, 10) }}</span>
+            <span>{{ scope.row.kprq | utoTimeToBeijing }}</span>
           </template>
         </el-table-column>
         <el-table-column label="开票机号" prop="kpjh" align="center"/>
@@ -124,7 +124,7 @@
             <span>{{ SYS_QDBZ[scope.row.qdbz] }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="发票状态" prop="fpzt" align="center">
+        <el-table-column label="发票状态" prop="fpzt" align="center" width="160">
           <template slot-scope="scope">
             <span>{{ SYS_FPZT[scope.row.fpzt] }}</span>
           </template>
