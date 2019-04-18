@@ -9,6 +9,7 @@
     <el-dialog
       :visible.sync="showChangePassword"
       :close-on-click-modal="closeOnClickModal"
+      :before-close="closeDialog"
       title="修改密码"
       width="400px">
       <el-form ref="xgmmForm" :model="xgmmForm" :rules="xgmmFormRules" label-width="100px" class="demo-ruleForm" size="mini">
@@ -33,6 +34,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { changePassword } from '@/api/app'
+
 export default {
   data() {
     const validateConfirm = (rule, value, callback) => {
@@ -56,6 +58,7 @@ export default {
         newPassword: '',
         confirmPassword: ''
       },
+      // 修改密码表单校验规则
       xgmmFormRules: {
         oldPassword: [
           { required: true, message: '请输入原密码', trigger: 'blur' }

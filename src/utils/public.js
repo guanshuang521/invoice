@@ -1,6 +1,7 @@
 /**
- * Created by linzibin on 2019.3.8.
- * defined some public methods
+ * @author Linzb
+ * @date 2019/4/18
+ * @Description: 定义全局公共函数文件
  */
 
 /**
