@@ -27,7 +27,9 @@
           </el-select>
         </el-form-item>
         <el-form-item label="发票状态">
-          <el-option v-for="item in dictList['SYS_FPZT']" :key="item.id" :label="item.name" :value="item.code"/>
+          <el-select v-model="listQuery.fpzt" placeholder="请选择" size="small">
+            <el-option v-for="item in dictList['SYS_FPZT']" :key="item.id" :label="item.name" :value="item.code"/>
+          </el-select>
         </el-form-item>
         <el-form-item label="打印状态">
           <el-select v-model="listQuery.dyzt" placeholder="请选择" size="small">
@@ -119,26 +121,14 @@
         </el-table-column>
       </el-table>
       <el-pagination
-        :current-page="listQuery.currentPage"
-        :page-sizes="[10, 20, 30, 50, 100]"
-        :page-size="listQuery.pageSize"
-        :total="totalCount"
-        layout="total, sizes, prev, pager, next, jumper"
+        :current-page = "listQuery.currentPage"
+        :page-sizes = "[10, 20, 30, 50, 100]"
+        :page-size = "listQuery.pageSize"
+        :total = "totalCount"
         style="margin-top: 20px"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"/>
-    </div>
-    <div class="page-box">
-      <el-pagination
-        :current-page="currentPage"
-        :page-sizes="[10, 20, 30, 50, 100]"
-        :page-size="pageSize"
-        :total="total"
-        layout="prev, pager, next, jumper, total, sizes, slot"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange">
-        <!-- <span></span> -->
-      </el-pagination>
+        layout = "total, sizes, prev, pager, next, jumper"
+        @size-change = "handleSizeChange"
+        @current-change = "handleCurrentChange"/>
     </div>
     <!--发票查看弹窗-->
     <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="fpckDialogVisible" title="发票查看" width="1280px">
@@ -154,6 +144,8 @@
 import { getList, fpDetail } from '@/api/invoice/oSpecial'
 import { arrayToMapField } from '@/utils/public'
 import { mapGetters } from 'vuex'
+import apiPath from '@/api/apiUrl'
+import { getToken } from '@/utils/auth'
 import fppmShow from '@/components/fppiaomianShow'
 
 export default {
@@ -218,6 +210,8 @@ export default {
       }).catch(err => {
         this.$message.error(err)
       })
+    },
+    exportExcel() {
     },
     // 重置
     handleReset() {
