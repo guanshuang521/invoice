@@ -4,6 +4,9 @@
  * @Description: 接口配置文件
  */
 const apiPath = {
+  app: {
+    changePassword: '' // 修改密码
+  },
   login: {
     login: '/rbac/userInfo/login',
     logout: '/rbac/userInfo/logout',
@@ -139,7 +142,9 @@ const apiPath = {
       // 开具电票
       makeEInvoice: '/invoice/invoice/makeEInvoice',
       // 下载
-      download: '/invoice/invoice/downloadSinglePdf'
+      download: '/invoice/invoice/downloadSinglePdf',
+      // 获取未使用的发票代码、号码
+      getNotInvoiceYetDmHm: '/invoice/invoice/getNotInvoiceYetDmHm'
     }
   },
 

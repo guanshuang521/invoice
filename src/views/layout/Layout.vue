@@ -7,12 +7,14 @@
       <tags-view/>
       <app-main/>
     </div>
+    <change-password/>
   </div>
 </template>
 
 <script>
 import { Navbar, Sidebar, AppMain, TagsView } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
+import changePassword from '@/components/changePassword'
 
 export default {
   name: 'Layout',
@@ -20,7 +22,8 @@ export default {
     Navbar,
     Sidebar,
     AppMain,
-    TagsView
+    TagsView,
+    changePassword
   },
   mixins: [ResizeMixin],
   computed: {

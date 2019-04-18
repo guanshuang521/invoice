@@ -268,11 +268,6 @@ export default {
           this.listLoading = false
           this.$message.error(err)
         })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
       })
     },
     closeDialog() {

@@ -330,7 +330,7 @@ export default{
           { required: true, message: '商品名称不能为空', trigger: 'blur' }
         ],
         shflmc: [
-          { required: true, message: '税收分类名称不能为空', trigger: 'blur' }
+          { required: true, message: '税收分类名称不能为空', trigger: 'change' }
         ],
         hsbz: [
           { required: true, message: '含税标志名称不能为空', trigger: 'blur' }
@@ -462,6 +462,9 @@ export default{
     },
     addClick() { // 添加
       this.dialogVisible = true
+      this.$nextTick(() => {
+        this.$refs['form'].clearValidate()
+      })
       this.dialogType = 'adds'
       this.form = {}
     },

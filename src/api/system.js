@@ -13,3 +13,11 @@ export function getDictList() {
     data: {}
   })
 }
+// 修改密码
+export function changePassword() {
+  return request({
+    url: apiPath.login.dict,
+    method: 'post',
+    data: {}
+  })
+}
