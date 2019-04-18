@@ -7,3 +7,10 @@
 export function utoTimeToBeijing(value) {
   return new Date(+new Date(new Date(value).toJSON()) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '')
 }
+// 将数字转换成金额显示
+export function toMoney(num) {
+  num = num.toFixed(2)
+  num = parseFloat(num)
+  num = num.toLocaleString()
+  return num
+}
