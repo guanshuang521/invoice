@@ -5,7 +5,7 @@
  */
 const apiPath = {
   app: {
-    changePassword: '' // 修改密码
+    changePassword: '/rbac/userInfo/updateUserInfo' // 修改密码
   },
   login: {
     login: '/rbac/userInfo/login',

@@ -142,7 +142,7 @@
         @current-change = "handleCurrentChange"/>
     </div>
     <!--生成预制发票弹窗-->
-    <invoice-dialog :ishow="invoiceDialogVisible" :dialogTitle="dialogTitle" :buildPop="buildPop" :makePopData="makePopData" @hideDialog="closeDialog"/>
+    <invoice-dialog :ishow="invoiceDialogVisible" :dialog-title="dialogTitle" :build-pop="buildPop" :make-pop-data="makePopData" @hideDialog="closeDialog"/>
   </div>
 </template>
 <script>
