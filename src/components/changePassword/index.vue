@@ -91,9 +91,9 @@ export default {
         if (valid) {
           this.loading = true
           this.xgmmForm.id = this.userInfo
-          this.xgmmForm.oldPassword = md5(this.xgmmForm.oldPassword)
-          this.xgmmForm.newPassword = md5(this.xgmmForm.newPassword)
           const args = Object.assign({}, this.xgmmForm)
+          args.oldPassword = md5(args.oldPassword)
+          args.newPassword = md5(args.newPassword)
           delete args.confirmPassword
           changePassword(args).then(res => {
             this.loading = false
