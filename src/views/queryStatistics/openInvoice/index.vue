@@ -212,6 +212,9 @@ export default {
       })
     },
     exportExcel() {
+      const url = apiPath.invoice.oSpecial.exportAll + '?gmfMc=' + this.listQuery.gmfMc + '&fpDm=' + this.listQuery.fpDm + '&fpHm=' + this.listQuery.fpHm + '&kprq_start=' + this.listQuery.kprq_start + '&kprq_end=' + this.listQuery.kprq_end + '&zfrq_start=' + this.listQuery.zfrq_start + '&zfrq_end=' + this.listQuery.zfrq_end
+      const downurl = url + '&x-access-token=' + getToken()
+      window.open(downurl)
     },
     // 重置
     handleReset() {
