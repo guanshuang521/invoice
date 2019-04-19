@@ -198,7 +198,7 @@ const apiPath = {
     openInvoice: {
       opeinvoiceList: '/invoice/queryAndCount/queryIssuedInvoice', // 已开发票查询
       exportIssuedInvoice: '/invoice/queryAndCount/exportIssuedInvoice',
-      fpSeeDetail: '/invoice/queryAndCount/getInvoiceByHmDm',
+      fpSeeDetail: '/invoice/queryAndCount/getInvoiceByHmDm'
     }
   },
   // 数据同步
