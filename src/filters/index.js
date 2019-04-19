@@ -9,8 +9,7 @@ export function utoTimeToBeijing(value) {
 }
 // 将数字转换成金额显示
 export function toMoney(num) {
-  num = num.toFixed(2)
-  num = parseFloat(num)
+  num = parseFloat(num).toFixed(2)
   num = num.toLocaleString()
   return num
 }

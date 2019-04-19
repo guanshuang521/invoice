@@ -81,17 +81,29 @@
             <span>{{ SYS_FPLX[scope.row.fplx] }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="购方名称" prop="gmfMc" align="center"/>
-        <el-table-column label="购方税号" prop="gmfNsrsbh" align="center"/>
-        <el-table-column label="金额（不含税）" prop="hjje" align="center"/>
-        <el-table-column label="税额" prop="hjse" align="center"/>
-        <el-table-column label="价税合计" prop="jshj" align="center"/>
-        <el-table-column label="开票时间" align="center">
+        <el-table-column label="购方名称" prop="gmfMc" align="center" width="220"/>
+        <el-table-column label="购方税号" prop="gmfNsrsbh" align="center" width="160"/>
+        <el-table-column label="金额（不含税）" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.kprq.substr(0, 10) }}</span>
+            <span>{{ scope.row.hjje | toMoney }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="开票机号" prop="kpjh" align="center"/>
+        <el-table-column label="税额" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.hjse | toMoney }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="价税合计" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.jshj | toMoney }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="开票时间" align="center" width="160">
+          <template slot-scope="scope">
+            <span>{{ scope.row.kprq | utoTimeToBeijing }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="开票机号" prop="kpjh" align="center" width="160"/>
         <el-table-column label="清单标志" prop="qdbz" align="center">
           <template slot-scope="scope">
             <span>{{ SYS_QDBZ[scope.row.qdbz] }}</span>
@@ -138,7 +150,7 @@
 </template>
 
 <script>
-import { opeinvoiceList, fpSeeDetail, exportIssuedInvoice } from '@/api/invoice/oSpecial'
+import { opeinvoiceList, fpSeeDetail } from '@/api/invoice/oSpecial'
 import { arrayToMapField } from '@/utils/public'
 import { mapGetters } from 'vuex'
 import apiPath from '@/api/apiUrl'
@@ -213,9 +225,14 @@ export default {
       })
     },
     exportExcel() {
-      const url = apiPath.invoice.openInvoice.exportIssuedInvoice + '?gmfMc=' + this.listQuery.gmfMc + '&fpDm=' + this.listQuery.fpDm + '&fpHm=' + this.listQuery.fpHm + '&kprq_start=' + this.listQuery.kprq_start + '&kprq_end=' + this.listQuery.kprq_end + '&zfrq_start=' + this.listQuery.zfrq_start + '&zfrq_end=' + this.listQuery.zfrq_end + '&xmmc=' + this.listQuery.xmmc + '&fplx=' + this.listQuery.fplx + '&fpzt=' + this.listQuery.fpzt + '&dybz=' + this.listQuery.dybz + '&xsfNsrsbh=' + this.org.taxNum
-      const downurl = url + '&x-access-token=' + getToken()
-      window.open(downurl)
+      this.$confirm('确定要导出数据吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(() => {
+        const url = apiPath.invoice.openInvoice.exportIssuedInvoice + '?gmfMc=' + this.listQuery.gmfMc + '&fpDm=' + this.listQuery.fpDm + '&fpHm=' + this.listQuery.fpHm + '&kprq_start=' + this.listQuery.kprq_start + '&kprq_end=' + this.listQuery.kprq_end + '&zfrq_start=' + this.listQuery.zfrq_start + '&zfrq_end=' + this.listQuery.zfrq_end + '&xmmc=' + this.listQuery.xmmc + '&fplx=' + this.listQuery.fplx + '&fpzt=' + this.listQuery.fpzt + '&dybz=' + this.listQuery.dybz + '&xsfNsrsbh=' + this.org.taxNum
+        const downurl = url + '&x-access-token=' + getToken()
+        window.open(downurl)
+      })
     },
     // 重置
     handleReset() {
