@@ -21,9 +21,7 @@
         </el-form-item>
         <el-form-item label="发票类型">
           <el-select v-model="listQuery.fplx" placeholder="请选择" size="small">
-            <el-option label="增值税专用发票" value="004"/>
-            <el-option label="增值税普通发票" value="007"/>
-            <el-option label="增值税电子发票" value="026"/>
+            <el-option v-for="item in dictList['SYS_FPLX']" :key="item.id" :label="item.name" :value="item.code"/>
           </el-select>
         </el-form-item>
         <el-form-item label="发票状态">
@@ -33,12 +31,11 @@
         </el-form-item>
         <el-form-item label="打印状态">
           <el-select v-model="listQuery.dyzt" placeholder="请选择" size="small">
-            <el-option label="未打印" value="0"/>
-            <el-option label="已打印" value="1"/>
+            <el-option v-for="item in dictList['SYS_DYBZ']" :key="item.id" :label="item.name" :value="item.code"/>
           </el-select>
         </el-form-item>
         <el-form-item label="税率">
-          <el-select v-model="listQuery.role" placeholder="请选择" size="small">
+          <el-select v-model="listQuery.sl" placeholder="请选择" size="small">
             <el-option v-for="item in dictList['SYS_SL']" :key="item.id" :label="item.name" :value="item.code"/>
           </el-select>
         </el-form-item>
@@ -141,7 +138,7 @@
 </template>
 
 <script>
-import { getList, fpDetail } from '@/api/invoice/oSpecial'
+import { opeinvoiceList, fpSeeDetail, exportIssuedInvoice } from '@/api/invoice/oSpecial'
 import { arrayToMapField } from '@/utils/public'
 import { mapGetters } from 'vuex'
 import apiPath from '@/api/apiUrl'
@@ -167,6 +164,10 @@ export default {
         gmfMc: '',
         fpDm: '',
         fpHm: '',
+        fplx: '',
+        fpzt: '',
+        dybz: '',
+        sl: '',
         kprq_start: '',
         kprq_end: '',
         zfrq_start: '',
@@ -204,7 +205,7 @@ export default {
     // 查询
     initList() {
       this.listQuery.xsfNsrsbh = this.org.taxNum
-      getList(this.listQuery).then(res => {
+      opeinvoiceList(this.listQuery).then(res => {
         this.dataList = res.data.list
         this.totalCount = res.data.count
       }).catch(err => {
@@ -212,7 +213,7 @@ export default {
       })
     },
     exportExcel() {
-      const url = apiPath.invoice.oSpecial.exportAll + '?gmfMc=' + this.listQuery.gmfMc + '&fpDm=' + this.listQuery.fpDm + '&fpHm=' + this.listQuery.fpHm + '&kprq_start=' + this.listQuery.kprq_start + '&kprq_end=' + this.listQuery.kprq_end + '&zfrq_start=' + this.listQuery.zfrq_start + '&zfrq_end=' + this.listQuery.zfrq_end
+      const url = apiPath.invoice.openInvoice.exportIssuedInvoice + '?gmfMc=' + this.listQuery.gmfMc + '&fpDm=' + this.listQuery.fpDm + '&fpHm=' + this.listQuery.fpHm + '&kprq_start=' + this.listQuery.kprq_start + '&kprq_end=' + this.listQuery.kprq_end + '&zfrq_start=' + this.listQuery.zfrq_start + '&zfrq_end=' + this.listQuery.zfrq_end + '&xmmc=' + this.listQuery.xmmc + '&fplx=' + this.listQuery.fplx + '&fpzt=' + this.listQuery.fpzt + '&dybz=' + this.listQuery.dybz + '&xsfNsrsbh=' + this.org.taxNum
       const downurl = url + '&x-access-token=' + getToken()
       window.open(downurl)
     },
@@ -225,6 +226,10 @@ export default {
         gmfMc: '',
         fpDm: '',
         fpHm: '',
+        fplx: '',
+        fpzt: '',
+        dybz: '',
+        sl: '',
         kprq_start: '',
         kprq_end: '',
         zfrq_start: '',
@@ -234,7 +239,7 @@ export default {
     },
     // 查看发票
     checkFP(val) {
-      fpDetail({ fpDm: val.fpDm, fpHm: val.fpHm }).then(res => {
+      fpSeeDetail({ fpDm: val.fpDm, fpHm: val.fpHm, fplx: val.fplx }).then(res => {
         console.log(res)
         this.fpckDialogVisible = true
         this.fppmShowData = res.data

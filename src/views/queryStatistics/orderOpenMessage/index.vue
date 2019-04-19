@@ -150,21 +150,29 @@
       <order-open-message/>
     </el-dialog>
     <!-- 导入弹窗 -->
-    <el-upload
-      ref="upload"
-      :on-preview="handlePreview"
-      :on-remove="handleRemove"
-      :file-list="fileList"
-      :auto-upload="false"
-      :on-error="uploadError"
-      :on-success="uploadSuccess"
-      :action="uploadPath()"
-      accept=".xls,.xlsx"
-      class="upload-demo">
-      <div slot="tip" class="el-upload__tip">选择上传文件</div>
-      <el-button slot="trigger" size="small" type="primary">添加文件</el-button>
-      <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">开始上传</el-button>
-    </el-upload>
+    <el-dialog
+      :close-on-click-modal="closeOnClickModal"
+      :visible.sync="dialogVisible2"
+      :before-close="handleClose"
+      title="客户基础信息导入"
+      width="350px"
+      custom-class="add-customer">
+      <el-upload
+        ref="upload"
+        :on-preview="handlePreview"
+        :on-remove="handleRemove"
+        :file-list="fileList"
+        :auto-upload="false"
+        :on-error="uploadError"
+        :on-success="uploadSuccess"
+        :action="uploadPath()"
+        accept=".xls,.xlsx"
+        class="upload-demo">
+        <div slot="tip" class="el-upload__tip">选择上传文件</div>
+        <el-button slot="trigger" size="small" type="primary">添加文件</el-button>
+        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">开始上传</el-button>
+      </el-upload>
+    </el-dialog>
   </div>
 </template>
 
@@ -344,9 +352,6 @@ export default {
     handleClose() { // 关闭弹窗
       this.dialogVisible = false
       this.dialogVisible2 = false
-    },
-    submitUpload() {
-      this.$refs.upload.submit()
     },
     handleRemove(file, fileList) {
       console.log(file, fileList)

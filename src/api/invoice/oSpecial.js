@@ -15,6 +15,13 @@ export function getList(data) {
     data: data
   })
 }
+export function opeinvoiceList(data) {
+  return request({
+    url: apiPath.invoice.openInvoice.opeinvoiceList,
+    method: 'post',
+    data: data
+  })
+}
 // 发票找回
 export function retrieve(data) {
   return request({
@@ -87,3 +94,20 @@ export function sendMsg(data) {
     data
   })
 }
+// 查看发票
+export function fpSeeDetail(data) {
+  return request({
+    url: apiPath.invoice.openInvoice.fpSeeDetail,
+    method: 'post',
+    data
+  })
+}
+// 导出发票
+export function exportIssuedInvoice(data) {
+  return request({
+    url: apiPath.invoice.openInvoice.exportIssuedInvoice,
+    method: 'post',
+    data
+  })
+}
+

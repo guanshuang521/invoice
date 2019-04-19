@@ -1,3 +1,5 @@
+import {exportIssuedInvoice} from "./invoice/oSpecial";
+
 /**
  * @author Linzb
  * @date 2019/4/1
@@ -192,6 +194,11 @@ const apiPath = {
       insert: '/invoice/invoiceHzxxb/insertInvoiceHzxxb', // 保存
       apply: '/invoice/invoiceHzxxb/applyInvoiceHzxxb', // 申请
       sync: '/invoice/invoiceHzxxb/queryInvoiceHzxxb' // 同步
+    },
+    openInvoice: {
+      opeinvoiceList: '/invoice/queryAndCount/queryIssuedInvoice', // 已开发票查询
+      exportIssuedInvoice: '/invoice/queryAndCount/exportIssuedInvoice',
+      fpSeeDetail: '/invoice/queryAndCount/getInvoiceByHmDm',
     }
   },
   // 数据同步
