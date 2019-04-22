@@ -1,25 +1,25 @@
 <template>
   <div class="dashboard-editor-container add-edit-info-container">
     <el-form ref="form" :model="terminalInfo" :rules="terminalRules" class="form" label-width="100px" size="mini">
-      <el-form-item label="所属税号：" prop="taxNum" >
+      <el-form-item label="所属税号:" prop="taxNum" >
         <el-input v-model="terminalInfo.taxNum" :disabled="true" placeholder="请输入"/>
       </el-form-item>
-      <el-form-item label="终端标识：" prop="terminalMark" >
+      <el-form-item label="终端标识:" prop="terminalMark" >
         <el-input v-model="terminalInfo.terminalMark" placeholder="请输入"/>
       </el-form-item>
-      <el-form-item label="终端名称：" prop="terminalName" >
+      <el-form-item label="终端名称:" prop="terminalName" >
         <el-input v-model="terminalInfo.terminalName" placeholder="请输入"/>
       </el-form-item>
-      <el-form-item label="终端地址：" prop="terminalIp" >
+      <el-form-item label="终端地址:" prop="terminalIp" >
         <el-input v-model="terminalInfo.terminalIp" placeholder="请输入"/>
       </el-form-item>
-      <el-form-item label="终端端口号：" prop="terminalPort" >
+      <el-form-item label="终端端口号:" prop="terminalPort" >
         <el-input v-model="terminalInfo.terminalPort" placeholder="请输入"/>
       </el-form-item>
-      <el-form-item label="机器编号：" prop="machineCode" >
+      <el-form-item label="机器编号:" prop="machineCode" >
         <el-input v-model="terminalInfo.machineCode" placeholder="请输入"/>
       </el-form-item>
-      <el-form-item label="开票类型：" prop="invoiceType" >
+      <el-form-item label="开票类型:" prop="invoiceType" >
         <el-checkbox-group v-model="terminalInfo.invoiceType">
           <el-checkbox v-for="item in fplx" :key="item.id" :label="item.code" name="invoiceType">{{ item.name }}</el-checkbox>
           <!--<el-checkbox label="007" name="invoiceType">普票</el-checkbox>-->
