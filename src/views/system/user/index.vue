@@ -154,6 +154,13 @@ import { arrayToMapField } from '@/utils/public'
 export default {
   name: 'Dashboard',
   data() {
+    const passwordValidate = (rule, value, callback) => {
+      if (value.length < 5) {
+        callback(new Error('密码不能小于5位'))
+      } else {
+        callback()
+      }
+    }
     return {
       // 控制弹窗点击空白位置不关闭
       closeOnClickModal: false,
@@ -196,7 +203,7 @@ export default {
           { required: true, message: '请输入账号', trigger: 'blur' }
         ],
         password: [
-          { required: true, message: '请输入密码', trigger: 'blur' }
+          { required: true, message: '请输入密码,不小于5位', trigger: 'blur', validator: passwordValidate }
         ],
         userName: [
           { required: true, message: '请输入用户名', trigger: 'blur' }

@@ -12,3 +12,19 @@ export function getTableList() {
     data: 'data'
   })
 }
+// 查询
+export function getOrderList(data) {
+  return request({
+    url: apiPath.queryStatistics.orderOpenMessage.getOrderList,
+    method: 'post',
+    data
+  })
+}
+// 订单信息
+export function orderInfo(data) {
+  return request({
+    url: apiPath.queryStatistics.orderOpenMessage.orderInfo,
+    method: 'post',
+    data
+  })
+}

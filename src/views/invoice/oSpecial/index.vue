@@ -282,7 +282,7 @@ export default {
         kprq_end: '',
         zfrq_start: '',
         zfrq_end: '',
-        fplx: '004',
+        fplx: '',
         xsfNsrsbh: ''
       },
       listLoading: false,

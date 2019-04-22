@@ -284,7 +284,6 @@
         </div>
       </div>
     </el-dialog>
-
     <!--选择税收编码dialog-->
     <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="isgoods" :before-close="closeIsGoods" title="选择税收编码" width="800px" class="goodsDialog">
       <div class="dialog_item">
