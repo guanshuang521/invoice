@@ -44,44 +44,43 @@
         @selection-change="handleSelectionChange">
         <el-table-column
           type="selection"
-          align="center"
-          width="34px"/>
-        <el-table-column label="序号" align="center" width="35px">
+          align="center"/>
+        <el-table-column label="序号" align="center" width="65">
           <template slot-scope="scope">
             {{ scope.$index + 1 }}
           </template>
         </el-table-column>
-        <el-table-column label="发票代码" align="center">
+        <el-table-column label="发票代码" align="center" width="100">
           <template slot-scope="scope">
             {{ scope.row.fpDm }}
           </template>
         </el-table-column>
-        <el-table-column label="发票号码" align="center">
+        <el-table-column label="发票号码" align="center" width="100">
           <template slot-scope="scope">
             <span>{{ scope.row.fpHm }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="发票类型" align="center">
+        <el-table-column label="发票类型" align="center" width="100">
           <template slot-scope="scope">
             {{ scope.row.fplx }}
           </template>
         </el-table-column>
-        <el-table-column label="销方名称" align="center">
+        <el-table-column label="销方名称" align="center" width="160">
           <template slot-scope="scope">
             {{ scope.row.xsfMc }}
           </template>
         </el-table-column>
-        <el-table-column label="销方税号" align="center">
+        <el-table-column label="销方税号" align="center" width="100">
           <template slot-scope="scope">
             {{ scope.row.xsfNsrsbh }}
           </template>
         </el-table-column>
-        <el-table-column label="购方名称" align="center">
+        <el-table-column label="购方名称" align="center" width="160">
           <template slot-scope="scope">
             {{ scope.row.gmfMc }}
           </template>
         </el-table-column>
-        <el-table-column label="购方税号" align="center">
+        <el-table-column label="购方税号" align="center" width="100">
           <template slot-scope="scope">
             {{ scope.row.gmfNsrsbh }}
           </template>

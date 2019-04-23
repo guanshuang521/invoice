@@ -1,5 +1,3 @@
-import {exportIssuedInvoice} from "./invoice/oSpecial";
-
 /**
  * @author Linzb
  * @date 2019/4/1
@@ -49,7 +47,8 @@ const apiPath = {
       roleList: '/rbac/role/selectRoleList', // 查询全部角色列表
       assignRole: '/rbac/user/assignRole', // 用户关联角色
       selectTerminalsList: '/rbac/terminal/selectTerminalsList',
-      updatePassword: '/rbac/userInfo/resetPassword'
+      updatePassword: '/rbac/userInfo/resetPassword',
+      selectUserOrgList: '/rbac/userInfo/selectUserOrgList'
     },
     // 角色权限管理
     role: {
