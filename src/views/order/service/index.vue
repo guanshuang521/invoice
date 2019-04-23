@@ -128,6 +128,13 @@
           label="传输日期"
           align="center"/>
         <el-table-column
+          label="订单状态"
+          align="center">
+          <template slot-scope="scope">
+            {{ SYS_ERP_STATUS[scope.row.status] }}
+          </template>
+        </el-table-column>
+        <el-table-column
           prop="bz"
           label="备注"
           align="center"/>
@@ -208,10 +215,7 @@ export default {
         this.tableList = res.data.list
         this.totalCount = res.data.count
       }).catch(err => {
-        this.$message({
-          message: err,
-          type: 'error'
-        })
+        this.$message.error(err)
         this.listLoading = false
       })
     },
@@ -252,7 +256,8 @@ export default {
         cancelButtonText: '取消'
       }).then(() => {
         const params = {
-          id: this.checkedList.join()
+          id: this.checkedList.join(),
+          djlx: 'CEI费用'
         }
         this.loading = true
         buildInvoice(params).then(response => {
@@ -267,10 +272,7 @@ export default {
           this.loading = false
         }).catch(err => {
           this.loading = false
-          this.$message({
-            type: 'error',
-            message: err.message
-          })
+          this.$message.error(err)
         })
       })
     },
@@ -295,7 +297,8 @@ export default {
         cancelButtonText: '取消'
       }).then(() => {
         const params = {
-          ids: this.checkedList.join(',')
+          ids: this.checkedList.join(','),
+          djlx: 'CEI费用'
         }
         this.loading = true
         generatenIvoices(params).then(response => {
@@ -305,10 +308,7 @@ export default {
           this.makePopData = response.data
         }).catch(err => {
           this.loading = false
-          this.$message({
-            type: 'error',
-            message: err.message
-          })
+          this.$message.error(err)
         })
       })
     },

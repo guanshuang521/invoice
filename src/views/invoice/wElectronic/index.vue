@@ -122,13 +122,14 @@
         </el-table-column>
       </el-table>
     </el-dialog>
-
+    <download-or-print :show="xzdyDialogVisible" :fp-data="fpdata" @closeDialog="closeDownload"/>
   </div>
 </template>
 
 <script>
 import { initTableList, backInvoicePre, exportData } from '@/api/invoice/inovicePre'
 import { invoiceEle } from '@/api/invoiceOpening/opening'
+import downloadOrPrint from '@/components/downloadOrPrintBill'
 import BillDetail from '@/components/invoice/billDetail'
 import OrderDetail from '@/components/invoice/orderDetail'
 import { arrayToMapField } from '@/utils/public'
@@ -136,7 +137,12 @@ import fppmShow from '@/components/fppiaomianShow'
 import { mapGetters } from 'vuex'
 export default {
   name: 'WElectronic',
-  components: { BillDetail, OrderDetail, fppmShow },
+  components: {
+    BillDetail,
+    OrderDetail,
+    fppmShow,
+    downloadOrPrint
+  },
   data() {
     return {
       // 控制弹窗点击空白位置不关闭
@@ -166,7 +172,11 @@ export default {
       // 批量开具发票数据
       branchInviceData: [],
       // 当前订单ID
-      currentFpId: 0
+      currentFpId: 0,
+      // 下载打印窗口是否显示
+      xzdyDialogVisible: false,
+      // 发票信息
+      fpdata: {}
     }
   },
   computed: {
@@ -195,10 +205,7 @@ export default {
         this.dataList = res.data.list
         this.totalCount = res.data.count
       }).catch(err => {
-        this.$message({
-          message: err,
-          type: 'error'
-        })
+        this.$message.error(err)
         this.listLoading = false
       })
     },
@@ -223,7 +230,14 @@ export default {
         }).then(() => {
           invoiceEle(this.checkedList[0]).then(res => {
             if (res.code === '0000') {
-              initTableList()
+              this.xzdyDialogVisible = true
+              this.fpdata = {
+                type: 'download',
+                fpDm: res.data.fpDm,
+                fpHm: res.data.fpHm,
+                fpqqlsh: res.data.fpqqlsh,
+                jym: res.data.jym
+              }
             } else {
               this.$message.success(res.messgae)
             }
@@ -290,25 +304,21 @@ export default {
           idArr.push(item.id)
         })
         backInvoicePre(idArr.join(',')).then(res => {
-          this.$message({
-            type: 'success',
-            message: res.msg
-          })
+          this.$message.success(res)
+          this.initList()
         }).catch(err => {
-          this.$message({
-            type: 'error',
-            message: err.msg
-          })
+          this.$message.error(err)
         })
       })
     },
     // 导出
     exportList() {
-      exportData(this.listQuery).catch(err => {
-        this.$message({
-          message: err,
-          type: 'error'
-        })
+      const args = Object.assign({}, this.listQuery, {
+        xsfNsrsbh: this.org.taxNum,
+        fplx: this.$store.getters.fplx_ele
+      })
+      exportData(args).catch(err => {
+        this.$message.error(err)
       })
     }, // 发票预览
     billPreview(rowData) {
@@ -334,8 +344,9 @@ export default {
       this.initList()
       this.showBranchInvice = false
     },
-    // 订单预览
-    getPmData() {
+    // 关闭下载弹窗
+    closeDownload(msg) {
+      this.xzdyDialogVisible = msg
     },
     handleSizeChange() {
     },

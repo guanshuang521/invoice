@@ -80,10 +80,6 @@
           label="单据类型"
           align="center"/>
         <el-table-column
-          prop="djbh"
-          label="费用单据编号"
-          align="center"/>
-        <el-table-column
           prop="ejgysbm"
           label="二级供应商编码"
           align="center"/>
@@ -124,6 +120,13 @@
           label="传输日期"
           align="center"/>
         <el-table-column
+          label="订单状态"
+          align="center">
+          <template slot-scope="scope">
+            {{ SYS_ERP_STATUS[scope.row.status] }}
+          </template>
+        </el-table-column>
+        <el-table-column
           prop="bz"
           label="备注"
           align="center"/>
@@ -139,7 +142,7 @@
         @current-change = "handleCurrentChange"/>
     </div>
     <!--生成预制发票弹窗-->
-    <invoice-dialog :ishow="invoiceDialogVisible" :dialogTitle="dialogTitle" :buildPop="buildPop" :makePopData="makePopData" @hideDialog="closeDialog"/>
+    <invoice-dialog :ishow="invoiceDialogVisible" :dialog-title="dialogTitle" :build-pop="buildPop" :make-pop-data="makePopData" @hideDialog="closeDialog"/>
   </div>
 </template>
 <script>
@@ -203,10 +206,7 @@ export default {
         this.totalCount = res.data.count
         this.tableList = res.data.list
       }).catch(err => {
-        this.$message({
-          message: err,
-          type: 'error'
-        })
+        this.$message.error(err)
         this.listLoading = false
       })
     },
@@ -246,7 +246,8 @@ export default {
         cancelButtonText: '取消'
       }).then(() => {
         const params = {
-          id: this.checkedList.join()
+          id: this.checkedList.join(),
+          djlx: 'SLC'
         }
         this.loading = true
         buildInvoice(params).then(response => {
@@ -261,10 +262,7 @@ export default {
           this.loading = false
         }).catch(err => {
           this.loading = false
-          this.$message({
-            type: 'error',
-            message: err.message
-          })
+          this.$message.error(err)
         })
       })
     },
@@ -289,7 +287,8 @@ export default {
         cancelButtonText: '取消'
       }).then(() => {
         const params = {
-          ids: this.checkedList.join(',')
+          ids: this.checkedList.join(','),
+          djlx: 'SLC'
         }
         this.loading = true
         generatenIvoices(params).then(response => {
@@ -299,10 +298,7 @@ export default {
           this.makePopData = response.data
         }).catch(err => {
           this.loading = false
-          this.$message({
-            type: 'error',
-            message: err.message
-          })
+          this.$message.error(err)
         })
       })
     },

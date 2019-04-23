@@ -27,6 +27,7 @@
         <el-form-item label="开票日期起">
           <el-date-picker
             v-model="listQuery.kprq_start"
+            value-format="yyyy-MM-dd"
             type="date"
             size="small"
             class="filter-item"
@@ -35,6 +36,7 @@
         <el-form-item label="开票日期止">
           <el-date-picker
             v-model="listQuery.kprq_end"
+            value-format="yyyy-MM-dd"
             type="date"
             size="small"
             class="filter-item"
@@ -43,6 +45,7 @@
         <el-form-item label="作废日期起">
           <el-date-picker
             v-model="listQuery.zfrq_start"
+            value-format="yyyy-MM-dd"
             type="date"
             size="small"
             class="filter-item"
@@ -51,6 +54,7 @@
         <el-form-item label="作废日期止">
           <el-date-picker
             v-model="listQuery.zfrq_end"
+            value-format="yyyy-MM-dd"
             type="date"
             size="small"
             class="filter-item"
@@ -97,21 +101,21 @@
         @selection-change="handleSelectionChange">
         style="width: 100%;">
         <el-table-column type="selection" width="35"/>
-        <el-table-column label="发票代码" prop="fpDm" align="center"/>
-        <el-table-column label="发票号码" prop="fpHm" align="center"/>
+        <el-table-column label="发票代码" prop="fpDm" align="center" width="100"/>
+        <el-table-column label="发票号码" prop="fpHm" align="center" width="100"/>
         <el-table-column label="发票类型" prop="fplx" align="center">
           <template slot-scope="scope">
             <span>{{ SYS_FPLX[scope.row.fplx] }}</span>
           </template>
         </el-table-column>
         <el-table-column label="购方名称" prop="gmfMc" align="center"/>
-        <el-table-column label="购方税号" prop="gmfNsrsbh" align="center"/>
+        <el-table-column label="购方税号" prop="gmfNsrsbh" align="center" width="200"/>
         <el-table-column label="金额（不含税）" prop="hjje" align="center"/>
         <el-table-column label="税额" prop="hjse" align="center"/>
         <el-table-column label="价税合计" prop="jshj" align="center"/>
-        <el-table-column label="开票时间" align="center">
+        <el-table-column label="开票时间" align="center" width="160">
           <template slot-scope="scope">
-            <span>{{ scope.row.kprq.substr(0, 10) }}</span>
+            <span>{{ scope.row.kprq | utoTimeToBeijing }}</span>
           </template>
         </el-table-column>
         <el-table-column label="开票机号" prop="kpjh" align="center"/>
@@ -120,7 +124,7 @@
             <span>{{ SYS_QDBZ[scope.row.qdbz] }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="发票状态" prop="fpzt" align="center">
+        <el-table-column label="发票状态" prop="fpzt" align="center" width="160">
           <template slot-scope="scope">
             <span>{{ SYS_FPZT[scope.row.fpzt] }}</span>
           </template>
@@ -137,8 +141,9 @@
           width="300">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="checkFP(scope.row)">查看</el-button>
-            <el-button type="primary" size="mini" @click="reInvoice(scope.row)">作废重开</el-button>
-            <el-button type="primary" size="mini" @click="hcInvoice(scope.row)">红冲发票</el-button>
+            <el-button v-if="parseInt(scope.row.fpzt) == 1" type="primary" size="mini" @click="reInvoice(scope.row)">作废重开</el-button>
+            <el-button v-if="parseInt(scope.row.fpzt) == 4" type="primary" size="mini" @click="reInvoice(scope.row)">重开</el-button>
+            <el-button v-if="parseInt(scope.row.fpzt) == 1 && parseInt(scope.row.kplx) == 0" type="primary" size="mini" @click="hcInvoice(scope.row)">红冲发票</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -313,6 +318,8 @@ export default {
       fpzfShowList: [],
       // 发票票面展示数据
       fppmShowData: {},
+      // 作废重开原始数据
+      fppmZfckDataBefore: {},
       // 作废重开数据
       fppmZfckData: {},
       // 红冲发票数据
@@ -384,14 +391,21 @@ export default {
     reInvoice(val) {
       fpDetail({ fpDm: val.fpDm, fpHm: val.fpHm }).then(res => {
         this.zfckDialogVisible = true
-        this.fppmZfckData = res.data
+        this.fppmZfckData = JSON.parse(JSON.stringify(res.data))
+        this.fppmZfckDataBefore = JSON.parse(JSON.stringify(res.data))
       }).catch(err => {
         this.$message.error(err)
       })
     },
     // 作废重开提交
     reInvoiceSubmit() {
-      const args = Object.assign({}, this.fppmZfckData)
+      const args = Object.assign({}, this.fppmZfckDataBefore)
+      args.zfInvoice = Object.assign({}, this.fppmZfckData, {
+        zflx: 1,
+        zfr: this.info.userName,
+        zfyy: '',
+        check: true
+      })
       this.listLoading = true
       reInvoice(args).then(res => {
         this.zfckDialogVisible = false
@@ -414,6 +428,7 @@ export default {
           item.se = -item.se
           item.hsxmje = -item.hsxmje
           item.xmje = -item.xmje
+          item.xmsl = -item.xmsl
         })
         this.fppmHckpData = res.data
       }).catch(err => {
@@ -422,9 +437,11 @@ export default {
     },
     // 红冲开票提交
     hcInvoiceSubmit() {
-      debugger
       const args = Object.assign({}, this.fppmHckpData)
       this.listLoading = true
+      args.kplx = 1
+      args.yFpdm = args.fpDm
+      args.yFphm = args.fpHm
       invoice(args).then(res => {
         this.hckpDialogVisible = false
         this.listLoading = false
@@ -563,19 +580,8 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        exportAll(this.listQuery).then(res => {
-          const content = res
-          const blob = new Blob([content])
-          const fileName = '项目信息表.xls'
-          if ('download' in document.createElement('a')) { // 非IE下载
-            const elink = document.createElement('a')
-            elink.download = fileName
-            elink.style.display = 'none'
-            elink.href = URL.createObjectURL(blob)
-            document.body.appendChild(elink)
-            elink.click()
-          }
-        }).catch()
+        this.listQuery.xsfNsrsbh = this.org.taxNum
+        exportAll(this.listQuery)
       })
     },
     // 数据回传
@@ -610,7 +616,7 @@ export default {
         zfrq_start: '',
         zfrq_end: '',
         fplx: '007',
-        xsfNsrsbh: '500102020160826'
+        xsfNsrsbh: this.org.taxNum
       }
       this.initList()
     },

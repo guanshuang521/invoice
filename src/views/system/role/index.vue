@@ -93,10 +93,11 @@
           <div class="tree-container">
             <el-tree
               ref="tree2"
+              :key="form.id"
               :data="treeData"
               :props="defaultProps"
               :filter-node-method="filterNode"
-              :default-checked-keys="form.resourceId"
+              :default-checked-keys="form.resourceIds"
               node-key="id"
               class="filter-tree"
               default-expand-all
@@ -117,10 +118,7 @@
 
 <script>
 import { arrayToTree } from '@/utils/public'
-import { getRoleList, deleteRole, insertRole, getRoleDetail, updateRole } from '@/api/system/role'
-import { getRoute } from '@/api/login'
-import { getUserId } from '@/utils/auth'
-
+import { getRoleList, deleteRole, insertRole, getRoleDetail, updateRole, getRources } from '@/api/system/role'
 export default {
   name: 'Role',
   data() {
@@ -150,9 +148,10 @@ export default {
       dialogType: '',
       // 弹窗表单
       form: {
+        id: '',
         roleName: '',
         status: '',
-        resourceId: []
+        resourceIds: []
       },
       // 表单校验
       rules: {
@@ -169,7 +168,7 @@ export default {
         label: 'label'
       },
       treeData: [],
-      resourceId: []
+      resourceIds: []
     }
   },
   mounted() {
@@ -192,8 +191,8 @@ export default {
     },
     // 获取权限树数据
     getResource() {
-      getRoute(getUserId()).then(res => {
-        this.treeData = arrayToTree(res.data.menus, 'title')
+      getRources().then(res => {
+        this.treeData = arrayToTree(res.data, 'title')
       })
     },
     // 查询
@@ -220,13 +219,15 @@ export default {
     addRole() {
       this.dialogVisible = true
       this.dialogType = 'add'
+      this.form.id = 0
+      this.form.resourceIds = []
     },
     // 添加角色提交
     addRoleFn(formName) { // 添加角色
       this.$refs[formName].validate((valid) => {
         if (valid) {
           var params = JSON.parse(JSON.stringify(this.form))
-          params.resourceIds = this.resourceId.join(',')
+          params.resourceIds = this.resourceIds
           insertRole(params).then(res => {
             this.fetchData()
             this.dialogVisible = false
@@ -240,30 +241,25 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           var params = JSON.parse(JSON.stringify(this.form))
-          params.resourceId = this.resourceId
+          params.resourceIds = this.resourceIds
           updateRole(params).then(response => {
             this.fetchData()
             this.dialogVisible = false
             this.dialogType = ''
             this.$refs[formName].resetFields()
+          }).catch(err => {
+            this.$message.error(err)
           })
         }
       })
     },
     // 删除数据
     delRole() {
-      if (this.checkedList.length === 0) {
-        this.$message.error('至少选择一条数据')
-        return false
-      }
       this.$confirm('确定要删除选择的数据吗?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       }).then(() => {
-        var params = {
-          roleId: this.checkedList.join(',')
-        }
-        deleteRole(params).then(res => {
+        deleteRole(this.checkedList).then(res => {
           this.$message.success(res.message)
           this.fetchData()
         }).catch(err => {
@@ -305,7 +301,7 @@ export default {
       for (var i = 0; i < checks.checkedNodes.length; i++) {
         arr.push(checks.checkedNodes[i].id)
       }
-      this.resourceId = arr
+      this.resourceIds = arr
     }
   }
 }

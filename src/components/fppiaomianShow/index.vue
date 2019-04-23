@@ -78,39 +78,39 @@
         </div>
         <div class="tableLines">
           <ul class="linesTitle">
-            <li style="width:5%">行号</li>
-            <li style="width:20%">货物或应税劳务、服务名称</li>
-            <li style="width:8%">规格型号</li>
-            <li style="width:6%">单位</li>
-            <li style="width:9%">数量</li>
-            <li style="width:10%">单价(含税)</li>
-            <li style="width:10%">金额(含税)</li>
-            <li style="width:8%">税率</li>
+            <li style="width:7%">行号</li>
+            <li style="width:22%">货物或应税劳务、服务名称</li>
+            <li style="width:10%">规格型号</li>
+            <li style="width:8%">单位</li>
+            <li style="width:11%">数量</li>
+            <li style="width:12%">单价(含税)</li>
+            <li style="width:12%">金额(含税)</li>
+            <li style="width:10%">税率</li>
             <li style="width:8%">税额</li>
           </ul>
           <div class="linesList">
             <!--<tr v-for="(item, index) in lines.length" :model="lines[index]" :key="item.id" :class="lines[index].fphxz === '1' ? 'discount_tr' : ''">-->
             <ul v-for="(item, index) in formdata.lines" :key="item.id" class="linesConten">
-              <li style="width:5%">{{ index + 1 }}</li>
-              <li style="width:20%;position: relative;">
+              <li style="width:7%">{{ index + 1 }}</li>
+              <li style="width:22%;position: relative;">
                 <input v-model="formdata.lines[index].xmmc" class="readonly">
               </li>
-              <li style="width:8%">
+              <li style="width:10%">
                 <input v-model="formdata.lines[index].ggxh" readOnly>
               </li>
-              <li style="width:6%">
+              <li style="width:8%">
                 <input v-model="formdata.lines[index].dw" readOnly>
               </li>
-              <li style="width:9%">
+              <li style="width:11%">
                 <input v-model="formdata.lines[index].xmsl" class="readonly" @blur="inputBlur(index, 'xmsl', $event)">
               </li>
-              <li style="width:10%">
+              <li style="width:12%">
                 <input v-model="formdata.lines[index].hsxmdj" class="readonly" @blur="inputBlur(index, 'xmdj', $event)">
               </li>
-              <li style="width:10%">
+              <li style="width:12%">
                 <input v-model="formdata.lines[index].hsxmje" class="readonly" @blur="inputBlur(index, 'xmje', $event)">
               </li>
-              <li style="width:8%">
+              <li style="width:10%">
                 <input v-model="formdata.lines[index].sl" readOnly>
                 <!--{{dataConversion(formdata.lines[index].sl, globaldata.globaldata.fapiaoSL)}}-->
               </li>
@@ -284,7 +284,6 @@
         </div>
       </div>
     </el-dialog>
-
     <!--选择税收编码dialog-->
     <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="isgoods" :before-close="closeIsGoods" title="选择税收编码" width="800px" class="goodsDialog">
       <div class="dialog_item">

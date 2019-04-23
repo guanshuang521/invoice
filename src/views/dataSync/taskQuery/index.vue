@@ -68,14 +68,14 @@
           </template>
         </el-table-column>
         <el-table-column label="数据源系统" align="center" prop="dataSource"/>
-        <el-table-column label="同步时间" align="center" prop="modifiedTime"/>
+        <el-table-column label="同步时间" align="center" prop="syncTime"/>
         <el-table-column label="同步状态" align="center" prop="jobStatus">
           <template slot-scope="scope">
-            {{ SYS_TBZT[scope.row.jobStatus] }}
+            {{ SYS_TBZT[scope.row.syncStatus] }}
           </template>
         </el-table-column>
-        <el-table-column label="入库记录数" align="center" prop="params"/>
-        <el-table-column label="同步状态描述" align="center" prop="cronExpression"/>
+        <el-table-column label="入库记录数" align="center" prop="recordNum"/>
+        <el-table-column label="同步状态描述" align="center" prop="syncDescription"/>
       </el-table>
     </div>
     <div class="page-box">
@@ -216,12 +216,6 @@ export default {
     exportExcel() { // 下载
       // openPostWindow(apiPath.dataSync.taskQuery.exportExcel, this.searchParams)
       exportExcel(this.searchParams)
-        .then(response => {
-          console.log(response)
-        })
-        .catch(e => {
-          console.log('error:' + e)
-        })
     },
     handleSizeChange(val) { // 改变单页数据
       this.searchParams.pageSize = val

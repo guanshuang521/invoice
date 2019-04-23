@@ -4,7 +4,12 @@
 * @Description:任务设置
 */
 <template>
-  <div class="taskSettings-container">
+  <div
+    v-loading.fullscreen.lock="loading"
+    class="taskSettings-container"
+    element-loading-text="加载中"
+    element-loading-spinner="el-icon-loading"
+    element-loading-background="rgba(0, 0, 0, 0.6)">
     <el-tabs v-model="activeName">
       <el-tab-pane label="手工同步" name="first">
         <el-form ref="manualForm" :model="manualForm" :rules="manualFormRules" class="manual-form" label-width="100px">
@@ -36,7 +41,7 @@
           <el-button type="primary" size="mini" @click="handleAdd">新增</el-button>
         </div>
         <el-table
-          v-loading="listLoading"
+          v-loading="loading"
           :data="list"
           element-loading-text="Loading"
           border
@@ -74,7 +79,7 @@
           </el-table-column>
           <el-table-column label="状态" align="center">
             <template slot-scope="scope">
-              {{ scope.row.jobStatus }}
+              {{ qyzt[scope.row.jobStatus] }}
             </template>
           </el-table-column>
           <el-table-column label="操作" align="center">
@@ -144,7 +149,7 @@
         <el-form-item label="启用状态" prop="jobStatus" >
           <el-select v-model="dataSyncForm.jobStatus" placeholder="请选择" style="width: 170px">
             <el-option
-              v-for="item in qyzt"
+              v-for="item in dictList['SYS_QYZT']"
               :key="item.id"
               :label="item.name"
               :value="item.code"/>
@@ -164,6 +169,7 @@
 import { mapGetters } from 'vuex'
 import { submitSync, addSave, initData, handleEdit } from '@/api/dataSync/taskSetting'
 import testSettings from '@/components/dataSync/testSettings'
+import { arrayToMapField } from '@/utils/public'
 export default {
   name: 'Dashboard',
   components: {
@@ -192,7 +198,7 @@ export default {
       // 定时同步数据列表
       list: [],
       // 请求遮罩
-      listLoading: false,
+      loading: false,
       // 查询条件
       searchParams: {
         currentPage: 1,
@@ -251,7 +257,7 @@ export default {
       return this.dictList['SYS_TBPL']
     },
     qyzt() {
-      return this.dictList['SYS_QYZT']
+      return arrayToMapField(this.dictList['SYS_QYZT'], 'code', 'name')
     }
   },
   mounted() {
@@ -270,13 +276,13 @@ export default {
     syncSubmit() {
       this.$refs['manualForm'].validate((valid) => {
         if (valid) {
-          submitSync(this.manualForm).then(res => {
-            this.manualForm = {
-              dataType: '',
-              dataSource: ''
-            }
+          this.loading = true
+          const args = Object.assign({}, this.manualForm)
+          submitSync(args).then(res => {
+            this.loading = false
             this.$message.success(res.message)
           }).catch(err => {
+            this.loading = false
             this.$message.error(err)
           })
         }
@@ -294,24 +300,30 @@ export default {
         if (valid) {
           if (this.dialogType === 'add') {
             const args = Object.assign({}, this.dataSyncForm)
+            this.loading = true
             addSave(args).then(res => {
               this.$message.success(res.message)
               this.initData()
               this.dialogVisible = false
               this.dialogType = ''
               this.$refs['dataSyncForm'].resetFields()
+              this.loading = false
             }).catch(err => {
+              this.loading = false
               this.$message.error(err)
             })
           } else {
             const args = Object.assign({}, this.dataSyncForm)
+            this.loading = true
             handleEdit(args).then(res => {
               this.$message.success(res.message)
               this.initData()
               this.dialogVisible = false
               this.dialogType = ''
+              this.loading = false
               this.$refs['dataSyncForm'].resetFields()
             }).catch(err => {
+              this.loading = false
               this.$message.error(err)
             })
           }

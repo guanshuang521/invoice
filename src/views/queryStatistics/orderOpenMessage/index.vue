@@ -149,6 +149,30 @@
       custom-class="add-customer">
       <order-open-message/>
     </el-dialog>
+    <!-- 导入弹窗 -->
+    <el-dialog
+      :close-on-click-modal="closeOnClickModal"
+      :visible.sync="dialogVisible2"
+      :before-close="handleClose"
+      title="客户基础信息导入"
+      width="350px"
+      custom-class="add-customer">
+      <el-upload
+        ref="upload"
+        :on-preview="handlePreview"
+        :on-remove="handleRemove"
+        :file-list="fileList"
+        :auto-upload="false"
+        :on-error="uploadError"
+        :on-success="uploadSuccess"
+        :action="uploadPath()"
+        accept=".xls,.xlsx"
+        class="upload-demo">
+        <div slot="tip" class="el-upload__tip">选择上传文件</div>
+        <el-button slot="trigger" size="small" type="primary">添加文件</el-button>
+        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">开始上传</el-button>
+      </el-upload>
+    </el-dialog>
   </div>
 </template>
 
@@ -156,6 +180,7 @@
 import { mapGetters } from 'vuex'
 import { getTableList } from '@/api/queryStatistics/orderOpenMessage'
 import orderOpenMessage from '@/components/queryStatistics/orderOpenMessage'
+import apiPath from '@/api/apiUrl'
 export default {
   name: 'OrderOpenMessage',
   components: {
@@ -165,6 +190,7 @@ export default {
     return {
       // 控制弹窗点击空白位置不关闭
       closeOnClickModal: false,
+      dialogVisible2: false,
       value: '',
       options: [{
         value: '01',
@@ -229,7 +255,8 @@ export default {
         phone: '',
         bank: '',
         bankAccount: ''
-      }
+      },
+      fileList: []
     }
   },
   computed: {
@@ -256,6 +283,31 @@ export default {
       // })
     },
     initTable() {},
+    submitUpload() { // 开始上传按钮
+      this.loading = true
+      this.$refs.upload.submit()
+    },
+    uploadSuccess(res, file, fileList) { // 上传成功后的回调
+      this.loading = false
+      this.$message({
+        message: res.message,
+        type: res.code === '0000' ? 'success' : 'error'
+      })
+      res.code === '0000' ? this.dialogVisible2 = false : this.$refs.upload.clearFiles()
+      this.getList()
+    },
+    uploadError(res, file, fileList) { // 上传错误
+      this.loading = false
+      this.$message({
+        message: '网络错误，请稍后再试',
+        type: 'error'
+      })
+      this.dialogVisible2 = false
+      this.getList()
+    },
+    uploadPath() { // 上传地址
+      return apiPath.system.codeManagement.importExcel
+    },
     reset() { // 重置
       this.searchs = {
         customerName: '',
@@ -300,9 +352,6 @@ export default {
     handleClose() { // 关闭弹窗
       this.dialogVisible = false
       this.dialogVisible2 = false
-    },
-    submitUpload() {
-      this.$refs.upload.submit()
     },
     handleRemove(file, fileList) {
       console.log(file, fileList)

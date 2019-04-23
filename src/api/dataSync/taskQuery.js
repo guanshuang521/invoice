@@ -5,6 +5,7 @@
 */
 import request from '@/utils/request'
 import apiPath from '@/api/apiUrl'
+import { getToken } from '@/utils/auth'
 
 export function getList(data) {
   return request({
@@ -14,10 +15,9 @@ export function getList(data) {
   })
 }
 export function exportExcel(data) {
-  console.log(data)
-  return request({
-    url: apiPath.dataSync.taskQuery.exportExcel,
-    method: 'get',
-    params: data
-  })
+  const params = ['x-access-token=' + getToken()]
+  for (const key in data) {
+    params.push(key + '=' + data[key])
+  }
+  window.open(apiPath.dataSync.taskQuery.exportExcel + '?' + params.join('&'))
 }

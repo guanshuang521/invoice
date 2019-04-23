@@ -1,9 +1,14 @@
+import {exportIssuedInvoice} from "./invoice/oSpecial";
+
 /**
  * @author Linzb
  * @date 2019/4/1
  * @Description: 接口配置文件
  */
 const apiPath = {
+  app: {
+    changePassword: '/rbac/userInfo/updatePassword' // 修改密码
+  },
   login: {
     login: '/rbac/userInfo/login',
     logout: '/rbac/userInfo/logout',
@@ -20,6 +25,7 @@ const apiPath = {
       addNode: '/rbac/organization/insertOrganization',
       terminalList: '/rbac/terminal/selectByTerminal',
       deleteTerminal: '/rbac/terminal/deleteTerminal',
+      addTerminal: '/rbac/terminal/insertTerminal',
       updateTerminal: '/rbac/terminal/updateTerminal'
     },
     // 门店管理
@@ -41,7 +47,9 @@ const apiPath = {
       delete: '/rbac/userInfo/deleteUserInfo', // 删除用户
       detail: '/rbac/userInfo/selectUserInfoView', // 获取用户详情
       roleList: '/rbac/role/selectRoleList', // 查询全部角色列表
-      assignRole: '/rbac/user/assignRole' // 用户关联角色
+      assignRole: '/rbac/user/assignRole', // 用户关联角色
+      selectTerminalsList: '/rbac/terminal/selectTerminalsList',
+      updatePassword: '/rbac/userInfo/resetPassword'
     },
     // 角色权限管理
     role: {
@@ -49,7 +57,8 @@ const apiPath = {
       deleteRole: '/rbac/role/deleteRole', // 角色信息删除
       insertRole: '/rbac/role/insertRole', // 角色信息新增
       detail: '/rbac/role/selectRoleInfo', // 获取角色信息
-      updateRole: '/rbac/role/updateRole' // 角色信息编辑
+      updateRole: '/rbac/role/updateRole', // 角色信息编辑
+      getRources: '/rbac/menu/selectResourcesList' // 获取所有菜单
     },
     // 开票规则模板
     template: {
@@ -88,6 +97,7 @@ const apiPath = {
       selectCustomerList: '/rbac/customer/selectCustomersList', // 获取所有购方信息
       deleteCustomer: '/rbac/customer/deleteCustomer', // 购方信息删除
       insertCustomer: '/rbac/customer/insertCustomer', // 购方信息新增
+      editCustomer: '/rbac/customer/updateCustomer',
       exportModle: '/rbac/customer/downloadCustomerExcel', // 导出模板
       importExcel: '/rbac/customer/importCustomerExcel' // 导入Excel数据
     },
@@ -124,7 +134,9 @@ const apiPath = {
   },
   queryStatistics: {
     orderOpenMessage: {
-      getTableList: '/orderOpenMessage/getTableList'
+      getTableList: '/orderOpenMessage/getTableList',
+      getOrderList: '/invoice/invoice/getInvoiceListPage',
+      orderInfo: '/invoice/queryAndCount/viewOrderFromInvoice'
     }
   },
 
@@ -135,7 +147,9 @@ const apiPath = {
       // 开具电票
       makeEInvoice: '/invoice/invoice/makeEInvoice',
       // 下载
-      download: '/invoice/invoice/downloadSinglePdf'
+      download: '/invoice/invoice/downloadSinglePdf',
+      // 获取未使用的发票代码、号码
+      getNotInvoiceYetDmHm: '/invoice/invoice/getNotInvoiceYetDmHm'
     }
   },
 
@@ -183,12 +197,17 @@ const apiPath = {
       insert: '/invoice/invoiceHzxxb/insertInvoiceHzxxb', // 保存
       apply: '/invoice/invoiceHzxxb/applyInvoiceHzxxb', // 申请
       sync: '/invoice/invoiceHzxxb/queryInvoiceHzxxb' // 同步
+    },
+    openInvoice: {
+      opeinvoiceList: '/invoice/queryAndCount/queryIssuedInvoice', // 已开发票查询
+      exportIssuedInvoice: '/invoice/queryAndCount/exportIssuedInvoice',
+      fpSeeDetail: '/invoice/queryAndCount/getInvoiceByHmDm'
     }
   },
   // 数据同步
   dataSync: {
     taskQuery: {
-      getList: 'invoiceJob/scheduleJob/queryScheduleJobList',
+      getList: 'invoiceJob/scheduleJobLog/queryScheduleJobLogList',
       exportExcel: 'invoiceJob/scheduleJobLog/exportScheduleJobLog'
     },
     taskSetting: {

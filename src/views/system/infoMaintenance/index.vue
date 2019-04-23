@@ -8,7 +8,7 @@
     v-loading.fullscreen.lock="listLoading"
     element-loading-text="加载中"
     element-loading-spinner="el-icon-loading"
-    element-loading-background="rgba(0, 0, 0, 0.8)"
+    element-loading-background="rgba(0, 0, 0, 0.6)"
     class="infoMaintenance-container">
     <div class="filter-container">
       <el-form :inline="true" :model="searchParams" class="demo-form-inline">
@@ -54,6 +54,15 @@
         <el-table-column label="移动电话" align="center" prop="sjhm"/>
         <el-table-column label="开户行" align="center" prop="khh"/>
         <el-table-column label="银行账号" align="center" prop="yhzh"/>
+        <el-table-column
+          align="center"
+          fixed="right"
+          label="操作"
+          width="200">
+          <template slot-scope="scope">
+            <el-button type="primary" size="small" @click="editInfomain(scope.row)">编辑</el-button>
+          </template>
+        </el-table-column>
       </el-table>
     </div>
     <div class="page-box">
@@ -72,15 +81,17 @@
       :visible.sync="dialogVisible"
       :close-on-click-modal="closeOnClickModal"
       :before-close="() => handleClose('form')"
-      title="新增购方信息"
+      :title="dialogTitle"
       width="650px"
       custom-class="add-customer">
       <el-form ref="form" :inline="true" :rules="rules" :model="form" label-width="120px" size="mini">
         <el-form-item label="购方名称：" prop="khmc">
-          <el-input v-model="form.khmc" placeholder="请输入"/>
+          <el-input v-if="dialogTitle == '新增购方信息'" v-model="form.khmc" placeholder="请输入"/>
+          <el-input v-if="dialogTitle != '新增购方信息'" v-model="form.khmc" placeholder="请输入" disabled="disabled"/>
         </el-form-item>
         <el-form-item label="购方税号：" prop="khsh">
-          <el-input v-model="form.khsh" placeholder="请输入"/>
+          <el-input v-if="dialogTitle == '新增购方信息'" v-model="form.khsh" placeholder="请输入"/>
+          <el-input v-if="dialogTitle != '新增购方信息'" v-model="form.khsh" placeholder="请输入" disabled="disabled"/>
         </el-form-item>
         <el-form-item label="联系人：">
           <el-input v-model="form.lxry" placeholder="请输入"/>
@@ -94,7 +105,7 @@
         <el-form-item label="邮箱：" prop="yx">
           <el-input v-model="form.yx" placeholder="请输入"/>
         </el-form-item>
-        <el-form-item label="详细地址：" prop="khdz" style="width: 540px">
+        <el-form-item label="详细地址：" prop="khdz" style="width: 596px">
           <el-input v-model="form.khdz" placeholder="请输入" class="detailAddress"/>
         </el-form-item>
         <el-form-item label="开户银行：">
@@ -108,7 +119,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer" align="center">
-        <el-button type="primary" size="mini" @click="addCustomerFn('form')">保存</el-button>
+        <el-button v-if="dialogTitle == '新增购方信息'" type="primary" size="mini" this. @click="addCustomerFn('form')">保存</el-button>
+        <el-button v-if="dialogTitle != '新增购方信息' " type="primary" size="mini" @click="editCustomerFn('form')">保存</el-button>
         <el-button size="mini" @click="handleClose('form')">取消</el-button>
       </div>
     </el-dialog>
@@ -121,7 +133,6 @@
       custom-class="add-customer">
       <el-upload
         ref="upload"
-        :before-upload="beforeUpload"
         :on-preview="handlePreview"
         :on-remove="handleRemove"
         :file-list="fileList"
@@ -141,7 +152,7 @@
 </template>
 
 <script>
-import { getCustomerList, deleteCustomer, insertCustomer } from '@/api/system/infoMaintenance'
+import { getCustomerList, deleteCustomer, insertCustomer, editCustomer } from '@/api/system/infoMaintenance'
 import apiPath from '@/api/apiUrl'
 import { arrayToMapField } from '@/utils/public'
 import { mapGetters } from 'vuex'
@@ -199,7 +210,8 @@ export default {
           { required: true, message: '购方名称不能为空', trigger: 'blur' }
         ],
         khsh: [
-          { required: true, message: '购方税号不能为空', trigger: 'blur' }
+          { required: true, message: '购方税号不能为空', trigger: 'blur' },
+          { min: 15, max: 20, type: 'string', message: '长度在 15 到 20 之间', trigger: 'blur' }
         ],
         yx: [
           { required: true, validator: yxFilter, trigger: 'blur' }
@@ -207,7 +219,11 @@ export default {
       },
       // 导入弹窗是否显示
       dialogVisible2: false,
-      fileList: []
+      fileList: [],
+      // 弹窗标题
+      dialogTitle: '',
+      // 弹窗类型
+      dialogType: ''
     }
   },
   computed: {
@@ -256,10 +272,43 @@ export default {
       })
     },
     addCustomer() {
+      this.dialogTitle = '新增购方信息'
+      this.dialogType = 'addInformation'
       this.dialogVisible = true
+      for (const k in this.form) {
+        this.form[k] = ''
+      }
     },
     getToken() {
       return getToken
+    },
+    editInfomain(row) {
+      this.dialogTitle = '编辑购方信息'
+      this.dialogType = 'editInformation'
+      this.dialogVisible = true
+      this.form = row
+    },
+    editCustomerFn(form) {
+      this.$refs[form].validate((valid) => {
+        if (valid) {
+          editCustomer(this.form).then(res => {
+            this.$message({
+              type: 'success',
+              message: res.message
+            })
+            this.initTable()
+            this.dialogVisible = false
+            for (const k in this.form) {
+              this.form[k] = ''
+            }
+          }).catch(e => {
+            this.$message.error(e)
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
     },
     addCustomerFn(form) { // 添加购方信息
       this.$refs[form].validate((valid) => {
@@ -375,8 +424,8 @@ export default {
       }
       .detailAddress{
        /deep/ .el-input__inner{
-          width: 420px;
-          max-width: 420px;
+          width: 474px;
+          max-width: 474px;
         }
       }
       .button-container {

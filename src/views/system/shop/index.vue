@@ -9,7 +9,7 @@
     class="shop-container"
     element-loading-text="加载中"
     element-loading-spinner="el-icon-loading"
-    element-loading-background="rgba(0, 0, 0, 0.8)">
+    element-loading-background="rgba(0, 0, 0, 0.6)">
     <div class="button-container">
       <el-button type="primary" icon="el-icon-search" size="mini" @click="dialogVisible('add')">新增</el-button>
       <el-button type="primary" icon="el-icon-search" size="mini" @click="dialogVisible('edit')">修改</el-button>
@@ -207,8 +207,7 @@ export default {
       data2: '',
       storeIds: [],
       listData: '',
-      Id: '',
-      currentPage1: 1
+      Id: ''
     }
   },
   mounted() {
@@ -301,6 +300,7 @@ export default {
               this.showDialog = false
               this.loading = false
             }).catch(err => {
+              this.$message.error(err)
               this.loading = false
               this.showDialog = false
             })
@@ -310,7 +310,8 @@ export default {
         this.$refs['store'].validate((valid) => {
           if (valid) {
             this.showDialog = false
-            editData(this.data2).then(res => {
+            editData(this.form).then(res => {
+              this.$message.success(res.message)
               this.getTableList()
               this.showDialog = false
             }).catch(err => {
@@ -331,20 +332,26 @@ export default {
       if (this.multipleSelection.length < 1) {
         this.$message.error('至少选择一条数据')
       } else {
-        const ids = []
-        this.multipleSelection.forEach((item) => {
-          ids.push(item.id)
-        })
-        deleteData(ids.join(',')).then(res => {
-          this.$message({
-            type: 'success',
-            message: res.message
+        this.$confirm('确定删除选择数据?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          const ids = []
+          this.multipleSelection.forEach((item) => {
+            ids.push(item.id)
           })
-          this.getTableList()
-        }).catch(err => {
-          this.$message({
-            type: 'error',
-            message: err
+          deleteData(ids.join(',')).then(res => {
+            this.$message({
+              type: 'success',
+              message: res.message
+            })
+            this.getTableList()
+          }).catch(err => {
+            this.$message({
+              type: 'error',
+              message: err
+            })
           })
         })
       }

@@ -4,7 +4,7 @@
     class="ordinary"
     element-loading-text="加载中"
     element-loading-spinner="el-icon-loading"
-    element-loading-background="rgba(0, 0, 0, 0.8)">
+    element-loading-background="rgba(0, 0, 0, 0.6)">
     <form>
       <button class="bluebtn" style="margin: 20px 0 0 20px" @click.prevent="kaijuBtn">确认开具</button>
       <div class="specialPm">
@@ -124,7 +124,7 @@ export default {
             kplx: '0', // 开票类型
             fpDm: '', // 发票代码
             fpHm: '', // 发票号码
-            hsbz: '1', // 含税标识
+            hsbz: '0', // 含税标识
             xsfId: this.org.id, // ？
             xsfBmid: this.org.id, // ？
             xsfBmmc: this.org.name, // ？

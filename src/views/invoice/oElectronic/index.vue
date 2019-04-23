@@ -27,6 +27,7 @@
         <el-form-item label="开票日期起">
           <el-date-picker
             v-model="listQuery.kprq_start"
+            value-format="yyyy-MM-dd"
             type="date"
             size="small"
             class="filter-item"
@@ -35,22 +36,7 @@
         <el-form-item label="开票日期止">
           <el-date-picker
             v-model="listQuery.kprq_end"
-            type="date"
-            size="small"
-            class="filter-item"
-            placeholder="请选择"/>
-        </el-form-item>
-        <el-form-item label="作废日期起">
-          <el-date-picker
-            v-model="listQuery.zfrq_start"
-            type="date"
-            size="small"
-            class="filter-item"
-            placeholder="请选择"/>
-        </el-form-item>
-        <el-form-item label="作废日期止">
-          <el-date-picker
-            v-model="listQuery.zfrq_end"
+            value-format="yyyy-MM-dd"
             type="date"
             size="small"
             class="filter-item"
@@ -94,21 +80,21 @@
         @selection-change="handleSelectionChange">
         style="width: 100%;">
         <el-table-column type="selection" width="35"/>
-        <el-table-column label="发票代码" prop="fpDm" align="center"/>
-        <el-table-column label="发票号码" prop="fpHm" align="center"/>
+        <el-table-column label="发票代码" prop="fpDm" align="center" width="120"/>
+        <el-table-column label="发票号码" prop="fpHm" align="center" width="100"/>
         <el-table-column label="发票类型" prop="fplx" align="center">
           <template slot-scope="scope">
             <span>{{ SYS_FPLX[scope.row.fplx] }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="购方名称" prop="gmfMc" align="center"/>
-        <el-table-column label="购方税号" prop="gmfNsrsbh" align="center"/>
+        <el-table-column label="购方名称" prop="gmfMc" align="center" width="220"/>
+        <el-table-column label="购方税号" prop="gmfNsrsbh" align="center" width="160"/>
         <el-table-column label="金额（不含税）" prop="hjje" align="center"/>
         <el-table-column label="税额" prop="hjse" align="center"/>
         <el-table-column label="价税合计" prop="jshj" align="center"/>
-        <el-table-column label="开票时间" align="center">
+        <el-table-column label="开票时间" align="center" width="160">
           <template slot-scope="scope">
-            <span>{{ scope.row.kprq.substr(0, 10) }}</span>
+            <span>{{ scope.row.kprq | utoTimeToBeijing }}</span>
           </template>
         </el-table-column>
         <el-table-column label="开票机号" prop="kpjh" align="center"/>
@@ -130,7 +116,7 @@
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="checkFP(scope.row)">查看</el-button>
             <el-button type="primary" size="mini" @click="sendMsg(scope.row)">推送</el-button>
-            <el-button type="primary" size="mini" @click="hcInvoice(scope.row)">红冲发票</el-button>
+            <el-button v-if="parseInt(scope.row.fpzt) == 1 && parseInt(scope.row.kplx) == 0" type="primary" size="mini" @click="hcInvoice(scope.row)">红冲发票</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -179,8 +165,7 @@
       </div>
     </el-dialog>
     <!--红冲发票弹窗-->
-    <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="hckpDialogVisible" title="作废重开" width="1280px">
-      <span>红字信息表编号：</span><el-input v-model="hzxxbbh" placeholder="请输入" style="width: 182px"/>
+    <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="hckpDialogVisible" title="红冲开票" width="1280px">
       <fppmShow :formdata="fppmHckpData" :is-sph-readonly="true"/>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button type="primary" size="mini" @click="hcInvoiceSubmit">开具</el-button>
@@ -210,7 +195,7 @@
 
 <script>
 import { getList, retrieve, exportAll, validate, passBackInvoice, fpDetail, reInvoice, sendMsg } from '@/api/invoice/oSpecial'
-import { invoice } from '@/api/invoiceOpening/opening'
+import { invoiceEle } from '@/api/invoiceOpening/opening'
 import { arrayToMapField } from '@/utils/public'
 import { mapGetters } from 'vuex'
 import fppmShow from '@/components/fppiaomianShow'
@@ -281,12 +266,12 @@ export default {
       fpzfShowList: [],
       // 发票票面展示数据
       fppmShowData: {},
+      // 作废重开原始数据
+      fppmZfckDataBefore: {},
       // 作废重开数据
       fppmZfckData: {},
       // 红冲发票数据
       fppmHckpData: {},
-      // 红字信息表编号
-      hzxxbbh: '',
       // 推送表单
       sendForm: {
         sjh: '',
@@ -371,14 +356,20 @@ export default {
     reInvoice(val) {
       fpDetail({ fpDm: val.fpDm, fpHm: val.fpHm }).then(res => {
         this.zfckDialogVisible = true
-        this.fppmZfckData = res.data
+        this.fppmZfckDataBefore = JSON.parse(JSON.stringify(res.data))
+        this.fppmZfckData = JSON.parse(JSON.stringify(res.data))
       }).catch(err => {
         this.$message.error(err)
       })
     },
     // 作废重开提交
     reInvoiceSubmit() {
-      const args = Object.assign({}, this.fppmZfckData)
+      const args = Object.assign({}, this.fppmZfckDataBefore)
+      args.zfInvoice = Object.assign({}, this.fppmZfckData, {
+        zflx: 1,
+        zfr: this.info.userName,
+        zfyy: ''
+      })
       this.listLoading = true
       reInvoice(args).then(res => {
         this.zfckDialogVisible = false
@@ -401,6 +392,7 @@ export default {
           item.se = -item.se
           item.hsxmje = -item.hsxmje
           item.xmje = -item.xmje
+          item.xmsl = -item.xmsl
         })
         this.fppmHckpData = res.data
       }).catch(err => {
@@ -411,8 +403,10 @@ export default {
     hcInvoiceSubmit() {
       const args = Object.assign({}, this.fppmHckpData)
       this.listLoading = true
-      args.hzxxbbh = this.hzxxbbh
-      invoice(args).then(res => {
+      args.kplx = 1
+      args.yFpdm = args.fpDm
+      args.yFphm = args.fpHm
+      invoiceEle(args).then(res => {
         this.hckpDialogVisible = false
         this.listLoading = false
         this.$message.success(res.message)
@@ -460,19 +454,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        exportAll(this.listQuery).then(res => {
-          const content = res
-          const blob = new Blob([content])
-          const fileName = '项目信息表.xls'
-          if ('download' in document.createElement('a')) { // 非IE下载
-            const elink = document.createElement('a')
-            elink.download = fileName
-            elink.style.display = 'none'
-            elink.href = URL.createObjectURL(blob)
-            document.body.appendChild(elink)
-            elink.click()
-          }
-        }).catch()
+        exportAll(this.listQuery)
       })
     },
     // 数据回传
@@ -483,6 +465,7 @@ export default {
         type: 'warning'
       }).then(() => {
         this.loading = true
+        this.listQuery.xsfNsrsbh = this.org.taxNum
         passBackInvoice(this.listQuery).then(res => {
           this.loading = false
           this.$message.success(res.message)
@@ -506,8 +489,7 @@ export default {
         kprq_end: '',
         zfrq_start: '',
         zfrq_end: '',
-        fplx: '026',
-        xsfNsrsbh: '500102020160826'
+        fplx: '026'
       }
       this.initList()
     },

@@ -8,10 +8,7 @@
     <div class="filter-container">
       <el-form :inline="true" :model="searchParams" class="demo-form-inline">
         <el-form-item label="商品分类">
-          <el-select v-model="searchParams.sign" placeholder="请选择" size="small">
-            <el-option label="已开具" value="1"/>
-            <el-option label="未开具" value="0"/>
-          </el-select>
+          <el-input v-model="searchParams.sign" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="税收编码">
           <el-input v-model="searchParams.shflbm" placeholder="请输入" size="small"/>
@@ -203,7 +200,7 @@ export default {
       this.getList()
     },
     exportData() { // 导出数据
-      const url = apiPath.system.codeManagement.exportData + '?spbm=' + this.searchParams.spbm + '&spmc=' + this.searchParams.spmc
+      const url = apiPath.system.codeManagement.exportData + '?shflbm=' + this.searchParams.shflbm + '&spmc=' + this.searchParams.spmc
       const downurl = url + '&x-access-token=' + getToken()
       window.open(downurl)
     },
