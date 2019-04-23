@@ -35,4 +35,12 @@ export function getAllCustomer(data) {
     data
   })
 }
+// 编辑购方
+export function editCustomer(data) {
+  return request({
+    url: apiPath.system.customer.editCustomer,
+    method: 'post',
+    data
+  })
+}
 

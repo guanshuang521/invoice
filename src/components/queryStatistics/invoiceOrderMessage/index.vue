@@ -7,49 +7,49 @@
   <div>
     <!-- 新增弹窗 -->
     <el-table
-      :data="list"
+      :data="poplist"
       element-loading-text="Loading"
       border
       fit
       highlight-current-row>
-      <el-table-column align="center" width="31px">
+      <el-table-column align="center" width="39px">
         <template slot-scope="scope">
           {{ scope.$index + 1 }}
         </template>
       </el-table-column>
       <el-table-column label="单据编号" align="center">
         <template slot-scope="scope">
-          {{ scope.row.customerName }}
+          {{ scope.row.djbh }}
         </template>
       </el-table-column>
       <el-table-column label="单据类型" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.customerTaxNumber }}</span>
+          <span>{{ scope.row.djlx }}</span>
         </template>
       </el-table-column>
       <el-table-column label="购方名称" align="center">
         <template slot-scope="scope">
-          {{ scope.row.address }}
+          {{ scope.row.gmfMc }}
         </template>
       </el-table-column>
       <el-table-column label="购方税号" align="center">
         <template slot-scope="scope">
-          {{ scope.row.email }}
+          {{ scope.row.gmfNsrsbh }}
         </template>
       </el-table-column>
       <el-table-column label="金额（不含税）" align="center">
         <template slot-scope="scope">
-          {{ scope.row.contacts }}
+          {{ scope.row.hjje }}
         </template>
       </el-table-column>
       <el-table-column label="税额" align="center">
         <template slot-scope="scope">
-          {{ scope.row.contactNumber }}
+          {{ scope.row.hjse }}
         </template>
       </el-table-column>
       <el-table-column label="价税合计" align="center">
         <template slot-scope="scope">
-          {{ scope.row.phone }}
+          {{ scope.row.jshj }}
         </template>
       </el-table-column>
     </el-table>
@@ -57,39 +57,46 @@
       <el-pagination
         :current-page="currentPage"
         :page-sizes="[10, 20, 30, 50, 100]"
-        :page-size="pageSize"
-        :total="total"
-        layout="prev, pager, next, jumper, total, sizes, slot"
+        :page-size="100"
+        :total="poptotal"
+        layout="total, sizes, prev, pager, next, jumper"
+        style="margin-top: 20px"
         @size-change="handleSizeChange"
-        @current-change="handleCurrentChange">
-        <!-- <span></span> -->
-      </el-pagination>
+        @current-change="handleCurrentChange"/>
     </div>
   </div>
 </template>
 <script type="application/ecmascript">
 export default {
+  name: 'InvoiceDialog',
   props: {
+    poptotal: {
+      type: String,
+      default: ''
+    },
+    poplist: {
+      type: String,
+      default: () => ''
+    }
   },
   data() {
     return {
       currentPage: 1,
       pageSize: 25,
-      total: 1000,
-      showDialog: false,
-      list: [
-        {
-          djsh: '管理员',
-          xfmc: 1,
-          gfmc: '北京市丰台科技园',
-          xfsh: '12433323454',
-          gfsh: '23543212343',
-          je: '北京银行中关村支行',
-          se: '123444321234567876',
-          jshj: 0,
-          ddzt: 0
-        }
-      ]
+      showDialog: false
+      // list: [
+      //   {
+      //     djsh: '管理员',
+      //     xfmc: 1,
+      //     gfmc: '北京市丰台科技园',
+      //     xfsh: '12433323454',
+      //     gfsh: '23543212343',
+      //     hjje: '北京银行中关村支行',
+      //     hjse: '123444321234567876',
+      //     jshj: 0,
+      //     ddzt: 0
+      //   }
+      // ]
     }
   },
   watch: {
@@ -97,16 +104,12 @@ export default {
   created() {
   },
   methods: {
-    handleSelectionChange(val) { // 表格选中数据发生变化
+    handleSizeChange() {},
+    handleCurrentChange() {},
+    // 表格选中数据发生变化
+    handleSelectionChange(val) {
+      this.checkedList = []
       this.checkedList = val
-    },
-    handleSizeChange(val) {
-      // console.log(`每页 ${val} 条`)
-    },
-    handleCurrentChange(val) {
-      // console.log(`当前页: ${val}`)
-    },
-    handleClose() { // 关闭弹窗
     }
   }
 }

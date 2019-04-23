@@ -49,24 +49,14 @@
             {{ scope.$index + 1 }}
           </template>
         </el-table-column>
-        <el-table-column label="商品编码" align="center">
+        <el-table-column label="商品编码" align="center" width="100">
           <template slot-scope="scope">
             {{ scope.row.spbm }}
           </template>
         </el-table-column>
-        <el-table-column label="商品名称" align="center">
+        <el-table-column label="商品名称" align="center" width="200">
           <template slot-scope="scope">
             <span>{{ scope.row.spmc }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="商品税目" align="center">
-          <template slot-scope="scope">
-            {{ scope.row.spsm }}
-          </template>
-        </el-table-column>
-        <el-table-column label="简码" align="center">
-          <template slot-scope="scope">
-            {{ scope.row.jm }}
           </template>
         </el-table-column>
         <el-table-column label="规格型号" align="center">
@@ -89,12 +79,12 @@
             {{ SYS_HSBZ[scope.row.hsbz] }}
           </template>
         </el-table-column>
-        <el-table-column label="税收分类编码" align="center">
+        <el-table-column label="税收分类编码" align="center" width="170">
           <template slot-scope="scope">
             {{ scope.row.shflbm }}
           </template>
         </el-table-column>
-        <el-table-column label="税收分类名称" align="center">
+        <el-table-column label="税收分类名称" align="center" width="120">
           <template slot-scope="scope">
             {{ scope.row.shflmc }}
           </template>
@@ -104,7 +94,7 @@
             {{ SYS_SL[scope.row.sl] }}
           </template>
         </el-table-column>
-        <el-table-column label="零税率标识" align="center">
+        <el-table-column label="零税率标识" align="center" width="110">
           <template slot-scope="scope">
             {{ scope.row.lslbs }}
           </template>
@@ -157,27 +147,19 @@
         <el-form-item label="商品编码" prop="spbm" size="small">
           <el-input v-model="form.spbm" placeholder="请输入"/>
         </el-form-item>
-        <el-form-item label="税率(%)" prop="sl" size="small">
-          <el-select v-model="form.sl" placeholder="税率" size="small">
-            <el-option v-for="item in dictList['SYS_SL']" :key="item.id" :label="item.name" :value="item.code"/>
-          </el-select>
-        </el-form-item>
         <el-form-item label="商品名称" prop="spmc" size="small">
           <el-input v-model="form.spmc" placeholder="请输入"/>
         </el-form-item>
-        <el-form-item label="规格型号" prop="ggxh" size="small">
-          <el-input v-model="form.ggxh" placeholder="请输入"/>
-        </el-form-item>
-        <el-form-item label="商品税目" prop="shflmc" size="small">
+        <el-form-item label="税收分类名称" prop="shflmc" size="small">
           <el-select v-model="form.shflmc" filterable placeholder="请选择" size="small" @change="changeShflmc">
             <el-option v-for="item in commodityTypes" :key="item.id" :label="item.shflmc" :value="item.id"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="单价(元)" prop="dj" size="small">
-          <el-input v-model="form.dj" placeholder="请输入"/>
+        <el-form-item label="税收分类编码" prop="shflbm" size="small">
+          <el-input v-model="form.shflbm" placeholder="请输入" readonly/>
         </el-form-item>
-        <el-form-item label="简码" prop="jm" size="small">
-          <el-input v-model="form.jm" placeholder="请输入"/>
+        <el-form-item label="规格型号" prop="ggxh" size="small">
+          <el-input v-model="form.ggxh" placeholder="请输入"/>
         </el-form-item>
         <el-form-item label="计量单位" prop="meteringcom" size="small">
           <el-input v-model="form.jldw" placeholder="请输入"/>
@@ -187,27 +169,27 @@
             <el-option v-for="item in dictList['SYS_HSBZ']" :key="item.id" :label="item.name" :value="item.code"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="税收分类名称" prop="shflmc" size="small">
-          <el-select v-model="form.shflmc" filterable placeholder="请选择" size="small" @change="changeShflmc">
-            <el-option v-for="item in commodityTypes" :key="item.id" :label="item.shflmc" :value="item.id"/>
-          </el-select>
+        <el-form-item label="单价(元)" prop="dj" size="small">
+          <el-input v-model="form.dj" placeholder="请输入"/>
         </el-form-item>
         <el-form-item label="零含税标识" prop="lslbs" size="small">
           <el-select v-model="form.lslbs" placeholder="请选择">
             <el-option v-for="item in dictList['SYS_LSLBS']" :key="item.id" :label="item.name" :value="item.code"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="税收分类编码" prop="shflbm" size="small">
-          <el-input v-model="form.shflbm" placeholder="请输入" readonly/>
-        </el-form-item>
-        <el-form-item label="免税类型" prop="mslx" size="small">
-          <el-select v-model="form.mslx" placeholder="请选择" size="small">
-            <el-option v-for="item in dictList['SYS_MSLX']" :key="item.id" :label="item.name" :value="item.code"/>
+        <el-form-item label="税率(%)" prop="sl" size="small">
+          <el-select v-model="form.sl" placeholder="税率" size="small">
+            <el-option v-for="item in dictList['SYS_SL']" :key="item.id" :label="item.name" :value="item.code"/>
           </el-select>
         </el-form-item>
         <el-form-item label="是否享受优惠政策" prop="sfxsyhzc" size="small">
           <el-select v-model="form.sfxsyhzc" placeholder="请选择" size="small">
             <el-option v-for="item in dictList['SYS_SFXSYHZC']" :key="item.id" :label="item.name" :value="item.code"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="免税类型" prop="mslx" size="small">
+          <el-select v-model="form.mslx" placeholder="请选择" size="small">
+            <el-option v-for="item in dictList['SYS_MSLX']" :key="item.id" :label="item.name" :value="item.code"/>
           </el-select>
         </el-form-item>
         <el-form-item label="优惠政策类型" prop="yhzclx" size="small">

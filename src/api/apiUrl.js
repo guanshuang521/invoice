@@ -97,6 +97,7 @@ const apiPath = {
       selectCustomerList: '/rbac/customer/selectCustomersList', // 获取所有购方信息
       deleteCustomer: '/rbac/customer/deleteCustomer', // 购方信息删除
       insertCustomer: '/rbac/customer/insertCustomer', // 购方信息新增
+      editCustomer: '/rbac/customer/updateCustomer',
       exportModle: '/rbac/customer/downloadCustomerExcel', // 导出模板
       importExcel: '/rbac/customer/importCustomerExcel' // 导入Excel数据
     },

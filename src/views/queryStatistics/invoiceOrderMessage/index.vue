@@ -8,22 +8,20 @@
     <div class="filter-container">
       <el-form :inline="true" :model="searchParams" class="demo-form-inline">
         <el-form-item label="销方名称">
-          <el-input v-model="searchParams.userName" placeholder="请输入" size="small"/>
+          <el-input v-model="searchParams.xsfMc" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="购方名称">
-          <el-input v-model="searchParams.userName" placeholder="请输入" size="small"/>
+          <el-input v-model="searchParams.gmfMc" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="发票代码">
-          <el-input v-model="searchParams.userName" placeholder="请输入" size="small"/>
+          <el-input v-model="searchParams.fpDm" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="发票号码">
-          <el-input v-model="searchParams.userName" placeholder="请输入" size="small"/>
+          <el-input v-model="searchParams.fpHm" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="发票类型">
-          <el-select v-model="searchParams.role" placeholder="请选择" size="small">
-            <el-option label="增值税专用发票" value="shanghai"/>
-            <el-option label="增值税普通发票" value="beijing"/>
-            <el-option label="增值税电子发票" value="dianzi"/>
+          <el-select v-model="searchParams.fplx" placeholder="请选择" size="small">
+            <el-option v-for="item in dictList['SYS_FPLX']" :key="item.id" :label="item.name" :value="item.code"/>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -48,54 +46,54 @@
           type="selection"
           align="center"
           width="34px"/>
-        <el-table-column align="center" width="31px">
+        <el-table-column label="序号" align="center" width="35px">
           <template slot-scope="scope">
             {{ scope.$index + 1 }}
           </template>
         </el-table-column>
         <el-table-column label="发票代码" align="center">
           <template slot-scope="scope">
-            {{ scope.row.djsh }}
+            {{ scope.row.fpDm }}
           </template>
         </el-table-column>
         <el-table-column label="发票号码" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.xfmc }}</span>
+            <span>{{ scope.row.fpHm }}</span>
           </template>
         </el-table-column>
         <el-table-column label="发票类型" align="center">
           <template slot-scope="scope">
-            {{ scope.row.xfsh }}
+            {{ scope.row.fplx }}
           </template>
         </el-table-column>
         <el-table-column label="销方名称" align="center">
           <template slot-scope="scope">
-            {{ scope.row.gfmc }}
+            {{ scope.row.xsfMc }}
           </template>
         </el-table-column>
         <el-table-column label="销方税号" align="center">
           <template slot-scope="scope">
-            {{ scope.row.gfsh }}
+            {{ scope.row.xsfNsrsbh }}
           </template>
         </el-table-column>
         <el-table-column label="购方名称" align="center">
           <template slot-scope="scope">
-            {{ scope.row.je }}
+            {{ scope.row.gmfMc }}
           </template>
         </el-table-column>
         <el-table-column label="购方税号" align="center">
           <template slot-scope="scope">
-            {{ scope.row.se }}
+            {{ scope.row.gmfNsrsbh }}
           </template>
         </el-table-column>
         <el-table-column label="金额（不含税）" align="center">
           <template slot-scope="scope">
-            {{ scope.row.ddzt }}
+            {{ scope.row.hjje }}
           </template>
         </el-table-column>
         <el-table-column label="税额" align="center">
           <template slot-scope="scope">
-            {{ scope.row.se }}
+            {{ scope.row.hjse }}
           </template>
         </el-table-column>
         <el-table-column label="价税合计" align="center">
@@ -105,7 +103,7 @@
         </el-table-column>
         <el-table-column label="备注" align="center">
           <template slot-scope="scope">
-            {{ scope.row.ddzt }}
+            {{ scope.row.bz }}
           </template>
         </el-table-column>
         <el-table-column label="操作" align="center">
@@ -137,15 +135,16 @@
       title="订单信息"
       width="750px"
       custom-class="add-customer">
-      <invoice-order-message/>
+      <invoice-order-message :poptotal="poptotal" :poplist="poplist"/>
     </el-dialog>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import { getTableList } from '@/api/queryStatistics/orderOpenMessage'
+import { getTableList, getOrderList, orderInfo } from '@/api/queryStatistics/orderOpenMessage'
 import invoiceOrderMessage from '@/components/queryStatistics/invoiceOrderMessage'
+import { arrayToMapField } from '@/utils/public'
 export default {
   name: 'InvoiceOrderMessage',
   components: {
@@ -156,48 +155,17 @@ export default {
       // 控制弹窗点击空白位置不关闭
       closeOnClickModal: false,
       value: '',
-      options: [{
-        value: '01',
-        label: '费用单据'
-      }, {
-        value: '02',
-        label: '结算单据'
-      }, {
-        value: '03',
-        label: '开票号'
-      }],
       searchParams: {
-        userName: '',
-        role: '',
         currentPage: 1,
-        pageSize: 10
+        pageSize: 10,
+        gmfMc: '',
+        fpDm: '',
+        fpHm: '',
+        fplx: '',
+        xsfMc: ''
       },
-      listQuery: [
-        {
-          djsh: '管理员',
-          xfmc: 1,
-          gfmc: '北京市丰台科技园',
-          xfsh: '12433323454',
-          gfsh: '23543212343',
-          je: '北京银行中关村支行',
-          se: '123444321234567876',
-          jshj: 0,
-          ddzt: 0
-        }
-      ],
-      list: [
-        {
-          djsh: '管理员',
-          xfmc: 1,
-          gfmc: '北京市丰台科技园',
-          xfsh: '12433323454',
-          gfsh: '23543212343',
-          je: '北京银行中关村支行',
-          se: '123444321234567876',
-          jshj: 0,
-          ddzt: 0
-        }
-      ],
+      list: [],
+      poptotal: '',
       listLoading: false,
       searchs: {
         customerName: '',
@@ -209,6 +177,7 @@ export default {
       total: 1000,
       dialogVisible: false,
       dialogType: '',
+      poplist: {},
       form: {
         customerName: '',
         customerTaxNumber: '',
@@ -225,14 +194,18 @@ export default {
   computed: {
     ...mapGetters([
       'name',
-      'roles'
-    ])
+      'roles',
+      'dictList',
+      'org'
+    ]),
+    SYS_FPLX() {
+      return arrayToMapField(this.dictList['SYS_FPLX'], 'code', 'name')
+    }
   },
   mounted() {
   },
   created() {
-    // this.fetchData()
-    this.getTableList()
+    // this.getTableList()
   },
   methods: {
     change(a) {
@@ -245,11 +218,24 @@ export default {
       //   this.listLoading = false
       // })
     },
-    initTable() {},
+    initTable() {
+      this.searchParams.xsfNsrsbh = this.org.taxNum
+      getOrderList(this.searchParams).then(res => {
+        this.list = res.data.list
+        this.total = res.data.count
+      }).catch(err => {
+        this.$message.error(err)
+      })
+    },
     reset() { // 重置
-      this.searchs = {
-        customerName: '',
-        customerTaxNumber: ''
+      this.searchParams = {
+        currentPage: 1,
+        pageSize: 10,
+        gmfMc: '',
+        fpDm: '',
+        fpHm: '',
+        fplx: '',
+        xsfMc: ''
       }
     },
     handleSelectionChange(val) { // 表格选中数据发生变化
@@ -302,14 +288,26 @@ export default {
     },
     handleEdit(index, row) {
       this.dialogVisible = true
-    },
-    getTableList() {
-      getTableList().then(res => {
-        if (res.code === '0000') {
-          this.list = res.data
-        }
+      const params = {
+        invoiceId: row.id,
+        currentPage: 1,
+        pageSize: 10
+      }
+      orderInfo(params).then(res => {
+        console.log(res)
+        this.poplist = res.data.list
+        this.poptotal = res.data.count
+      }).catch(err => {
+        this.$message.error(err)
       })
     }
+    // getTableList() {
+    //   getTableList().then(res => {
+    //     if (res.code === '0000') {
+    //       this.list = res.data
+    //     }
+    //   })
+    // }
   }
 }
 </script>
