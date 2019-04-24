@@ -78,7 +78,7 @@
         <el-table-column prop="jshj" label="价税合计" width="120" align="center"/>
         <el-table-column prop="ghdwmc" label="购方名称" width="120" align="center"/>
         <el-table-column prop="xhdwmc" label="销方名称" width="120" align="center"/>
-        <el-table-column fixed="right" label="操作" width="150" align="center">
+        <el-table-column fixed="right" label="操作" width="190" align="center">
           <template slot-scope="scope">
             <el-button type="text" size="small" @click="checkHZXXB(scope.row)">查看</el-button>
             <el-button type="text" size="small">上传</el-button>
@@ -183,10 +183,9 @@ export default {
   methods: {
     // table列表查询
     initTable() {
-      this.tableList = [{}]
-      return false
       initList(this.searchParams).then(res => {
         this.tableList = res.data.list
+        this.totalCount = res.data.count
       }).catch(err => {
         this.$message.error(err)
       })
@@ -255,7 +254,7 @@ export default {
     },
     // 同步
     asyncData(row) {
-      this.$confirm('确定要同步数据吗?', '提示', {
+      this.$confirm('确定上传选择的红字信息表申请数据吗?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
