@@ -44,7 +44,7 @@
             {{ scope.row.orgInfo && scope.row.orgInfo.orgName ?scope.row.orgInfo.orgName:'' }}
           </template>
         </el-table-column>
-        <el-table-column label="终端号" prop="terminalId" align="center"/>
+        <el-table-column label="终端号" prop="terminalMark" align="center"/>
         <el-table-column
           label="用户状态"
           align="center">
@@ -115,10 +115,10 @@
           </el-select>
         </el-form-item>
         <el-form-item label="终端号：" prop="terminalCode" >
-          <el-select v-model="userInfo.terminalId" placeholder="请选择">
-            <el-option v-for="option in terminalInfo" :key="option.id" :value="option.taxNum" :label="option.taxNum"/>
+          <el-select v-model="userInfo.terminalMark" placeholder="请选择">
+            <el-option v-for="option in terminalInfo" :key="option.id" :value="option.terminalMark" :label="option.terminalMark"/>
           </el-select>
-          <!--<el-input v-model="userInfo.terminalId" placeholder="请输入"/>-->
+          <!--<el-input v-model="userInfo.terminalMark" placeholder="请输入"/>-->
         </el-form-item>
         <el-form-item label="数据权限：" prop="auth" >
           <div class="authTree">
@@ -194,7 +194,7 @@ export default {
         receiver: '',
         reviewer: '',
         status: '',
-        terminalId: '',
+        terminalMark: '',
         auth: '',
         role: []
       },
@@ -245,8 +245,8 @@ export default {
       }
       this.loading = true
       selectTerminalsList(params).then(response => {
+        this.userInfo.terminalMark = ''
         this.loading = false
-        console.log(response.data.list)
         this.terminalInfo = response.data.list
       }).catch(err => {
         this.loading = false
@@ -332,7 +332,7 @@ export default {
         receiver: '',
         reviewer: '',
         status: '',
-        terminalId: '',
+        terminalMark: '',
         role: [],
         auth: ''
       }
