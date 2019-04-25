@@ -69,3 +69,4 @@ export function updateTerminal(data) {
     data: data
   })
 }
+

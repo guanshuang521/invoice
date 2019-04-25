@@ -443,6 +443,7 @@ export default {
           authList.push(item.id)
         })
         this.authArray = authList
+        this.changeSsjg()
       }).catch(err => {
         this.listLoading = false
         this.$message.error(err)

@@ -55,6 +55,11 @@
             class="filter-item"
             placeholder="请选择"/>
         </el-form-item>
+        <el-form-item label="纳税主体">
+          <el-select v-model="listQuery.xsfNsrsbh" placeholder="请选择" size="small">
+            <el-option v-for="item in orgList" :key="item.id" :label="item.orgName" :value="item.taxNum"/>
+          </el-select>
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" size="small" @click="initList">查询</el-button>
           <el-button type="primary" size="small" @click="handleReset">重置</el-button>
@@ -83,7 +88,7 @@
         </el-table-column>
         <el-table-column label="购方名称" prop="gmfMc" align="center" width="220"/>
         <el-table-column label="购方税号" prop="gmfNsrsbh" align="center" width="160"/>
-        <el-table-column label="金额（不含税）" align="center">
+        <el-table-column label="金额（不含税）" align="center" width="120">
           <template slot-scope="scope">
             <span>{{ scope.row.hjje | toMoney }}</span>
           </template>
@@ -151,6 +156,7 @@
 
 <script>
 import { opeinvoiceList, fpSeeDetail } from '@/api/invoice/oSpecial'
+import { selectUserOrgList } from '@/api/system/user'
 import { arrayToMapField } from '@/utils/public'
 import { mapGetters } from 'vuex'
 import apiPath from '@/api/apiUrl'
@@ -183,13 +189,16 @@ export default {
         kprq_start: '',
         kprq_end: '',
         zfrq_start: '',
-        zfrq_end: ''
+        zfrq_end: '',
+        xsfNsrsbh: ''
       },
       listLoading: false,
       dataList: [],
       fppmShowData: [],
       // 发票查看窗口是否显示
-      fpckDialogVisible: false
+      fpckDialogVisible: false,
+      // 用户有权限的机构列表
+      orgList: []
     }
   },
   computed: {
@@ -212,11 +221,15 @@ export default {
   },
   mounted() {
     this.$store.getters.isAutoLoadData ? this.initList() : ''
+    selectUserOrgList({}).then(res => {
+      this.orgList = res.data
+    }).catch(err => {
+      this.$message.error(err)
+    })
   },
   methods: {
     // 查询
     initList() {
-      this.listQuery.xsfNsrsbh = this.org.taxNum
       opeinvoiceList(this.listQuery).then(res => {
         this.dataList = res.data.list
         this.totalCount = res.data.count
@@ -229,9 +242,13 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       }).then(() => {
-        const url = apiPath.invoice.openInvoice.exportIssuedInvoice + '?gmfMc=' + this.listQuery.gmfMc + '&fpDm=' + this.listQuery.fpDm + '&fpHm=' + this.listQuery.fpHm + '&kprq_start=' + this.listQuery.kprq_start + '&kprq_end=' + this.listQuery.kprq_end + '&zfrq_start=' + this.listQuery.zfrq_start + '&zfrq_end=' + this.listQuery.zfrq_end + '&xmmc=' + this.listQuery.xmmc + '&fplx=' + this.listQuery.fplx + '&fpzt=' + this.listQuery.fpzt + '&dybz=' + this.listQuery.dybz + '&xsfNsrsbh=' + this.org.taxNum
-        const downurl = url + '&x-access-token=' + getToken()
-        window.open(downurl)
+        const paramArr = ['x-access-token=' + getToken()]
+        Object.keys(this.listQuery).forEach(item => {
+          paramArr.push(item + '=' + this.listQuery[item])
+        })
+        const url = apiPath.invoice.openInvoice.exportIssuedInvoice + '?' + paramArr.join('&')
+        console.log(url)
+        window.open(url)
       })
     },
     // 重置
