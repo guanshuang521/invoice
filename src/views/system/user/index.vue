@@ -338,6 +338,7 @@ export default {
       }
       this.initTree()
       this.authArray = []
+      this.terminalInfo = []
     },
     addUser() { // 新增用户保存
       this.showPrise = true
