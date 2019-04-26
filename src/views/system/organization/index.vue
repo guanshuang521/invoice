@@ -164,6 +164,23 @@
                   @current-change="handleCurrentChange"/>
               </template>
             </el-tab-pane>
+            <el-tab-pane v-if="currentNodeType === 2" name="fourth" label="发票通基础设置">
+              <el-form ref="nodeMaintenanceForm" :model="nodeMaintenanceForm" :rules="nodeMaintenanceRules" label-width="120px" size="mini">
+                <el-form-item label="组织机构代码:" prop="orgCode">
+                  <el-input v-model="nodeMaintenanceForm.orgCode"/>
+                </el-form-item>
+                <el-form-item label="组织机构名称:" prop="orgName">
+                  <el-input v-model="nodeMaintenanceForm.orgName"/>
+                </el-form-item>
+                <el-form-item label="备注:" prop="remark">
+                  <el-input v-model="nodeMaintenanceForm.remark" classs="note" type="textarea"/>
+                </el-form-item>
+                <el-form-item>
+                  <el-button type="danger" icon="el-icon-delete" @click="deleteNode">删除</el-button>
+                  <el-button type="primary" icon="el-icon-check" @click="updateForm('nodeMaintenanceForm')">保存</el-button>
+                </el-form-item>
+              </el-form>
+            </el-tab-pane>
           </el-tabs>
         </div>
       </el-col>
@@ -321,7 +338,27 @@ export default {
         pageSize: 10
       },
       // 终端弹窗类型
-      terminalType: ''
+      terminalType: '',
+      // 发票通基础设置表单
+      fptBasicSetForm: {
+        appId: '',
+        aesKey: '',
+        file: '',
+        truststorePath: '',
+        pfxPwd: '',
+        trustPwd: '',
+        requestUrl: ''
+      },
+      // 发票通基础设置表单校验
+      fptBasicSetFormRules: {
+        appId: [],
+        aesKey: [],
+        file: '',
+        truststorePath: '',
+        pfxPwd: '',
+        trustPwd: '',
+        requestUrl: ''
+      }
     }
   },
   computed: {
@@ -448,7 +485,7 @@ export default {
     // 获取税号关联终端列表
     getTerminal() {
       const args = this.terminalQueryParams
-      args.orgId = this.currentNodeDetail.orgCode
+      args.orgId = this.currentNodeDetail.id
       terminalList(args).then(res => {
         this.codeRelevanceTerminalList = res.data.list
         this.totalCount = res.data.count
@@ -462,7 +499,7 @@ export default {
         if (valid) {
           const args = this.codeMaintenanceForm
           args.id = this.$refs.organTree.getCurrentNode().id
-          args.orgCode = this.currentNodeDetail.orgCode
+          args.orgCode = this.currentNodeDetail.id
           this.loading = true
           updateNode(args).then(res => {
             this.$refs[data].resetFields()
@@ -536,7 +573,7 @@ export default {
           if (this.terminalType === 'add') {
             const args = Object.assign({}, this.terminalInfo)
             args.invoiceType = args.invoiceType.join(',')
-            args.orgId = this.currentNodeDetail.orgCode
+            args.orgId = this.currentNodeDetail.id
             addTerminal(args).then(res => {
               this.$message({
                 type: 'success',

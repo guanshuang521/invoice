@@ -48,7 +48,7 @@
     <div class="button-container">
       <el-button size="mini" class="filter-item" type="primary" icon="el-icon-search" @click="addApply">新增申请</el-button>
       <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="del">删除</el-button>
-      <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="">打印</el-button>
+      <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="openPrintFp">打印</el-button>
     </div>
     <div class="table-container">
       <el-table
@@ -81,8 +81,8 @@
         <el-table-column fixed="right" label="操作" width="190" align="center">
           <template slot-scope="scope">
             <el-button type="text" size="small" @click="checkHZXXB(scope.row)">查看</el-button>
-            <el-button type="text" size="small">上传</el-button>
-            <el-button type="text" size="small">编辑</el-button>
+            <el-button type="text" size="small" @click="uploadData(scope.row)">上传</el-button>
+            <el-button type="text" size="small" @click="editData(scope.row)">编辑</el-button>
             <el-button type="text" size="small" @click="asyncData(scope.row)">同步</el-button>
           </template>
         </el-table-column>
@@ -110,19 +110,49 @@
         <el-button type="primary" size="mini" @click="redTableOpen">下一步</el-button>
       </span>
     </el-dialog>
-    <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="dialogRedTableVisible" title="红字信息表填开-申请" width="1200px">
-      <red-table v-if="dialogRedTableVisible" :form="form" :editable="true" @closeDialog="getInfo"/>
+    <!--红字信息表新增、编辑-->
+    <el-dialog
+      :close-on-click-modal="closeOnClickModal"
+      :visible.sync="dialogRedTableVisible"
+      :title="dialogRedTableTitle"
+      width="1200px">
+      <red-table v-if="dialogRedTableVisible" :form="form" :is-edit="isEdit" :editable="true" @closeDialog="getInfo"/>
     </el-dialog>
     <!--红字信息表查看-->
     <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="checkHZXXBVisible" title="红字信息表填开-查看" width="1200px">
       <red-table v-if="checkHZXXBVisible" :form="form" :editable="false" @closeDialog="getInfo"/>
+    </el-dialog>
+    <!--打印发票弹窗-->
+    <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="dyfpDialogVisible" title="打印发票信息列表" width="680px">
+      <el-table
+        :data="checkedItems"
+        border
+        fit
+        highlight-current-row>
+        <el-table-column prop="index" label="序号" align="center" width="50">
+          <template slot-scope="scope">
+            {{ scope.$index + 1 }}
+          </template>
+        </el-table-column>
+        <el-table-column label="发票类型" align="center">
+          <template slot-scope="scope">
+            <span>{{ SYS_FPLX[scope.row.fplx] }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="发票代码" prop="fpDm" align="center"/>
+        <el-table-column label="发票号码" prop="fpHm" align="center"/>
+      </el-table>
+      <div slot="footer" class="dialog-footer" align="center">
+        <el-button size="mini" type="primary" @click="printFp()">打印</el-button>
+      </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
 import redTable from '@/components/redTable/index'
-import { initList, del, sync } from '@/api/invoice/redTable'
+import { initList, del, apply, sync } from '@/api/invoice/redTable'
+import { printFP } from '@/api/invoice/oSpecial'
 import { arrayToMapField } from '@/utils/public'
 import Template from '../../system/template/index'
 import { mapGetters } from 'vuex'
@@ -161,12 +191,19 @@ export default {
       },
       totalCount: 0,
       dialogVisible: false,
+      // 新增编辑红字信息表是否显示
       dialogRedTableVisible: false,
+      dialogRedTableTitle: '',
       // 查看红字信息表是否显示
       checkHZXXBVisible: false,
       // 票面信息
       pfDetail: {},
-      checkedList: []
+      checkedList: [],
+      editable: false,
+      // 发票打印窗口是否显示
+      dyfpDialogVisible: false,
+      // 勾选的列表项
+      checkedItems: []
     }
   },
   computed: {
@@ -175,6 +212,9 @@ export default {
     ]),
     SYS_HZXXB_CLZT() { // 税率
       return arrayToMapField(this.dictList['SYS_HZXXB_CLZT'], 'code', 'name')
+    },
+    SYS_FPLX() {
+      return arrayToMapField(this.dictList['SYS_FPLX'], 'code', 'name')
     }
   },
   mounted() {
@@ -232,6 +272,8 @@ export default {
         if (valid) {
           this.dialogVisible = false
           this.dialogRedTableVisible = true
+          this.dialogRedTableTitle = '红字信息表填开-申请'
+          this.isEdit = false
         }
       })
     },
@@ -248,8 +290,41 @@ export default {
     // 新增申请
     addApply() {
       this.dialogVisible = true
+      this.form = {
+        yfpdm: '',
+        yfphm: ''
+      }
       this.$nextTick(() => {
         this.$refs['applyForm'].resetFields()
+      })
+    },
+    // 编辑
+    editData(row) {
+      this.dialogRedTableVisible = true
+      this.dialogRedTableTitle = '红字信息表填开-编辑'
+      this.isEdit = true
+      this.form = {
+        id: row.id
+      }
+    },
+    // 上传
+    uploadData(row) {
+      this.$confirm('确定上传选择的红字信息表申请数据吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.loading = true
+        const params = {
+          id: row.id
+        }
+        apply(params).then(res => {
+          this.loading = false
+          this.$message.success(res.message)
+        }).catch(err => {
+          this.loading = false
+          this.$message.error(err)
+        })
       })
     },
     // 同步
@@ -272,12 +347,63 @@ export default {
         })
       })
     },
+    // 打印
+    openPrintFp() {
+      if (this.checkedItems.length === 0) {
+        this.$message.info('请至少选择一条数据！')
+        return
+      }
+      function sortBy(field) {
+        return function(a, b) {
+          return a[field] - b[field]
+        }
+      }
+      // 验证规则：发票代码一样，发票号码需连续
+      this.checkedItems.sort(sortBy('yfphm'))
+      let valid = true
+      const defaultFpDm = this.checkedItems[0].yfphm
+      this.checkedItems.reduce((pre, curr) => {
+        if (pre && parseFloat(pre.yfphm) !== parseFloat(curr.yfphm) - 1) {
+          this.$message.error('发票号码需连续！')
+          valid = false
+        }
+      })
+      this.checkedItems.forEach(item => {
+        if (item.yfpdm !== defaultFpDm) {
+          this.$message.error('发票代码需一致！')
+          valid = false
+        }
+      })
+      if (valid) {
+        this.dyfpDialogVisible = true
+      }
+    },
+    // 打印
+    printFp() {
+      this.checkedItems.forEach(item => {
+        const xml = `<?xml version="1.0" encoding="gbk"?>
+    <business id="20004"comment="发票打印">
+        <body yylxdm="1">
+        <kpzdbs>${this.info.terminalMark}</kpzdbs>
+        <fplxdm>${item.fplx}</fplxdm>
+        <fpdm>${item.yfpdm}</fpdm>
+        <fphm>${item.yfphm}</fphm>
+        <dylx>0</dylx>
+        <dyfs>1</dyfs>
+        </body>
+      </business>`
+        const Base64 = require('js-base64').Base64
+        const args = '<content>' + Base64.encode(xml) + '</content>'
+        printFP(args).then()
+      })
+    },
     // 获取选中列表项
     handleSelectionChange(val) {
       this.checkedList = []
       for (let i = 0; i < val.length; i++) {
         this.checkedList.push(val[i].id)
       }
+      this.checkedItems = val
     },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`)

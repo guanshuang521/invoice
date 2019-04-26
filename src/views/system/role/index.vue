@@ -102,6 +102,7 @@
               class="filter-tree"
               default-expand-all
               show-checkbox
+              check-strictly="false"
               @check="handleCheck"
             />
           </div>
@@ -271,6 +272,7 @@ export default {
     handleEdit(id) {
       getRoleDetail(id).then(res => {
         this.form = res.data
+        this.resourceIds = res.data.resourceIds
       }).catch(err => {
         this.$message.error(err)
       })
@@ -297,11 +299,7 @@ export default {
       console.log(data, checked, indeterminate)
     },
     handleCheck(data, checks) {
-      var arr = []
-      for (var i = 0; i < checks.checkedNodes.length; i++) {
-        arr.push(checks.checkedNodes[i].id)
-      }
-      this.resourceIds = arr
+      this.resourceIds = checks.checkedKeys.concat(checks.halfCheckedKeys)
     }
   }
 }

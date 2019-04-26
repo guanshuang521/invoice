@@ -195,7 +195,10 @@ const apiPath = {
       detail: '/invoice/invoiceHzxxb/selectByInvoiceHzxxbByfp', // 详情
       insert: '/invoice/invoiceHzxxb/insertInvoiceHzxxb', // 保存
       apply: '/invoice/invoiceHzxxb/applyInvoiceHzxxb', // 申请
-      sync: '/invoice/invoiceHzxxb/queryInvoiceHzxxb' // 同步
+      sync: '/invoice/invoiceHzxxb/queryInvoiceHzxxb', // 同步
+      upload: '/invoice/invoiceHzxxb/queryInvoiceHzxxb', // 上传
+      editDetail: '/invoice/invoiceHzxxb/selectInvoiceHzxxbView', // 查看编辑详情
+      editSave: '/invoice/invoiceHzxxb/updateInvoiceHzxxb' // 编辑保存
     },
     openInvoice: {
       opeinvoiceList: '/invoice/queryAndCount/queryIssuedInvoice', // 已开发票查询

@@ -45,10 +45,34 @@ export function apply(data) {
     data
   })
 }
+// 上传
+export function upload(data) {
+  return request({
+    url: apiPath.invoice.redTable.upload,
+    method: 'post',
+    data
+  })
+}
 // 同步
 export function sync(data) {
   return request({
     url: apiPath.invoice.redTable.sync,
+    method: 'post',
+    data
+  })
+}
+// 获取编辑详情
+export function editDetail(data) {
+  return request({
+    url: apiPath.invoice.redTable.editDetail,
+    method: 'post',
+    data
+  })
+}
+// 编辑保存
+export function editSave(data) {
+  return request({
+    url: apiPath.invoice.redTable.editSave,
     method: 'post',
     data
   })
