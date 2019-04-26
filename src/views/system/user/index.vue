@@ -53,7 +53,11 @@
           </template>
         </el-table-column>
         <el-table-column label="上次登录IP" prop="modifiedId" align="center" width="100"/>
-        <el-table-column label="最后登录时间" prop="modifiedTime" align="center" width="120"/>
+        <el-table-column label="最后登录时间" width="160" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.modifiedTime | utoTimeToBeijing }}</span>
+          </template>
+        </el-table-column>
         <el-table-column
           align="center"
           fixed="right"
@@ -239,13 +243,11 @@ export default {
   },
   methods: {
     changeSsjg() {
-      console.log(this.userInfo.orgId)
       const params = {
         orgId: this.userInfo.orgId
       }
       this.loading = true
       selectTerminalsList(params).then(response => {
-        // this.userInfo.terminalMark = ''
         this.loading = false
         this.terminalInfo = response.data.list
       }).catch(err => {
@@ -352,7 +354,6 @@ export default {
             this.userInfo.password = password
             const args = Object.assign({}, this.userInfo)
             args.role = args.role.join(',')
-            console.log(this.userInfo)
             add(args).then(res => {
               this.$message.success(res.message)
               this.loading = false
