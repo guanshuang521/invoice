@@ -105,6 +105,12 @@
             <el-option v-for="option in dictList['SYS_FPLX']" :key="option.id" :value="option.code" :label="option.name"/>
           </el-select>
         </el-form-item>
+        <el-form-item v-if="dynamicValidateForm.fplx==26" label="备用发票类型" prop="byfplx">
+          <el-select v-model="dynamicValidateForm.byfplx" placeholder="请选择备用发票类型" style="width: 100%">
+            <el-option value ="007">普票</el-option>
+            <el-option value ="026">电票</el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="购方名称" prop="gmfMc">
           <el-select
             v-model="dynamicValidateForm.gmfMc"
@@ -195,6 +201,7 @@ export default {
         gmfMc: '',
         gmfNsrsbh: '',
         fplx: '',
+        byfplx: '',
         gmfYhzh: '',
         gmfDzdh: '',
         gmfDzyx: '',
@@ -204,6 +211,9 @@ export default {
       rules: {
         fplx: [
           { required: true, message: '请选择预制发票类型', trigger: 'blur' }
+        ],
+        byfplx: [
+          { required: true, message: '请选择备用发票类型', trigger: 'blur' }
         ],
         gmfMc: [
           { required: true, message: '请选择购方名称', trigger: 'blur' }
