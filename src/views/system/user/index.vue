@@ -114,7 +114,7 @@
             <el-option v-for="option in dictList['SYS_QYZT']" :key="option.id" :value="option.code" :label="option.name"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="终端号：" prop="terminalCode" >
+        <el-form-item label="终端号：" prop="terminalMark" >
           <el-select v-model="userInfo.terminalMark" placeholder="请选择">
             <el-option v-for="option in terminalInfo" :key="option.id" :value="option.terminalMark" :label="option.terminalMark"/>
           </el-select>
@@ -245,7 +245,7 @@ export default {
       }
       this.loading = true
       selectTerminalsList(params).then(response => {
-        this.userInfo.terminalMark = ''
+        // this.userInfo.terminalMark = ''
         this.loading = false
         this.terminalInfo = response.data.list
       }).catch(err => {
