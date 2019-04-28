@@ -69,4 +69,23 @@ export function updateTerminal(data) {
     data: data
   })
 }
+// 获取机构证书信息
+export function getOrgZs(data) {
+  return request({
+    url: apiPath.system.organization.getOrgZs,
+    method: 'post',
+    data: data
+  })
+}
+// 更新机构证书信息
+export function updateOrgZs(data) {
+  return request({
+    url: apiPath.system.organization.updateOrgZs,
+    method: 'post',
+    headers: {
+      contentType: 'application/x-www-form-urlencoded'
+    },
+    data: data
+  })
+}
 

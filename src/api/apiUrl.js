@@ -24,7 +24,9 @@ const apiPath = {
       terminalList: '/rbac/terminal/selectByTerminal',
       deleteTerminal: '/rbac/terminal/deleteTerminal',
       addTerminal: '/rbac/terminal/insertTerminal',
-      updateTerminal: '/rbac/terminal/updateTerminal'
+      updateTerminal: '/rbac/terminal/updateTerminal',
+      getOrgZs: '/rbac/organization/getOrganizationZs',
+      updateOrgZs: '/rbac/organization/updateOrganizationByZs'
     },
     // 门店管理
     shop: {
