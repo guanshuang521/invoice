@@ -192,7 +192,8 @@
             <el-option v-for="item in dictList['SYS_MSLX']" :key="item.id" :label="item.name" :value="item.code"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="优惠政策类型" prop="yhzclx" size="small">
+        <!--<el-form-item label="优惠政策类型" prop="yhzclx" size="small">-->
+        <el-form-item :rules="form.sfxsyhzc!=1?rules.yhzclx:[{ required: true, message: '优惠政策类型不能为空', trigger: 'blur' }]" label="优惠政策类型" prop="yhzclx" size="small">
           <el-select v-model="form.yhzclx" placeholder="请选择" size="small">
             <el-option v-for="item in dictList['SYS_YHZCLX']" :key="item.id" :label="item.name" :value="item.code"/>
           </el-select>
@@ -340,6 +341,9 @@ export default{
         ],
         shflbm: [
           { required: true, message: '税收分类编码不能为空', trigger: 'blur' }
+        ],
+        yhzclx: [
+          { required: false, message: '优惠政策类型不能为空', trigger: 'blur' }
         ]
       },
       // 所有税收分类编码
