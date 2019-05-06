@@ -31,13 +31,11 @@
             <el-option v-for="option in dictList['SYS_FPLX']" :key="option.id" :value="option.code" :label="option.name"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="备用发票类型" prop="byfplx">
-          <el-select v-model="dynamicValidateForm.fplx" placeholder="请选择备用发票类型">
-            <el-option value="" label=""/>
+        <el-form-item v-if="dynamicValidateForm.fplx==26" label="备用发票类型" prop="byfplx">
+          <el-select v-model="dynamicValidateForm.byfplx" placeholder="请选择备用发票类型" style="width: 100%">
+            <el-option value ="007">普票</el-option>
+            <el-option value ="026">电票</el-option>
           </el-select>
-        </el-form-item>
-        <el-form-item :rules="dynamicValidateForm.fplx==26?rules.gmfDzyx:[{ required: false, message: '请输入邮箱地址', trigger: 'blur' },{ type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }]" label="邮箱" prop="gmfDzyx">
-          <el-input v-model="dynamicValidateForm.gmfDzyx"/>
         </el-form-item>
         <el-form-item label="手机号" prop="gmfSjh">
           <el-input v-model="dynamicValidateForm.gmfSjh"/>
@@ -86,6 +84,7 @@ export default {
       dynamicValidateForm: {
         ids: '',
         fplx: '',
+        byfplx: '',
         gmfDzyx: '',
         gmfSjh: '',
         hjje: '',
@@ -95,6 +94,9 @@ export default {
       rules: {
         fplx: [
           { required: true, message: '请选择预制发票类型', trigger: 'blur' }
+        ],
+        byfplx: [
+          { required: true, message: '请选择备用发票类型', trigger: 'blur' }
         ],
         gmfDzyx: [
           { required: true, message: '请输入邮箱地址', trigger: 'blur' },
