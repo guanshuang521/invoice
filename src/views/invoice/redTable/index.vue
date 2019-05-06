@@ -4,7 +4,12 @@
 * @Description: 红字信息表
 */
 <template>
-  <div class="redTable-container">
+  <div
+    v-loading.fullscreen.lock="loading"
+    class="redTable-container"
+    element-loading-text="加载中"
+    element-loading-spinner="el-icon-loading"
+    element-loading-background="rgba(0, 0, 0, 0.6)">
     <div class="filter-container">
       <el-form :inline="true" :model="searchParams" class="demo-form-inline">
         <el-form-item label="购方名称">
@@ -156,6 +161,7 @@ import { printFP } from '@/api/invoice/oSpecial'
 import { arrayToMapField } from '@/utils/public'
 import Template from '../../system/template/index'
 import { mapGetters } from 'vuex'
+import { detail } from '@/api/invoice/redTable'
 
 export default {
   name: 'RedTable',
@@ -203,7 +209,8 @@ export default {
       // 发票打印窗口是否显示
       dyfpDialogVisible: false,
       // 勾选的列表项
-      checkedItems: []
+      checkedItems: [],
+      loading: false
     }
   },
   computed: {
@@ -270,10 +277,17 @@ export default {
     redTableOpen() {
       this.$refs['applyForm'].validate((valid) => {
         if (valid) {
-          this.dialogVisible = false
-          this.dialogRedTableVisible = true
-          this.dialogRedTableTitle = '红字信息表填开-申请'
-          this.isEdit = false
+          this.loading = true
+          detail(this.form).then(res => {
+            this.loading = false
+            this.dialogVisible = false
+            this.dialogRedTableVisible = true
+            this.dialogRedTableTitle = '红字信息表填开-申请'
+            this.isEdit = false
+          }).catch(err => {
+            this.loading = false
+            this.$message.error(err)
+          })
         }
       })
     },

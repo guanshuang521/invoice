@@ -58,7 +58,7 @@
           label="订单状态"
           align="center">
           <template slot-scope="scope">
-            {{ SYS_POS_DDZT[scope.row.ddzt] }}
+            {{ SYS_POS_DDZT[scope.row.status] }}
           </template>
         </el-table-column>
         <el-table-column
