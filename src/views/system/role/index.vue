@@ -103,11 +103,11 @@
               :props="defaultProps"
               :filter-node-method="filterNode"
               :default-checked-keys="form.resourceIds"
+              :check-strictly="strictly"
               node-key="id"
               class="filter-tree"
               default-expand-all
               show-checkbox
-              check-strictly="false"
               @check="handleCheck"
             />
           </div>
@@ -181,7 +181,8 @@ export default {
         label: 'label'
       },
       treeData: [],
-      resourceIds: []
+      resourceIds: [],
+      strictly: false
     }
   },
   mounted() {
@@ -244,10 +245,13 @@ export default {
           params.resourceIds = this.resourceIds
           delete params.id
           insertRole(params).then(res => {
+            this.$message.success(res.message)
             this.fetchData()
             this.dialogVisible = false
             this.dialogType = ''
             this.$refs[formName].resetFields()
+          }).catch(err => {
+            this.$message.error(err)
           })
         }
       })
@@ -257,7 +261,8 @@ export default {
         if (valid) {
           var params = JSON.parse(JSON.stringify(this.form))
           params.resourceIds = this.resourceIds
-          updateRole(params).then(response => {
+          updateRole(params).then(res => {
+            this.$message.success(res.message)
             this.fetchData()
             this.dialogVisible = false
             this.dialogType = ''

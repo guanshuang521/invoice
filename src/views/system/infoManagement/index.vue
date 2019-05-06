@@ -155,29 +155,21 @@
       custom-class="add-customer">
       <el-form ref="form" :inline="isInline" :rules="rules" :model="form" label-width="140px" size="mini">
         <el-form-item label="商品编码" prop="spbm" size="small">
-          <el-input v-model="form.spbm" placeholder="请输入"/>
-        </el-form-item>
-        <el-form-item label="税率(%)" prop="sl" size="small">
-          <el-select v-model="form.sl" placeholder="税率" size="small">
-            <el-option v-for="item in dictList['SYS_SL']" :key="item.id" :label="item.name" :value="item.code"/>
-          </el-select>
+          <el-input v-model="form.spbm" placeholder="请输入" disabled/>
         </el-form-item>
         <el-form-item label="商品名称" prop="spmc" size="small">
           <el-input v-model="form.spmc" placeholder="请输入"/>
         </el-form-item>
-        <el-form-item label="规格型号" prop="ggxh" size="small">
-          <el-input v-model="form.ggxh" placeholder="请输入"/>
-        </el-form-item>
-        <el-form-item label="商品税目" prop="spsm" size="small">
-          <el-select v-model="form.spsm" filterable placeholder="请选择" size="small" @change="changeShflmc">
-            <el-option label="税目" value="0"/>
+        <el-form-item label="税收分类名称" prop="shflmc" size="small">
+          <el-select v-model="form.shflmc" filterable placeholder="请选择" size="small" @change="changeShflmc(true)">
+            <el-option v-for="item in commodityTypes" :key="item.id" :label="item.shflmc" :value="item.id"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="单价(元)" prop="dj" size="small">
-          <el-input v-model="form.dj" placeholder="请输入"/>
+        <el-form-item label="税收分类编码" prop="shflbm" size="small">
+          <el-input v-model="form.shflbm" placeholder="请输入" readonly/>
         </el-form-item>
-        <el-form-item label="简码" prop="jm" size="small">
-          <el-input v-model="form.jm" placeholder="请输入"/>
+        <el-form-item label="规格型号" prop="ggxh" size="small">
+          <el-input v-model="form.ggxh" placeholder="请输入"/>
         </el-form-item>
         <el-form-item label="计量单位" prop="meteringcom" size="small">
           <el-input v-model="form.jldw" placeholder="请输入"/>
@@ -187,22 +179,17 @@
             <el-option v-for="item in dictList['SYS_HSBZ']" :key="item.id" :label="item.name" :value="item.code"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="税收分类名称" prop="shflmc" size="small">
-          <el-select v-model="form.shflmc" filterable placeholder="请选择" size="small" @change="changeShflmc">
-            <el-option v-for="item in commodityTypes" :key="item.id" :label="item.shflmc" :value="item.id"/>
-          </el-select>
+        <el-form-item label="单价(元)" prop="dj" size="small">
+          <el-input v-model="form.dj" placeholder="请输入"/>
         </el-form-item>
         <el-form-item label="零含税标识" prop="lslbs" size="small">
-          <el-select v-model="form.lslbs" placeholder="请选择">
+          <el-select v-model="form.lslbs" :disabled="lslbsDisabled" placeholder="请选择">
             <el-option v-for="item in dictList['SYS_LSLBS']" :key="item.id" :label="item.name" :value="item.code"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="税收分类编码" prop="shflbm" size="small">
-          <el-input v-model="form.shflbm" placeholder="请输入" readonly/>
-        </el-form-item>
-        <el-form-item label="免税类型" prop="mslx" size="small">
-          <el-select v-model="form.mslx" placeholder="请选择" size="small">
-            <el-option v-for="item in dictList['SYS_MSLX']" :key="item.id" :label="item.name" :value="item.code"/>
+        <el-form-item label="税率(%)" prop="sl" size="small">
+          <el-select v-model="form.sl" placeholder="税率" size="small" @change="slChange">
+            <el-option v-for="item in dictList['SYS_SL']" :key="item.id" :label="item.name" :value="item.code"/>
           </el-select>
         </el-form-item>
         <el-form-item label="是否享受优惠政策" prop="sfxsyhzc" size="small">
@@ -210,7 +197,12 @@
             <el-option v-for="item in dictList['SYS_SFXSYHZC']" :key="item.id" :label="item.name" :value="item.code"/>
           </el-select>
         </el-form-item>
-        <el-form-item :rules="form.sfxsyhzc!=1?rules.yhzclx:[{ required: true, message: '优惠政策类型不能为空', trigger: 'blur' }]" label="优惠政策类型" prop="yhzclx" size="small">
+        <el-form-item label="免税类型" prop="mslx" size="small">
+          <el-select v-model="form.mslx" placeholder="请选择" size="small">
+            <el-option v-for="item in dictList['SYS_MSLX']" :key="item.id" :label="item.name" :value="item.code"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="优惠政策类型" prop="yhzclx" size="small">
           <el-select v-model="form.yhzclx" placeholder="请选择" size="small">
             <el-option v-for="item in dictList['SYS_YHZCLX']" :key="item.id" :label="item.name" :value="item.code"/>
           </el-select>
@@ -229,13 +221,13 @@
       title="新增商品税收编码转换"
       width="700px"
       custom-class="add-customer">
-      <el-form ref="form1" :rules="rules" :model="form1" :inline="true" label-width="120px">
-        <el-form-item label="税收分类名称">
-          <el-select v-model="form1.shflmc" filterable placeholder="请选择" size="small">
-            <el-option v-for="item in commodityTypes" :key="item.id" :label="item.jm" :value="item.id"/>
+      <el-form ref="form1" :rules="form1Rules" :model="form1" :inline="true" label-width="120px">
+        <el-form-item label="税收分类名称" prop="shflmc">
+          <el-select v-model="form1.shflmc" filterable placeholder="请选择" size="small" @change="changeShflmc(false)">
+            <el-option v-for="item in commodityTypes" :key="item.id" :label="item.shflmc" :value="item.id"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="税收分类编码" prop="spmcName" size="small">
+        <el-form-item label="税收分类编码" prop="shflbm" size="small">
           <el-input v-model="form1.shflbm"/>
         </el-form-item>
       </el-form>
@@ -271,11 +263,13 @@
   </div>
 </template>
 <script>
-import { commodictList, AddData, editData, getAllCommodityTypes } from '@/api/system/infoManagement'
+import { commodictList, AddData, editData, getAllCommodityTypes, getManagementCode, updateCommodityByShflbm } from '@/api/system/infoManagement'
 import apiPath from '@/api/apiUrl'
 import { arrayToMapField } from '@/utils/public'
 import { getToken } from '@/utils/auth'
 import { mapGetters } from 'vuex'
+import qs from 'qs'
+
 export default{
   name: 'InfoManagement',
   data() {
@@ -303,8 +297,6 @@ export default{
       form: {
         spbm: '',
         spmc: '',
-        spsm: '',
-        jm: '',
         ggxh: '',
         dj: '',
         jldw: '',
@@ -321,6 +313,14 @@ export default{
       form1: {
         shflmc: '',
         shflbm: ''
+      },
+      form1Rules: {
+        shflmc: [
+          { required: true, message: '税收分类名称不能为空', trigger: 'change' }
+        ],
+        shflbm: [
+          { required: true, message: '税收分类编码不能为空', trigger: 'blur' }
+        ]
       },
       rules: {
         spbm: [
@@ -358,13 +358,12 @@ export default{
         ],
         shflbm: [
           { required: true, message: '税收分类编码不能为空', trigger: 'blur' }
-        ],
-        yhzclx: [
-          { required: false, message: '优惠政策类型不能为空', trigger: 'blur' }
         ]
       },
       // 所有税收分类编码
-      commodityTypes: []
+      commodityTypes: [],
+      // 零含税标识是否不可编辑
+      lslbsDisabled: false
     }
   },
   computed: {
@@ -404,18 +403,30 @@ export default{
   },
   methods: {
     // 税收分类名称切换
-    changeShflmc() {
-      console.log(this.form.shflmc)
-      this.commodityTypes.forEach(item => {
-        if (item.id === this.form.shflmc) {
-          this.form.shflbm = item.shflbm
-          this.form.sl = item.sl
-          this.form.sfxsyhzc = item.sfxsyhzc
-          this.form.lslbs = item.lslbs
-          this.form.mslx = item.mslx
-          this.form.yhzclx = item.yhzclx
-        }
-      })
+    changeShflmc(isAdd) {
+      if (isAdd) {
+        getManagementCode(qs.stringify({ shflbm: this.form.shflmc })).then(res => {
+          this.form.spbm = res.data.spbm
+        }).catch(err => {
+          this.$message.error(err)
+        })
+        this.commodityTypes.forEach(item => {
+          if (item.id === this.form.shflmc) {
+            this.form.shflbm = item.shflbm
+            this.form.sl = item.sl
+            this.form.sfxsyhzc = item.sfxsyhzc
+            this.form.lslbs = item.lslbs
+            this.form.mslx = item.mslx
+            this.form.yhzclx = item.yhzclx
+          }
+        })
+      } else {
+        this.commodityTypes.forEach(item => {
+          if (item.id === this.form1.shflmc) {
+            this.form1.shflbm = item.shflbm
+          }
+        })
+      }
     },
     searchFn() {
       this.getList()
@@ -469,7 +480,22 @@ export default{
         this.$refs['form'].clearValidate()
       })
       this.dialogType = 'adds'
-      this.form = {}
+      this.form = {
+        spbm: '',
+        spmc: '',
+        ggxh: '',
+        dj: '',
+        jldw: '',
+        hsbz: '',
+        shflbm: '',
+        shflmc: '',
+        sl: '',
+        lslbs: '',
+        mslx: '',
+        sfxsyhzc: '',
+        yhzclx: '',
+        id: 0
+      }
     },
     addAdata(formName) { // 点击添加确定后
       if (this.dialogType === 'adds') {
@@ -525,9 +551,9 @@ export default{
       }
     },
     settingClick() { // 设置税收分类编码
-      if (this.checkedList.length !== 1) {
+      if (this.checkedList.length === 0) {
         this.$message({
-          message: '请选择一条数据操作',
+          message: '请至少选择一条数据操作',
           type: 'error'
         })
         return false
@@ -540,7 +566,10 @@ export default{
           var params = {}
           params.shflbm = JSON.parse(JSON.stringify(this.form1)).shflbm
           params.shflmc = JSON.parse(JSON.stringify(this.form1)).shflmc
-          params.id = this.checkedList[0].id
+          params.ids = ''
+          this.checkedList.forEach((item) => {
+            params.ids += item.id
+          })
           this.loading = true
           editData(params).then(res => {
             this.$message({
@@ -551,7 +580,9 @@ export default{
             this.getList()
             this.dialogVisible1 = false
             this.dialogType = ''
-            this.form = {}
+            this.form = {
+
+            }
           }).catch(e => {
             this.$message({
               message: e,
@@ -599,6 +630,17 @@ export default{
     },
     handlePreview(file) { // 点击文件列表中已上传的文件时的钩子
       console.log(file)
+    },
+    // 更改税率回调函数
+    slChange() {
+      console.log(this.form.sl)
+      if (this.form.sl === '0') {
+        this.form.lslbs = '1'
+        this.lslbsDisabled = false
+      } else {
+        this.form.lslbs = '2'
+        this.lslbsDisabled = true
+      }
     }
   }
 }
@@ -607,8 +649,10 @@ export default{
   .infoManagement {
     &-container {
       margin: 30px;
-      /deep/ .el-input__inner{
-        width: 180px;
+      .el-dialog__wrapper{
+        /deep/ .el-input__inner{
+          width: 180px;
+        }
       }
       .button-container {
         margin-bottom: 20px;

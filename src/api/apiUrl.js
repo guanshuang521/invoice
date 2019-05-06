@@ -77,7 +77,9 @@ const apiPath = {
       exportData: '/rbac/commoditye/exportCommodityExcel', // 导出数据
       importExcel: '/rbac/commoditye/importCommodityExcel', // 导入Excel
       commodityTypes: '/rbac/commodityType/selectCommodityTypesList', // 获取所有的税收分类编码,
-      allList: '/rbac/commoditye/selectCommoditysList' // 获取所有商品列表
+      allList: '/rbac/commoditye/selectCommoditysList', // 获取所有商品列表
+      getManagementCode: '/rbac/commoditye/getSpbmCode', // 根据税收分类名称获取商品编码
+      updateCommodityByShflbm: '/rbac/commoditye/updateCommodityByShflbm' // 批量设置税收分类编码
     },
     codeManagement: {
       list: '/rbac/commodityType/selectByCommodityType', // 页面加载获取数据

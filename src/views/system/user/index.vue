@@ -288,7 +288,7 @@ export default {
     },
     initTree() { // 初始化机构树
       this.loading = true
-      getNodeList({}).then(res => {
+      getNodeList({ type: 2 }).then(res => {
         this.loading = false
         this.orgIdOptions = res.data.list
         this.organTreeData = {}
@@ -296,13 +296,6 @@ export default {
       }).catch(e => {
         this.loading = false
         this.$message.error(e)
-      })
-      getNodeList({ type: 2 }).then(res => {
-        this.loading = false
-        this.orgIdOptions = res.data.list
-      }).catch(err => {
-        this.loading = false
-        this.$message.error(err)
       })
     },
     initTable() { // table列表查询
