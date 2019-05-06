@@ -440,7 +440,7 @@ export default {
     // 发票验证
     validate() {
       if (this.checkedItems.length === 0) {
-        this.$message.info('请至少选择一条数据！')
+        this.$message.warning('请至少选择一条数据！')
         return
       }
       this.checkedItems.forEach(item => {

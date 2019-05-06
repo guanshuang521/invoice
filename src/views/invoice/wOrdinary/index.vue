@@ -255,7 +255,7 @@ export default {
     batchInvoice() {
       let checked = true
       if (this.checkedList.length === 0) {
-        this.$message.info('请至少选择一条数据！')
+        this.$message.warning('请至少选择一条数据！')
         return
       }
       this.checkedList.forEach(item => {
@@ -289,10 +289,7 @@ export default {
     // 预制发票退回
     backInvoicePre() {
       if (this.checkedList.length === 0) {
-        this.$message({
-          message: '请至少选择一条数据！',
-          type: 'error'
-        })
+        this.$message.warning('请至少选择一条数据！')
         return
       }
       this.$confirm('是否确认回退选择的预制发票?', '预制发票回退', {

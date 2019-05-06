@@ -166,7 +166,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="税收分类编码" prop="shflbm" size="small">
-          <el-input v-model="form.shflbm" placeholder="请输入" readonly/>
+          <el-input v-model="form.shflbm" placeholder="请输入" disabled/>
         </el-form-item>
         <el-form-item label="规格型号" prop="ggxh" size="small">
           <el-input v-model="form.ggxh" placeholder="请输入"/>

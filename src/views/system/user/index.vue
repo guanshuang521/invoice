@@ -242,6 +242,7 @@ export default {
   },
   methods: {
     changeSsjg() {
+      this.userInfo.terminalMark = ''
       const params = {
         orgId: this.userInfo.orgId
       }

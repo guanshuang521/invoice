@@ -252,7 +252,7 @@ export default {
     // 删除
     del() {
       if (this.checkedList.length === 0) {
-        this.$message.info('请至少选择一条数据！')
+        this.$message.warning('请至少选择一条数据！')
         return false
       }
       this.$confirm('确定要删除选择的数据吗?', '提示', {
@@ -364,7 +364,7 @@ export default {
     // 打印
     openPrintFp() {
       if (this.checkedItems.length !== 1) {
-        this.$message.info('请选择一条数据！')
+        this.$message.warning('请选择一条数据！')
         return
       }
       function sortBy(field) {

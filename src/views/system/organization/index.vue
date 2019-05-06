@@ -663,7 +663,7 @@ export default {
         if (valid) {
           this.$refs.fileUpload.submit()
           if (this.param === '') {
-            this.$message.info('请上传fpx证书')
+            this.$message.warning('请上传fpx证书')
             return false
           }
           this.param.append('id', this.currentNodeDetail.id)

@@ -274,10 +274,7 @@ export default {
     },
     delList() { // 删除数据
       if (this.checkedList.length === 0) {
-        this.$message({
-          type: 'info',
-          message: '请先选择表格中的数据'
-        })
+        this.$message.warning('请先选择表格中的数据')
         return false
       }
       this.$confirm('确定要删除选择的数据吗?', '提示', {
@@ -289,10 +286,7 @@ export default {
         }
         this.loading = true
         delPosList(params).then(response => {
-          this.$message({
-            type: 'success',
-            message: '删除成功'
-          })
+          this.$message.success('删除成功')
           this.initTable()
           this.loading = false
         }).catch(err => {

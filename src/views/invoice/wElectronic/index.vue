@@ -256,7 +256,7 @@ export default {
     batchInvoice() {
       let checked = true
       if (this.checkedList.length === 0) {
-        this.$message.info('请至少选择一条数据！')
+        this.$message.warning('请至少选择一条数据！')
         return
       }
       this.checkedList.forEach(item => {

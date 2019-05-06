@@ -238,17 +238,7 @@ export default {
     // 同一购方订单生成预制发票
     createPreInvoice() {
       if (this.checkedList.length === 0) {
-        this.$message({
-          type: 'info',
-          message: '请先选择表格中的一条数据'
-        })
-        return false
-      }
-      if (this.checkedList.length !== 1) {
-        this.$message({
-          type: 'info',
-          message: '请选择表格中的一条数据'
-        })
+        this.$message.warning('请先选择表格中的一条数据')
         return false
       }
       this.$confirm('确定要同一购方订单生成预制发票吗?', '提示', {
@@ -286,10 +276,7 @@ export default {
     // 勾选生成预制发票
     checkCreateInvoice() {
       if (this.checkedList.length === 0) {
-        this.$message({
-          type: 'info',
-          message: '请先选择表格中的数据'
-        })
+        this.$message.warning('请先选择表格中的一条数据')
         return false
       }
       this.$confirm('确定要生成预制发票吗?', '提示', {
