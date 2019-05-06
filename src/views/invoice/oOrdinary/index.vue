@@ -428,9 +428,13 @@ export default {
           item.se = -item.se
           item.hsxmje = -item.hsxmje
           item.xmje = -item.xmje
-          item.xmsl = -item.xmsl
+          item.xmsl = -item.xmsl === '0' ? '' : -item.xmsl
         })
         this.fppmHckpData = res.data
+        this.fppmHckpData.check = true
+        this.fppmHckpData.hjje = -this.fppmHckpData.hjje
+        this.fppmHckpData.hjse = -this.fppmHckpData.hjse
+        this.fppmHckpData.jshj = -this.fppmHckpData.jshj
       }).catch(err => {
         this.$message.error(err)
       })
@@ -489,8 +493,8 @@ export default {
     },
     // 打印发票弹窗
     openPrintFp() {
-      if (this.checkedItems.length === 0) {
-        this.$message.info('请至少选择一条数据！')
+      if (this.checkedItems.length !== 1) {
+        this.$message.info('请选择一条数据！')
         return
       }
       function sortBy(field) {

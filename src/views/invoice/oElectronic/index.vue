@@ -392,9 +392,13 @@ export default {
           item.se = -item.se
           item.hsxmje = -item.hsxmje
           item.xmje = -item.xmje
-          item.xmsl = -item.xmsl
+          item.xmsl = -item.xmsl === '0' ? '' : -item.xmsl
         })
         this.fppmHckpData = res.data
+        this.fppmHckpData.check = true
+        this.fppmHckpData.hjje = -this.fppmHckpData.hjje
+        this.fppmHckpData.hjse = -this.fppmHckpData.hjse
+        this.fppmHckpData.jshj = -this.fppmHckpData.jshj
       }).catch(err => {
         this.$message.error(err)
       })

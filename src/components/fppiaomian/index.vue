@@ -320,7 +320,7 @@ export default {
         kpzh: '',
         lines: [
           {
-            num: '1', // 序号
+            xh: '1', // 序号
             commodityId: '', // 商品编号
             fphxz: '0', // 0 正常行,1折扣行,2被折扣行
             yhzcbs: '0', // 优惠政策标识  0：不使用，1：使用
@@ -456,7 +456,7 @@ export default {
     addBtn() {
       this.formdata.lines.push(
         {
-          num: this.formdata.lines.length + 1, // 序号
+          xh: this.formdata.lines.length + 1, // 序号
           commodityId: '', // 商品编号
           fphxz: '0', // 0 正常行,1折扣行,2被折扣行
           yhzcbs: '0',

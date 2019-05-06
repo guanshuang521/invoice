@@ -349,8 +349,8 @@ export default {
     },
     // 打印
     openPrintFp() {
-      if (this.checkedItems.length === 0) {
-        this.$message.info('请至少选择一条数据！')
+      if (this.checkedItems.length !== 1) {
+        this.$message.info('请选择一条数据！')
         return
       }
       function sortBy(field) {
