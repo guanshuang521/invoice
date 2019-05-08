@@ -28,10 +28,22 @@
           <div v-if="formdata.fplx == this.$store.getters.fplx_spe">增值税专用发票</div>
         </div>
         <div class="fpTitleRight">
-          <img src="../../assets/common/no.jpg">
+          <!--<img src="../../assets/common/no.jpg">-->
+          <div class="titlekprq">
+            <span class="kprqText">发票代码：</span>
+            <span class="kprq">{{ formdata.fpDm }}</span>
+          </div>
+          <div class="titlekprq">
+            <span class="kprqText">发票号码：</span>
+            <span class="kprq">{{ formdata.fpHm }}</span>
+          </div>
           <div class="titlekprq">
             <span class="kprqText">开票日期：</span>
-            <span class="kprq">{{ kprq }}</span>
+            <span class="kprq">{{ formdata.kprq }}</span>
+          </div>
+          <div class="titlekprq">
+            <span class="kprqText">校验码：</span>
+            <span class="kprq">{{ formdata.jym }}</span>
           </div>
         </div>
       </div>
@@ -371,7 +383,6 @@ export default {
       closeOnClickModal: false,
       dataConversion: dataConversion,
       globaldata: globaldata,
-      kprq: '',
       isgoods: false, // 选择税收编码弹窗显示
       isgmfmcDialog: false, // 选择购买方名称弹窗显示
       isyhxx: false, // 添加客户信息弹窗显示
@@ -466,7 +477,6 @@ export default {
     }
   },
   mounted: function() {
-    this.kprq = getDate(new Date().getTime(), 'yyyy年MM月dd日')
     // 计算所有 明细项 金额、税额 合计
     if (this.formdata.hjje) {
       this.formdata.hjje = Number(this.formdata.hjje).toFixed(2)
