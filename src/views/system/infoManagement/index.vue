@@ -566,10 +566,11 @@ export default{
           var params = {}
           params.shflbm = JSON.parse(JSON.stringify(this.form1)).shflbm
           params.shflmc = JSON.parse(JSON.stringify(this.form1)).shflmc
-          params.ids = ''
+          params.ids = []
           this.checkedList.forEach((item) => {
-            params.ids += item.id
+            params.ids.push(item.id)
           })
+          params.ids = params.ids.join(',')
           this.loading = true
           editData(params).then(res => {
             this.$message({

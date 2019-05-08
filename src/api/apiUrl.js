@@ -72,7 +72,7 @@ const apiPath = {
     InfoManagement: {
       list: '/rbac/commoditye/selectByCommodity', // 页面加载获取数据
       newAdd: '/rbac/commoditye/insertCommodity', // 添加数据
-      editData: '/rbac/commoditye/updateCommodity', // 编辑数据(修改数据)
+      editData: '/rbac/commoditye/updateCommodityByShflbm', // 编辑数据(修改数据)
       exportModle: '/rbac/commoditye/downloadCommodityExcel', // 下载模板
       exportData: '/rbac/commoditye/exportCommodityExcel', // 导出数据
       importExcel: '/rbac/commoditye/importCommodityExcel', // 导入Excel
