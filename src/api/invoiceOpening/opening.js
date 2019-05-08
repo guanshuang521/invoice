@@ -37,3 +37,11 @@ export function download(data) {
   }
   window.open(apiPath.invoiceOpening.opening.download + '?' + params.join('&'))
 }
+// 获取未开票的发票代码、发票号码
+export function getNotInvoiceYetDmHm(data) {
+  return request({
+    url: apiPath.invoiceOpening.opening.getNotInvoiceYetDmHm,
+    method: 'post',
+    data
+  })
+}

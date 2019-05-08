@@ -41,7 +41,7 @@
               <td rowspan="2" style="text-align:center;" width="10%">购<br>方</td>
               <td class="td_border" style="text-align:center;" width="14%">名称：</td>
               <td class="td_border" width="26%">
-                <input v-model="formdata.ghdwmc" type="text" class="bw-input">
+                <input v-model="formdata.ghdwmc" type="text" class="bw-input" readonly="readonly">
               </td>
             </tr>
             <tr>
@@ -51,7 +51,7 @@
               </td>
               <td class="td_border" align="center">纳税人识别号：</td>
               <td class="td_border">
-                <input v-model="formdata.ghdwsbh" type="text" class="bw-input">
+                <input v-model="formdata.ghdwsbh" type="text" class="bw-input" readonly="readonly">
               </td>
             </tr>
           </tbody>
@@ -190,11 +190,11 @@
                   </div>
                   <div class="search-item" style="margin-bottom: 10px">
                     <span class="hzxx_span search-label" style="font-size: 14px;">联系电话：</span>
-                    <input v-model="form.lxfs" type="text" class="hzxx_input search-input">
+                    <input v-model="formdata.lxfs" type="text" class="hzxx_input search-input">
                   </div>
                   <div class="search-item">
                     <span class="fl hzxx_span search-label" style="float: left;display: inline;">申请理由：</span>
-                    <textarea v-model="form.sqly" class="sqly_area" data-exclude="true" style="border: 1px solid #E0E0E0;margin-left: 4px"/>
+                    <textarea v-model="formdata.sqly" class="sqly_area" data-exclude="true" style="border: 1px solid #E0E0E0;margin-left: 4px"/>
                   </div>
                 </div>
               </td>
@@ -222,7 +222,7 @@
 </template>
 
 <script>
-import { detail, insert } from '@/api/invoice/redTable'
+import { detail, editDetail, insert, editSave } from '@/api/invoice/redTable'
 export default {
   name: 'Hzfp',
   components: {
@@ -234,6 +234,10 @@ export default {
       default: {}
     },
     'editable': {
+      type: Boolean,
+      default: true
+    },
+    'isEdit': {
       type: Boolean,
       default: true
     }
@@ -265,14 +269,24 @@ export default {
         // 原发票号码
         yfphm: '',
         lines: [],
-        SQLX: 2
+        sqlx: 2
       }
     }
   },
   mounted: function() {
-    this.detail()
+    this.isEdit ? this.editDetail() : this.detail()
   },
   methods: {
+    // 获取编辑详情
+    editDetail() {
+      editDetail({ id: this.form.id }).then(res => {
+        this.formdata = res.data
+        console.log(res)
+      }).catch(err => {
+        this.$message.error(err)
+      })
+    },
+    // 获取详情
     detail() {
       detail(this.form).then(res => {
         this.formdata = res.data.hzxxb
@@ -283,14 +297,25 @@ export default {
     },
     save() {
       this.loading = true
-      insert(this.formdata).then(res => {
-        this.loading = false
-        this.$message.success(res.message)
-        this.$emit('closeDialog', true)
-      }).catch(err => {
-        this.loading = false
-        this.$message.error(err)
-      })
+      if (this.isEdit) {
+        editSave(this.formdata).then(res => {
+          this.loading = false
+          this.$message.success(res.message)
+          this.$emit('closeDialog', true)
+        }).catch(err => {
+          this.loading = false
+          this.$message.error(err)
+        })
+      } else {
+        insert(this.formdata).then(res => {
+          this.loading = false
+          this.$message.success(res.message)
+          this.$emit('closeDialog', true)
+        }).catch(err => {
+          this.loading = false
+          this.$message.error(err)
+        })
+      }
     }
   }
 }
@@ -304,6 +329,7 @@ export default {
     margin: 5% auto;
     text-align: center;
     border: none;
+    pointer-events: none;
   }
   .hzfp_all {
     width: 1154px;

@@ -58,7 +58,7 @@
           label="订单状态"
           align="center">
           <template slot-scope="scope">
-            {{ SYS_POS_DDZT[scope.row.ddzt] }}
+            {{ SYS_POS_DDZT[scope.row.status] }}
           </template>
         </el-table-column>
         <el-table-column
@@ -103,6 +103,12 @@
         <el-form-item label="预制发票类型" prop="fplx">
           <el-select v-model="dynamicValidateForm.fplx" placeholder="请选择预制发票类型" style="width: 100%">
             <el-option v-for="option in dictList['SYS_FPLX']" :key="option.id" :value="option.code" :label="option.name"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item v-if="dynamicValidateForm.fplx==26" label="备用发票类型" prop="byfplx">
+          <el-select v-model="dynamicValidateForm.byfplx" placeholder="请选择备用发票类型" style="width: 100%">
+            <el-option value ="007">普票</el-option>
+            <el-option value ="026">电票</el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="购方名称" prop="gmfMc">
@@ -195,6 +201,7 @@ export default {
         gmfMc: '',
         gmfNsrsbh: '',
         fplx: '',
+        byfplx: '',
         gmfYhzh: '',
         gmfDzdh: '',
         gmfDzyx: '',
@@ -204,6 +211,9 @@ export default {
       rules: {
         fplx: [
           { required: true, message: '请选择预制发票类型', trigger: 'blur' }
+        ],
+        byfplx: [
+          { required: true, message: '请选择备用发票类型', trigger: 'blur' }
         ],
         gmfMc: [
           { required: true, message: '请选择购方名称', trigger: 'blur' }
@@ -264,10 +274,7 @@ export default {
     },
     delList() { // 删除数据
       if (this.checkedList.length === 0) {
-        this.$message({
-          type: 'info',
-          message: '请先选择表格中的数据'
-        })
+        this.$message.warning('请先选择表格中的数据')
         return false
       }
       this.$confirm('确定要删除选择的数据吗?', '提示', {
@@ -279,10 +286,7 @@ export default {
         }
         this.loading = true
         delPosList(params).then(response => {
-          this.$message({
-            type: 'success',
-            message: '删除成功'
-          })
+          this.$message.success('删除成功')
           this.initTable()
           this.loading = false
         }).catch(err => {

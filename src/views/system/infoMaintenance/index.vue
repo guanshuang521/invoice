@@ -108,11 +108,8 @@
         <el-form-item label="详细地址：" prop="khdz" style="width: 596px">
           <el-input v-model="form.khdz" placeholder="请输入" class="detailAddress"/>
         </el-form-item>
-        <el-form-item label="开户银行：">
-          <el-select v-model="form.khh" placeholder="请选择">
-            <el-option label="华夏银行" value="华夏银行"/>
-            <el-option label="北京银行" value="北京银行"/>
-          </el-select>
+        <el-form-item label="开户银行：" >
+          <el-input v-model="form.khh" placeholder="请输入"/>
         </el-form-item>
         <el-form-item label="银行账号：">
           <el-input v-model="form.yhzh" class="address"/>
@@ -334,10 +331,7 @@ export default {
     },
     delCustomer() { // 删除数据
       if (this.checkedList.length === 0) {
-        this.$message({
-          type: 'info',
-          message: '请至少选择一条数据！'
-        })
+        this.$message.warning('请至少选择一条数据！')
         return false
       }
       this.$confirm('确定要删除选择的数据吗?', '提示', {

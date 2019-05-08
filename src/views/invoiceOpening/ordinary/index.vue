@@ -88,6 +88,7 @@ export default {
           fpDm: '', // 发票代码
           fpHm: '', // 发票号码
           hsbz: '0', // 含税标识
+          lyxt: 99, // 来源系统
           xsfId: this.org.id, // ？
           xsfBmid: this.org.id, // ？
           xsfBmmc: this.org.name, // ？

@@ -23,6 +23,7 @@
             :filter-node-method="filterNode"
             :expand-on-click-node="autoExpand"
             :highlight-current="highlight"
+            :limit="1"
             class="filter-tree"
             default-expand-all
             @node-click="showTabs()"
@@ -164,6 +165,44 @@
                   @current-change="handleCurrentChange"/>
               </template>
             </el-tab-pane>
+            <el-tab-pane v-if="info.userCode === 'admin'" name="fifth" label="发票通基础设置">
+              <el-form ref="fptBasicSetForm" :model="fptBasicSetForm" :rules="fptBasicSetFormRules" label-width="120px" size="mini">
+                <el-form-item label="开票地址:" prop="requestUrl">
+                  <el-input v-model="fptBasicSetForm.requestUrl"/>
+                </el-form-item>
+                <el-form-item label="appid:" prop="appId">
+                  <el-input v-model="fptBasicSetForm.appId"/>
+                </el-form-item>
+                <el-form-item label="aeskey:" prop="aesKey">
+                  <el-input v-model="fptBasicSetForm.aesKey"/>
+                </el-form-item>
+                <el-form-item label="pfx证书:">
+                  <el-upload
+                    ref="fileUpload"
+                    :on-change="handleUploadChange"
+                    :file-list="fileList"
+                    :action="''"
+                    :before-upload="beforeUpload"
+                    :auto-upload="false"
+                    class="upload-demo">
+                    <el-button size="small" type="primary">点击上传</el-button>
+                    <div slot="tip" class="el-upload__tip">只能上传pfx文件</div>
+                  </el-upload>
+                </el-form-item>
+                <el-form-item label="pfx证书密码:" prop="pfxPwd">
+                  <el-input v-model="fptBasicSetForm.pfxPwd"/>
+                </el-form-item>
+                <el-form-item label="truststore路径:" prop="truststorePath">
+                  <el-input v-model="fptBasicSetForm.truststorePath"/>
+                </el-form-item>
+                <el-form-item label="truststore密码:" prop="trustPwd">
+                  <el-input v-model="fptBasicSetForm.trustPwd"/>
+                </el-form-item>
+                <el-form-item>
+                  <el-button type="primary" icon="el-icon-check" @click="updateOrgZs('fptBasicSetForm')">保存</el-button>
+                </el-form-item>
+              </el-form>
+            </el-tab-pane>
           </el-tabs>
         </div>
       </el-col>
@@ -180,10 +219,12 @@
 </template>
 
 <script>
-import { getNodeList, deleteNode, updateNode, addNode, terminalList, deleteTerminal, addTerminal, updateTerminal } from '@/api/system/organization'
+import { getNodeList, deleteNode, updateNode, addNode, terminalList, deleteTerminal, addTerminal, updateTerminal, getOrgZs, updateOrgZs } from '@/api/system/organization'
 import dialogDetail from '@/components/system/organization'
 import { arrayToTree, arrayToMapField } from '@/utils/public'
 import { mapGetters } from 'vuex'
+import qs from 'qs'
+
 export default {
   name: 'Dashboard',
   components: {
@@ -321,13 +362,48 @@ export default {
         pageSize: 10
       },
       // 终端弹窗类型
-      terminalType: ''
+      terminalType: '',
+      // 发票通基础设置表单
+      fptBasicSetForm: {
+        appId: '',
+        aesKey: '',
+        pfxFile: '',
+        truststorePath: '',
+        pfxPwd: '',
+        trustPwd: '',
+        requestUrl: ''
+      },
+      // 发票通基础设置表单校验
+      fptBasicSetFormRules: {
+        appId: [
+          { required: true, message: '请输入appId', trigger: 'blur' }
+        ],
+        aesKey: [
+          { required: true, message: '请输入aesKey', trigger: 'blur' }
+        ],
+        truststorePath: [
+          { required: true, message: '请输入truststore路径', trigger: 'blur' }
+        ],
+        pfxPwd: [
+          { required: true, message: '请输入pfx证书密码', trigger: 'blur' }
+        ],
+        trustPwd: [
+          { required: true, message: '请输入truststore密码', trigger: 'blur' }
+        ],
+        requestUrl: [
+          { required: true, message: '请输入开票地址', trigger: 'blur' }
+        ]
+      },
+      fileList: [],
+      // 证书提交表单参数
+      param: ''
     }
   },
   computed: {
     // 获取数据字典
     ...mapGetters([
-      'dictList'
+      'dictList',
+      'info'
     ]),
     // 发票类型
     invoiceTypeObj() {
@@ -372,6 +448,17 @@ export default {
       this.nodeList.forEach((item) => {
         if (item.id === this.$refs.organTree.getCurrentNode().id) {
           this.currentNodeDetail = item
+          // 回填发票通基础设置
+          this.fptBasicSetForm.appId = item.appId
+          this.fptBasicSetForm.aesKey = item.aesKey
+          this.fptBasicSetForm.truststorePath = item.truststorePath
+          this.fptBasicSetForm.pfxPwd = item.pfxPwd
+          this.fptBasicSetForm.trustPwd = item.trustPwd
+          this.fptBasicSetForm.requestUrl = item.requestUrl
+          this.$set(this.fileList, 0, {
+            name: this.currentNodeDetail.fileName,
+            status: 'finished'
+          })
           this.currentNodeType = item.type
           this.isTreeChecked = true
           this.nodeMaintenanceForm = {
@@ -448,7 +535,7 @@ export default {
     // 获取税号关联终端列表
     getTerminal() {
       const args = this.terminalQueryParams
-      args.orgId = this.currentNodeDetail.orgCode
+      args.orgId = this.currentNodeDetail.id
       terminalList(args).then(res => {
         this.codeRelevanceTerminalList = res.data.list
         this.totalCount = res.data.count
@@ -462,7 +549,7 @@ export default {
         if (valid) {
           const args = this.codeMaintenanceForm
           args.id = this.$refs.organTree.getCurrentNode().id
-          args.orgCode = this.currentNodeDetail.orgCode
+          args.orgCode = this.currentNodeDetail.id
           this.loading = true
           updateNode(args).then(res => {
             this.$refs[data].resetFields()
@@ -536,7 +623,7 @@ export default {
           if (this.terminalType === 'add') {
             const args = Object.assign({}, this.terminalInfo)
             args.invoiceType = args.invoiceType.join(',')
-            args.orgId = this.currentNodeDetail.orgCode
+            args.orgId = this.currentNodeDetail.id
             addTerminal(args).then(res => {
               this.$message({
                 type: 'success',
@@ -570,9 +657,52 @@ export default {
         }
       })
     },
+    // 更新机构证书信息
+    updateOrgZs() {
+      this.$refs['fptBasicSetForm'].validate((valid) => {
+        if (valid) {
+          this.$refs.fileUpload.submit()
+          if (this.param === '') {
+            this.$message.warning('请上传fpx证书')
+            return false
+          }
+          this.param.append('id', this.currentNodeDetail.id)
+          this.param.append('appId', this.fptBasicSetForm.appId)
+          this.param.append('aesKey', this.fptBasicSetForm.aesKey)
+          this.param.append('truststorePath', this.fptBasicSetForm.truststorePath)
+          this.param.append('pfxPwd', this.fptBasicSetForm.pfxPwd)
+          this.param.append('trustPwd', this.fptBasicSetForm.trustPwd)
+          this.param.append('requestUrl', this.fptBasicSetForm.requestUrl)
+          this.loading = true
+          updateOrgZs(this.param).then(res => {
+            this.loading = false
+            this.$message.success(res.message)
+            this.getOrgZs()
+          }).catch(err => {
+            this.loading = false
+            this.$message.error(err)
+          })
+        }
+      })
+    },
+    // 上传文件
+    handleUploadChange(data) {
+      console.log(data)
+    },
+    beforeUpload(file) {
+      this.param = new FormData()
+      this.param.append('pfxFile', file, file.name)
+      return false
+    },
+    handleExceed(files) {
+      this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件`)
+    },
+    // 点击面板回调
     handleClick(node) {
       if (node.name === 'fourth') {
         this.getTerminal()
+      }
+      if (node.name === 'fifth') {
       }
     },
     // 修改每页最大条数

@@ -441,9 +441,13 @@ export default {
           item.se = -item.se
           item.hsxmje = -item.hsxmje
           item.xmje = -item.xmje
-          item.xmsl = -item.xmsl
+          item.xmsl = -item.xmsl === '0' ? '' : -item.xmsl
         })
         this.fppmHckpData = res.data
+        this.fppmHckpData.check = true
+        this.fppmHckpData.hjje = -this.fppmHckpData.hjje
+        this.fppmHckpData.hjse = -this.fppmHckpData.hjse
+        this.fppmHckpData.jshj = -this.fppmHckpData.jshj
       }).catch(err => {
         this.$message.error(err)
       })
@@ -474,7 +478,7 @@ export default {
     cancel() {
       let checked = true
       if (this.checkedItems.length === 0) {
-        this.$message.info('请至少选择一条数据！')
+        this.$message.warning('请至少选择一条数据！')
         return
       }
       const currentMonth = (new Date().getMonth()).toString().length === 1 ? '0' + (new Date().getMonth() + 1) : (new Date().getMonth() + 1)
@@ -507,8 +511,8 @@ export default {
     },
     // 打印发票弹窗
     openPrintFp() {
-      if (this.checkedItems.length === 0) {
-        this.$message.info('请至少选择一条数据！')
+      if (this.checkedItems.length !== 1) {
+        this.$message.warning('请选择一条数据！')
         return
       }
       function sortBy(field) {
@@ -559,7 +563,7 @@ export default {
     // 打印清单
     printList() {
       if (this.checkedItems.length !== 1) {
-        this.$message.info('请选择一条数据！')
+        this.$message.warning('请选择一条数据！')
         return
       }
       const xml = `<?xml version="1.0" encoding="gbk"?>
@@ -581,7 +585,7 @@ export default {
     // 发票验证
     validate() {
       if (this.checkedItems.length === 0) {
-        this.$message.info('请至少选择一条数据！')
+        this.$message.warning('请至少选择一条数据！')
         return
       }
       this.checkedItems.forEach(item => {
