@@ -94,7 +94,7 @@
         <el-table-column label="价税合计" prop="jshj" align="center"/>
         <el-table-column label="开票时间" align="center" width="160">
           <template slot-scope="scope">
-            <span>{{ scope.row.kprq | utoTimeToBeijing }}</span>
+            <span>{{ scope.row.kprq }}</span>
           </template>
         </el-table-column>
         <el-table-column label="开票机号" prop="kpjh" align="center"/>
