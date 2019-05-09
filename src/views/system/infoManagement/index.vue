@@ -162,7 +162,7 @@
         </el-form-item>
         <el-form-item label="税收分类名称" prop="shflmc" size="small">
           <el-select v-model="form.shflmc" filterable placeholder="请选择" size="small" @change="changeShflmc(true)">
-            <el-option v-for="item in commodityTypes" :key="item.id" :label="item.shflmc" :value="item.id"/>
+            <el-option v-for="item in commodityTypes" :key="item.id" :label="item.shflmc" :value="item.shflmc"/>
           </el-select>
         </el-form-item>
         <el-form-item label="税收分类编码" prop="shflbm" size="small">
@@ -224,7 +224,7 @@
       <el-form ref="form1" :rules="form1Rules" :model="form1" :inline="true" label-width="120px">
         <el-form-item label="税收分类名称" prop="shflmc">
           <el-select v-model="form1.shflmc" filterable placeholder="请选择" size="small" @change="changeShflmc(false)">
-            <el-option v-for="item in commodityTypes" :key="item.id" :label="item.shflmc" :value="item.id"/>
+            <el-option v-for="item in commodityTypes" :key="item.id" :label="item.shflmc" :value="item.shflmc"/>
           </el-select>
         </el-form-item>
         <el-form-item label="税收分类编码" prop="shflbm" size="small">
@@ -405,24 +405,25 @@ export default{
     // 税收分类名称切换
     changeShflmc(isAdd) {
       if (isAdd) {
-        getManagementCode(qs.stringify({ shflbm: this.form.shflmc })).then(res => {
+        this.commodityTypes.forEach(item => {
+          if (item.shflmc === this.form.shflmc) {
+          this.form.shflbm = item.shflbm
+          this.form.sl = item.sl
+          this.form.sfxsyhzc = item.sfxsyhzc
+          this.form.lslbs = item.lslbs
+          this.form.mslx = item.mslx
+          this.form.yhzclx = item.yhzclx
+        }
+      })
+        getManagementCode(qs.stringify({ shflbm: this.form.shflbm })).then(res => {
           this.form.spbm = res.data.spbm
         }).catch(err => {
           this.$message.error(err)
         })
-        this.commodityTypes.forEach(item => {
-          if (item.id === this.form.shflmc) {
-            this.form.shflbm = item.shflbm
-            this.form.sl = item.sl
-            this.form.sfxsyhzc = item.sfxsyhzc
-            this.form.lslbs = item.lslbs
-            this.form.mslx = item.mslx
-            this.form.yhzclx = item.yhzclx
-          }
-        })
+
       } else {
         this.commodityTypes.forEach(item => {
-          if (item.id === this.form1.shflmc) {
+          if (item.shflmc === this.form1.shflmc) {
             this.form1.shflbm = item.shflbm
           }
         })
@@ -566,10 +567,11 @@ export default{
           var params = {}
           params.shflbm = JSON.parse(JSON.stringify(this.form1)).shflbm
           params.shflmc = JSON.parse(JSON.stringify(this.form1)).shflmc
-          params.ids = ''
+          params.ids = []
           this.checkedList.forEach((item) => {
-            params.ids += item.id
+            params.ids.push(item.id)
           })
+          params.ids = params.ids.join(',')
           this.loading = true
           editData(params).then(res => {
             this.$message({

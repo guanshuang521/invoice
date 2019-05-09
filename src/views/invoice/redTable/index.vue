@@ -300,6 +300,10 @@ export default {
     // 查看
     checkHZXXB(row) {
       this.checkHZXXBVisible = true
+      this.dialogRedTableTitle = '红字信息表填开-查看'
+      this.form = {
+        id: row.id
+      }
     },
     // 新增申请
     addApply() {
