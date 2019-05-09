@@ -52,7 +52,7 @@
             {{ SYS_QYZT[scope.row.status] }}
           </template>
         </el-table-column>
-        <el-table-column label="上次登录IP" prop="modifiedId" align="center" width="100"/>
+        <el-table-column label="上次登录IP" prop="description" align="center" width="100"/>
         <el-table-column label="最后登录时间" width="160" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.modifiedTime | utoTimeToBeijing }}</span>
