@@ -73,7 +73,7 @@
         </el-table-column>
         <el-table-column label="填开日期" width="120" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.tkrq | utoTimeToBeijing }}</span>
+            <span>{{ scope.row.tkrq }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="yfpdm" label="发票代码" width="120" align="center"/>

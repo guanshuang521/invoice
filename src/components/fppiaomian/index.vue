@@ -31,11 +31,11 @@
           <!--<img src="../../assets/common/no.jpg">-->
           <div class="titlekprq">
             <span class="kprqText">发票代码：</span>
-            <span class="fpdmShow">{{ fpdmShow }}</span>
+            <span class="kprq">{{ fpdmShow }}</span>
           </div>
           <div class="titlekprq">
             <span class="kprqText">发票号码：</span>
-            <span class="fphmShow">{{ fphmShow }}</span>
+            <span class="kprq">{{ fphmShow }}</span>
           </div>
           <div class="titlekprq">
             <span class="kprqText">开票日期：</span>
@@ -775,12 +775,15 @@ export default {
     // 获取发票号码、发票代码
     getNotInvoiceYetDmHm() {
       const args = {
-        fplx: '004',
-        kpzdbs: this.info.kpzdbs,
+        fplx: this.pmfplx,
+        kpzdbs: this.info.terminalMark,
         xsfNsrsbh: this.org.taxNum
       }
       getNotInvoiceYetDmHm(args).then(res => {
-
+        if (res.code === '0000') {
+          this.fpdmShow = res.data.dqfpdm
+          this.fphmShow = res.data.dqfphm
+        }
       }).catch(err => {
         this.$message.error(err)
       })
