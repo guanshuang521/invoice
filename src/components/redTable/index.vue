@@ -281,7 +281,8 @@ export default {
     editDetail() {
       editDetail({ id: this.form.id }).then(res => {
         this.formdata = res.data
-        console.log(res)
+        this.formdata.sqlx = 2
+        console.log(this.formdata)
       }).catch(err => {
         this.$message.error(err)
       })
