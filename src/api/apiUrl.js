@@ -73,7 +73,7 @@ const apiPath = {
       list: '/rbac/commoditye/selectByCommodity', // 页面加载获取数据
       newAdd: '/rbac/commoditye/insertCommodity', // 添加数据
       editData: '/rbac/commoditye/updateCommodityByShflbm', // 编辑数据(修改数据)
-      exportModle: '/rbac/commoditye/downloadCommodityExcel', // 下载模板
+      exportModle: '/rbac/commoditye/downloadExcel', // 下载模板
       exportData: '/rbac/commoditye/exportCommodityExcel', // 导出数据
       importExcel: '/rbac/commoditye/importCommodityExcel', // 导入Excel
       commodityTypes: '/rbac/commodityType/selectCommodityTypesList', // 获取所有的税收分类编码,
@@ -85,7 +85,7 @@ const apiPath = {
       list: '/rbac/commodityType/selectByCommodityType', // 页面加载获取数据
       newAdd: '/rbac/commodityType/insertCommodityType', // 添加数据
       editData: '/rbac/commodityType/updateCommodityType', // 编辑数据(修改数据)
-      exportModle: '/rbac/commodityType/download', // 下载模板
+      exportModle: '/rbac/commodityType/downloadExcel', // 下载模板
       exportData: '/rbac/commodityType/exportCommodityTypeExcel', // 导出数据
       importExcel: '/rbac/commodityType/importCommodityTypeExcel' // 导入Excel
     },
