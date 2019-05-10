@@ -7,14 +7,14 @@
   <div class="codeManagement-container">
     <div class="filter-container">
       <el-form :inline="true" :model="searchParams" class="demo-form-inline">
-        <el-form-item label="商品分类">
+        <!--<el-form-item label="商品分类">
           <el-input v-model="searchParams.sign" placeholder="请输入" size="small"/>
-        </el-form-item>
+        </el-form-item>-->
         <el-form-item label="税收编码">
           <el-input v-model="searchParams.shflbm" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="商品或服务名称">
-          <el-input v-model="searchParams.spmc" placeholder="请输入" size="small"/>
+          <el-input v-model="searchParams.shflmc" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" size="small" @click="searchFn">查询</el-button>
