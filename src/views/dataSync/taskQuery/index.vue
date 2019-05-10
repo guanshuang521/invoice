@@ -9,8 +9,13 @@
       <el-form :inline="true" :model="searchParams" class="demo-form-inline">
         <el-form-item label="数据类型">
           <el-select v-model="searchParams.dataType" placeholder="请选择" size="small">
-            <el-option label="商品类订单" value="1"/>
-            <el-option label="服务类订单" value="2"/>
+<!--            <el-option label="商品类订单" value="1"/>-->
+<!--            <el-option label="服务类订单" value="2"/>-->
+            <el-option
+              v-for="item in sjlx"
+              :key="item.id"
+              :label="item.name"
+              :value="item.code"/>
           </el-select>
         </el-form-item>
         <el-form-item label="同步状态">
@@ -165,14 +170,19 @@ export default {
     ...mapGetters([
       'dictList'
     ]),
+    sjlx() {
+      return this.dictList['SYS_SJLX']
+    },
     SYS_SJLX() { // 数据类型
       return arrayToMapField(this.dictList['SYS_SJLX'], 'code', 'name')
+      // return this.dictList['SYS_SJLX']
     },
     SYS_TBZT() { // 同步状态
       return arrayToMapField(this.dictList['SYS_TBZT'], 'code', 'name')
     }
   },
   mounted() {
+    console.log(this.$store.getters.dictList)
   },
   created() {
   },

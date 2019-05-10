@@ -385,6 +385,7 @@ export default {
     hcInvoice(val) {
       fpDetail({ fpDm: val.fpDm, fpHm: val.fpHm }).then(res => {
         this.hckpDialogVisible = true
+        debugger
         res.data.lines.forEach(item => {
           item.hjje = -item.hjje
           item.hjse = -item.hjse
@@ -392,7 +393,9 @@ export default {
           item.se = -item.se
           item.hsxmje = -item.hsxmje
           item.xmje = -item.xmje
-          item.xmsl = -item.xmsl === '0' ? '' : -item.xmsl
+          // item.xmsl = -item.xmsl   //(把零去掉)
+          console.log(-item.xmsl)
+          // === '0' ? '' : -item.xmsl
         })
         this.fppmHckpData = res.data
         this.fppmHckpData.check = true

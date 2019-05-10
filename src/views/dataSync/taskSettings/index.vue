@@ -262,6 +262,7 @@ export default {
   },
   mounted() {
     this.initData()
+    // console.log(this.$store.getters.dictList)
   },
   methods: {
     // 获取定时同步列表数据

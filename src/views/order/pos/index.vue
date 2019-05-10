@@ -105,10 +105,12 @@
             <el-option v-for="option in dictList['SYS_FPLX']" :key="option.id" :value="option.code" :label="option.name"/>
           </el-select>
         </el-form-item>
-        <el-form-item v-if="dynamicValidateForm.fplx==26" label="备用发票类型" prop="byfplx">
+        <el-form-item v-if="dynamicValidateForm.fplx=='004'" label="备用发票类型" prop="byfplx">
           <el-select v-model="dynamicValidateForm.byfplx" placeholder="请选择备用发票类型" style="width: 100%">
-            <el-option value ="007">普票</el-option>
-            <el-option value ="026">电票</el-option>
+            <el-option value ="普票">普票</el-option>
+<!--            007-->
+            <el-option value ="电票">电票</el-option>
+<!--            026-->
           </el-select>
         </el-form-item>
         <el-form-item label="购方名称" prop="gmfMc">
@@ -438,6 +440,12 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
+
+          if(this.dynamicValidateForm.byfplx == "普票"){
+            this.dynamicValidateForm.byfplx = '007'
+          }else if(this.dynamicValidateForm.byfplx == "电票"){
+            this.dynamicValidateForm.byfplx = '026'
+          }
           this.$emit('makeInvoicePre', this.dynamicValidateForm)
           const args = Object.assign({}, this.dynamicValidateForm)
           args.ids = this.idtotal

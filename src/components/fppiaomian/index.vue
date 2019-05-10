@@ -111,7 +111,8 @@
                 <input v-model="formdata.lines[index].dw" readOnly>
               </li>
               <li style="width:9%">
-                <input v-model="formdata.lines[index].xmsl" type="number" @blur="inputBlur(index, 'xmsl', $event)">
+                <input v-model="formdata.lines[index].xmsl" type="text" @blur="inputBlur(index, 'xmsl', $event)">
+<!--                type="number"-->
               </li>
               <li style="width:10%">
                 <input v-model="formdata.lines[index].hsxmdj" type="number" @blur="inputBlur(index, 'xmdj', $event)">
@@ -724,6 +725,8 @@ export default {
         _thisLines[index].se = Number(_thisLines[index].hsxmje * sl / (1 + sl)).toFixed(2)
         _thisLines[index].xmje = _thisLines[index].hsxmje - _thisLines[index].se
       } else {
+        // 0510添加
+        _thisLines[index].xmsl = ''
         // 含税金额
         _thisLines[index].hsxmje = hsxmdj * xmsl
         // 税额
