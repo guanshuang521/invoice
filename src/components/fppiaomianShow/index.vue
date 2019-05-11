@@ -86,7 +86,9 @@
             </div>
           </div>
           <div class="tbT mmqText">密<br>码<br>区</div>
-          <div class="tbT mmqTable"/>
+          <div class="tbT mmqTable">
+            <span class="mmqTable-skm"> {{ formdata.skm }} </span>
+          </div>
         </div>
         <div class="tableLines">
           <ul class="linesTitle">
@@ -829,13 +831,16 @@ export default {
 }
 </script>
 <style scoped rel="stylesheet/scss" lang="scss">
+  .gfMc{
+    width: 523px;
+  }
   .tbmc /deep/ .el-input__inner{
     height: 25px!important;
     border-radius: 0;
     border-top: none;
     border-left: none;
     border-color: #B2945F;
-    width: 514px;
+    width: 524px;
   }
   .gfMc /deep/ .el-input__inner{
     padding-left: 5px;
@@ -1015,6 +1020,8 @@ export default {
     .mmqTable{
       width: 36%;
       height: 100%;
+        font-size: 12px;
+        padding: 5px;
     }
   }
   .tableLines{
