@@ -481,7 +481,7 @@ export default {
       this.formdata.hjse = Number(this.formdata.hjse).toFixed(2)
     }
     debugger
-    this.formdata.jshjupper = getDx((this.formdata.hjse + this.formdata.hjje))
+    this.formdata.jshjupper = getDx(Number(this.formdata.hjse) + Number(this.formdata.hjje))
     this.formdata.jshj = (Number(this.formdata.hjje) + Number(this.formdata.hjse)).toFixed(2)
     this.$emit('getformdata', this.formdata)
   },

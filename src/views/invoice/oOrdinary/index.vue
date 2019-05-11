@@ -428,7 +428,7 @@ export default {
           item.se = -item.se
           item.hsxmje = -item.hsxmje
           item.xmje = -item.xmje
-          item.xmsl = -item.xmsl === '0' ? '' : -item.xmsl
+          item.xmsl = (item.xmsl === null ? '' : -item.xmsl)
         })
         this.fppmHckpData = res.data
         this.fppmHckpData.check = true

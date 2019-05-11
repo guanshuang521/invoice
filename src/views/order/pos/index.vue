@@ -12,6 +12,11 @@
         <el-form-item label="开票码">
           <el-input v-model="searchParams.djbh" placeholder="请输入开票码" size="small"/>
         </el-form-item>
+        <el-form-item label="纳税主体">
+          <el-select v-model="searchParams.xfsh" placeholder="请选择" size="small">
+            <el-option v-for="item in orgList" :key="item.id" :label="item.orgName" :value="item.taxNum"/>
+          </el-select>
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" size="small" @click="initTable">查询</el-button>
           <el-button type="primary" size="small" @click="reset">重置</el-button>
@@ -143,7 +148,7 @@
         <el-form-item label="开户行及账号" >
           <el-input v-model="dynamicValidateForm.gmfYhzh" />
         </el-form-item>
-        <el-form-item :rules="dynamicValidateForm.fplx==26?rules.gmfDzyx:[{ required: false, message: '请输入邮箱地址', trigger: 'blur' },{ type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }]" label="邮箱" prop="gmfDzyx">
+        <el-form-item :rules="dynamicValidateForm.fplx=='026'?rules.gmfDzyx:[{ required: false, message: '请输入邮箱地址', trigger: 'blur' },{ type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }]" label="邮箱" prop="gmfDzyx">
           <el-input v-model="dynamicValidateForm.gmfDzyx"/>
         </el-form-item>
         <el-form-item label="手机号" prop="gmfSjh">
@@ -164,6 +169,8 @@ import { getAllCustomer } from '@/api/system/infoMaintenance'
 import apiPath from '@/api/apiUrl'
 import { arrayToMapField } from '@/utils/public'
 import { getToken } from '@/utils/auth'
+import { selectUserOrgList } from '@/api/system/user'
+
 export default {
   name: 'Dashboard',
   data() {
@@ -174,7 +181,8 @@ export default {
       searchParams: {
         pageSize: 10,
         currentPage: 1,
-        djbh: ''
+        djbh: '',
+        xfsh: ''
       },
       // 列表数据
       tableList: [],
@@ -236,7 +244,8 @@ export default {
       hjje: '',
       hjse: '',
       jshj: '',
-      ddzt: ''
+      ddzt: '',
+      orgList: []
     }
   },
   computed: {
@@ -246,6 +255,11 @@ export default {
     }
   },
   mounted() {
+    selectUserOrgList({}).then(res => {
+      this.orgList = res.data
+    }).catch(err => {
+      this.$message.error(err)
+    })
   },
   methods: {
     // 初始化数据
@@ -265,7 +279,8 @@ export default {
       this.searchParams = {
         pageSize: 10,
         currentPage: 1,
-        djbh: ''
+        djbh: '',
+        xfsh: ''
       }
       this.initTable()
     },

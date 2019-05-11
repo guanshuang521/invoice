@@ -42,6 +42,11 @@
             class="filter-item"
             placeholder="请选择"/>
         </el-form-item>
+        <el-form-item label="纳税主体">
+          <el-select v-model="searchParams.xfnssbh" placeholder="请选择" size="small">
+            <el-option v-for="item in orgList" :key="item.id" :label="item.orgName" :value="item.taxNum"/>
+          </el-select>
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" size="small" @click="initTable">查询</el-button>
           <el-button type="primary" size="small" @click="reset">重置</el-button>
@@ -152,6 +157,8 @@ import invoiceDialog from '../components/invoiceDialog'
 import apiPath from '@/api/apiUrl'
 import { arrayToMapField } from '@/utils/public'
 import { getToken } from '@/utils/auth'
+import { selectUserOrgList } from '@/api/system/user'
+
 export default {
   name: 'Dashboard',
   components: { invoiceDialog },
@@ -167,7 +174,8 @@ export default {
         startDjbh: '',
         endDjbh: '',
         startDate: '',
-        endDate: ''
+        endDate: '',
+        xfnssbh: ''
       },
       // 列表勾选项
       checkedList: [],
@@ -187,7 +195,8 @@ export default {
       operation: {},
       buildPop: {},
       makePopData: {},
-      dialogTitle: ''
+      dialogTitle: '',
+      orgList: []
     }
   },
   computed: {
@@ -196,7 +205,13 @@ export default {
       return arrayToMapField(this.dictList['SYS_ERP_STATUS'], 'code', 'name')
     }
   },
-  mounted() {},
+  mounted() {
+    selectUserOrgList({}).then(res => {
+      this.orgList = res.data
+    }).catch(err => {
+      this.$message.error(err)
+    })
+  },
   methods: {
     // 初始化数据
     initTable() {
@@ -221,7 +236,8 @@ export default {
         startDate: '',
         endDate: '',
         currentPage: 1,
-        pageSize: 10
+        pageSize: 10,
+        xfnssbh: ''
       }
       this.initTable()
     },

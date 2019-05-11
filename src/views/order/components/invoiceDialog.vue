@@ -40,6 +40,9 @@
         <el-form-item label="手机号" prop="gmfSjh">
           <el-input v-model="dynamicValidateForm.gmfSjh"/>
         </el-form-item>
+        <el-form-item :rules="dynamicValidateForm.fplx=='026'?rules.gmfDzyx:[{ required: false, message: '请输入邮箱地址', trigger: 'blur' },{ type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }]" label="邮箱" prop="gmfDzyx">
+          <el-input v-model="dynamicValidateForm.gmfDzyx"/>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button size="mini" @click="hideDialog">取 消</el-button>

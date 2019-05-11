@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { download } from '@/api/invoiceOpening/opening'
+import { downloadNew } from '@/api/invoiceOpening/opening'
 import { printFP } from '@/api/invoice/oSpecial'
 
 export default {
@@ -80,7 +80,12 @@ export default {
         jym: this.fpData.jym
       }
       this.$emit('closeDialog', false)
-      download(args)
+      downloadNew(args).then(res => {
+        const params = ['x-access-token=' + getToken()]
+        window.open(res.data.url + '?' + params.join('&'))
+      }).catch(err => {
+        this.$message.error(err)
+      })
     },
     closeDialog() {
       this.$emit('closeDialog', false)
