@@ -192,10 +192,6 @@
         <div class="msgText"><span class="required">*</span>销售方：(章)</div>
         <div class="msgCon"/>
       </div>
-      <div class="fphintmsg">
-        <p>信息提示：您目前开票选择的业务类型为“”，绑定的业务编号为“”</p>
-        <p>绑定的流水号为“”,接收发票推送的邮箱为“”</p>
-      </div>
     </div>
     <div class="edgebg rightEdge">
       <ul class="edge_right">
