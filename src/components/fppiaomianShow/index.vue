@@ -188,10 +188,6 @@
         <div class="msgText"><span class="required">*</span>销售方：(章)</div>
         <div class="msgCon"/>
       </div>
-      <div class="fphintmsg">
-        <p>信息提示：您目前开票选择的业务类型为“”，绑定的业务编号为“”</p>
-        <p>绑定的流水号为“”,接收发票推送的邮箱为“”</p>
-      </div>
     </div>
     <div class="edgebg rightEdge">
       <ul class="edge_right">
@@ -484,6 +480,7 @@ export default {
     if (this.formdata.hjse) {
       this.formdata.hjse = Number(this.formdata.hjse).toFixed(2)
     }
+    this.formdata.jshjupper = getDx(Number(this.formdata.hjse) + Number(this.formdata.hjje))
     this.formdata.jshj = (Number(this.formdata.hjje) + Number(this.formdata.hjse)).toFixed(2)
     this.$emit('getformdata', this.formdata)
   },
@@ -795,7 +792,6 @@ export default {
     // 处理单价
     calculatePrice(index, xmsl, xmdj, xmdjShow, hsxmdj, xmje, xmjeShow, hsxmje, sl, currentInput) {
       const _thisLines = this.formdata.lines
-      debugger
       // 金额，单价
       if (Number(xmsl) !== 0 && Number(xmdj) !== 0) {
         // 如果是金额输入框

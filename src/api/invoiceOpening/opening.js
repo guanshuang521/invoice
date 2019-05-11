@@ -37,6 +37,14 @@ export function download(data) {
   }
   window.open(apiPath.invoiceOpening.opening.download + '?' + params.join('&'))
 }
+// 电票下载(改动后)
+export function downloadNew(data) {
+  return request({
+    url: apiPath.invoiceOpening.opening.download,
+    method: 'post',
+    data
+  })
+}
 // 获取未开票的发票代码、发票号码
 export function getNotInvoiceYetDmHm(data) {
   return request({

@@ -112,7 +112,7 @@
               </li>
               <li style="width:9%">
                 <input v-model="formdata.lines[index].xmsl" type="text" @blur="inputBlur(index, 'xmsl', $event)">
-<!--                type="number"-->
+                <!--                type="number"-->
               </li>
               <li style="width:10%">
                 <input v-model="formdata.lines[index].hsxmdj" type="number" @blur="inputBlur(index, 'xmdj', $event)">
@@ -191,10 +191,6 @@
         <div class="msgCon" v-html="kpr"/>
         <div class="msgText"><span class="required">*</span>销售方：(章)</div>
         <div class="msgCon"/>
-      </div>
-      <div class="fphintmsg">
-        <p>信息提示：您目前开票选择的业务类型为“”，绑定的业务编号为“”</p>
-        <p>绑定的流水号为“”,接收发票推送的邮箱为“”</p>
       </div>
     </div>
     <div class="edgebg rightEdge">
@@ -661,6 +657,7 @@ export default {
         this.formdata.lines[this.goods.dialogGoodsIndex]['spbh'] = checked.spbh
         this.formdata.lines[this.goods.dialogGoodsIndex]['commodityId'] = checked.spmc
         this.formdata.lines[this.goods.dialogGoodsIndex]['sl'] = checked.sl
+        this.formdata.lines[this.goods.dialogGoodsIndex]['hsxmdj'] = checked.dj
         // 清空数量、金额、税额
         this.formdata.lines[this.goods.dialogGoodsIndex]['xmsl'] = ''
         this.formdata.lines[this.goods.dialogGoodsIndex]['hsxmje'] = ''
@@ -726,7 +723,7 @@ export default {
         _thisLines[index].xmje = _thisLines[index].hsxmje - _thisLines[index].se
       } else {
         // 0510添加
-        _thisLines[index].xmsl = ''
+        _thisLines[index].xmsl === '0' ? _thisLines[index].xmsl = '' : _thisLines[index].xmsl
         // 含税金额
         _thisLines[index].hsxmje = hsxmdj * xmsl
         // 税额

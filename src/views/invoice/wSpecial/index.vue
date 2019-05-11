@@ -56,7 +56,8 @@
             <span>{{ SYS_KPZT[scope.row.kpzt] }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="开票提示" prop="bz" align="center"/>
+        <el-table-column label="开票提示" prop="returnMsg" align="center"/>
+        <el-table-column label="备注" prop="bz" align="center"/>
         <el-table-column
           align="center"
           fixed="right"

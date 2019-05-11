@@ -62,7 +62,8 @@
             <span>{{ SYS_KPZT[scope.row.kpzt] }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="开票提示" prop="bz" align="center"/>
+        <el-table-column label="开票提示" prop="returnMsg" align="center"/>
+        <el-table-column label="备注" prop="bz" align="center"/>
         <el-table-column
           align="center"
           fixed="right"
@@ -228,6 +229,9 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
+          const invoiceData = this.checkedList[0]
+          invoiceData.kpzdbs = this.info.terminalMark
+          invoiceData.kpr = this.info.userName
           invoiceEle(this.checkedList[0]).then(res => {
             if (res.code === '0000') {
               this.xzdyDialogVisible = true

@@ -589,11 +589,6 @@ export default {
             message: err
           })
         })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
       })
     },
     // 修改终端

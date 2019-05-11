@@ -59,16 +59,6 @@
             <span>{{ scope.row.spmc }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="商品税目" align="center" width="200">
-          <template slot-scope="scope">
-            <span>{{ scope.row.spsm }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="简码" align="center" width="110">
-          <template slot-scope="scope">
-            {{ scope.row.jm }}
-          </template>
-        </el-table-column>
         <el-table-column label="规格型号" align="center">
           <template slot-scope="scope">
             {{ scope.row.ggxh }}
@@ -155,7 +145,7 @@
       custom-class="add-customer">
       <el-form ref="form" :inline="isInline" :rules="rules" :model="form" label-width="140px" size="mini">
         <el-form-item label="商品编码" prop="spbm" size="small">
-          <el-input v-model="form.spbm" placeholder="请输入" disabled/>
+          <el-input v-model="form.spbm" placeholder="请输入"/>
         </el-form-item>
         <el-form-item label="商品名称" prop="spmc" size="small">
           <el-input v-model="form.spmc" placeholder="请输入"/>
@@ -175,15 +165,15 @@
           <el-input v-model="form.jldw" placeholder="请输入"/>
         </el-form-item>
         <el-form-item label="含税标志" prop="hsbz" size="small">
-          <el-select v-model="form.hsbz" placeholder="请选择" size="small">
+          <el-select v-model="form.hsbz" placeholder="请选择" size="small" disabled>
             <el-option v-for="item in dictList['SYS_HSBZ']" :key="item.id" :label="item.name" :value="item.code"/>
           </el-select>
         </el-form-item>
         <el-form-item label="单价(元)" prop="dj" size="small">
           <el-input v-model="form.dj" placeholder="请输入"/>
         </el-form-item>
-        <el-form-item label="零含税标识" prop="lslbs" size="small">
-          <el-select v-model="form.lslbs" :disabled="lslbsDisabled" placeholder="请选择">
+        <el-form-item label="零税率标识" prop="lslbs" size="small">
+          <el-select v-model="form.lslbs" :disabled="lslbsDisabled" placeholder="请选择" @change="dealChange">
             <el-option v-for="item in dictList['SYS_LSLBS']" :key="item.id" :label="item.name" :value="item.code"/>
           </el-select>
         </el-form-item>
@@ -193,16 +183,16 @@
           </el-select>
         </el-form-item>
         <el-form-item label="是否享受优惠政策" prop="sfxsyhzc" size="small">
-          <el-select v-model="form.sfxsyhzc" placeholder="请选择" size="small">
+          <el-select v-model="form.sfxsyhzc" placeholder="请选择" size="small" @change="dealChange">
             <el-option v-for="item in dictList['SYS_SFXSYHZC']" :key="item.id" :label="item.name" :value="item.code"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="免税类型" prop="mslx" size="small">
+        <el-form-item v-if="form.lslbs === '1'" label="免税类型" prop="mslx" size="small">
           <el-select v-model="form.mslx" placeholder="请选择" size="small">
             <el-option v-for="item in dictList['SYS_MSLX']" :key="item.id" :label="item.name" :value="item.code"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="优惠政策类型" prop="yhzclx" size="small">
+        <el-form-item v-if="form.sfxsyhzc === '1'" label="优惠政策类型" prop="yhzclx" size="small">
           <el-select v-model="form.yhzclx" placeholder="请选择" size="small">
             <el-option v-for="item in dictList['SYS_YHZCLX']" :key="item.id" :label="item.name" :value="item.code"/>
           </el-select>
@@ -300,7 +290,7 @@ export default{
         ggxh: '',
         dj: '',
         jldw: '',
-        hsbz: '',
+        hsbz: '1',
         shflbm: '',
         shflmc: '',
         sl: '',
@@ -407,20 +397,19 @@ export default{
       if (isAdd) {
         this.commodityTypes.forEach(item => {
           if (item.shflmc === this.form.shflmc) {
-          this.form.shflbm = item.shflbm
-          this.form.sl = item.sl
-          this.form.sfxsyhzc = item.sfxsyhzc
-          this.form.lslbs = item.lslbs
-          this.form.mslx = item.mslx
-          this.form.yhzclx = item.yhzclx
-        }
-      })
-        getManagementCode(qs.stringify({ shflbm: this.form.shflbm })).then(res => {
-          this.form.spbm = res.data.spbm
-        }).catch(err => {
-          this.$message.error(err)
+            this.form.shflbm = item.shflbm
+            this.form.sl = item.sl
+            this.form.sfxsyhzc = item.sfxsyhzc
+            this.form.lslbs = item.lslbs
+            this.form.mslx = item.mslx
+            this.form.yhzclx = item.yhzclx
+          }
         })
-
+        // getManagementCode(qs.stringify({ shflbm: this.form.shflbm })).then(res => {
+        //   this.form.spbm = res.data.spbm
+        // }).catch(err => {
+        //   this.$message.error(err)
+        // })
       } else {
         this.commodityTypes.forEach(item => {
           if (item.shflmc === this.form1.shflmc) {
@@ -487,7 +476,7 @@ export default{
         ggxh: '',
         dj: '',
         jldw: '',
-        hsbz: '',
+        hsbz: '1',
         shflbm: '',
         shflmc: '',
         sl: '',
@@ -642,6 +631,15 @@ export default{
       } else {
         this.form.lslbs = '2'
         this.lslbsDisabled = true
+      }
+    },
+    // 更改零含税标识和是否享受优惠政策时，更改对应关联字段的值
+    dealChange() {
+      if (this.form.lslbs === '2') {
+        this.form.mslx = ''
+      }
+      if (this.form.sfxsyhzc === '2') {
+        this.form.yhzclx = ''
       }
     }
   }
