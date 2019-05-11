@@ -42,7 +42,7 @@
             <span class="kprq">{{ formdata.kprq }}</span>
           </div>
           <div class="titlekprq">
-            <span class="kprqText">校验码：</span>
+            <span class="kprqText">校&nbsp;&nbsp;验&nbsp;&nbsp;码：</span>
             <span class="kprq">{{ formdata.jym }}</span>
           </div>
         </div>
@@ -86,9 +86,7 @@
             </div>
           </div>
           <div class="tbT mmqText">密<br>码<br>区</div>
-          <div class="tbT mmqTable">
-            <span class="mmqTable-skm"> {{ formdata.skm }} </span>
-          </div>
+          <div class="tbT mmqTable">{{ formdata.skm }}</div>
         </div>
         <div class="tableLines">
           <ul class="linesTitle">
@@ -934,8 +932,10 @@ export default {
         margin-top: 5px;
         margin-left: 195px;
         .kprqText{
-          display: inline-block;
+          width: 80px;
           vertical-align: middle;
+          text-align: justify;
+          text-justify: inter-ideograph;
           font-size: 14px;
           color: #866d3d;
         }
@@ -1020,8 +1020,9 @@ export default {
     .mmqTable{
       width: 36%;
       height: 100%;
-        font-size: 12px;
-        padding: 5px;
+      font-size: 14px;
+      padding: 10px;
+      word-break: break-all;
     }
   }
   .tableLines{
