@@ -345,11 +345,6 @@ export default {
           message: '删除成功!'
         })
         this.initTable()
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
       })
     },
     // 生成预制发票
@@ -380,10 +375,7 @@ export default {
     showInvoiceDialog() {
       // this.dialogVisible = true
       if (this.checkedList.length === 0) {
-        this.$message({
-          type: 'info',
-          message: '请先选择表格中的数据'
-        })
+        this.$message.warning('请先选择表格中的数据')
         return false
       }
       this.$confirm('确定要生成预制发票吗?', '提示', {
