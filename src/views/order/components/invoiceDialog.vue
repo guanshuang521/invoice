@@ -21,7 +21,7 @@
           <el-input v-if="dialogTitle == '同一购方订单生成预制发票'" v-model="buildPop.hjse" disabled="disabled"/>
           <el-input v-if="dialogTitle !== '同一购方订单生成预制发票'" v-model="makePopData.hjse" disabled="disabled"/>
         </el-form-item>
-        <el-form-item label="加税合计">
+        <el-form-item label="价税合计">
           <el-input v-if="dialogTitle == '同一购方订单生成预制发票'" v-model="buildPop.jshj" disabled="disabled"/>
           <el-input v-if="dialogTitle !== '同一购方订单生成预制发票'" v-model="makePopData.jshj" disabled="disabled"/>
           <!--<el-input v-model="buildPop.jshj" disabled="disabled"/>-->
@@ -31,7 +31,7 @@
             <el-option v-for="option in dictList['SYS_FPLX']" :key="option.id" :value="option.code" :label="option.name"/>
           </el-select>
         </el-form-item>
-        <el-form-item v-if="dynamicValidateForm.fplx==26" label="备用发票类型" prop="byfplx">
+        <el-form-item v-if="dynamicValidateForm.fplx=='004'" label="备用发票类型" prop="byfplx">
           <el-select v-model="dynamicValidateForm.byfplx" placeholder="请选择备用发票类型" style="width: 100%">
             <el-option value ="007">普票</el-option>
             <el-option value ="026">电票</el-option>
