@@ -445,8 +445,8 @@ export default {
     },
     // 点击机构展示对应的机构详情
     showTabs() {
+      this.activeName = 'first'
       this.nodeList.forEach((item) => {
-        debugger
         if (item.id === this.$refs.organTree.getCurrentNode().id) {
           this.currentNodeDetail = item
           // 回填发票通基础设置
@@ -484,7 +484,7 @@ export default {
           // this.$nextTick(function() {
           //   document.getElementById('tab-0').click()
           // })
-        }else{
+        } else {
           console.log(111)
         }
       })
@@ -697,7 +697,6 @@ export default {
     },
     // 点击面板回调
     handleClick(node) {
-      debugger
       if (node.name === 'fourth') {
         this.getTerminal()
       }
