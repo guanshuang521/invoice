@@ -115,7 +115,6 @@
           width="300">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="checkFP(scope.row)">查看</el-button>
-            <el-button type="primary" size="mini" @click="sendMsg(scope.row)">推送</el-button>
             <el-button v-if="parseInt(scope.row.fpzt) == 1 && parseInt(scope.row.kplx) == 0" type="primary" size="mini" @click="hcInvoice(scope.row)">红冲发票</el-button>
           </template>
         </el-table-column>

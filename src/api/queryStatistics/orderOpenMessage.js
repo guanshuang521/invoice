@@ -4,12 +4,15 @@
 import request from '@/utils/request'
 import apiPath from '@/api/apiUrl'
 // 获取节点列表
-export function getTableList() {
+export function getTableList(data) {
   console.log(apiPath.queryStatistics.orderOpenMessage.getTableList)
   return request({
     url: apiPath.queryStatistics.orderOpenMessage.getTableList,
     method: 'post',
-    data: 'data'
+    data: data,
+    headers: {
+      'Content-Type': 'application/json'
+    }
   })
 }
 // 查询
