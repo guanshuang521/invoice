@@ -366,7 +366,7 @@ export default {
   methods: {
     initList() {
       this.listQuery.xsfNsrsbh = this.org.taxNum
-      this.listQuery.fplx = "004"
+      this.listQuery.fplx = '004'
       getList(this.listQuery).then(res => {
         this.dataList = res.data.list
         this.totalCount = res.data.count

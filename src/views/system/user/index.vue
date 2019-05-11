@@ -250,6 +250,7 @@ export default {
       selectTerminalsList(params).then(response => {
         this.loading = false
         this.terminalInfo = response.data.list
+        console.log(this.terminalInfo)
       }).catch(err => {
         this.loading = false
         this.$message({
@@ -431,6 +432,7 @@ export default {
         id: row.id
       }
       this.loading = true
+      this.changeSsjg()
       getUserDetail(params).then(res => {
         this.loading = false
         this.userInfo = JSON.parse(JSON.stringify(res.data))
@@ -445,7 +447,6 @@ export default {
           authList.push(item.id)
         })
         this.authArray = authList
-        this.changeSsjg()
       }).catch(err => {
         this.listLoading = false
         this.$message.error(err)
