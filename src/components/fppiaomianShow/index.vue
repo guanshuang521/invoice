@@ -480,7 +480,6 @@ export default {
     if (this.formdata.hjse) {
       this.formdata.hjse = Number(this.formdata.hjse).toFixed(2)
     }
-    debugger
     this.formdata.jshjupper = getDx(Number(this.formdata.hjse) + Number(this.formdata.hjje))
     this.formdata.jshj = (Number(this.formdata.hjje) + Number(this.formdata.hjse)).toFixed(2)
     this.$emit('getformdata', this.formdata)
@@ -793,7 +792,6 @@ export default {
     // 处理单价
     calculatePrice(index, xmsl, xmdj, xmdjShow, hsxmdj, xmje, xmjeShow, hsxmje, sl, currentInput) {
       const _thisLines = this.formdata.lines
-      debugger
       // 金额，单价
       if (Number(xmsl) !== 0 && Number(xmdj) !== 0) {
         // 如果是金额输入框
