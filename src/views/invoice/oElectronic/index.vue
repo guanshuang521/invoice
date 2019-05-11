@@ -384,7 +384,6 @@ export default {
     hcInvoice(val) {
       fpDetail({ fpDm: val.fpDm, fpHm: val.fpHm }).then(res => {
         this.hckpDialogVisible = true
-        debugger
         res.data.lines.forEach(item => {
           item.hjje = -item.hjje
           item.hjse = -item.hjse
