@@ -165,7 +165,7 @@
                   @current-change="handleCurrentChange"/>
               </template>
             </el-tab-pane>
-            <el-tab-pane v-if="info.userCode === 'admin'" name="fifth" label="发票通基础设置">
+            <el-tab-pane v-if="info.userCode === 'superAdmin'" name="fifth" label="发票通基础设置">
               <el-form ref="fptBasicSetForm" :model="fptBasicSetForm" :rules="fptBasicSetFormRules" label-width="120px" size="mini">
                 <el-form-item label="开票地址:" prop="requestUrl">
                   <el-input v-model="fptBasicSetForm.requestUrl"/>
@@ -176,28 +176,28 @@
                 <el-form-item label="aeskey:" prop="aesKey">
                   <el-input v-model="fptBasicSetForm.aesKey"/>
                 </el-form-item>
-                <el-form-item label="pfx证书:">
-                  <el-upload
-                    ref="fileUpload"
-                    :on-change="handleUploadChange"
-                    :file-list="fileList"
-                    :action="''"
-                    :before-upload="beforeUpload"
-                    :auto-upload="false"
-                    class="upload-demo">
-                    <el-button size="small" type="primary">点击上传</el-button>
-                    <div slot="tip" class="el-upload__tip">只能上传pfx文件</div>
-                  </el-upload>
-                </el-form-item>
-                <el-form-item label="pfx证书密码:" prop="pfxPwd">
-                  <el-input v-model="fptBasicSetForm.pfxPwd"/>
-                </el-form-item>
-                <el-form-item label="truststore路径:" prop="truststorePath">
-                  <el-input v-model="fptBasicSetForm.truststorePath"/>
-                </el-form-item>
-                <el-form-item label="truststore密码:" prop="trustPwd">
-                  <el-input v-model="fptBasicSetForm.trustPwd"/>
-                </el-form-item>
+                <!--<el-form-item label="pfx证书:">-->
+                <!--<el-upload-->
+                <!--ref="fileUpload"-->
+                <!--:on-change="handleUploadChange"-->
+                <!--:file-list="fileList"-->
+                <!--:action="''"-->
+                <!--:before-upload="beforeUpload"-->
+                <!--:auto-upload="false"-->
+                <!--class="upload-demo">-->
+                <!--<el-button size="small" type="primary">点击上传</el-button>-->
+                <!--<div slot="tip" class="el-upload__tip">只能上传pfx文件</div>-->
+                <!--</el-upload>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item label="pfx证书密码:" prop="pfxPwd">-->
+                <!--<el-input v-model="fptBasicSetForm.pfxPwd"/>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item label="truststore路径:" prop="truststorePath">-->
+                <!--<el-input v-model="fptBasicSetForm.truststorePath"/>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item label="truststore密码:" prop="trustPwd">-->
+                <!--<el-input v-model="fptBasicSetForm.trustPwd"/>-->
+                <!--</el-form-item>-->
                 <el-form-item>
                   <el-button type="primary" icon="el-icon-check" @click="updateOrgZs('fptBasicSetForm')">保存</el-button>
                 </el-form-item>
@@ -659,11 +659,12 @@ export default {
     updateOrgZs() {
       this.$refs['fptBasicSetForm'].validate((valid) => {
         if (valid) {
-          this.$refs.fileUpload.submit()
-          if (this.param === '') {
-            this.$message.warning('请上传fpx证书')
-            return false
-          }
+          // this.$refs.fileUpload.submit()
+          // if (this.param === '') {
+          //   this.$message.warning('请上传fpx证书')
+          //   return false
+          // }
+          this.param = new FormData()
           this.param.append('id', this.currentNodeDetail.id)
           this.param.append('appId', this.fptBasicSetForm.appId)
           this.param.append('aesKey', this.fptBasicSetForm.aesKey)
