@@ -137,9 +137,10 @@ const apiPath = {
   },
   queryStatistics: {
     orderOpenMessage: {
-      getTableList: '/orderOpenMessage/getTableList',
-      getOrderList: '/invoice/invoice/getInvoiceListPage',
+      getTableList: '/invoice/queryAndCount/getOrderList',
+      getOrderList: '/invoice/queryAndCount/viewInvoiceFromOrder',
       orderInfo: '/invoice/queryAndCount/viewOrderFromInvoice'
+      // getTableList: '/invoice/queryAndCount/getOrderList'
     }
   },
 

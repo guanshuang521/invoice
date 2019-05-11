@@ -7,23 +7,25 @@
   <div class="orderOpen-container">
     <div class="filter-container">
       <el-form :inline="true" :model="searchParams" class="demo-form-inline">
-        <el-form-item label="销方名称">
-          <el-input v-model="searchParams.userName" placeholder="请输入" size="small"/>
+        <el-form-item label="纳税主体">
+          <el-select v-model="searchParams.xfsh" placeholder="请选择" size="small">
+            <el-option v-for="item in orgList" :key="item.id" :label="item.orgName" :value="item.taxNum"/>
+          </el-select>
         </el-form-item>
         <el-form-item label="购方名称">
-          <el-input v-model="searchParams.userName" placeholder="请输入" size="small"/>
+          <el-input v-model="searchParams.gfmc" placeholder="请输入" size="small"/>
         </el-form-item>
-        <el-form-item label="发票代码">
-          <el-input v-model="searchParams.userName" placeholder="请输入" size="small"/>
+        <el-form-item label="单据起号">
+          <el-input v-model="searchParams.startDjbh" placeholder="请输入" size="small"/>
         </el-form-item>
-        <el-form-item label="发票号码">
-          <el-input v-model="searchParams.userName" placeholder="请输入" size="small"/>
+        <el-form-item label="单据止号">
+          <el-input v-model="searchParams.endDjbh" placeholder="请输入" size="small"/>
         </el-form-item>
-        <el-form-item label="发票类型">
-          <el-select v-model="searchParams.role" placeholder="请选择" size="small">
-            <el-option label="增值税专用发票" value="shanghai"/>
-            <el-option label="增值税普通发票" value="beijing"/>
-            <el-option label="增值税电子发票" value="dianzi"/>
+        <el-form-item label="单据类型">
+          <el-select v-model="searchParams.djlx" placeholder="请选择" size="small">
+            <el-option label="商品类订单" value="SLC"/>
+            <el-option label="服务类订单" value="CEI费用"/>
+            <el-option label="开票号" value="POS"/>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -31,9 +33,6 @@
           <el-button type="primary" size="small" @click="reset">重置</el-button>
         </el-form-item>
       </el-form>
-    </div>
-    <div class="button-container">
-      <el-button type="primary" size="mini" @click="importExcel">导入Excel</el-button>
     </div>
     <div class="table-container">
       <el-table
@@ -55,37 +54,37 @@
         </el-table-column>
         <el-table-column label="单据编号" align="center">
           <template slot-scope="scope">
-            {{ scope.row.djsh }}
+            {{ scope.row.djbh }}
           </template>
         </el-table-column>
         <el-table-column label="销方名称" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.xfmc }}</span>
+            <span>{{ scope.row.xsfMc }}</span>
           </template>
         </el-table-column>
         <el-table-column label="销方税号" align="center">
           <template slot-scope="scope">
-            {{ scope.row.xfsh }}
+            {{ scope.row.xsfNsrsbh }}
           </template>
         </el-table-column>
         <el-table-column label="购方名称" align="center">
           <template slot-scope="scope">
-            {{ scope.row.gfmc }}
+            {{ scope.row.gmfMc }}
           </template>
         </el-table-column>
         <el-table-column label="购方税号" align="center">
           <template slot-scope="scope">
-            {{ scope.row.gfsh }}
+            {{ scope.row.gmfNsrsbh }}
           </template>
         </el-table-column>
         <el-table-column label="金额（不含税）" align="center">
           <template slot-scope="scope">
-            {{ scope.row.je }}
+            {{ scope.row.hjje }}
           </template>
         </el-table-column>
         <el-table-column label="税额" align="center">
           <template slot-scope="scope">
-            {{ scope.row.se }}
+            {{ scope.row.hjse }}
           </template>
         </el-table-column>
         <el-table-column label="价税合计" align="center">
@@ -95,30 +94,30 @@
         </el-table-column>
         <el-table-column label="开票时间" align="center">
           <template slot-scope="scope">
-            {{ scope.row.ddzt }}
+            {{ scope.row.kprq }}
           </template>
         </el-table-column>
         <el-table-column label="开票机号" align="center">
           <template slot-scope="scope">
-            {{ scope.row.je }}
+            {{ scope.row.kpzdbs }}
           </template>
         </el-table-column>
         <el-table-column label="清单标志" align="center">
           <template slot-scope="scope">
-            {{ scope.row.se }}
+            {{ scope.row.qdbz }}
           </template>
         </el-table-column>
         <el-table-column label="发票状态" align="center">
           <template slot-scope="scope">
-            {{ scope.row.jshj }}
+            {{ scope.row.fpzt }}
           </template>
         </el-table-column>
         <el-table-column label="打印状态" align="center">
           <template slot-scope="scope">
-            {{ scope.row.ddzt }}
+            {{ scope.row.kpzt }}
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center">
+        <el-table-column label="操作" fixed="right" align="center">
           <template slot-scope="scope">
             <el-button
               size="mini"
@@ -130,15 +129,14 @@
     </div>
     <div class="page-box">
       <el-pagination
-        :current-page="currentPage"
-        :page-sizes="[10, 20, 30, 50, 100]"
-        :page-size="pageSize"
-        :total="total"
-        layout="prev, pager, next, jumper, total, sizes, slot"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange">
-        <!-- <span></span> -->
-      </el-pagination>
+        :current-page = "searchParams.currentPage"
+        :page-sizes = "[1, 10, 20, 30, 50, 100]"
+        :page-size = "searchParams.pageSize"
+        :total = "total"
+        style="margin-top: 20px"
+        layout = "total, sizes, prev, pager, next, jumper"
+        @size-change = "handleSizeChange"
+        @current-change = "handleCurrentChange"/>
     </div>
     <el-dialog
       :close-on-click-modal="closeOnClickModal"
@@ -147,38 +145,15 @@
       title="查看"
       width="750px"
       custom-class="add-customer">
-      <order-open-message/>
-    </el-dialog>
-    <!-- 导入弹窗 -->
-    <el-dialog
-      :close-on-click-modal="closeOnClickModal"
-      :visible.sync="dialogVisible2"
-      :before-close="handleClose"
-      title="客户基础信息导入"
-      width="350px"
-      custom-class="add-customer">
-      <el-upload
-        ref="upload"
-        :on-preview="handlePreview"
-        :on-remove="handleRemove"
-        :file-list="fileList"
-        :auto-upload="false"
-        :on-error="uploadError"
-        :on-success="uploadSuccess"
-        :action="uploadPath()"
-        accept=".xls,.xlsx"
-        class="upload-demo">
-        <div slot="tip" class="el-upload__tip">选择上传文件</div>
-        <el-button slot="trigger" size="small" type="primary">添加文件</el-button>
-        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">开始上传</el-button>
-      </el-upload>
+      <order-open-message :tableList="tableList" :tableTotal="tableTotal" @TableCurrentChange="TableCurrentChange" @TablePagesizeChange="TablePagesizeChange"/>
     </el-dialog>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import { getTableList } from '@/api/queryStatistics/orderOpenMessage'
+import { selectUserOrgList } from '@/api/system/user'
+import { getTableList, getOrderList } from '@/api/queryStatistics/orderOpenMessage'
 import orderOpenMessage from '@/components/queryStatistics/orderOpenMessage'
 import apiPath from '@/api/apiUrl'
 export default {
@@ -202,9 +177,18 @@ export default {
         value: '03',
         label: '开票号'
       }],
+      tableTotal: 0,
       searchParams: {
-        userName: '',
-        role: '',
+        djlx: 'SLC',
+        gfmc: '',
+        xfsh: '',
+        startDjbh: '',
+        endDjbh: '',
+        currentPage: 1,
+        pageSize: 10
+      },
+      searchParamsTable: {
+        orderId: '',
         currentPage: 1,
         pageSize: 10
       },
@@ -222,17 +206,6 @@ export default {
         }
       ],
       list: [
-        {
-          djsh: '管理员',
-          xfmc: 1,
-          gfmc: '北京市丰台科技园',
-          xfsh: '12433323454',
-          gfsh: '23543212343',
-          je: '北京银行中关村支行',
-          se: '123444321234567876',
-          jshj: 0,
-          ddzt: 0
-        }
       ],
       listLoading: false,
       searchs: {
@@ -256,7 +229,11 @@ export default {
         bank: '',
         bankAccount: ''
       },
-      fileList: []
+      fileList: [],
+      // 用户有权限的机构列表
+      orgList: [],
+      // 弹框表格
+      tableList: []
     }
   },
   computed: {
@@ -266,23 +243,30 @@ export default {
     ])
   },
   mounted() {
+    selectUserOrgList().then(res => {
+      this.orgList = res.data
+    }).catch(err => {
+      this.$message.error(err)
+    })
+    this.getTableList()
   },
   created() {
     // this.fetchData()
-    this.getTableList()
+
   },
   methods: {
     change(a) {
       this.dialogVisible = false
     },
-    fetchData() { // 获取数据
-      this.listLoading = true
-      // getList(this.listQuery).then(response => {
-      //   this.list = response.data.items
-      //   this.listLoading = false
-      // })
+    initTable() {
+      this.getTableList()
     },
-    initTable() {},
+    getTableList() {
+      getTableList(this.searchParams).then(res => {
+        this.list = res.data.data.list
+        this.total = res.data.data.total
+      })
+    },
     submitUpload() { // 开始上传按钮
       this.loading = true
       this.$refs.upload.submit()
@@ -344,10 +328,12 @@ export default {
       this.dialogVisible2 = true
     },
     handleSizeChange(val) {
-      // console.log(`每页 ${val} 条`)
+      this.searchParams.pageSize = val
+      this.initTable()
     },
     handleCurrentChange(val) {
-      // console.log(`当前页: ${val}`)
+      this.searchParams.currentPage = val
+      this.initTable()
     },
     handleClose() { // 关闭弹窗
       this.dialogVisible = false
@@ -359,14 +345,24 @@ export default {
     handlePreview(file) {
       console.log(file)
     },
+    TablePagesizeChange(val) {
+      this.searchParamsTable.pageSize = val
+      this.getOrderList()
+    },
+    TableCurrentChange(val) {
+      this.searchParamsTable.currentPage = val
+      this.getOrderList()
+    },
     handleEdit(index, row) {
       this.dialogVisible = true
+      this.searchParamsTable.orderId = row.id
+      this.getOrderList()
     },
-    getTableList() {
-      getTableList().then(res => {
-        if (res.code === 20000) {
-          this.list = res.data
-        }
+    getOrderList() {
+      getOrderList(this.searchParamsTable).then(e => {
+        this.tableList = e.data.data.list
+        this.tableTotal = e.data.data.total
+        console.log(this.tableList)
       })
     }
   }
