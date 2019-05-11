@@ -82,7 +82,6 @@ export default {
       }
       this.$emit('closeDialog', false)
       downloadNew(args).then(res => {
-        debugger
         window.open(res.data.pdfUrl)
       }).catch(err => {
         this.$message.error(err)
