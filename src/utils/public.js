@@ -143,3 +143,23 @@ export function arrayToMapField(arr, targetField, itemField) {
   }
   return map
 }
+// arrayToMapField
+// export function arrayToMapField1(arr, targetField, itemField) {
+//   const map = {}
+//   const t = targetField
+//   if (arr instanceof Array) {
+//     arr.forEach(function(item) {
+//       if (!map[item[t]]) {
+//         map[item[t]] = ''
+//       }
+//     })
+//     for (const p in map) {
+//       arr.forEach(function(item) {
+//         if (p === item[t]) {
+//           map[p] = item[itemField]
+//         }
+//       })
+//     }
+//   }
+//   return map
+// }

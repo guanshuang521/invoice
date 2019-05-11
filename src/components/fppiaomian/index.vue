@@ -27,8 +27,16 @@
           <div v-if="formdata.fplx == this.$store.getters.fplx_gen">增值税普通发票</div>
           <div v-if="formdata.fplx == this.$store.getters.fplx_spe">增值税专用发票</div>
         </div>
-        <div class="fpTitleRight">
-          <img src="../../assets/common/no.jpg">
+        <div class="fpTitleRight" style="margin-top: 20px">
+          <!--<img src="../../assets/common/no.jpg">-->
+          <div class="titlekprq">
+            <span class="kprqText">发票代码：</span>
+            <span class="kprq">{{ fpdmShow }}</span>
+          </div>
+          <div class="titlekprq">
+            <span class="kprqText">发票号码：</span>
+            <span class="kprq">{{ fphmShow }}</span>
+          </div>
           <div class="titlekprq">
             <span class="kprqText">开票日期：</span>
             <span class="kprq">{{ kprq }}</span>
@@ -103,7 +111,8 @@
                 <input v-model="formdata.lines[index].dw" readOnly>
               </li>
               <li style="width:9%">
-                <input v-model="formdata.lines[index].xmsl" type="number" @blur="inputBlur(index, 'xmsl', $event)">
+                <input v-model="formdata.lines[index].xmsl" type="text" @blur="inputBlur(index, 'xmsl', $event)">
+<!--                type="number"-->
               </li>
               <li style="width:10%">
                 <input v-model="formdata.lines[index].hsxmdj" type="number" @blur="inputBlur(index, 'xmdj', $event)">
@@ -258,6 +267,7 @@
 
 <script>
 import { getDate, getDx, dataConversion } from '@/utils/filter'
+import { getNotInvoiceYetDmHm } from '@/api/invoiceOpening/opening'
 import { getAllCustomer } from '@/api/system/infoMaintenance'
 import { commodictList } from '@/api/system/infoManagement'
 import { arrayToMapField } from '@/utils/public'
@@ -320,7 +330,7 @@ export default {
         kpzh: '',
         lines: [
           {
-            num: '1', // 序号
+            xh: '1', // 序号
             commodityId: '', // 商品编号
             fphxz: '0', // 0 正常行,1折扣行,2被折扣行
             yhzcbs: '0', // 优惠政策标识  0：不使用，1：使用
@@ -347,6 +357,8 @@ export default {
         ]
       },
       kprq: '',
+      fpdmShow: '',
+      fphmShow: '',
       isgoods: false, // 选择税收编码弹窗显示
       isgmfmcDialog: false, // 选择购买方名称弹窗显示
       isyhxx: false, // 添加客户信息弹窗显示
@@ -439,6 +451,7 @@ export default {
     }
   },
   mounted: function() {
+    this.getNotInvoiceYetDmHm()
     this.getGoodList()
     this.kprq = getDate(new Date().getTime(), 'yyyy年MM月dd日')
     // 计算所有 明细项 金额、税额 合计
@@ -456,7 +469,7 @@ export default {
     addBtn() {
       this.formdata.lines.push(
         {
-          num: this.formdata.lines.length + 1, // 序号
+          xh: this.formdata.lines.length + 1, // 序号
           commodityId: '', // 商品编号
           fphxz: '0', // 0 正常行,1折扣行,2被折扣行
           yhzcbs: '0',
@@ -712,6 +725,8 @@ export default {
         _thisLines[index].se = Number(_thisLines[index].hsxmje * sl / (1 + sl)).toFixed(2)
         _thisLines[index].xmje = _thisLines[index].hsxmje - _thisLines[index].se
       } else {
+        // 0510添加
+        _thisLines[index].xmsl = ''
         // 含税金额
         _thisLines[index].hsxmje = hsxmdj * xmsl
         // 税额
@@ -759,6 +774,22 @@ export default {
     // 添加用户信息
     addUser() {
       this.isyhxx = false
+    },
+    // 获取发票号码、发票代码
+    getNotInvoiceYetDmHm() {
+      const args = {
+        fplx: this.pmfplx,
+        kpzdbs: this.info.terminalMark,
+        xsfNsrsbh: this.org.taxNum
+      }
+      getNotInvoiceYetDmHm(args).then(res => {
+        if (res.code === '0000') {
+          this.fpdmShow = res.data.dqfpdm
+          this.fphmShow = res.data.dqfphm
+        }
+      }).catch(err => {
+        this.$message.error(err)
+      })
     }
   }
 }

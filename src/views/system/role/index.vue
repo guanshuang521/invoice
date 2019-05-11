@@ -83,10 +83,15 @@
         <el-form-item label="角色名称" prop="roleName">
           <el-input v-model="form.roleName" placeholder="请输入"/>
         </el-form-item>
-        <el-form-item label="有效标志" prop="status">
-          <el-select v-model="form.status" placeholder="请选择">
-            <el-option :value="enable" label="有效"/>
-            <el-option label="无效" value="0"/>
+        <!--<el-form-item label="有效标志" prop="status">-->
+        <!--<el-select v-model="form.status" placeholder="请选择">-->
+        <!--<el-option :value="enable" label="有效"/>-->
+        <!--<el-option label="无效" value="0"/>-->
+        <!--</el-select>-->
+        <!--</el-form-item>-->
+        <el-form-item label="有效标志">
+          <el-select v-model="form.status" prop="sloginStatus">
+            <el-option v-for="item in options" :key="item.value" :value="item.value" :label="item.label"/>
           </el-select>
         </el-form-item>
         <el-form-item label="菜单权限">
@@ -98,6 +103,7 @@
               :props="defaultProps"
               :filter-node-method="filterNode"
               :default-checked-keys="form.resourceIds"
+              :check-strictly="strictly"
               node-key="id"
               class="filter-tree"
               default-expand-all
@@ -146,11 +152,18 @@ export default {
       dialogVisible: false,
       // 弹窗类型
       dialogType: '',
+      options: [{
+        value: '1',
+        label: '有效'
+      }, {
+        value: '0',
+        label: '无效'
+      }],
       // 弹窗表单
       form: {
         id: '',
         roleName: '',
-        status: '',
+        status: '1',
         resourceIds: []
       },
       // 表单校验
@@ -158,7 +171,7 @@ export default {
         roleName: [
           { required: true, message: '角色名称不能为空', trigger: 'blur' }
         ],
-        status: [
+        sloginStatus: [
           { required: true, message: '有效标志不能为空', trigger: 'blur' }
         ]
       },
@@ -168,7 +181,8 @@ export default {
         label: 'label'
       },
       treeData: [],
-      resourceIds: []
+      resourceIds: [],
+      strictly: false
     }
   },
   mounted() {
@@ -220,6 +234,7 @@ export default {
       this.dialogVisible = true
       this.dialogType = 'add'
       this.form.id = 0
+      this.form.status = '1'
       this.form.resourceIds = []
     },
     // 添加角色提交
@@ -228,11 +243,15 @@ export default {
         if (valid) {
           var params = JSON.parse(JSON.stringify(this.form))
           params.resourceIds = this.resourceIds
+          delete params.id
           insertRole(params).then(res => {
+            this.$message.success(res.message)
             this.fetchData()
             this.dialogVisible = false
             this.dialogType = ''
             this.$refs[formName].resetFields()
+          }).catch(err => {
+            this.$message.error(err)
           })
         }
       })
@@ -242,7 +261,8 @@ export default {
         if (valid) {
           var params = JSON.parse(JSON.stringify(this.form))
           params.resourceIds = this.resourceIds
-          updateRole(params).then(response => {
+          updateRole(params).then(res => {
+            this.$message.success(res.message)
             this.fetchData()
             this.dialogVisible = false
             this.dialogType = ''
@@ -271,6 +291,8 @@ export default {
     handleEdit(id) {
       getRoleDetail(id).then(res => {
         this.form = res.data
+        this.form.status = JSON.stringify(res.data.status)
+        this.resourceIds = res.data.resourceIds
       }).catch(err => {
         this.$message.error(err)
       })
@@ -297,11 +319,7 @@ export default {
       console.log(data, checked, indeterminate)
     },
     handleCheck(data, checks) {
-      var arr = []
-      for (var i = 0; i < checks.checkedNodes.length; i++) {
-        arr.push(checks.checkedNodes[i].id)
-      }
-      this.resourceIds = arr
+      this.resourceIds = checks.checkedKeys.concat(checks.halfCheckedKeys)
     }
   }
 }

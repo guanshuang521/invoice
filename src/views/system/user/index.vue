@@ -44,7 +44,7 @@
             {{ scope.row.orgInfo && scope.row.orgInfo.orgName ?scope.row.orgInfo.orgName:'' }}
           </template>
         </el-table-column>
-        <el-table-column label="终端号" prop="terminalId" align="center"/>
+        <el-table-column label="终端号" prop="terminalMark" align="center"/>
         <el-table-column
           label="用户状态"
           align="center">
@@ -52,8 +52,12 @@
             {{ SYS_QYZT[scope.row.status] }}
           </template>
         </el-table-column>
-        <el-table-column label="上次登录IP" prop="modifiedId" align="center" width="100"/>
-        <el-table-column label="最后登录时间" prop="modifiedTime" align="center" width="120"/>
+        <el-table-column label="上次登录IP" prop="description" align="center" width="100"/>
+        <el-table-column label="最后登录时间" width="160" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.modifiedTime }}</span>
+          </template>
+        </el-table-column>
         <el-table-column
           align="center"
           fixed="right"
@@ -76,13 +80,10 @@
         @current-change="handleCurrentChange"/>
     </div>
     <!--新增编辑用户弹窗-->
-    <el-dialog :title="dialogTitle" :close-on-click-modal="closeOnClickModal" :visible.sync="dialogVisible" :lock-scroll="true" width="640px" custom-class="showPop dialog-wapper pub-min-pop">
+    <el-dialog :title="dialogTitle" :close-on-click-modal="closeOnClickModal" :visible.sync="dialogVisible" :lock-scroll="true" :before-close="() => handleClose('form')" width="640px" custom-class="showPop dialog-wapper pub-min-pop">
       <el-form ref="userForm" :inline="true" :model="userInfo" :rules="userRules" class="form" label-width="100px" size="mini">
         <el-form-item label="账号：" prop="userCode" >
           <el-input v-model="userInfo.userCode" placeholder="请输入"/>
-        </el-form-item>
-        <el-form-item v-if="showPrise" label="密码：" prop="password">
-          <el-input v-model="userInfo.password" placeholder="请输入"/>
         </el-form-item>
         <el-form-item label="用户名：" prop="userName" >
           <el-input v-model="userInfo.userName" placeholder="请输入"/>
@@ -110,15 +111,15 @@
           </el-select>
         </el-form-item>
         <el-form-item label="用户状态：" prop="status" >
-          <el-select v-model="SYS_QYZT[userInfo.status]" placeholder="请选择" style="width: 170px">
+          <el-select v-model="userInfo.status" placeholder="请选择" style="width: 170px">
             <el-option v-for="option in dictList['SYS_QYZT']" :key="option.id" :value="option.code" :label="option.name"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="终端号：" prop="terminalCode" >
-          <el-select v-model="userInfo.terminalId" placeholder="请选择">
-            <el-option v-for="option in terminalInfo" :key="option.id" :value="option.taxNum" :label="option.taxNum"/>
+        <el-form-item label="终端号：" prop="terminalMark" >
+          <el-select v-model="userInfo.terminalMark" placeholder="请选择">
+            <el-option v-for="option in terminalInfo" :key="option.id" :value="option.terminalMark" :label="option.terminalMark"/>
           </el-select>
-          <!--<el-input v-model="userInfo.terminalId" placeholder="请输入"/>-->
+          <!--<el-input v-model="userInfo.terminalMark" placeholder="请输入"/>-->
         </el-form-item>
         <el-form-item label="数据权限：" prop="auth" >
           <div class="authTree">
@@ -137,7 +138,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button type="primary" size="mini" @click="addUser">保存</el-button>
-        <el-button size="mini" @click="dialogVisible = !dialogVisible">取消</el-button>
+        <el-button size="mini" @click="handleClose('form')">取消</el-button>
       </div>
     </el-dialog>
   </div>
@@ -185,7 +186,6 @@ export default {
       dialogType: '',
       // 弹窗是否显示
       dialogVisible: false,
-      showPrise: true,
       // 新增用户表单
       userInfo: {
         userCode: '',
@@ -193,8 +193,8 @@ export default {
         userName: '',
         receiver: '',
         reviewer: '',
-        status: '',
-        terminalId: '',
+        status: '1',
+        terminalMark: '',
         auth: '',
         role: []
       },
@@ -232,6 +232,9 @@ export default {
       return arrayToMapField(this.dictList['SYS_QYZT'], 'code', 'name')
     }
   },
+  // created() {
+  //   this.couponSelected = this.dictList['SYS_QYZT'][1].code
+  // },
   mounted() {
     this.listLoading = true
     this.$store.getters.isAutoLoadData ? this.initTable() : ''
@@ -239,14 +242,13 @@ export default {
   },
   methods: {
     changeSsjg() {
-      console.log(this.userInfo.orgId)
+      this.userInfo.terminalMark = ''
       const params = {
         orgId: this.userInfo.orgId
       }
       this.loading = true
       selectTerminalsList(params).then(response => {
         this.loading = false
-        console.log(response.data.list)
         this.terminalInfo = response.data.list
       }).catch(err => {
         this.loading = false
@@ -280,9 +282,14 @@ export default {
     closeDialog() {
       this.dialogVisible = false
     },
+    handleClose(formName) { // 关闭弹窗
+      this.dialogVisible = false
+      this.dialogType = ''
+      // this.$refs[formName].resetFields()
+    },
     initTree() { // 初始化机构树
       this.loading = true
-      getNodeList({}).then(res => {
+      getNodeList({ type: 2 }).then(res => {
         this.loading = false
         this.orgIdOptions = res.data.list
         this.organTreeData = {}
@@ -290,13 +297,6 @@ export default {
       }).catch(e => {
         this.loading = false
         this.$message.error(e)
-      })
-      getNodeList({ type: 2 }).then(res => {
-        this.loading = false
-        this.orgIdOptions = res.data.list
-      }).catch(err => {
-        this.loading = false
-        this.$message.error(err)
       })
     },
     initTable() { // table列表查询
@@ -332,15 +332,16 @@ export default {
         receiver: '',
         reviewer: '',
         status: '',
-        terminalId: '',
+        terminalMark: '',
         role: [],
         auth: ''
       }
       this.initTree()
       this.authArray = []
+      this.terminalInfo = []
+      this.userInfo.status = '1'
     },
     addUser() { // 新增用户保存
-      this.showPrise = true
       const userInfoauth = JSON.parse(JSON.stringify(this.$refs.organTree.getCheckedKeys()))
       this.userInfo.auth = userInfoauth.join(',')
       this.$refs['userForm'].validate((valid) => {
@@ -351,11 +352,11 @@ export default {
             this.userInfo.password = password
             const args = Object.assign({}, this.userInfo)
             args.role = args.role.join(',')
-            console.log(this.userInfo)
             add(args).then(res => {
               this.$message.success(res.message)
               this.loading = false
               this.closeDialog()
+              // this.$refs['userForm'].resetFields()
               this.initTable()
             }).catch(err => {
               this.loading = false
@@ -373,6 +374,7 @@ export default {
                 type: 'success'
               })
               this.closeDialog()
+              // this.$refs['userForm'].resetFields()
               this.initTable()
             }).catch(err => {
               this.loading = false
@@ -423,7 +425,6 @@ export default {
     editUser(row) { // 编辑用户
       this.dialogTitle = '编辑用户'
       this.dialogType = 'editUser'
-      this.showPrise = false
       this.dialogVisible = true
       this.initTree()
       const params = {
@@ -438,11 +439,13 @@ export default {
           roleList.push(item.id)
         })
         this.userInfo.role = roleList
+        this.userInfo.status = JSON.stringify(res.data.status)
         const authList = []
         res.data.userOrgList.forEach(item => {
           authList.push(item.id)
         })
         this.authArray = authList
+        this.changeSsjg()
       }).catch(err => {
         this.listLoading = false
         this.$message.error(err)

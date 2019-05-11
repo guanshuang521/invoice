@@ -24,7 +24,7 @@ import '@/permission' // permission control
  * it will intercept your request, so you won't see the request in the network.
  * If you remove `../mock` it will automatically request easy-mock data.
  */
-import '../mock' // simulation data
+// import '../mock' // simulation data
 import request from '@/utils/request'
 import * as filters from '@/filters/index'
 

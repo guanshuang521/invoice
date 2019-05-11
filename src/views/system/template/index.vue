@@ -256,11 +256,11 @@ export default {
       this.dialogFormVisible = true
       this.templateForm = {
         ruleName: '',
-        classBig: '',
-        rate: '',
-        commodity: '',
-        plusMinus: '',
-        price: '',
+        classBig: '2',
+        rate: '2',
+        commodity: '2',
+        plusMinus: '2',
+        price: '2',
         status: '1'
       }
     },

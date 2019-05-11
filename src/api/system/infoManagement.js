@@ -77,3 +77,19 @@ export function getAllList(data) {
     data: data
   })
 }
+// 根据税收分类编码获取商品编码
+export function getManagementCode(data) {
+  return request({
+    url: apiPath.system.InfoManagement.getManagementCode,
+    method: 'post',
+    data: data
+  })
+}
+// 批量设置税收分类编码
+export function updateCommodityByShflbm(data) {
+  return request({
+    url: apiPath.system.InfoManagement.updateCommodityByShflbm,
+    method: 'post',
+    data: data
+  })
+}

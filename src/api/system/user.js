@@ -88,4 +88,11 @@ export function updatePassword(data) {
     data
   })
 }
-
+// 获取当前用户有权限的机构列表
+export function selectUserOrgList(data) {
+  return request({
+    url: apiPath.system.user.selectUserOrgList,
+    method: 'post',
+    data: data
+  })
+}

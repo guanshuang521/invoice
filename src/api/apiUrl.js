@@ -1,5 +1,3 @@
-import {exportIssuedInvoice} from "./invoice/oSpecial";
-
 /**
  * @author Linzb
  * @date 2019/4/1
@@ -26,7 +24,9 @@ const apiPath = {
       terminalList: '/rbac/terminal/selectByTerminal',
       deleteTerminal: '/rbac/terminal/deleteTerminal',
       addTerminal: '/rbac/terminal/insertTerminal',
-      updateTerminal: '/rbac/terminal/updateTerminal'
+      updateTerminal: '/rbac/terminal/updateTerminal',
+      getOrgZs: '/rbac/organization/getOrganizationZs',
+      updateOrgZs: '/rbac/organization/updateOrganizationByZs'
     },
     // 门店管理
     shop: {
@@ -49,7 +49,8 @@ const apiPath = {
       roleList: '/rbac/role/selectRoleList', // 查询全部角色列表
       assignRole: '/rbac/user/assignRole', // 用户关联角色
       selectTerminalsList: '/rbac/terminal/selectTerminalsList',
-      updatePassword: '/rbac/userInfo/resetPassword'
+      updatePassword: '/rbac/userInfo/resetPassword',
+      selectUserOrgList: '/rbac/userInfo/selectUserOrgList'
     },
     // 角色权限管理
     role: {
@@ -71,18 +72,20 @@ const apiPath = {
     InfoManagement: {
       list: '/rbac/commoditye/selectByCommodity', // 页面加载获取数据
       newAdd: '/rbac/commoditye/insertCommodity', // 添加数据
-      editData: '/rbac/commoditye/updateCommodity', // 编辑数据(修改数据)
-      exportModle: '/rbac/commoditye/downloadCommodityExcel', // 下载模板
+      editData: '/rbac/commoditye/updateCommodityByShflbm', // 编辑数据(修改数据)
+      exportModle: '/rbac/commoditye/downloadExcel', // 下载模板
       exportData: '/rbac/commoditye/exportCommodityExcel', // 导出数据
       importExcel: '/rbac/commoditye/importCommodityExcel', // 导入Excel
       commodityTypes: '/rbac/commodityType/selectCommodityTypesList', // 获取所有的税收分类编码,
-      allList: '/rbac/commoditye/selectCommoditysList' // 获取所有商品列表
+      allList: '/rbac/commoditye/selectCommoditysList', // 获取所有商品列表
+      getManagementCode: '/rbac/commoditye/getSpbmCode', // 根据税收分类名称获取商品编码
+      updateCommodityByShflbm: '/rbac/commoditye/updateCommodityByShflbm' // 批量设置税收分类编码
     },
     codeManagement: {
       list: '/rbac/commodityType/selectByCommodityType', // 页面加载获取数据
       newAdd: '/rbac/commodityType/insertCommodityType', // 添加数据
       editData: '/rbac/commodityType/updateCommodityType', // 编辑数据(修改数据)
-      exportModle: '/rbac/commodityType/download', // 下载模板
+      exportModle: '/rbac/commodityType/downloadExcel', // 下载模板
       exportData: '/rbac/commodityType/exportCommodityTypeExcel', // 导出数据
       importExcel: '/rbac/commodityType/importCommodityTypeExcel' // 导入Excel
     },
@@ -196,7 +199,10 @@ const apiPath = {
       detail: '/invoice/invoiceHzxxb/selectByInvoiceHzxxbByfp', // 详情
       insert: '/invoice/invoiceHzxxb/insertInvoiceHzxxb', // 保存
       apply: '/invoice/invoiceHzxxb/applyInvoiceHzxxb', // 申请
-      sync: '/invoice/invoiceHzxxb/queryInvoiceHzxxb' // 同步
+      sync: '/invoice/invoiceHzxxb/queryInvoiceHzxxb', // 同步
+      upload: '/invoice/invoiceHzxxb/queryInvoiceHzxxb', // 上传
+      editDetail: '/invoice/invoiceHzxxb/selectInvoiceHzxxbView', // 查看编辑详情
+      editSave: '/invoice/invoiceHzxxb/updateInvoiceHzxxb' // 编辑保存
     },
     openInvoice: {
       opeinvoiceList: '/invoice/queryAndCount/queryIssuedInvoice', // 已开发票查询

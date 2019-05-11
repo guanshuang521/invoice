@@ -57,6 +57,7 @@ export default {
       })
     },
     pmformdata: function(msg) {
+      console.log(msg)
       this.form = msg
     }
   }
