@@ -42,7 +42,7 @@ export function downloadNew(data) {
   return request({
     url: apiPath.invoiceOpening.opening.download,
     method: 'post',
-    data
+    data: data
   })
 }
 // 获取未开票的发票代码、发票号码

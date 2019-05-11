@@ -139,8 +139,8 @@
             <li style="width:20%">￥{{ formdata.hjse }}</li>
           </ul>
           <ul class="hjbottom">
-            <li style="width:20%;" class="hjTitle">价税合计（大写）</li>
-            <li style="width:40%">
+            <li style="width:calc(20% - 3px)" class="hjTitle">价税合计（大写）</li>
+            <li style="width:calc(40% + 3px)">
               <img src="../../assets/common/hjdx.png" style="float: left;margin: 4px 3px;">
               {{ formdata.jshjupper }}
             </li>
@@ -1191,6 +1191,8 @@ export default {
         border-right: 1px solid #B2945F;
         border-bottom: 1px solid #B2945F;
         box-sizing: border-box;
+        line-height: 1.8;
+        padding-left: 5px;
       }
       input{
         border: none;
