@@ -147,7 +147,7 @@ export default {
               fpDm: res.data.fpDm,
               fpHm: res.data.fpHm,
               fpqqlsh: res.data.fpqqlsh,
-              jym: res.data.jym
+              xsfNsrsbh: this.org.taxNum
             }
           }).catch(err => {
             this.loading = false

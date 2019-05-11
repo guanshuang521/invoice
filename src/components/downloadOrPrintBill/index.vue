@@ -77,12 +77,13 @@ export default {
       const args = {
         fpDm: this.fpData.fpDm,
         fpHm: this.fpData.fpHm,
-        jym: this.fpData.jym
+        xsfNsrsbh: this.fpData.xsfNsrsbh,
+        fpqqlsh: this.fpData.fpqqlsh
       }
       this.$emit('closeDialog', false)
       downloadNew(args).then(res => {
-        const params = ['x-access-token=' + getToken()]
-        window.open(res.data.url + '?' + params.join('&'))
+        debugger
+        window.open(res.data.pdfUrl)
       }).catch(err => {
         this.$message.error(err)
       })
