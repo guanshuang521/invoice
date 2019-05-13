@@ -449,7 +449,7 @@ export default {
       }
     }
   },
-  mounted: function() {
+  created: function() {
     this.getNotInvoiceYetDmHm()
     this.getGoodList()
     this.kprq = getDate(new Date().getTime(), 'yyyy年MM月dd日')
@@ -460,6 +460,7 @@ export default {
     if (this.formdata.hjse) {
       this.formdata.hjse = Number(this.formdata.hjse).toFixed(2)
     }
+    this.formdata.jshjupper = getDx((Number(this.formdata.hjje).toFixed(2) + Number(this.formdata.hjse)))
     this.formdata.jshj = (Number(this.formdata.hjje) + Number(this.formdata.hjse)).toFixed(2)
     this.$emit('getformdata', this.formdata)
   },

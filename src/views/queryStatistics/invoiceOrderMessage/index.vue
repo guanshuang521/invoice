@@ -134,7 +134,7 @@
       title="订单信息"
       width="750px"
       custom-class="add-customer">
-      <invoice-order-message :id="currentId"/>
+      <invoice-order-message v-if="dialogVisible" :id="currentId"/>
     </el-dialog>
   </div>
 </template>
@@ -289,26 +289,7 @@ export default {
     handleEdit(index, row) {
       this.dialogVisible = true
       this.currentId = row.id
-      const params = {
-        invoiceId: row.id,
-        currentPage: 1,
-        pageSize: 10
-      }
-      orderInfo(params).then(res => {
-        console.log(res)
-        this.poplist = res.data.list
-        this.poptotal = res.data.count
-      }).catch(err => {
-        this.$message.error(err)
-      })
     }
-    // getTableList() {
-    //   getTableList().then(res => {
-    //     if (res.code === '0000') {
-    //       this.list = res.data
-    //     }
-    //   })
-    // }
   }
 }
 </script>

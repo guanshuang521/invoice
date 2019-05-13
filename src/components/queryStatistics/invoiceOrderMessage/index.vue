@@ -7,7 +7,7 @@
   <div>
     <!-- 新增弹窗 -->
     <el-table
-      :data="poplist"
+      :data="list"
       element-loading-text="Loading"
       border
       fit
@@ -24,17 +24,17 @@
       </el-table-column>
       <el-table-column label="单据类型" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.djlx }}</span>
+          <span>{{ SYS_DJLX[scope.row.djlx] }}</span>
         </template>
       </el-table-column>
       <el-table-column label="购方名称" align="center">
         <template slot-scope="scope">
-          {{ scope.row.gmfMc }}
+          {{ scope.row.gfmc }}
         </template>
       </el-table-column>
       <el-table-column label="购方税号" align="center">
         <template slot-scope="scope">
-          {{ scope.row.gmfNsrsbh }}
+          {{ scope.row.gfsh }}
         </template>
       </el-table-column>
       <el-table-column label="金额（不含税）" align="center">
@@ -58,7 +58,7 @@
         :current-page="currentPage"
         :page-sizes="[10, 20, 30, 50, 100]"
         :page-size="100"
-        :total="poptotal"
+        :total="totalCount"
         layout="total, sizes, prev, pager, next, jumper"
         style="margin-top: 20px"
         @size-change="handleSizeChange"
@@ -67,6 +67,10 @@
   </div>
 </template>
 <script type="application/ecmascript">
+import { orderInfo } from '@/api/queryStatistics/orderOpenMessage'
+import { mapGetters } from 'vuex'
+import { arrayToMapField } from '@/utils/public'
+
 export default {
   name: 'InvoiceDialog',
   props: {
@@ -77,25 +81,47 @@ export default {
   },
   data() {
     return {
-      currentPage: 1,
-      pageSize: 25,
       showDialog: false,
-      list: []
+      list: [],
+      searchParams: {
+        currentPage: 1,
+        pageSize: 10
+      },
+      totalCount: ''
+    }
+  },
+  computed: {
+    ...mapGetters([
+      'dictList',
+      'org',
+      'info'
+    ]),
+    SYS_DJLX() {
+      return arrayToMapField(this.dictList['SYS_DJLX'], 'code', 'name')
     }
   },
   mounted() {
-
+    this.initList()
   },
   methods: {
     initList() {
-
+      const params = Object.assign({}, this.searchParams)
+      params.invoiceId = this.id
+      orderInfo(params).then(res => {
+        console.log(res)
+        this.list = res.data.data.list
+        this.totalCount = res.data.data.total
+      }).catch(err => {
+        this.$message.error(err)
+      })
     },
-    handleSizeChange() {},
-    handleCurrentChange() {},
-    // 表格选中数据发生变化
-    handleSelectionChange(val) {
-      this.checkedList = []
-      this.checkedList = val
+    handleSizeChange(val) {
+      this.searchParams.pageSize = val
+      this.initList()
+    },
+    handleCurrentChange(val) {
+      this.searchParams.currentPage = val
+      this.initList()
     }
   }
 }
