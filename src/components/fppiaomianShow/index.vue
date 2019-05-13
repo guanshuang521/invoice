@@ -139,8 +139,8 @@
             <li style="width:20%">￥{{ formdata.hjse }}</li>
           </ul>
           <ul class="hjbottom">
-            <li style="width:calc(20% - 3px)" class="hjTitle">价税合计（大写）</li>
-            <li style="width:calc(40% + 3px)">
+            <li style="width:calc(20% - 4px)" class="hjTitle">价税合计（大写）</li>
+            <li style="width:calc(40% + 4px)">
               <img src="../../assets/common/hjdx.png" style="float: left;margin: 4px 3px;">
               {{ formdata.jshjupper }}
             </li>
@@ -963,7 +963,7 @@ export default {
     }
     .gmfText{
       width: 4%;
-      height: 100%;
+      height: 100px;
       margin:0 auto;
       line-height:32px;
       color: #b2945f;
@@ -972,7 +972,7 @@ export default {
     }
     .gmfTable{
       width: 57%;
-      height: 100%;
+      height: 100px;
       display: inline-block;
       vertical-align: top;
       border: none;
@@ -1010,7 +1010,7 @@ export default {
     }
     .mmqText{
       width: 3%;
-      height: 100%;
+      height: 100px;
       margin:0 auto;
       line-height:32px;
       color: #b2945f;
@@ -1019,7 +1019,7 @@ export default {
     }
     .mmqTable{
       width: 36%;
-      height: 100%;
+      height: 100px;
       font-size: 14px;
       padding: 10px;
       word-break: break-all;
@@ -1153,7 +1153,7 @@ export default {
     }
     .xsfText{
       width: 4%;
-      height: 100%;
+      height: 100px;
       margin:0 auto;
       line-height:32px;
       color: #b2945f;
@@ -1162,7 +1162,7 @@ export default {
     }
     .xsfTable{
       width: 56%;
-      height: 100%;
+      height: 100px;
       display: inline-block;
       vertical-align: top;
       border: none;
@@ -1201,7 +1201,7 @@ export default {
     }
     .bzText{
       width: 10%;
-      height: 100%;
+      height: 100px;
       margin:0 auto;
       line-height:32px;
       color: #b2945f;
@@ -1210,7 +1210,7 @@ export default {
     }
     .bzTable{
       width: 30%;
-      height: 100%;
+      height: 100px;
     }
   }
   .fpmsg{
