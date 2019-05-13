@@ -255,16 +255,17 @@ export default {
     }
   },
   mounted() {
-    selectUserOrgList({}).then(res => {
-      res.data.forEach((item) => {
-        if (item.id === this.org.id) {
-          this.orgList.push(item)
-          this.searchParams.xfsh = item.taxNum
-        }
-      })
-    }).catch(err => {
-      this.$message.error(err)
-    })
+    this.searchParams.xfsh = this.org.taxNum
+    // selectUserOrgList({}).then(res => {
+    //   res.data.forEach((item) => {
+    //     if (item.id === this.org.id) {
+    //       this.orgList.push(item)
+    //       this.searchParams.xfsh = item.taxNum
+    //     }
+    //   })
+    // }).catch(err => {
+    //   this.$message.error(err)
+    // })
   },
   methods: {
     // 初始化数据

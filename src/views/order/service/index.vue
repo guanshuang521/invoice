@@ -216,17 +216,18 @@ export default {
     }
   },
   mounted() {
-    selectUserOrgList({}).then(res => {
-      // 过滤当前用户的纳税主体
-      res.data.forEach((item) => {
-        if (item.id === this.org.id) {
-          this.orgList.push(item)
-          this.searchParams.xfnssbh = item.taxNum
-        }
-      })
-    }).catch(err => {
-      this.$message.error(err)
-    })
+    this.searchParams.xfnssbh = this.org.taxNum
+    // selectUserOrgList({}).then(res => {
+    //   // 过滤当前用户的纳税主体
+    //   res.data.forEach((item) => {
+    //     if (item.id === this.org.id) {
+    //       this.orgList.push(item)
+    //       this.searchParams.xfnssbh = item.taxNum
+    //     }
+    //   })
+    // }).catch(err => {
+    //   this.$message.error(err)
+    // })
   },
   methods: {
     // 初始化数据
