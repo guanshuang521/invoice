@@ -178,6 +178,7 @@ const apiPath = {
       billDetail: '/invoice/billDetail',
       cancel: '/invoice/invoice/voidedCheck', // 作废
       exportAll: '/invoice/invoice/exportInvoiceAll', // 发票导出
+      exportInvoiceSelected: '/invoice/invoice/exportInvoiceSelected', // 发票勾选导出
       validate: '/invoice/invoice/validateInvoice', // 发票验证
       passBackInvoice: '/invoice/invoice/passBackInvoice', // 数据回传
       fpDetail: '/invoice/invoice/getInvoiceByHmDm', // 获取发票详情
