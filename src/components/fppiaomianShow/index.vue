@@ -1038,14 +1038,18 @@ export default {
       border-bottom: 1px solid #B2945F;
       box-sizing: border-box;
       color: #B2945F;
+      overflow-y: scroll;
       li{
-        line-height: 40px;
+        line-height: 39px;
       }
     }
     .linesList{
       min-height: 97px;
       max-height: 150px;
-      overflow-y: auto;
+      overflow-y: scroll;
+    }
+    .linesList::-webkit-scrollbar{
+        background: #F0F0F0;
     }
     .linesConten{
       width: 100%;
