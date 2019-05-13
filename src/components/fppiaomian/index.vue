@@ -561,7 +561,7 @@ export default {
       })
     },
     gfmcBlur() {
-      console.log(1)
+      console.log(11111)
     },
     handleSizeChange(data, type) {
       if (type === 'isgoods') {
