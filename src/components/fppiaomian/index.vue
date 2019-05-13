@@ -89,24 +89,24 @@
         <div class="tableLines">
           <ul class="linesTitle">
             <li style="width:5%">行号</li>
-            <li style="width:20%">货物或应税劳务、服务名称</li>
-            <li style="width:8%">规格型号</li>
+            <li style="width:25%">货物或应税劳务、服务名称</li>
+            <li style="width:10%">规格型号</li>
             <li style="width:6%">单位</li>
             <li style="width:9%">数量</li>
             <li style="width:10%">单价(含税)</li>
             <li style="width:10%">金额(含税)</li>
             <li style="width:8%">税率</li>
             <li style="width:8%">税额</li>
-            <li style="width:16%">操作</li>
+            <li style="width:9%">操作</li>
           </ul>
           <div class="linesList">
             <ul v-for="(item, index) in formdata.lines" :key="item.id" class="linesConten">
               <li style="width:5%">{{ index + 1 }}</li>
-              <li style="width:20%;position: relative;">
+              <li style="width:25%;position: relative;">
                 <input v-model="formdata.lines[index].xmmc">
                 <a class="small_select taxNumSelectBtn" style="top:7px" @click="isGoodsDialog(index)">···</a>
               </li>
-              <li style="width:8%">
+              <li style="width:10%">
                 <input v-model="formdata.lines[index].ggxh" readOnly>
               </li>
               <li style="width:6%">
@@ -128,7 +128,7 @@
               <li style="width:8%">
                 <input v-model="formdata.lines[index].se" readOnly>
               </li>
-              <li style="width:16%">
+              <li style="width:9%">
                 <div class="czbtn">
                   <a class="addRow" @click="addBtn"/>
                   <!--<a class="ywbmBtn">业务编号</a>-->
@@ -931,7 +931,7 @@ export default {
     }
     .gmfText{
       width: 4%;
-      height: 100%;
+      height: 100px;
       margin:0 auto;
       line-height:32px;
       color: #b2945f;
@@ -940,7 +940,7 @@ export default {
     }
     .gmfTable{
       width: 57%;
-      height: 100%;
+      height: 100px;
       display: inline-block;
       vertical-align: top;
       border: none;
@@ -978,7 +978,7 @@ export default {
     }
     .mmqText{
       width: 3%;
-      height: 100%;
+      height: 100px;
       margin:0 auto;
       line-height:32px;
       color: #b2945f;
@@ -987,7 +987,7 @@ export default {
     }
     .mmqTable{
       width: 36%;
-      height: 100%;
+      height: 100px;
     }
   }
   .tableLines{
@@ -1003,14 +1003,18 @@ export default {
       border-bottom: 1px solid #B2945F;
       box-sizing: border-box;
       color: #B2945F;
+      overflow-y: scroll;
       li{
-        line-height: 40px;
+        line-height: 39px;
       }
     }
     .linesList{
       min-height: 97px;
       max-height: 150px;
-      overflow-y: auto;
+      overflow-y: scroll;
+    }
+    .linesList::-moz-scrolled-content{
+      background: #F0F0F0;
     }
     .linesConten{
       width: 100%;
@@ -1118,7 +1122,7 @@ export default {
     }
     .xsfText{
       width: 4%;
-      height: 100%;
+      height: 100px;
       margin:0 auto;
       line-height:32px;
       color: #b2945f;
@@ -1127,7 +1131,7 @@ export default {
     }
     .xsfTable{
       width: 56%;
-      height: 100%;
+      height: 100px;
       display: inline-block;
       vertical-align: top;
       border: none;
@@ -1167,7 +1171,7 @@ export default {
     }
     .bzText{
       width: 10%;
-      height: 100%;
+      height: 100px;
       margin:0 auto;
       line-height:32px;
       color: #b2945f;
@@ -1176,7 +1180,7 @@ export default {
     }
     .bzTable{
       width: 30%;
-      height: 100%;
+      height: 100px;
     }
   }
   .fpmsg{
