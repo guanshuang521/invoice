@@ -55,8 +55,12 @@ service.interceptors.response.use(
   },
   error => {
     console.log('err' + error) // for debug
+    let errorMsg = '请求失败'
+    if (error.config.url === '/print') {
+      errorMsg = '调起打印客户端失败，请确认是否已打开客户端'
+    }
     Message({
-      message: '请求失败',
+      message: errorMsg,
       type: 'error',
       duration: 5 * 1000
     })

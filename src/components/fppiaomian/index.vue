@@ -56,10 +56,12 @@
                 remote
                 clearable
                 reserve-keyword
+                default-first-option
                 allow-create
                 size="mini"
                 placeholder="请输入关键词"
                 class="gfMc"
+                @blur="gfmcBlur"
                 @change="remoteChange">
                 <el-option
                   v-for="item in gfList"
@@ -213,11 +215,11 @@
       <div class="dialog_item">
         <div class="search_item">
           <div class="search_label">商品税收编码：</div>
-          <input v-model="goods.spbm" class="search_input" type="text">
+          <input v-model="goods.spbm" class="search_input" type="text" @keydown="keydown($event)">
         </div>
         <div class="search_item">
           <div class="search_label">商品名称：</div>
-          <input v-model="goods.spmc" class="search_input" type="text">
+          <input v-model="goods.spmc" class="search_input" type="text" @keydown="keydown($event)">
         </div>
         <div class="bluebtn" @click="getGoodsList">查询</div>
         <div class="bluebtn" @click="resetGoodsList">重置</div>
@@ -503,6 +505,11 @@ export default {
       }
       this.formdata.lines.splice(index, 1)
     },
+    keydown($event) {
+      if ($event.keyCode === 13) {
+        this.getGoodsList()
+      }
+    },
     // 查询商品列表
     getGoodsList() {
       const args = {
@@ -553,6 +560,9 @@ export default {
         }
       })
     },
+    gfmcBlur() {
+      console.log(1)
+    },
     handleSizeChange(data, type) {
       if (type === 'isgoods') {
         const args = {
@@ -578,7 +588,7 @@ export default {
       if (type === 'isgoods') {
         const args = {
           currentPage: data,
-          pageSize: data,
+          pageSize: 10,
           spbm: this.goods.spbm,
           spmc: this.goods.spmc
         }

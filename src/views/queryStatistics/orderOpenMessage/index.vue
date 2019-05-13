@@ -59,32 +59,32 @@
         </el-table-column>
         <el-table-column label="销方名称" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.xsfMc }}</span>
+            <span>{{ scope.row.xfmc }}</span>
           </template>
         </el-table-column>
         <el-table-column label="销方税号" align="center">
           <template slot-scope="scope">
-            {{ scope.row.xsfNsrsbh }}
+            {{ scope.row.xfsh }}
           </template>
         </el-table-column>
         <el-table-column label="购方名称" align="center">
           <template slot-scope="scope">
-            {{ scope.row.gmfMc }}
+            {{ scope.row.gfmc }}
           </template>
         </el-table-column>
         <el-table-column label="购方税号" align="center">
           <template slot-scope="scope">
-            {{ scope.row.gmfNsrsbh }}
+            {{ scope.row.gfsh }}
           </template>
         </el-table-column>
         <el-table-column label="金额（不含税）" align="center">
           <template slot-scope="scope">
-            {{ scope.row.hjje }}
+            {{ scope.row.bhsje }}
           </template>
         </el-table-column>
         <el-table-column label="税额" align="center">
           <template slot-scope="scope">
-            {{ scope.row.hjse }}
+            {{ scope.row.se }}
           </template>
         </el-table-column>
         <el-table-column label="价税合计" align="center">
@@ -92,29 +92,9 @@
             {{ scope.row.jshj }}
           </template>
         </el-table-column>
-        <el-table-column label="开票时间" align="center">
+        <el-table-column label="订单状态" align="center">
           <template slot-scope="scope">
-            {{ scope.row.kprq }}
-          </template>
-        </el-table-column>
-        <el-table-column label="开票机号" align="center">
-          <template slot-scope="scope">
-            {{ scope.row.kpzdbs }}
-          </template>
-        </el-table-column>
-        <el-table-column label="清单标志" align="center">
-          <template slot-scope="scope">
-            {{ scope.row.qdbz }}
-          </template>
-        </el-table-column>
-        <el-table-column label="发票状态" align="center">
-          <template slot-scope="scope">
-            {{ scope.row.fpzt }}
-          </template>
-        </el-table-column>
-        <el-table-column label="打印状态" align="center">
-          <template slot-scope="scope">
-            {{ scope.row.kpzt }}
+            {{ SYS_DDZT[scope.row.status] }}
           </template>
         </el-table-column>
         <el-table-column label="操作" fixed="right" align="center">
@@ -152,10 +132,12 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { arrayToMapField } from '@/utils/public'
 import { selectUserOrgList } from '@/api/system/user'
 import { getTableList, getOrderList } from '@/api/queryStatistics/orderOpenMessage'
 import orderOpenMessage from '@/components/queryStatistics/orderOpenMessage'
 import apiPath from '@/api/apiUrl'
+
 export default {
   name: 'OrderOpenMessage',
   components: {
@@ -239,8 +221,12 @@ export default {
   computed: {
     ...mapGetters([
       'name',
-      'roles'
-    ])
+      'roles',
+      'dictList'
+    ]),
+    SYS_DDZT() {
+      return arrayToMapField(this.dictList['SYS_DDZT'], 'code', 'name')
+    }
   },
   mounted() {
     selectUserOrgList().then(res => {
@@ -293,10 +279,17 @@ export default {
       return apiPath.system.codeManagement.importExcel
     },
     reset() { // 重置
-      this.searchs = {
-        customerName: '',
-        customerTaxNumber: ''
+      const djlx = this.searchParams.djlx
+      this.searchParams = {
+        djlx: djlx,
+        gfmc: '',
+        xfsh: '',
+        startDjbh: '',
+        endDjbh: '',
+        currentPage: 1,
+        pageSize: 10
       }
+      this.getTableList()
     },
     handleSelectionChange(val) { // 表格选中数据发生变化
       this.checkedList = val

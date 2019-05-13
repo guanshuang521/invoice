@@ -63,7 +63,7 @@
           label="订单状态"
           align="center">
           <template slot-scope="scope">
-            {{ SYS_POS_DDZT[scope.row.status] }}
+            {{ SYS_DDZT[scope.row.status] }}
           </template>
         </el-table-column>
         <el-table-column
@@ -250,8 +250,8 @@ export default {
   },
   computed: {
     ...mapGetters(['name', 'roles', 'dictList']),
-    SYS_POS_DDZT() { // 税率
-      return arrayToMapField(this.dictList['SYS_POS_DDZT'], 'code', 'name')
+    SYS_DDZT() { // 税率
+      return arrayToMapField(this.dictList['SYS_DDZT'], 'code', 'name')
     }
   },
   mounted() {

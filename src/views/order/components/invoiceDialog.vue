@@ -33,8 +33,8 @@
         </el-form-item>
         <el-form-item v-if="dynamicValidateForm.fplx=='004'" label="备用发票类型" prop="byfplx">
           <el-select v-model="dynamicValidateForm.byfplx" placeholder="请选择备用发票类型" style="width: 100%">
-            <el-option value ="007">普票</el-option>
-            <el-option value ="026">电票</el-option>
+            <el-option value ="007" label="普票"/>
+            <el-option value ="026" label="电票"/>
           </el-select>
         </el-form-item>
         <el-form-item label="手机号" prop="gmfSjh">
