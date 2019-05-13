@@ -555,11 +555,11 @@ export default {
           args.orgCode = this.currentNodeDetail.id
           this.loading = true
           updateNode(args).then(res => {
-            this.$refs[data].resetFields()
+            // this.$refs[data].resetFields()
             this.$message.success(res.message)
             this.initTree()
             this.loading = false
-            this.isTreeChecked = false
+            // this.isTreeChecked = false
           }).catch(err => {
             this.$message({
               message: err,

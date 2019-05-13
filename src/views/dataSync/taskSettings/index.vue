@@ -54,7 +54,7 @@
           </el-table-column>
           <el-table-column label="数据类型" align="center">
             <template slot-scope="scope">
-              {{ scope.row.dataType }}
+              {{ SYS_SJLX[scope.row.dataType] }}
             </template>
           </el-table-column>
           <el-table-column label="数据源系统" align="center">
@@ -170,6 +170,7 @@ import { mapGetters } from 'vuex'
 import { submitSync, addSave, initData, handleEdit } from '@/api/dataSync/taskSetting'
 import testSettings from '@/components/dataSync/testSettings'
 import { arrayToMapField } from '@/utils/public'
+
 export default {
   name: 'Dashboard',
   components: {
@@ -249,6 +250,9 @@ export default {
     ]),
     sjlx() {
       return this.dictList['SYS_SJLX']
+    },
+    SYS_SJLX() {
+      return arrayToMapField(this.dictList['SYS_SJLX'], 'code', 'name')
     },
     sjyxt() {
       return this.dictList['SYS_SJYXT']
