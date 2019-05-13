@@ -70,40 +70,26 @@
 export default {
   name: 'InvoiceDialog',
   props: {
-    poptotal: {
+    id: {
       type: String,
       default: ''
-    },
-    poplist: {
-      type: String,
-      default: () => ''
     }
   },
   data() {
     return {
       currentPage: 1,
       pageSize: 25,
-      showDialog: false
-      // list: [
-      //   {
-      //     djsh: '管理员',
-      //     xfmc: 1,
-      //     gfmc: '北京市丰台科技园',
-      //     xfsh: '12433323454',
-      //     gfsh: '23543212343',
-      //     hjje: '北京银行中关村支行',
-      //     hjse: '123444321234567876',
-      //     jshj: 0,
-      //     ddzt: 0
-      //   }
-      // ]
+      showDialog: false,
+      list: []
     }
   },
-  watch: {
-  },
-  created() {
+  mounted() {
+
   },
   methods: {
+    initList() {
+
+    },
     handleSizeChange() {},
     handleCurrentChange() {},
     // 表格选中数据发生变化

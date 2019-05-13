@@ -12,11 +12,11 @@
         <el-form-item label="开票码">
           <el-input v-model="searchParams.djbh" placeholder="请输入开票码" size="small"/>
         </el-form-item>
-        <el-form-item label="纳税主体">
-          <el-select v-model="searchParams.xfsh" placeholder="请选择" size="small" disabled>
-            <el-option v-for="item in orgList" :key="item.id" :label="item.orgName" :value="item.taxNum"/>
-          </el-select>
-        </el-form-item>
+        <!--<el-form-item label="纳税主体">-->
+          <!--<el-select v-model="searchParams.xfsh" placeholder="请选择" size="small" disabled>-->
+            <!--<el-option v-for="item in orgList" :key="item.id" :label="item.orgName" :value="item.taxNum"/>-->
+          <!--</el-select>-->
+        <!--</el-form-item>-->
         <el-form-item>
           <el-button type="primary" size="small" @click="initTable">查询</el-button>
           <el-button type="primary" size="small" @click="reset">重置</el-button>

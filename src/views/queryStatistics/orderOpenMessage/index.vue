@@ -251,6 +251,8 @@ export default {
       getTableList(this.searchParams).then(res => {
         this.list = res.data.data.list
         this.total = res.data.data.total
+      }).catch(err => {
+        this.$message.error(err)
       })
     },
     submitUpload() { // 开始上传按钮
@@ -306,12 +308,11 @@ export default {
         cancelButtonText: '取消'
         // type: 'warning',
         // center: true
-      }).then(() => {
+      }).then((res) => {
         console.log(this.checkedList)
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
-        })
+        this.$message.success(res.message)
+      }).catch(err => {
+        this.$message.error(err)
       })
     },
     downloadExcel() { // 下载
