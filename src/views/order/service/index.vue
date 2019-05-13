@@ -20,7 +20,7 @@
         </el-form-item>
         <el-form-item label="订单状态">
           <el-select v-model="searchParams.status" placeholder="请选择" size="small">
-            <el-option v-for="item in dictList['SYS_ERP_STATUS']" :key="item.id" :label="item.name" :value="item.code"/>
+            <el-option v-for="item in dictList['SYS_DDZT']" :key="item.id" :label="item.name" :value="item.code"/>
           </el-select>
         </el-form-item>
         <el-form-item label="单据起号">
@@ -136,7 +136,7 @@
           label="订单状态"
           align="center">
           <template slot-scope="scope">
-            {{ SYS_ERP_STATUS[scope.row.status] }}
+            {{ SYS_DDZT[scope.row.status] }}
           </template>
         </el-table-column>
         <el-table-column
@@ -211,8 +211,8 @@ export default {
   },
   computed: {
     ...mapGetters(['name', 'roles', 'dictList']),
-    SYS_ERP_STATUS() { // 状态
-      return arrayToMapField(this.dictList['SYS_ERP_STATUS'], 'code', 'name')
+    SYS_DDZT() { // 状态
+      return arrayToMapField(this.dictList['SYS_DDZT'], 'code', 'name')
     }
   },
   mounted() {

@@ -88,8 +88,8 @@
       <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="cancel">作废</el-button>
       <el-button size="small" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="fpzhDialogVisible = true">发票找回</el-button>
       <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="exportExcel">导出</el-button>
-      <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="billSendBack">数据回传</el-button>
-      <el-button size="small" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="validate">发票验证</el-button>
+      <!--<el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="billSendBack">数据回传</el-button>-->
+      <!--<el-button size="small" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="validate">发票验证</el-button>-->
     </div>
     <div class="table-container">
       <el-table
