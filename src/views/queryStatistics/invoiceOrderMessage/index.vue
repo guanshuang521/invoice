@@ -62,7 +62,7 @@
         </el-table-column>
         <el-table-column label="发票类型" align="center" width="100">
           <template slot-scope="scope">
-            {{ scope.row.fplx }}
+            {{ SYS_FPLX[scope.row.fplx] }}
           </template>
         </el-table-column>
         <el-table-column label="销方名称" align="center" width="160">
@@ -105,7 +105,7 @@
             {{ scope.row.bz }}
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center">
+        <el-table-column label="操作" align="center" width="100px">
           <template slot-scope="scope">
             <el-button
               size="mini"
@@ -134,14 +134,14 @@
       title="订单信息"
       width="750px"
       custom-class="add-customer">
-      <invoice-order-message :poptotal="poptotal" :poplist="poplist"/>
+      <invoice-order-message :id="currentId"/>
     </el-dialog>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import { getTableList, getOrderList, orderInfo } from '@/api/queryStatistics/orderOpenMessage'
+import { getOrderList, orderInfo } from '@/api/queryStatistics/orderOpenMessage'
 import invoiceOrderMessage from '@/components/queryStatistics/invoiceOrderMessage'
 import { arrayToMapField } from '@/utils/public'
 export default {
@@ -187,7 +187,8 @@ export default {
         phone: '',
         bank: '',
         bankAccount: ''
-      }
+      },
+      currentId: ''
     }
   },
   computed: {
@@ -220,7 +221,7 @@ export default {
     initTable() {
       this.searchParams.xsfNsrsbh = this.org.taxNum
       getOrderList(this.searchParams).then(res => {
-        this.list = res.data.list
+        this.list = res.data.data.list
         this.total = res.data.count
       }).catch(err => {
         this.$message.error(err)
@@ -287,6 +288,7 @@ export default {
     },
     handleEdit(index, row) {
       this.dialogVisible = true
+      this.currentId = row.id
       const params = {
         invoiceId: row.id,
         currentPage: 1,

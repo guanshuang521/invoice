@@ -83,12 +83,12 @@
         <el-table-column prop="jshj" label="价税合计" width="120" align="center"/>
         <el-table-column prop="ghdwmc" label="购方名称" width="120" align="center"/>
         <el-table-column prop="xhdwmc" label="销方名称" width="120" align="center"/>
-        <el-table-column fixed="right" label="操作" width="190" align="center">
+        <el-table-column fixed="right" label="操作" width="290" align="center">
           <template slot-scope="scope">
-            <el-button type="text" size="small" @click="checkHZXXB(scope.row)">查看</el-button>
-            <el-button type="text" size="small" @click="uploadData(scope.row)">上传</el-button>
-            <el-button type="text" size="small" @click="editData(scope.row)">编辑</el-button>
-            <el-button type="text" size="small" @click="asyncData(scope.row)">同步</el-button>
+            <el-button type="primary" size="small" @click="checkHZXXB(scope.row)">查看</el-button>
+            <el-button type="primary" size="small" @click="uploadData(scope.row)">上传</el-button>
+            <el-button type="primary" size="small" @click="editData(scope.row)">编辑</el-button>
+            <el-button type="primary" size="small" @click="asyncData(scope.row)">同步</el-button>
           </template>
         </el-table-column>
       </el-table>

@@ -61,7 +61,7 @@
           <tbody>
             <tr>
               <td class="hzxx_tab1">开<br>具<br>红<br>字<br>专<br>用<br>发<br>票<br>内<br>容</td>
-              <td style="vertical-align: top;overflow: hidden;">
+              <td style="vertical-align: top;overflow: hidden;position: relative">
                 <table id="fyxmdiv" class="tab_center">
                   <tbody>
                     <tr class="zz_tab">
@@ -104,7 +104,7 @@
                     </tr>
                   </tbody>
                 </table>
-                <ul class="hjtop">
+                <ul class="hjtop" style="position: absolute;width: 100%;bottom: 0">
                   <li style="width:60%;padding-left: 5px;">合计</li>
                   <li style="width:18%">￥{{ formdata.hjje }}</li>
                   <li style="width:20%">￥{{ formdata.hjse }}</li>

@@ -525,11 +525,16 @@ export default {
         if (valid) {
           const args = Object.assign({}, this.addNodeForm)
           args.parentId = this.$refs.organTree.getCurrentNode().id
+          this.loading = true
           addNode(args).then(res => {
             this.$refs[data].resetFields()
             this.$message.success(res.message)
-            this.initTree()
+            this.loading = false
+            setTimeout(() => {
+              this.initTree()
+            }, 500)
           }).catch(err => {
+            this.loading = false
             this.$message.error(err)
           })
         }

@@ -46,11 +46,11 @@
             class="filter-item"
             placeholder="请选择"/>
         </el-form-item>
-        <el-form-item label="纳税主体">
-          <el-select v-model="searchParams.xfnssbh" placeholder="请选择" size="small" disabled>
-            <el-option v-for="item in orgList" :key="item.id" :label="item.orgName" :value="item.taxNum"/>
-          </el-select>
-        </el-form-item>
+        <!--<el-form-item label="纳税主体">-->
+          <!--<el-select v-model="searchParams.xfnssbh" placeholder="请选择" size="small" disabled>-->
+            <!--<el-option v-for="item in orgList" :key="item.id" :label="item.orgName" :value="item.taxNum"/>-->
+          <!--</el-select>-->
+        <!--</el-form-item>-->
         <el-form-item>
           <el-button type="primary" size="small" @click="initTable">查询</el-button>
           <el-button type="primary" size="small" @click="reset">重置</el-button>
