@@ -43,7 +43,7 @@
             placeholder="请选择"/>
         </el-form-item>
         <el-form-item label="纳税主体">
-          <el-select v-model="searchParams.xfnssbh" placeholder="请选择" size="small">
+          <el-select v-model="searchParams.xfnssbh" placeholder="请选择" size="small" disabled>
             <el-option v-for="item in orgList" :key="item.id" :label="item.orgName" :value="item.taxNum"/>
           </el-select>
         </el-form-item>
@@ -200,14 +200,19 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['name', 'roles', 'dictList']),
+    ...mapGetters(['name', 'roles', 'org', 'dictList']),
     SYS_DDZT() { // 状态
       return arrayToMapField(this.dictList['SYS_DDZT'], 'code', 'name')
     }
   },
   mounted() {
     selectUserOrgList({}).then(res => {
-      this.orgList = res.data
+      res.data.forEach((item) => {
+        if (item.id === this.org.id) {
+          this.orgList.push(item)
+          this.searchParams.xfnssbh = item.taxNum
+        }
+      })
     }).catch(err => {
       this.$message.error(err)
     })

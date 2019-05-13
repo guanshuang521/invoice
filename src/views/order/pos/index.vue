@@ -13,7 +13,7 @@
           <el-input v-model="searchParams.djbh" placeholder="请输入开票码" size="small"/>
         </el-form-item>
         <el-form-item label="纳税主体">
-          <el-select v-model="searchParams.xfsh" placeholder="请选择" size="small">
+          <el-select v-model="searchParams.xfsh" placeholder="请选择" size="small" disabled>
             <el-option v-for="item in orgList" :key="item.id" :label="item.orgName" :value="item.taxNum"/>
           </el-select>
         </el-form-item>
@@ -249,14 +249,19 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['name', 'roles', 'dictList']),
+    ...mapGetters(['name', 'roles', 'org', 'dictList']),
     SYS_DDZT() { // 税率
       return arrayToMapField(this.dictList['SYS_DDZT'], 'code', 'name')
     }
   },
   mounted() {
     selectUserOrgList({}).then(res => {
-      this.orgList = res.data
+      res.data.forEach((item) => {
+        if (item.id === this.org.id) {
+          this.orgList.push(item)
+          this.searchParams.xfsh = item.taxNum
+        }
+      })
     }).catch(err => {
       this.$message.error(err)
     })
