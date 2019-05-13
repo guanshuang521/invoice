@@ -50,6 +50,7 @@
             <div class="tbmc">
               <span class="gmftitle">名      称：</span>
               <el-select
+                ref="gmfmc"
                 v-model="formdata.gmfMc"
                 :remote-method="remoteSearch"
                 filterable
@@ -561,7 +562,7 @@ export default {
       })
     },
     gfmcBlur() {
-      console.log(1)
+      console.log(11111)
     },
     handleSizeChange(data, type) {
       if (type === 'isgoods') {
