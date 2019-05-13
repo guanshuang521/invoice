@@ -449,7 +449,7 @@ export default {
       }
     }
   },
-  mounted: function() {
+  created: function() {
     this.getNotInvoiceYetDmHm()
     this.getGoodList()
     this.kprq = getDate(new Date().getTime(), 'yyyy年MM月dd日')
