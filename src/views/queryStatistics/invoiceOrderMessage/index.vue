@@ -7,6 +7,11 @@
   <div class="invoiceOrder-container">
     <div class="filter-container">
       <el-form :inline="true" :model="searchParams" class="demo-form-inline">
+        <el-form-item label="纳税主体">
+          <el-select v-model="searchParams.xfsh" placeholder="请选择" size="small">
+            <el-option v-for="item in orgList" :key="item.id" :label="item.orgName" :value="item.taxNum"/>
+          </el-select>
+        </el-form-item>
         <el-form-item label="销方名称">
           <el-input v-model="searchParams.xsfMc" placeholder="请输入" size="small"/>
         </el-form-item>
@@ -144,6 +149,8 @@ import { mapGetters } from 'vuex'
 import { getOrderList, orderInfo } from '@/api/queryStatistics/orderOpenMessage'
 import invoiceOrderMessage from '@/components/queryStatistics/invoiceOrderMessage'
 import { arrayToMapField } from '@/utils/public'
+import { selectUserOrgList } from '@/api/system/user'
+
 export default {
   name: 'InvoiceOrderMessage',
   components: {
@@ -161,7 +168,8 @@ export default {
         fpDm: '',
         fpHm: '',
         fplx: '',
-        xsfMc: ''
+        xsfMc: '',
+        xfsh: ''
       },
       list: [],
       poptotal: '',
@@ -188,7 +196,9 @@ export default {
         bank: '',
         bankAccount: ''
       },
-      currentId: ''
+      currentId: '',
+      // 用户有权限的机构列表
+      orgList: []
     }
   },
   computed: {
@@ -203,6 +213,11 @@ export default {
     }
   },
   mounted() {
+    selectUserOrgList().then(res => {
+      this.orgList = res.data
+    }).catch(err => {
+      this.$message.error(err)
+    })
   },
   created() {
     // this.getTableList()

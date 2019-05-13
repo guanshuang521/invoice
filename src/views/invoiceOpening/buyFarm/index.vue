@@ -80,8 +80,8 @@ export default {
           xsfDzdh: this.org.coAddr + ' ' + this.org.coPhone,
           xsfYhzh: this.org.bankName + ' ' + this.org.bankCode,
           kpr: this.info.userName,
-          fplx: this.fplx, // 发票类型
-          tzpz: '00', // 特殊票种标识
+          fplx: '007', // 发票类型
+          tzpz: '02', // 特殊票种标识
           dybz: '0', // 打印标识
           qdbz: '0', // 清单标识
           zfbz: '0', // 作废标识
@@ -99,7 +99,9 @@ export default {
           kpzdbs: this.info.terminalMark, // 开票终端标识 ?
           fplxdm: this.fplx, // 发票类型代码
           check: true, // 手工开具必传
-          skfplx: '2'
+          skfplx: '2',
+          lslbs: 1,
+          sl: 0
         })
         invoice(args).then(res => {
           this.loading = false

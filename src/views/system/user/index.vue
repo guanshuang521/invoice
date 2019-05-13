@@ -260,7 +260,7 @@ export default {
       })
     },
     resetPassword(row) {
-      this.$confirm('确定要重置密码吗?', '提示', {
+      this.$confirm('确认将该用户密码重置为88888888吗?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'

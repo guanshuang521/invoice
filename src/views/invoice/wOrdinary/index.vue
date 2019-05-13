@@ -347,9 +347,13 @@ export default {
     closePrint(data) {
       this.xzdyDialogVisible = data
     },
-    handleSizeChange() {
+    handleSizeChange(val) {
+      this.listQuery.pageSize = val
+      this.initList()
     },
-    handleCurrentChange() {
+    handleCurrentChange(val) {
+      this.listQuery.currentPage = val
+      this.initList()
     },
     // 表格选中数据发生变化
     handleSelectionChange(val) {

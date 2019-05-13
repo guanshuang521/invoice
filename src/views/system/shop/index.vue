@@ -12,7 +12,7 @@
     element-loading-background="rgba(0, 0, 0, 0.6)">
     <div class="button-container">
       <el-button type="primary" icon="el-icon-search" size="mini" @click="dialogVisible('add')">新增</el-button>
-      <el-button type="primary" icon="el-icon-search" size="mini" @click="dialogVisible('edit')">修改</el-button>
+      <!--<el-button type="primary" icon="el-icon-search" size="mini" @click="dialogVisible('edit')">修改</el-button>-->
       <el-button type="primary" icon="el-icon-search" size="mini" @click="remove">删除</el-button>
       <el-button type="primary" icon="el-icon-search" size="mini" @click="getTableList">查询</el-button>
     </div>
@@ -81,6 +81,15 @@
           align="center"
           width="180">
           <template slot-scope="scope">{{ scope.row.datasourceType }}</template>
+        </el-table-column>
+        <el-table-column
+          align="center"
+          fixed="right"
+          label="操作"
+          width="200">
+          <template slot-scope="scope">
+            <el-button type="primary" size="small" @click="dialogVisible('edit', scope.row)">修改</el-button>
+          </template>
         </el-table-column>
       </el-table>
     </div>
@@ -236,7 +245,7 @@ export default {
       })
     },
     // 点击新增/编辑按钮弹框出现
-    dialogVisible(type) {
+    dialogVisible(type, data) {
       this.type = type
       if (type === 'add') {
         this.form = {
@@ -264,15 +273,8 @@ export default {
           this.$refs['store'].resetFields()
         })
       } else {
-        if (this.multipleSelection.length !== 1) {
-          this.$message({
-            message: '请选择一条数据进行操作',
-            type: 'error'
-          })
-          return false
-        }
         const args = {
-          id: this.multipleSelection[0]['id']
+          id: data.id
         }
         detailData(args).then(res => {
           this.form = res.info

@@ -48,40 +48,20 @@
           <div class="tbT gmfText">购<br>买<br>方</div>
           <div class="tbT gmfTable">
             <div class="tbmc">
-              <span class="gmftitle">名      称：</span>
-              <el-select
-                ref="gmfmc"
-                v-model="formdata.gmfMc"
-                :remote-method="remoteSearch"
-                filterable
-                remote
-                clearable
-                reserve-keyword
-                default-first-option
-                allow-create
-                size="mini"
-                placeholder="请输入关键词"
-                class="gfMc"
-                @blur="gfmcBlur"
-                @change="remoteChange">
-                <el-option
-                  v-for="item in gfList"
-                  :key="item.value"
-                  :label="item.khmc"
-                  :value="item.khmc"/>
-              </el-select>
+              <span class="gmftitle">名称：</span>
+              <span class="gmfcontent" style="line-height: 24px;padding-left: 5px" v-html="xsfMc"/>
             </div>
             <div class="tbnsrsbh">
               <span class="gmftitle">纳税人识别号：</span>
-              <input v-model="formdata.gmfNsrsbh" class="gmfcontent">
+              <span class="gmfcontent" style="line-height: 24px;padding-left: 5px" v-html="xsfNsrsbh"/>
             </div>
             <div class="tbdzdh">
               <span class="gmftitle">地址  、  电话：</span>
-              <input v-model="formdata.gmfDzdh" class="gmfcontent">
+              <span class="gmfcontent" style="line-height: 24px;padding-left: 5px" v-html="xsfDzdh"/>
             </div>
             <div class="tbkhh">
               <span class="gmftitle">开户行及账号：</span>
-              <input v-model="formdata.gmfYhzh" class="gmfcontent">
+              <span class="gmfcontent" style="line-height: 24px;padding-left: 5px" v-html="xsfYhzh"/>
             </div>
           </div>
           <div class="tbT mmqText">密<br>码<br>区</div>
@@ -159,20 +139,40 @@
           <div class="tbB xsfText">销<br>售<br>方</div>
           <div class="tbB xsfTable">
             <div class="tbmc">
-              <span class="xsftitle">名称：</span>
-              <span class="xsfcontent" v-html="xsfMc"/>
+              <span class="xsftitle">名      称：</span>
+              <el-select
+                ref="gmfmc"
+                v-model="formdata.gmfMc"
+                :remote-method="remoteSearch"
+                filterable
+                remote
+                clearable
+                reserve-keyword
+                default-first-option
+                allow-create
+                size="mini"
+                placeholder="请输入关键词"
+                class="xsfcontent"
+                @blur="gfmcBlur"
+                @change="remoteChange">
+                <el-option
+                  v-for="item in gfList"
+                  :key="item.value"
+                  :label="item.khmc"
+                  :value="item.khmc"/>
+              </el-select>
             </div>
             <div class="tbnsrsbh">
               <span class="xsftitle">纳税人识别号：</span>
-              <span class="xsfcontent" v-html="xsfNsrsbh"/>
+              <input v-model="formdata.gmfNsrsbh" class="xsfcontent">
             </div>
             <div class="tbdzdh">
               <span class="xsftitle">地址  、  电话：</span>
-              <span class="xsfcontent" v-html="xsfDzdh"/>
+              <input v-model="formdata.gmfDzdh" class="xsfcontent">
             </div>
             <div class="tbkhh">
               <span class="xsftitle">开户行及账号：</span>
-              <span class="xsfcontent" v-html="xsfYhzh"/>
+              <input v-model="formdata.gmfYhzh" class="xsfcontent">
             </div>
           </div>
           <div class="tbB bzText">备<br><br>注</div>
@@ -810,7 +810,7 @@ export default {
     border-top: none;
     border-left: none;
     border-color: #B2945F;
-    width: 422px;
+    width: 410px;
   }
   .gfMc /deep/ .el-input__inner{
     padding-left: 5px;
@@ -1142,7 +1142,7 @@ export default {
         font-size: 0;
       }
       .xsftitle{
-        width: 28%;
+        width: 20%;
         line-height: 24px;
         font-size: 14px;
         text-align: center;
@@ -1154,7 +1154,7 @@ export default {
         color: #b2945f;
       }
       .xsfcontent{
-        width: 72%;
+        width: 80%;
         height: 100%;
         font-size: 14px;
         display: inline-block;
