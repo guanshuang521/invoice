@@ -46,6 +46,12 @@ export function exportAll(data) {
   }
   window.open(apiPath.invoice.oSpecial.exportAll + '?' + params.join('&'))
 }
+// 发票勾选导出
+export function exportInvoiceSelected(data) {
+  const params = 'x-access-token=' + getToken() + '&fpqqlshStr=' + data.join(',')
+  console.log(params)
+  window.open(apiPath.invoice.oSpecial.exportInvoiceSelected + '?' + params)
+}
 // 发票验证
 export function validate(data) {
   return request({

@@ -57,7 +57,19 @@ export default {
       // 校验
       let checked = true
       if (!this.form.gmfMc) {
-        this.$message.error('购方名称不能为空')
+        this.$message.error('销方名称不能为空')
+        return
+      }
+      if (!this.form.gmfNsrsbh) {
+        this.$message.error('销方纳税人识别号不能为空')
+        return
+      }
+      if (!this.form.gmfDzdh) {
+        this.$message.error('销方地址、电话不能为空')
+        return
+      }
+      if (!this.form.gmfYhzh) {
+        this.$message.error('销方开户行及账号不能为空')
         return
       }
       this.form.lines.forEach((item, key) => {
@@ -99,9 +111,13 @@ export default {
           kpzdbs: this.info.terminalMark, // 开票终端标识 ?
           fplxdm: this.fplx, // 发票类型代码
           check: true, // 手工开具必传
-          skfplx: '2',
-          lslbs: 1,
-          sl: 0
+          skfplx: '2'
+          // lslbs: 1,
+          // sl: 0
+        })
+        // 商品行信息每项加零税率标识
+        args.lines.forEach((item) => {
+          item.lslbs = 1
         })
         invoice(args).then(res => {
           this.loading = false

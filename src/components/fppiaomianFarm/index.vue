@@ -95,7 +95,6 @@
               </li>
               <li style="width:9%">
                 <input v-model="formdata.lines[index].xmsl" type="text" @blur="inputBlur(index, 'xmsl', $event)">
-                <!--                type="number"-->
               </li>
               <li style="width:10%">
                 <input v-model="formdata.lines[index].hsxmdj" type="number" @blur="inputBlur(index, 'xmdj', $event)">
@@ -518,7 +517,9 @@ export default {
         currentPage: this.goods.currentPage,
         pageSize: this.goods.pageSize,
         spbm: this.goods.spbm,
-        spmc: this.goods.spmc
+        spmc: this.goods.spmc,
+        lslbs: 1,
+        sl: 0
       }
       commodictList(args).then(res => {
         this.goods.list = res.data.list
@@ -533,7 +534,9 @@ export default {
         currentPage: 1,
         pageSize: 10,
         spbm: '',
-        spmc: ''
+        spmc: '',
+        lslbs: 1,
+        sl: 0
       }
       commodictList(args).then(res => {
         this.goods.list = res.data.list
@@ -571,7 +574,9 @@ export default {
           currentPage: this.goods.currentPage,
           pageSize: data,
           spbm: this.goods.spbm,
-          spmc: this.goods.spmc
+          spmc: this.goods.spmc,
+          lslbs: 1,
+          sl: 0
         }
         commodictList(args).then(res => {
           this.goods.list = res.data.list
@@ -592,7 +597,9 @@ export default {
           currentPage: data,
           pageSize: 10,
           spbm: this.goods.spbm,
-          spmc: this.goods.spmc
+          spmc: this.goods.spmc,
+          lslbs: 1,
+          sl: 0
         }
         commodictList(args).then(res => {
           this.goods.list = res.data.list
@@ -634,7 +641,9 @@ export default {
         currentPage: this.goods.currentPage,
         pageSize: this.goods.pageSize,
         spbm: this.goods.spbm,
-        spmc: this.goods.spmc
+        spmc: this.goods.spmc,
+        lslbs: 1,
+        sl: 0
       }
       commodictList(args).then(res => {
         this.goods.list = res.data.list

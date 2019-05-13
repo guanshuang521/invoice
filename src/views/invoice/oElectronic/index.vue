@@ -193,7 +193,7 @@
 </template>
 
 <script>
-import { getList, retrieve, exportAll, validate, passBackInvoice, fpDetail, reInvoice, sendMsg } from '@/api/invoice/oSpecial'
+import { getList, retrieve, exportAll, exportInvoiceSelected, validate, passBackInvoice, fpDetail, reInvoice, sendMsg } from '@/api/invoice/oSpecial'
 import { invoiceEle } from '@/api/invoiceOpening/opening'
 import { arrayToMapField } from '@/utils/public'
 import { mapGetters } from 'vuex'
@@ -454,13 +454,21 @@ export default {
     },
     // 导出
     exportExcel() {
-      this.$confirm('确定导出?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        exportAll(this.listQuery)
-      })
+      if (this.checkedItems.length !== 0) {
+        const fpqqlshStr = []
+        this.checkedItems.forEach((item) => {
+          fpqqlshStr.push(item.fpqqlsh)
+        })
+        exportInvoiceSelected(fpqqlshStr)
+      } else {
+        this.$confirm('确定导出?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          exportAll(this.listQuery)
+        })
+      }
     },
     // 数据回传
     billSendBack() {
