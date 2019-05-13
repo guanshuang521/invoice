@@ -1013,7 +1013,7 @@ export default {
       max-height: 150px;
       overflow-y: scroll;
     }
-    .linesList::-moz-scrolled-content{
+    .linesList::-webkit-scrollbar{
       background: #F0F0F0;
     }
     .linesConten{
