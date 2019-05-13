@@ -115,10 +115,10 @@ export default {
           // lslbs: 1,
           // sl: 0
         })
-        // 商品行信息每项加零税率标识
-        args.lines.forEach((item) => {
-          item.lslbs = 1
-        })
+        // // 商品行信息每项加零税率标识
+        // args.lines.forEach((item) => {
+        //   item.lslbs = '1'
+        // })
         invoice(args).then(res => {
           this.loading = false
           console.log(res)

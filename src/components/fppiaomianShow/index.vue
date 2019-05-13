@@ -433,19 +433,19 @@ export default {
     },
     xsfMc() {
       this.formdata.coName
-      return this.org.coName
+      return this.formdata.xsfMc
     },
     xsfNsrsbh() {
       this.formdata.taxNum
-      return this.org.taxNum
+      return this.formdata.xsfNsrsbh
     },
     xsfDzdh() {
       this.formdata.xsfDzdh
-      return this.org.coAddr === null ? '' : this.org.coAddr + ' ' + this.org.coPhone === null ? '' : this.org.coPhone
+      return this.formdata.xsfDzdh
     },
     xsfYhzh() {
       this.formdata.xsfYhzh
-      return this.org.bankName === null ? '' : this.org.bankName + ' ' + this.org.bankCode === null ? '' : this.org.bankCode
+      return this.formdata.xsfYhzh
     },
     kpr() {
       console.log(this.info)

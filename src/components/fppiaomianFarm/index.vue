@@ -332,7 +332,7 @@ export default {
             commodityId: '', // 商品编号
             fphxz: '0', // 0 正常行,1折扣行,2被折扣行
             yhzcbs: '0', // 优惠政策标识  0：不使用，1：使用
-            lslbs: '', // 零税率标识，空：非零税率， 1：免税，2：不征收，3 普通零税率
+            lslbs: '1', // 零税率标识，空：非零税率， 1：免税，2：不征收，3 普通零税率
             spmc: '', // 商品名称
             spbh: '', // 商品编号
             spbm: '', // 商品编码
@@ -472,7 +472,7 @@ export default {
           commodityId: '', // 商品编号
           fphxz: '0', // 0 正常行,1折扣行,2被折扣行
           yhzcbs: '0',
-          lslbs: '', // 零税率标识，暂时为空
+          lslbs: '1', // 零税率标识，暂时为空
           spmc: '', // 商品名称
           spbh: '', // 商品编号
           spbm: '', // 商品编码
@@ -518,8 +518,8 @@ export default {
         pageSize: this.goods.pageSize,
         spbm: this.goods.spbm,
         spmc: this.goods.spmc,
-        lslbs: 1,
-        sl: 0
+        lslbs: '1',
+        sl: '0'
       }
       commodictList(args).then(res => {
         this.goods.list = res.data.list
@@ -535,8 +535,8 @@ export default {
         pageSize: 10,
         spbm: '',
         spmc: '',
-        lslbs: 1,
-        sl: 0
+        lslbs: '1',
+        sl: '0'
       }
       commodictList(args).then(res => {
         this.goods.list = res.data.list
@@ -575,8 +575,8 @@ export default {
           pageSize: data,
           spbm: this.goods.spbm,
           spmc: this.goods.spmc,
-          lslbs: 1,
-          sl: 0
+          lslbs: '1',
+          sl: '0'
         }
         commodictList(args).then(res => {
           this.goods.list = res.data.list
@@ -598,8 +598,8 @@ export default {
           pageSize: 10,
           spbm: this.goods.spbm,
           spmc: this.goods.spmc,
-          lslbs: 1,
-          sl: 0
+          lslbs: '1',
+          sl: '0'
         }
         commodictList(args).then(res => {
           this.goods.list = res.data.list
@@ -642,8 +642,8 @@ export default {
         pageSize: this.goods.pageSize,
         spbm: this.goods.spbm,
         spmc: this.goods.spmc,
-        lslbs: 1,
-        sl: 0
+        lslbs: '1',
+        sl: '0'
       }
       commodictList(args).then(res => {
         this.goods.list = res.data.list
