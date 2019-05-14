@@ -393,15 +393,15 @@ export default {
           valid = false
         }
       })
-      this.checkedItems.forEach(item => {
-        if (item.yfpdm !== defaultFpDm) {
-          this.$message.error('发票代码需一致！')
-          valid = false
-        }
-      })
-      if (valid) {
-        this.dyfpDialogVisible = true
-      }
+      // this.checkedItems.forEach(item => {
+      //   if (item.yfpdm !== defaultFpDm) {
+      //     this.$message.error('发票代码需一致！')
+      //     valid = false
+      //   }
+      // })
+      // if (valid) {
+      this.dyfpDialogVisible = true
+      // }
     },
     // 打印
     printFp() {

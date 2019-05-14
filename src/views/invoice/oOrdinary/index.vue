@@ -225,7 +225,8 @@
     </el-dialog>
     <!--发票查看弹窗-->
     <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="fpckDialogVisible" title="发票查看" width="1280px">
-      <fppmShow v-if="fpckDialogVisible" :formdata="fppmShowData" :is-all-readonly="true"/>
+      <fppmShow v-if="fpckDialogVisible && !isFarmBill" :formdata="fppmShowData" :is-all-readonly="true"/>
+      <fppmShowFarm v-if="isFarmBill" :formdata="fppmShowData" :is-all-readonly="true"/>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button type="primary" size="mini" @click="fpckDialogVisible = false">关闭</el-button>
       </div>
@@ -253,11 +254,13 @@ import { invoice } from '@/api/invoiceOpening/opening'
 import { arrayToMapField } from '@/utils/public'
 import { mapGetters } from 'vuex'
 import fppmShow from '@/components/fppiaomianShow'
+import fppmShowFarm from '@/components/fppiaomianFarm'
 
 export default {
   name: 'OSpecial',
   components: {
-    fppmShow
+    fppmShow,
+    fppmShowFarm
   },
   data() {
     return {
@@ -323,7 +326,9 @@ export default {
       // 作废重开数据
       fppmZfckData: {},
       // 红冲发票数据
-      fppmHckpData: {}
+      fppmHckpData: {},
+      // 当前发票是否是农产品发票
+      isFarmBill: false
     }
   },
   computed: {
@@ -378,7 +383,9 @@ export default {
     },
     // 查看发票
     checkFP(val) {
-      console.log(val)
+      if (val.tzpz === '02') {
+        this.isFarmBill = true
+      }
       fpDetail({ fpDm: val.fpDm, fpHm: val.fpHm }).then(res => {
         console.log(res)
         this.fpckDialogVisible = true

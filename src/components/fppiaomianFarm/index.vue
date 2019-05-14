@@ -45,7 +45,7 @@
       </div>
       <div class="fpTable">
         <div class="tableTop">
-          <div class="tbT gmfText">购<br>买<br>方</div>
+          <div class="tbT gmfText">购<br>买<br>方1</div>
           <div class="tbT gmfTable">
             <div class="tbmc">
               <span class="gmftitle">名称：</span>
