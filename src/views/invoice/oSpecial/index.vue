@@ -232,7 +232,7 @@
     </el-dialog>
     <!--作废重开弹窗-->
     <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="zfckDialogVisible" title="作废重开" width="1280px">
-      <fppmShow :formdata="fppmZfckData" :readonly="false"/>
+      <fppmShow v-if="zfckDialogVisible" :readonly="false" :formdata="fppmZfckData"/>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button type="primary" size="mini" @click="reInvoiceSubmit">开具</el-button>
       </div>
@@ -244,7 +244,7 @@
           <el-input v-model="hcfpForm.hzxxbbh" placeholder="请输入" style="width: 182px"/>
         </el-form-item>
       </el-form>
-      <fppmShow :formdata="fppmHckpData" :readonly="false"/>
+      <fppmShow v-if="hckpDialogVisible" :formdata="fppmHckpData" :readonly="false"/>
       <div slot="footer" class="dialog-footer" align="center" style="padding-top: 0">
         <el-button type="primary" size="mini" @click="hcInvoiceSubmit">开具</el-button>
       </div>
@@ -253,7 +253,7 @@
 </template>
 
 <script>
-import { getList, retrieve, cancel, exportAll, validate, passBackInvoice, fpDetail, reInvoice, printFP } from '@/api/invoice/oSpecial'
+import { getList, retrieve, cancel, exportAll, exportInvoiceSelected, validate, passBackInvoice, fpDetail, reInvoice, printFP } from '@/api/invoice/oSpecial'
 import { invoice } from '@/api/invoiceOpening/opening'
 import { arrayToMapField } from '@/utils/public'
 import { mapGetters } from 'vuex'
@@ -414,8 +414,8 @@ export default {
     },
     // 作废重开提交
     reInvoiceSubmit() {
-      const args = Object.assign({}, this.fppmZfckDataBefore)
-      args.zfInvoice = Object.assign({}, this.fppmZfckData, {
+      const args = Object.assign({}, this.fppmZfckData)
+      args.zfInvoice = Object.assign({}, this.fppmZfckDataBefore, {
         zflx: 1,
         zfr: this.info.userName,
         zfyy: '',
@@ -443,7 +443,7 @@ export default {
           item.se = -item.se
           item.hsxmje = -item.hsxmje
           item.xmje = -item.xmje
-          item.xmsl = -item.xmsl === '0' ? '' : -item.xmsl
+          // item.xmsl = -item.xmsl === '0' ? '' : -item.xmsl
         })
         this.fppmHckpData = res.data
         this.fppmHckpData.check = true
@@ -499,11 +499,8 @@ export default {
         this.fpzfShowList = Object.assign([], this.checkedItems)
         this.fpzfShowList.forEach((item, key) => {
           this.$set(this.fpzfShowList[key], 'zfStatus', '正在处理中...')
-          this.listLoading = true
           cancel(item).then(res => {
-            this.initList()
-            this.listLoading = false
-            this.fpzfDialogVisible = false
+            this.$set(this.fpzfShowList[key], 'zfStatus', res.data.returnMessage)
           }).catch(err => {
             this.listLoading = false
             this.$set(this.fpzfShowList[key], 'zfStatus', err)
@@ -600,14 +597,22 @@ export default {
     },
     // 导出
     exportExcel() {
-      this.$confirm('确定导出?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.listQuery.xsfNsrsbh = this.org.taxNum
-        exportAll(this.listQuery)
-      })
+      if (this.checkedItems.length !== 0) {
+        const fpqqlshStr = []
+        this.checkedItems.forEach((item) => {
+          fpqqlshStr.push(item.fpqqlsh)
+        })
+        exportInvoiceSelected(fpqqlshStr)
+      } else {
+        this.$confirm('确定导出?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.listQuery.xsfNsrsbh = this.org.taxNum
+          exportAll(this.listQuery)
+        })
+      }
     },
     // 数据回传
     billSendBack() {

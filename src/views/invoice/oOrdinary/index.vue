@@ -108,7 +108,7 @@
             <span>{{ SYS_FPLX[scope.row.fplx] }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="购方名称" prop="gmfMc" align="center"/>
+        <el-table-column label="购方名称" prop="gmfMc" align="center" width="200"/>
         <el-table-column label="购方税号" prop="gmfNsrsbh" align="center" width="200"/>
         <el-table-column label="金额（不含税）" prop="hjje" align="center"/>
         <el-table-column label="税额" prop="hjse" align="center"/>
@@ -232,14 +232,14 @@
     </el-dialog>
     <!--作废重开弹窗-->
     <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="zfckDialogVisible" title="作废重开" width="1280px">
-      <fppmShow :formdata="fppmZfckData" :is-sph-readonly="true"/>
+      <fppmShow v-if="zfckDialogVisible" :readonly="false" :formdata="fppmZfckData" :is-sph-readonly="false"/>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button type="primary" size="mini" @click="reInvoiceSubmit">开具</el-button>
       </div>
     </el-dialog>
     <!--红冲发票弹窗-->
-    <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="hckpDialogVisible" title="作废重开" width="1280px">
-      <fppmShow :formdata="fppmHckpData" :is-sph-readonly="true"/>
+    <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="hckpDialogVisible" title="红冲发票" width="1280px">
+      <fppmShow v-if="hckpDialogVisible" :formdata="fppmHckpData" :is-sph-readonly="true"/>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button type="primary" size="mini" @click="hcInvoiceSubmit">开具</el-button>
       </div>
@@ -399,8 +399,8 @@ export default {
     },
     // 作废重开提交
     reInvoiceSubmit() {
-      const args = Object.assign({}, this.fppmZfckDataBefore)
-      args.zfInvoice = Object.assign({}, this.fppmZfckData, {
+      const args = Object.assign({}, this.fppmZfckData)
+      args.zfInvoice = Object.assign({}, this.fppmZfckDataBefore, {
         zflx: 1,
         zfr: this.info.userName,
         zfyy: '',
@@ -428,7 +428,7 @@ export default {
           item.se = -item.se
           item.hsxmje = -item.hsxmje
           item.xmje = -item.xmje
-          item.xmsl = (item.xmsl === null ? '' : -item.xmsl)
+          // item.xmsl = (item.xmsl === null || item.xmsl === '' ? '' : -item.xmsl)
         })
         this.fppmHckpData = res.data
         this.fppmHckpData.check = true
@@ -479,13 +479,10 @@ export default {
         this.fpzfShowList = Object.assign([], this.checkedItems)
         this.fpzfShowList.forEach((item, key) => {
           this.$set(this.fpzfShowList[key], 'zfStatus', '正在处理中...')
-          this.listLoading = true
           cancel(item).then(res => {
-            this.initList()
-            this.listLoading = false
-            this.fpzfDialogVisible = false
+            this.$set(this.fpzfShowList[key], 'zfStatus', res.data.returnMessage)
           }).catch(err => {
-            this.listLoading = false
+            // this.listLoading = false
             this.$set(this.fpzfShowList[key], 'zfStatus', err)
           })
         })

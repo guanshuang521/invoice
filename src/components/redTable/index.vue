@@ -291,6 +291,7 @@ export default {
     detail() {
       detail(this.form).then(res => {
         this.formdata = res.data.hzxxb
+        this.formdata.sqlx = 2
         console.log(res)
       }).catch(err => {
         this.$message.error(err)

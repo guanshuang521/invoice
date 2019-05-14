@@ -237,7 +237,7 @@ export default {
       this.getList()
     },
     uploadPath() { // 上传地址
-      return apiPath.system.codeManagement.importExcel
+      return apiPath.system.codeManagement.importExcel + '?x-access-token=' + getToken()
     },
     handleClose() { // 关闭弹窗
       this.dialogVisible2 = false

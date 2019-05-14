@@ -73,7 +73,7 @@
       <el-pagination
         :current-page="listQuery.currentPage"
         :page-sizes="[10, 20, 30, 50, 100]"
-        :page-size="100"
+        :page-size="listQuery.pageSize"
         :total="totalCount"
         layout="total, sizes, prev, pager, next, jumper"
         style="margin-top: 20px"
@@ -90,7 +90,7 @@
       </div>
     </el-dialog>
     <!--发票批量开具弹窗-->
-    <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="showBranchInvice" :before-close="closeBranchInvoice" title="批量开具发票" width="880px">
+    <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="showBranchInvice" :before-close="closeBranchInvoice" class="fpplkjDialog" title="批量开具发票" width="880px">
       <el-table
         :data="branchInviceData"
         border
@@ -365,6 +365,10 @@ export default {
 <style rel="stylesheet/scss" lang="scss" scoped>
   .wSpecial {
     &-container{
+      .fpplkjDialog /deep/ .el-dialog__body{
+        max-height: 500px;
+        overflow-y: scroll;
+      }
       margin: 30px;
       .filter-container{
         margin-bottom: 20px;

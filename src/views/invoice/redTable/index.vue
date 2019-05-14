@@ -87,7 +87,7 @@
           <template slot-scope="scope">
             <el-button type="primary" size="small" @click="checkHZXXB(scope.row)">查看</el-button>
             <el-button type="primary" size="small" @click="uploadData(scope.row)">上传</el-button>
-            <el-button type="primary" size="small" @click="editData(scope.row)">编辑</el-button>
+            <el-button v-if="scope.row.clzt === 0" type="primary" size="small" @click="editData(scope.row)">编辑</el-button>
             <el-button type="primary" size="small" @click="asyncData(scope.row)">同步</el-button>
           </template>
         </el-table-column>
@@ -270,6 +270,9 @@ export default {
           })
           this.initTable()
           this.loading = false
+        }).catch(err => {
+          this.loading = false
+          this.$message.error(err)
         })
       })
     },
@@ -361,7 +364,7 @@ export default {
         sync(params).then(res => {
           this.initTable()
           this.loading = false
-          //添加代码
+          // 添加代码
           this.$message.success(res.message)
         }).catch(err => {
           this.loading = false

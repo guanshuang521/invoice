@@ -158,14 +158,14 @@
     </el-dialog>
     <!--作废重开弹窗-->
     <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="zfckDialogVisible" title="作废重开" width="1280px">
-      <fppmShow :formdata="fppmZfckData" :is-sph-readonly="true"/>
+      <fppmShow v-if="zfckDialogVisible" :readonly="false" :formdata="fppmZfckData" :is-sph-readonly="true"/>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button type="primary" size="mini" @click="reInvoiceSubmit">开具</el-button>
       </div>
     </el-dialog>
     <!--红冲发票弹窗-->
     <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="hckpDialogVisible" title="红冲开票" width="1280px">
-      <fppmShow :formdata="fppmHckpData" :is-sph-readonly="true"/>
+      <fppmShow v-if="hckpDialogVisible" :formdata="fppmHckpData" :is-sph-readonly="true"/>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button type="primary" size="mini" @click="hcInvoiceSubmit">开具</el-button>
       </div>
@@ -363,8 +363,8 @@ export default {
     },
     // 作废重开提交
     reInvoiceSubmit() {
-      const args = Object.assign({}, this.fppmZfckDataBefore)
-      args.zfInvoice = Object.assign({}, this.fppmZfckData, {
+      const args = Object.assign({}, this.fppmZfckData)
+      args.zfInvoice = Object.assign({}, this.fppmZfckDataBefore, {
         zflx: 1,
         zfr: this.info.userName,
         zfyy: ''

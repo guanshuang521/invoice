@@ -25,13 +25,23 @@
     </div>
     <div class="button-container">
       <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="invoice">开具发票</el-button>
-      <el-button size="small" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit"
-                 @click="batchInvoice">批量开具
+      <el-button
+        size="small"
+        class="filter-item"
+        style="margin-left: 10px;"
+        type="primary"
+        icon="el-icon-edit"
+        @click="batchInvoice">批量开具
       </el-button>
       <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="backInvoicePre">预制发票回退
       </el-button>
-      <el-button size="small" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit"
-                 @click="exportList">导出
+      <el-button
+        size="small"
+        class="filter-item"
+        style="margin-left: 10px;"
+        type="primary"
+        icon="el-icon-edit"
+        @click="exportList">导出
       </el-button>
     </div>
     <div class="table-container">
@@ -79,7 +89,7 @@
       <el-pagination
         :current-page="listQuery.currentPage"
         :page-sizes="[10, 20, 30, 50, 100]"
-        :page-size="100"
+        :page-size="listQuery.pageSize"
         :total="totalCount"
         layout="total, sizes, prev, pager, next, jumper"
         style="margin-top: 20px"
@@ -96,7 +106,7 @@
       </div>
     </el-dialog>
     <!--发票批量开具弹窗-->
-    <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="showBranchInvice" :before-close="closeBranchInvoice" title="批量开具发票" width="880px">
+    <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="showBranchInvice" :before-close="closeBranchInvoice" class="fpplkjDialog" title="批量开具发票" width="880px">
       <el-table
         :data="branchInviceData"
         border
@@ -373,13 +383,15 @@ export default {
   .wSpecial {
     &-container {
       margin: 30px;
-
       .filter-container {
         margin-bottom: 20px;
       }
-
       .button-container {
         margin-bottom: 20px;
+      }
+      .fpplkjDialog /deep/ .el-dialog__body{
+          max-height: 500px;
+          overflow-y: scroll;
       }
     }
   }
