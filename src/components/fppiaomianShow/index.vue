@@ -346,7 +346,7 @@
 </template>
 
 <script>
-import { getDate, getDx, dataConversion } from '@/utils/filter'
+import { getDx, dataConversion } from '@/utils/filter'
 import { getAllCustomer } from '@/api/system/infoMaintenance'
 import { commodictList } from '@/api/system/infoManagement'
 import { arrayToMapField } from '@/utils/public'
@@ -356,9 +356,6 @@ import globaldata from '@/utils/filter'
 
 export default {
   name: 'FppmShow',
-  components: {
-    /* 'v-pagination': pagination*/
-  },
   props: {
     'formdata': {
       type: Object,

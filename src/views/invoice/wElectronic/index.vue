@@ -90,7 +90,7 @@
     <Order-detail :show-dialog="showOrderDialog" :current-fp-id="currentFpId" @close-dialog="closeBillDetail"/>
     <!--发票查看弹窗-->
     <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="showBillPreview" title="发票查看" width="1280px">
-      <fppmShow :formdata="fppmShowData" :is-all-readonly="true"/>
+      <fppmShow v-if="showBillPreview" :formdata="fppmShowData" :is-all-readonly="true"/>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button type="primary" size="mini" @click="showBillPreview = false">关闭</el-button>
       </div>

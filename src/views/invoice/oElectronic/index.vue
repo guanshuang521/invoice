@@ -151,7 +151,7 @@
     </el-dialog>
     <!--发票查看弹窗-->
     <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="fpckDialogVisible" title="发票查看" width="1280px">
-      <fppmShow :formdata="fppmShowData" :is-all-readonly="true"/>
+      <fppmShow v-if="fpckDialogVisible" :formdata="fppmShowData" :is-all-readonly="true"/>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button type="primary" size="mini" @click="fpckDialogVisible = false">关闭</el-button>
       </div>
