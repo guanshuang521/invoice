@@ -381,12 +381,12 @@ export default {
           const args = Object.assign({}, this.fpzhForm)
           this.listLoading = true
           retrieve(args).then(res => {
-            this.listLoading = true
+            this.listLoading = false
             this.$message.success(res.message)
             this.fpzhDialogVisible = false
             this.initList()
           }).catch(err => {
-            this.listLoading = true
+            this.listLoading = false
             this.$message.error(err)
           })
         }
