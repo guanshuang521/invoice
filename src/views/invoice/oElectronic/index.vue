@@ -65,7 +65,7 @@
       </el-form>
     </div>
     <div class="button-container">
-      <el-button size="small" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="fpzhDialogVisible = true">发票找回</el-button>
+      <el-button size="small" class="filter-item" type="primary" icon="el-icon-edit" @click="fpzhDialogVisible = true">发票找回</el-button>
       <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="exportExcel">导出</el-button>
       <!--<el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="billSendBack">数据回传</el-button>-->
       <!--<el-button size="small" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="validate">发票验证</el-button>-->
@@ -151,21 +151,24 @@
     </el-dialog>
     <!--发票查看弹窗-->
     <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="fpckDialogVisible" title="发票查看" width="1280px">
-      <fppmShow v-if="fpckDialogVisible" :formdata="fppmShowData" :is-all-readonly="true"/>
+      <fppmShow v-if="fpckDialogVisible &&!isFarmBill" :formdata="fppmShowData" :is-all-readonly="true"/>
+      <fppmShowFarm v-if="isFarmBill" :formdata="fppmShowData" :is-all-readonly="true"/>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button type="primary" size="mini" @click="fpckDialogVisible = false">关闭</el-button>
       </div>
     </el-dialog>
     <!--作废重开弹窗-->
     <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="zfckDialogVisible" title="作废重开" width="1280px">
-      <fppmShow v-if="zfckDialogVisible" :readonly="false" :formdata="fppmZfckData" :is-sph-readonly="true"/>
+      <fppmShow v-if="zfckDialogVisible && !isFarmBill" :readonly="false" :formdata="fppmZfckData" :is-sph-readonly="true"/>
+      <fppmShowFarm v-if="isFarmBill" :formdata="fppmZfckData" :readonly="false"/>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button type="primary" size="mini" @click="reInvoiceSubmit">开具</el-button>
       </div>
     </el-dialog>
     <!--红冲发票弹窗-->
     <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="hckpDialogVisible" title="红冲开票" width="1280px">
-      <fppmShow v-if="hckpDialogVisible" :formdata="fppmHckpData" :is-sph-readonly="true"/>
+      <fppmShow v-if="hckpDialogVisible && !isFarmBill" :formdata="fppmHckpData" :is-sph-readonly="true"/>
+      <fppmShowFarm v-if="isFarmBill" :formdata="fppmHckpData" :readonly="false"/>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button type="primary" size="mini" @click="hcInvoiceSubmit">开具</el-button>
       </div>
@@ -198,11 +201,13 @@ import { invoiceEle } from '@/api/invoiceOpening/opening'
 import { arrayToMapField } from '@/utils/public'
 import { mapGetters } from 'vuex'
 import fppmShow from '@/components/fppiaomianShow'
+import fppmShowFarm from '@/components/fppiaomianFarmShow'
 
 export default {
   name: 'OSpecial',
   components: {
-    fppmShow
+    fppmShow,
+    fppmShowFarm
   },
   data() {
     return {
@@ -287,7 +292,9 @@ export default {
             pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号码', trigger: 'blur'
           }
         ]
-      }
+      },
+      // 当前发票是否是农产品发票
+      isFarmBill: false
     }
   },
   computed: {
@@ -342,7 +349,9 @@ export default {
     },
     // 查看发票
     checkFP(val) {
-      console.log(val)
+      if (val.tzpz === '02') {
+        this.isFarmBill = true
+      }
       fpDetail({ fpDm: val.fpDm, fpHm: val.fpHm }).then(res => {
         console.log(res)
         this.fpckDialogVisible = true
@@ -353,6 +362,9 @@ export default {
     },
     // 作废重开
     reInvoice(val) {
+      if (val.tzpz === '02') {
+        this.isFarmBill = true
+      }
       fpDetail({ fpDm: val.fpDm, fpHm: val.fpHm }).then(res => {
         this.zfckDialogVisible = true
         this.fppmZfckDataBefore = JSON.parse(JSON.stringify(res.data))
@@ -382,6 +394,9 @@ export default {
     },
     // 红冲开票
     hcInvoice(val) {
+      if (val.tzpz === '02') {
+        this.isFarmBill = true
+      }
       fpDetail({ fpDm: val.fpDm, fpHm: val.fpHm }).then(res => {
         this.hckpDialogVisible = true
         res.data.lines.forEach(item => {

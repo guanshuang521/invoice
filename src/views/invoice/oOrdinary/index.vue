@@ -233,14 +233,16 @@
     </el-dialog>
     <!--作废重开弹窗-->
     <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="zfckDialogVisible" title="作废重开" width="1280px">
-      <fppmShow v-if="zfckDialogVisible" :readonly="false" :formdata="fppmZfckData" :is-sph-readonly="false"/>
+      <fppmShow v-if="zfckDialogVisible && !isFarmBill" :readonly="false" :formdata="fppmZfckData" :is-sph-readonly="false"/>
+      <fppmShowFarm v-if="isFarmBill" :formdata="fppmZfckData" :readonly="false"/>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button type="primary" size="mini" @click="reInvoiceSubmit">开具</el-button>
       </div>
     </el-dialog>
     <!--红冲发票弹窗-->
     <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="hckpDialogVisible" title="红冲发票" width="1280px">
-      <fppmShow v-if="hckpDialogVisible" :formdata="fppmHckpData" :is-sph-readonly="true"/>
+      <fppmShow v-if="hckpDialogVisible && !isFarmBill" :formdata="fppmHckpData" :is-sph-readonly="true"/>
+      <fppmShowFarm v-if="isFarmBill" :formdata="fppmHckpData" :readonly="true"/>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button type="primary" size="mini" @click="hcInvoiceSubmit">开具</el-button>
       </div>
@@ -254,7 +256,7 @@ import { invoice } from '@/api/invoiceOpening/opening'
 import { arrayToMapField } from '@/utils/public'
 import { mapGetters } from 'vuex'
 import fppmShow from '@/components/fppiaomianShow'
-import fppmShowFarm from '@/components/fppiaomianFarm'
+import fppmShowFarm from '@/components/fppiaomianFarmShow'
 
 export default {
   name: 'OSpecial',
@@ -396,6 +398,9 @@ export default {
     },
     // 作废重开
     reInvoice(val) {
+      if (val.tzpz === '02') {
+        this.isFarmBill = true
+      }
       fpDetail({ fpDm: val.fpDm, fpHm: val.fpHm }).then(res => {
         this.zfckDialogVisible = true
         this.fppmZfckData = JSON.parse(JSON.stringify(res.data))
@@ -426,6 +431,9 @@ export default {
     },
     // 红冲开票
     hcInvoice(val) {
+      if (val.tzpz === '02') {
+        this.isFarmBill = true
+      }
       fpDetail({ fpDm: val.fpDm, fpHm: val.fpHm }).then(res => {
         this.hckpDialogVisible = true
         res.data.lines.forEach(item => {

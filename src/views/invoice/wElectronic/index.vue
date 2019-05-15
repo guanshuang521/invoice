@@ -100,7 +100,8 @@
     <Order-detail :show-dialog="showOrderDialog" :current-fp-id="currentFpId" @close-dialog="closeBillDetail"/>
     <!--发票查看弹窗-->
     <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="showBillPreview" title="发票查看" width="1280px">
-      <fppmShow v-if="showBillPreview" :formdata="fppmShowData" :is-all-readonly="true"/>
+      <fppmShow v-if="showBillPreview && !isFarmBill" :formdata="fppmShowData" :is-all-readonly="true"/>
+      <fppmShowFarm v-if="isFarmBill" :formdata="fppmShowData" :is-all-readonly="true"/>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button type="primary" size="mini" @click="showBillPreview = false">关闭</el-button>
       </div>
@@ -140,18 +141,21 @@
 <script>
 import { initTableList, backInvoicePre, exportData } from '@/api/invoice/inovicePre'
 import { invoiceEle } from '@/api/invoiceOpening/opening'
+import { mapGetters } from 'vuex'
 import downloadOrPrint from '@/components/downloadOrPrintBill'
 import BillDetail from '@/components/invoice/billDetail'
 import OrderDetail from '@/components/invoice/orderDetail'
 import { arrayToMapField } from '@/utils/public'
 import fppmShow from '@/components/fppiaomianShow'
-import { mapGetters } from 'vuex'
+import fppmShowFarm from '@/components/fppiaomianFarmShow'
+
 export default {
   name: 'WElectronic',
   components: {
     BillDetail,
     OrderDetail,
     fppmShow,
+    fppmShowFarm,
     downloadOrPrint
   },
   data() {
@@ -187,7 +191,9 @@ export default {
       // 下载打印窗口是否显示
       xzdyDialogVisible: false,
       // 发票信息
-      fpdata: {}
+      fpdata: {},
+      // 当前发票是否是农产品发票
+      isFarmBill: false
     }
   },
   computed: {
@@ -285,6 +291,8 @@ export default {
         this.branchInviceData.forEach((item, key) => {
           this.$set(this.branchInviceData[key], 'kpStatus', '正在处理中...')
           this.listLoading = true
+          item.kpzdbs = this.info.terminalMark
+          item.kpr = this.info.userName
           invoiceEle(item).then(res => {
             if (res.code === '0000') {
               this.$set(this.branchInviceData[key], 'kpStatus', '<span style="color:green">开具成功</span>')
@@ -336,6 +344,9 @@ export default {
       })
     }, // 发票预览
     billPreview(rowData) {
+      if (rowData.tzpz === '02') {
+        this.isFarmBill = true
+      }
       this.fppmShowData = rowData
       this.showBillPreview = true
     },

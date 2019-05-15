@@ -225,14 +225,16 @@
     </el-dialog>
     <!--发票查看弹窗-->
     <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="fpckDialogVisible" title="发票查看" width="1280px">
-      <fppmShow v-if="fpckDialogVisible" :formdata="fppmShowData" :readonly="true"/>
+      <fppmShow v-if="fpckDialogVisible && !isFarmBill" :formdata="fppmShowData" :readonly="true"/>
+      <fppmShowFarm v-if="isFarmBill" :formdata="fppmShowData" :is-all-readonly="true"/>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button type="primary" size="mini" @click="fpckDialogVisible = false">关闭</el-button>
       </div>
     </el-dialog>
     <!--作废重开弹窗-->
     <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="zfckDialogVisible" title="作废重开" width="1280px">
-      <fppmShow v-if="zfckDialogVisible" :readonly="false" :formdata="fppmZfckData"/>
+      <fppmShow v-if="zfckDialogVisible && !isFarmBill" :readonly="false" :formdata="fppmZfckData"/>
+      <fppmShowFarm v-if="isFarmBill" :formdata="fppmZfckData" :readonly="false"/>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button type="primary" size="mini" @click="reInvoiceSubmit">开具</el-button>
       </div>
@@ -244,7 +246,8 @@
           <el-input v-model="hcfpForm.hzxxbbh" placeholder="请输入" style="width: 182px"/>
         </el-form-item>
       </el-form>
-      <fppmShow v-if="hckpDialogVisible" :formdata="fppmHckpData" :readonly="false"/>
+      <fppmShow v-if="hckpDialogVisible && !isFarmBill" :formdata="fppmHckpData" :readonly="false"/>
+      <fppmShowFarm v-if="isFarmBill" :formdata="fppmHckpData" :readonly="true"/>
       <div slot="footer" class="dialog-footer" align="center" style="padding-top: 0">
         <el-button type="primary" size="mini" @click="hcInvoiceSubmit">开具</el-button>
       </div>
@@ -258,11 +261,13 @@ import { invoice } from '@/api/invoiceOpening/opening'
 import { arrayToMapField } from '@/utils/public'
 import { mapGetters } from 'vuex'
 import fppmShow from '@/components/fppiaomianShow'
+import fppmShowFarm from '@/components/fppiaomianFarmShow'
 
 export default {
   name: 'OSpecial',
   components: {
-    fppmShow
+    fppmShow,
+    fppmShowFarm
   },
   data() {
     return {
@@ -337,7 +342,9 @@ export default {
         hzxxbbh: [
           { required: true, message: '红字信息表编号不能为空', trigger: 'blur' }
         ]
-      }
+      },
+      // 当前发票是否是农产品发票
+      isFarmBill: false
     }
   },
   computed: {
@@ -394,6 +401,9 @@ export default {
     },
     // 查看发票
     checkFP(val) {
+      if (val.tzpz === '02') {
+        this.isFarmBill = true
+      }
       fpDetail({ fpDm: val.fpDm, fpHm: val.fpHm }).then(res => {
         console.log(res)
         this.fpckDialogVisible = true
@@ -404,6 +414,9 @@ export default {
     },
     // 作废重开
     reInvoice(val) {
+      if (val.tzpz === '02') {
+        this.isFarmBill = true
+      }
       fpDetail({ fpDm: val.fpDm, fpHm: val.fpHm }).then(res => {
         this.zfckDialogVisible = true
         this.fppmZfckDataBefore = JSON.parse(JSON.stringify(res.data))
@@ -434,6 +447,9 @@ export default {
     },
     // 红冲开票
     hcInvoice(val) {
+      if (val.tzpz === '02') {
+        this.isFarmBill = true
+      }
       fpDetail({ fpDm: val.fpDm, fpHm: val.fpHm }).then(res => {
         this.hckpDialogVisible = true
         res.data.lines.forEach(item => {
