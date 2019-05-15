@@ -57,7 +57,7 @@
           </tbody>
         </table>
         <!-- // 中间部分 -->
-        <table class="hztab_center">
+        <table class="hztab_center" style="display: block;max-height: 200px;overflow-y: scroll;pointer-events: all">
           <tbody>
             <tr>
               <td class="hzxx_tab1">开<br>具<br>红<br>字<br>专<br>用<br>发<br>票<br>内<br>容</td>
@@ -291,6 +291,7 @@ export default {
     detail() {
       detail(this.form).then(res => {
         this.formdata = res.data.hzxxb
+        this.formdata.sqlx = 2
         console.log(res)
       }).catch(err => {
         this.$message.error(err)

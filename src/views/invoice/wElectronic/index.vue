@@ -25,13 +25,23 @@
     </div>
     <div class="button-container">
       <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="invoice">开具发票</el-button>
-      <el-button size="small" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit"
-                 @click="batchInvoice">批量开具
+      <el-button
+        size="small"
+        class="filter-item"
+        style="margin-left: 10px;"
+        type="primary"
+        icon="el-icon-edit"
+        @click="batchInvoice">批量开具
       </el-button>
       <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="backInvoicePre">预制发票回退
       </el-button>
-      <el-button size="small" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit"
-                 @click="exportList">导出
+      <el-button
+        size="small"
+        class="filter-item"
+        style="margin-left: 10px;"
+        type="primary"
+        icon="el-icon-edit"
+        @click="exportList">导出
       </el-button>
     </div>
     <div class="table-container">
@@ -79,7 +89,7 @@
       <el-pagination
         :current-page="listQuery.currentPage"
         :page-sizes="[10, 20, 30, 50, 100]"
-        :page-size="100"
+        :page-size="listQuery.pageSize"
         :total="totalCount"
         layout="total, sizes, prev, pager, next, jumper"
         style="margin-top: 20px"
@@ -90,13 +100,14 @@
     <Order-detail :show-dialog="showOrderDialog" :current-fp-id="currentFpId" @close-dialog="closeBillDetail"/>
     <!--发票查看弹窗-->
     <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="showBillPreview" title="发票查看" width="1280px">
-      <fppmShow v-if="showBillPreview" :formdata="fppmShowData" :is-all-readonly="true"/>
+      <fppmShow v-if="showBillPreview && !isFarmBill" :formdata="fppmShowData" :is-all-readonly="true"/>
+      <fppmShowFarm v-if="isFarmBill" :formdata="fppmShowData" :is-all-readonly="true"/>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button type="primary" size="mini" @click="showBillPreview = false">关闭</el-button>
       </div>
     </el-dialog>
     <!--发票批量开具弹窗-->
-    <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="showBranchInvice" :before-close="closeBranchInvoice" title="批量开具发票" width="880px">
+    <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="showBranchInvice" :before-close="closeBranchInvoice" class="fpplkjDialog" title="批量开具发票" width="880px">
       <el-table
         :data="branchInviceData"
         border
@@ -130,18 +141,21 @@
 <script>
 import { initTableList, backInvoicePre, exportData } from '@/api/invoice/inovicePre'
 import { invoiceEle } from '@/api/invoiceOpening/opening'
+import { mapGetters } from 'vuex'
 import downloadOrPrint from '@/components/downloadOrPrintBill'
 import BillDetail from '@/components/invoice/billDetail'
 import OrderDetail from '@/components/invoice/orderDetail'
 import { arrayToMapField } from '@/utils/public'
 import fppmShow from '@/components/fppiaomianShow'
-import { mapGetters } from 'vuex'
+import fppmShowFarm from '@/components/fppiaomianFarmShow'
+
 export default {
   name: 'WElectronic',
   components: {
     BillDetail,
     OrderDetail,
     fppmShow,
+    fppmShowFarm,
     downloadOrPrint
   },
   data() {
@@ -177,7 +191,9 @@ export default {
       // 下载打印窗口是否显示
       xzdyDialogVisible: false,
       // 发票信息
-      fpdata: {}
+      fpdata: {},
+      // 当前发票是否是农产品发票
+      isFarmBill: false
     }
   },
   computed: {
@@ -275,6 +291,8 @@ export default {
         this.branchInviceData.forEach((item, key) => {
           this.$set(this.branchInviceData[key], 'kpStatus', '正在处理中...')
           this.listLoading = true
+          item.kpzdbs = this.info.terminalMark
+          item.kpr = this.info.userName
           invoiceEle(item).then(res => {
             if (res.code === '0000') {
               this.$set(this.branchInviceData[key], 'kpStatus', '<span style="color:green">开具成功</span>')
@@ -326,6 +344,9 @@ export default {
       })
     }, // 发票预览
     billPreview(rowData) {
+      if (rowData.tzpz === '02') {
+        this.isFarmBill = true
+      }
       this.fppmShowData = rowData
       this.showBillPreview = true
     },
@@ -373,13 +394,15 @@ export default {
   .wSpecial {
     &-container {
       margin: 30px;
-
       .filter-container {
         margin-bottom: 20px;
       }
-
       .button-container {
         margin-bottom: 20px;
+      }
+      .fpplkjDialog /deep/ .el-dialog__body{
+          max-height: 500px;
+          overflow-y: scroll;
       }
     }
   }

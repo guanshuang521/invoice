@@ -7,6 +7,11 @@
   <div class="invoiceList-container">
     <div class="filter-container">
       <el-form :inline="true" :model="listQuery" class="demo-form-inline">
+        <el-form-item label="纳税主体">
+          <el-select v-model="listQuery.xsfNsrsbh" placeholder="请选择" size="small">
+            <el-option v-for="item in orgList" :key="item.id" :label="item.orgName" :value="item.taxNum"/>
+          </el-select>
+        </el-form-item>
         <el-form-item label="购方名称">
           <el-input v-model="listQuery.gmfMc" placeholder="请输入" size="small"/>
         </el-form-item>
@@ -54,11 +59,6 @@
             size="small"
             class="filter-item"
             placeholder="请选择"/>
-        </el-form-item>
-        <el-form-item label="纳税主体">
-          <el-select v-model="listQuery.xsfNsrsbh" placeholder="请选择" size="small">
-            <el-option v-for="item in orgList" :key="item.id" :label="item.orgName" :value="item.taxNum"/>
-          </el-select>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" size="small" @click="initList">查询</el-button>
@@ -146,7 +146,7 @@
     </div>
     <!--发票查看弹窗-->
     <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="fpckDialogVisible" title="发票查看" width="1280px">
-      <fppmShow :formdata="fppmShowData" :readonly="true"/>
+      <fppmShow v-if="fpckDialogVisible" :formdata="fppmShowData" :readonly="true"/>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button type="primary" size="mini" @click="fpckDialogVisible = false">关闭</el-button>
       </div>
@@ -226,6 +226,8 @@ export default {
     }).catch(err => {
       this.$message.error(err)
     })
+    // 纳税主体默认值
+    this.listQuery.xsfNsrsbh = this.org.taxNum
   },
   methods: {
     // 查询

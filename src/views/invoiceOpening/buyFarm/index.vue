@@ -64,14 +64,14 @@ export default {
         this.$message.error('销方纳税人识别号不能为空')
         return
       }
-      if (!this.form.gmfDzdh) {
-        this.$message.error('销方地址、电话不能为空')
-        return
-      }
-      if (!this.form.gmfYhzh) {
-        this.$message.error('销方开户行及账号不能为空')
-        return
-      }
+      // if (!this.form.gmfDzdh) {
+      //   this.$message.error('销方地址、电话不能为空')
+      //   return
+      // }
+      // if (!this.form.gmfYhzh) {
+      //   this.$message.error('销方开户行及账号不能为空')
+      //   return
+      // }
       this.form.lines.forEach((item, key) => {
         if (!item.xmmc) {
           this.$message.error('第' + (key + 1) + '行商品名称不能为空')

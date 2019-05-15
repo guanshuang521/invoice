@@ -87,7 +87,7 @@
           <template slot-scope="scope">
             <el-button type="primary" size="small" @click="checkHZXXB(scope.row)">查看</el-button>
             <el-button type="primary" size="small" @click="uploadData(scope.row)">上传</el-button>
-            <el-button type="primary" size="small" @click="editData(scope.row)">编辑</el-button>
+            <el-button v-if="scope.row.clzt === 0" type="primary" size="small" @click="editData(scope.row)">编辑</el-button>
             <el-button type="primary" size="small" @click="asyncData(scope.row)">同步</el-button>
           </template>
         </el-table-column>
@@ -141,11 +141,11 @@
         </el-table-column>
         <el-table-column label="发票类型" align="center">
           <template slot-scope="scope">
-            <span>{{ SYS_FPLX[scope.row.fplx] }}</span>
+            <span>{{ SYS_FPLX['004'] }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="发票代码" prop="fpDm" align="center"/>
-        <el-table-column label="发票号码" prop="fpHm" align="center"/>
+        <el-table-column label="发票代码" prop="yfpdm" align="center"/>
+        <el-table-column label="发票号码" prop="yfphm" align="center"/>
       </el-table>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button size="mini" type="primary" @click="printFp()">打印</el-button>
@@ -215,7 +215,8 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'dictList'
+      'dictList',
+      'info'
     ]),
     SYS_HZXXB_CLZT() { // 税率
       return arrayToMapField(this.dictList['SYS_HZXXB_CLZT'], 'code', 'name')
@@ -270,6 +271,9 @@ export default {
           })
           this.initTable()
           this.loading = false
+        }).catch(err => {
+          this.loading = false
+          this.$message.error(err)
         })
       })
     },
@@ -361,7 +365,7 @@ export default {
         sync(params).then(res => {
           this.initTable()
           this.loading = false
-          //添加代码
+          // 添加代码
           this.$message.success(res.message)
         }).catch(err => {
           this.loading = false
@@ -375,30 +379,30 @@ export default {
         this.$message.warning('请选择一条数据！')
         return
       }
-      function sortBy(field) {
-        return function(a, b) {
-          return a[field] - b[field]
-        }
-      }
+      // function sortBy(field) {
+      //   return function(a, b) {
+      //     return a[field] - b[field]
+      //   }
+      // }
       // 验证规则：发票代码一样，发票号码需连续
-      this.checkedItems.sort(sortBy('yfphm'))
-      let valid = true
-      const defaultFpDm = this.checkedItems[0].yfphm
-      this.checkedItems.reduce((pre, curr) => {
-        if (pre && parseFloat(pre.yfphm) !== parseFloat(curr.yfphm) - 1) {
-          this.$message.error('发票号码需连续！')
-          valid = false
-        }
-      })
-      this.checkedItems.forEach(item => {
-        if (item.yfpdm !== defaultFpDm) {
-          this.$message.error('发票代码需一致！')
-          valid = false
-        }
-      })
-      if (valid) {
-        this.dyfpDialogVisible = true
-      }
+      // this.checkedItems.sort(sortBy('yfphm'))
+      // let valid = true
+      // const defaultFpDm = this.checkedItems[0].yfphm
+      // this.checkedItems.reduce((pre, curr) => {
+      //   if (pre && parseFloat(pre.yfphm) !== parseFloat(curr.yfphm) - 1) {
+      //     this.$message.error('发票号码需连续！')
+      //     valid = false
+      //   }
+      // })
+      // this.checkedItems.forEach(item => {
+      //   if (item.yfpdm !== defaultFpDm) {
+      //     this.$message.error('发票代码需一致！')
+      //     valid = false
+      //   }
+      // })
+      // if (valid) {
+      this.dyfpDialogVisible = true
+      // }
     },
     // 打印
     printFp() {
@@ -407,7 +411,7 @@ export default {
     <business id="20004"comment="发票打印">
         <body yylxdm="1">
         <kpzdbs>${this.info.terminalMark}</kpzdbs>
-        <fplxdm>${item.fplx}</fplxdm>
+        <fplxdm>'004'</fplxdm>
         <fpdm>${item.yfpdm}</fpdm>
         <fphm>${item.yfphm}</fphm>
         <dylx>0</dylx>
