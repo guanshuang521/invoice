@@ -110,7 +110,7 @@
             {{ scope.row.bz }}
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" width="100px">
+        <el-table-column label="操作" align="left" width="100px">
           <template slot-scope="scope">
             <el-button
               size="mini"

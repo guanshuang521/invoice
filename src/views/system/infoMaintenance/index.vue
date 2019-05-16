@@ -55,7 +55,7 @@
         <el-table-column label="开户行" align="center" prop="khh"/>
         <el-table-column label="银行账号" align="center" prop="yhzh"/>
         <el-table-column
-          align="center"
+          align="left"
           fixed="right"
           label="操作"
           width="200">

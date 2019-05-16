@@ -83,7 +83,7 @@
           <template slot-scope="scope">{{ scope.row.datasourceType }}</template>
         </el-table-column>
         <el-table-column
-          align="center"
+          align="left"
           fixed="right"
           label="操作"
           width="200">

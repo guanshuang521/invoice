@@ -37,7 +37,7 @@
         :width="column.width"
         show-overflow-tooltip
         header-align="center"/>
-      <el-table-column v-if="operation.isShow" label="操作">
+      <el-table-column v-if="operation.isShow" label="操作" align="left">
         <template slot-scope="scope">
           <el-button
             v-for="item in operation.data"

@@ -97,7 +97,7 @@
             {{ SYS_DDZT[scope.row.status] }}
           </template>
         </el-table-column>
-        <el-table-column label="操作" fixed="right" align="center">
+        <el-table-column label="操作" fixed="right" align="left">
           <template slot-scope="scope">
             <el-button
               size="mini"

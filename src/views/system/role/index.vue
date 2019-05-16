@@ -50,7 +50,7 @@
             <span>{{ scope.row.status == 1 && '有效' || scope.row.status == 0 && '无效' }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center">
+        <el-table-column label="操作" align="left">
           <template slot-scope="scope">
             <el-button
               size="mini"

@@ -146,6 +146,7 @@
                     label="机器编号"
                     width="100"/>
                   <el-table-column
+                    align="left"
                     label="操作"
                     width="120">
                     <template slot-scope="scope">

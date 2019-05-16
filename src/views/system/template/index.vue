@@ -84,7 +84,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          align="center"
+          align="left"
           label="操作"
           width="160">
           <template slot-scope="scope">

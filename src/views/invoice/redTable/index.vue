@@ -71,7 +71,7 @@
             <span>{{ SYS_HZXXB_CLZT[scope.row.clzt] }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="填开日期" width="120" align="center">
+        <el-table-column label="填开日期" width="130" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.tkrq }}</span>
           </template>
@@ -81,9 +81,9 @@
         <el-table-column prop="je" label="金额（不含税）" width="120" align="center"/>
         <el-table-column prop="se" label="税额" width="120" align="center"/>
         <el-table-column prop="jshj" label="价税合计" width="120" align="center"/>
-        <el-table-column prop="ghdwmc" label="购方名称" width="120" align="center"/>
-        <el-table-column prop="xhdwmc" label="销方名称" width="120" align="center"/>
-        <el-table-column fixed="right" label="操作" width="290" align="center">
+        <el-table-column prop="ghdwmc" label="购方名称" width="200" align="center"/>
+        <el-table-column prop="xhdwmc" label="销方名称" width="200" align="center"/>
+        <el-table-column fixed="right" label="操作" width="290" align="left">
           <template slot-scope="scope">
             <el-button type="primary" size="small" @click="checkHZXXB(scope.row)">查看</el-button>
             <el-button type="primary" size="small" @click="uploadData(scope.row)">上传</el-button>

@@ -125,12 +125,13 @@
           </template>
         </el-table-column>
         <el-table-column
-          align="center"
+          align="left"
           fixed="right"
           label="操作"
-          width="100">
+          width="150">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="checkFP(scope.row)">查看</el-button>
+            <el-button v-if="scope.row.fplx == '026'" type="primary" size="mini" @click="download(scope.row)">下载</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -155,6 +156,7 @@
 </template>
 
 <script>
+import { downloadNew } from '@/api/invoiceOpening/opening'
 import { opeinvoiceList, fpSeeDetail } from '@/api/invoice/oSpecial'
 import { selectUserOrgList } from '@/api/system/user'
 import { arrayToMapField } from '@/utils/public'
@@ -279,6 +281,20 @@ export default {
         console.log(res)
         this.fpckDialogVisible = true
         this.fppmShowData = res.data
+      }).catch(err => {
+        this.$message.error(err)
+      })
+    },
+    // 发票下载
+    download(val) {
+      const args = {
+        fpDm: val.fpDm,
+        fpHm: val.fpHm,
+        xsfNsrsbh: val.xsfNsrsbh,
+        fpqqlsh: val.fpqqlsh
+      }
+      downloadNew(args).then(res => {
+        window.open(res.data.pdfUrl)
       }).catch(err => {
         this.$message.error(err)
       })

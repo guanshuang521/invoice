@@ -60,7 +60,7 @@
         <el-table-column label="开票提示" prop="returnMsg" align="center"/>
         <el-table-column label="备注" prop="bz" align="center"/>
         <el-table-column
-          align="center"
+          align="left"
           fixed="right"
           label="操作"
           width="300">
