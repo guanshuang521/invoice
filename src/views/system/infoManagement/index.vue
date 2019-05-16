@@ -444,7 +444,7 @@ export default{
     handleEdit(ind, rows) { // 编辑
       this.dialogVisible = true
       this.dialogType = 'edit'
-      this.form = rows
+      this.form = Object.assign({}, rows)
     },
     handleSizeChange(val) { // 改变单页条数
       this.searchParams.currentPage = 1

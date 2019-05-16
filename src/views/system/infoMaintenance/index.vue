@@ -281,7 +281,7 @@ export default {
       this.dialogTitle = '编辑购方信息'
       this.dialogType = 'editInformation'
       this.dialogVisible = true
-      this.form = row
+      this.form = Object.assign({}, row)
     },
     editCustomerFn(form) {
       this.$refs[form].validate((valid) => {
