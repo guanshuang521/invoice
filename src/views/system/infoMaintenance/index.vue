@@ -100,7 +100,7 @@
         <el-form-item label="移动电话：">
           <el-input v-model="form.sjhm" placeholder="请输入"/>
         </el-form-item>
-        <el-form-item label="邮箱：" prop="yx">
+        <el-form-item label="邮箱：">
           <el-input v-model="form.yx" placeholder="请输入"/>
         </el-form-item>
         <el-form-item label="详细地址：" prop="khdz" style="width: 596px">
