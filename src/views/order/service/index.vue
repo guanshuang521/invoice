@@ -158,7 +158,7 @@
         @current-change = "handleCurrentChange"/>
     </div>
     <!--生成预制发票弹窗-->
-    <invoice-dialog :ishow="invoiceDialogVisible" :dialog-title="dialogTitle" :build-pop="buildPop" :make-pop-data="makePopData" @hideDialog="closeDialog"/>
+    <invoice-dialog v-if="invoiceDialogVisible" :ishow="invoiceDialogVisible" :dialog-title="dialogTitle" :build-pop="buildPop" :make-pop-data="makePopData" @hideDialog="closeDialog"/>
   </div>
 </template>
 <script>
@@ -168,7 +168,6 @@ import invoiceDialog from '../components/invoiceDialog'
 import apiPath from '@/api/apiUrl'
 import { arrayToMapField } from '@/utils/public'
 import { getToken } from '@/utils/auth'
-import { selectUserOrgList } from '@/api/system/user'
 
 export default {
   name: 'Dashboard',
@@ -272,6 +271,9 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       }).then(() => {
+        this.$nextTick(() => {
+          this.$refs[data].resetFields()
+        })
         const params = {
           id: this.checkedList.join(),
           djlx: 'CEI费用'

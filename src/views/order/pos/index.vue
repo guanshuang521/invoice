@@ -13,9 +13,9 @@
           <el-input v-model="searchParams.djbh" placeholder="请输入开票码" size="small"/>
         </el-form-item>
         <!--<el-form-item label="纳税主体">-->
-          <!--<el-select v-model="searchParams.xfsh" placeholder="请选择" size="small" disabled>-->
-            <!--<el-option v-for="item in orgList" :key="item.id" :label="item.orgName" :value="item.taxNum"/>-->
-          <!--</el-select>-->
+        <!--<el-select v-model="searchParams.xfsh" placeholder="请选择" size="small" disabled>-->
+        <!--<el-option v-for="item in orgList" :key="item.id" :label="item.orgName" :value="item.taxNum"/>-->
+        <!--</el-select>-->
         <!--</el-form-item>-->
         <el-form-item>
           <el-button type="primary" size="small" @click="initTable">查询</el-button>
@@ -113,9 +113,9 @@
         <el-form-item v-if="dynamicValidateForm.fplx=='004'" label="备用发票类型" prop="byfplx">
           <el-select v-model="dynamicValidateForm.byfplx" placeholder="请选择备用发票类型" style="width: 100%">
             <el-option value ="普票">普票</el-option>
-<!--            007-->
+            <!--            007-->
             <el-option value ="电票">电票</el-option>
-<!--            026-->
+            <!--            026-->
           </el-select>
         </el-form-item>
         <el-form-item label="购方名称" prop="gmfMc">
@@ -420,6 +420,9 @@ export default {
         buildInvoicePre(params).then(response => {
           this.loading = false
           this.dialogVisible = true
+          this.$nextTick(() => {
+            this.$refs['dynamicValidateForm'].resetFields()
+          })
           this.num = response.data.num
           this.hjje = response.data.hjje
           this.hjse = response.data.hjse
@@ -453,10 +456,9 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-
-          if(this.dynamicValidateForm.byfplx == "普票"){
+          if (this.dynamicValidateForm.byfplx === '普票') {
             this.dynamicValidateForm.byfplx = '007'
-          }else if(this.dynamicValidateForm.byfplx == "电票"){
+          } else if (this.dynamicValidateForm.byfplx === '电票') {
             this.dynamicValidateForm.byfplx = '026'
           }
           this.$emit('makeInvoicePre', this.dynamicValidateForm)
