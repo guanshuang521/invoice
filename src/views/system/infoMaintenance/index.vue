@@ -86,12 +86,10 @@
       custom-class="add-customer">
       <el-form ref="form" :inline="true" :rules="rules" :model="form" label-width="120px" size="mini">
         <el-form-item label="购方名称：" prop="khmc">
-          <el-input v-if="dialogTitle == '新增购方信息'" v-model="form.khmc" placeholder="请输入"/>
-          <el-input v-if="dialogTitle != '新增购方信息'" v-model="form.khmc" placeholder="请输入" disabled="disabled"/>
+          <el-input v-model="form.khmc" placeholder="请输入"/>
         </el-form-item>
         <el-form-item label="购方税号：" prop="khsh">
-          <el-input v-if="dialogTitle == '新增购方信息'" v-model="form.khsh" placeholder="请输入"/>
-          <el-input v-if="dialogTitle != '新增购方信息'" v-model="form.khsh" placeholder="请输入" disabled="disabled"/>
+          <el-input v-model="form.khsh" placeholder="请输入"/>
         </el-form-item>
         <el-form-item label="联系人：">
           <el-input v-model="form.lxry" placeholder="请输入"/>
