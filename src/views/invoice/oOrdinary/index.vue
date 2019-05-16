@@ -233,7 +233,7 @@
     </el-dialog>
     <!--作废重开弹窗-->
     <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="zfckDialogVisible" title="作废重开" width="1280px">
-      <fppmShow v-if="zfckDialogVisible && !isFarmBill" :readonly="false" :formdata="fppmZfckData" :is-sph-readonly="false"/>
+      <fppmShow v-if="zfckDialogVisible && !isFarmBill" :readonly="true" :formdata="fppmZfckData" :is-sph-readonly="false"/>
       <fppmShowFarm v-if="isFarmBill" :formdata="fppmZfckData" :readonly="false"/>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button type="primary" size="mini" @click="reInvoiceSubmit">开具</el-button>
