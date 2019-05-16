@@ -18,9 +18,6 @@
         <el-form-item label="二级供应商编码">
           <el-input v-model="searchParams.ejgysbm" placeholder="请输入" size="small"/>
         </el-form-item>
-        <el-form-item label="费用单据编号">
-          <el-input v-model="searchParams.fydjbh" placeholder="请输入" size="small"/>
-        </el-form-item>
         <el-form-item label="订单状态">
           <el-select v-model="searchParams.status" placeholder="请选择" size="small">
             <el-option v-for="item in dictList['SYS_DDZT']" :key="item.id" :label="item.name" :value="item.code"/>
@@ -54,6 +51,12 @@
             <!--<el-option v-for="item in orgList" :key="item.id" :label="item.orgName" :value="item.taxNum"/>-->
           <!--</el-select>-->
         <!--</el-form-item>-->
+        <el-form-item label="结算单号">
+          <el-input v-model="searchParams.fydjbh" placeholder="请输入" size="small"/>
+        </el-form-item>
+        <el-form-item label="费用名称">
+          <el-input v-model="searchParams.spsm" placeholder="请输入" size="small"/>
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" size="small" @click="initTable">查询</el-button>
           <el-button type="primary" size="small" @click="reset">重置</el-button>
@@ -93,7 +96,11 @@
           align="center"/>
         <el-table-column
           prop="fydjbh"
-          label="费用单据编号"
+          label="结算单号"
+          align="center"/>
+        <el-table-column
+          prop="spsm"
+          label="费用名称"
           align="center"/>
         <el-table-column
           prop="ejgysbm"
