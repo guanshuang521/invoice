@@ -12,6 +12,9 @@
         <el-form-item label="购方名称">
           <el-input v-model="searchParams.spgsqc" placeholder="请输入" size="small"/>
         </el-form-item>
+        <el-form-item label="购方税号">
+          <el-input v-model="searchParams.gfsh" placeholder="请输入" size="small"/>
+        </el-form-item>
         <el-form-item label="二级供应商编码">
           <el-input v-model="searchParams.ejgysbm" placeholder="请输入" size="small"/>
         </el-form-item>
