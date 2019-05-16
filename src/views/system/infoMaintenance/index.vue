@@ -58,7 +58,7 @@
           align="left"
           fixed="right"
           label="操作"
-          width="200">
+          width="80">
           <template slot-scope="scope">
             <el-button type="primary" size="small" @click="editInfomain(scope.row)">编辑</el-button>
           </template>
