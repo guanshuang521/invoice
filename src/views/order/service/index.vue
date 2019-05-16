@@ -87,7 +87,7 @@
           label="单据编号"
           align="center"/>
         <el-table-column
-          prop="sjlx"
+          prop="dtype"
           label="数据类型"
           align="center"/>
         <el-table-column
