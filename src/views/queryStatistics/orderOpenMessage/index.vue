@@ -197,7 +197,7 @@ export default {
       checkedList: [],
       currentPage: 1,
       pageSize: 25,
-      total: 1000,
+      total: 0,
       dialogVisible: false,
       dialogType: '',
       form: {
@@ -222,6 +222,7 @@ export default {
     ...mapGetters([
       'name',
       'roles',
+      'org',
       'dictList'
     ]),
     SYS_DDZT() {
@@ -234,7 +235,9 @@ export default {
     }).catch(err => {
       this.$message.error(err)
     })
-    this.getTableList()
+    // 纳税主体默认值
+    this.searchParams.xfsh = this.org.taxNum
+    this.$store.getters.isAutoLoadData ? this.getTableList() : ''
   },
   created() {
     // this.fetchData()

@@ -35,9 +35,9 @@
         </el-form-item>
       </el-form>
     </div>
-    <div class="button-container">
-      <el-button type="primary" size="mini" @click="importExcel">导出</el-button>
-    </div>
+    <!--<div class="button-container">-->
+    <!--<el-button type="primary" size="mini" @click="importExcel">导出</el-button>-->
+    <!--</div>-->
     <div class="table-container">
       <el-table
         v-loading="listLoading"
@@ -146,7 +146,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { getOrderList, orderInfo } from '@/api/queryStatistics/orderOpenMessage'
+// import { getOrderList } from '@/api/queryStatistics/orderOpenMessage'
+import { opeinvoiceList } from '@/api/invoice/oSpecial'
 import invoiceOrderMessage from '@/components/queryStatistics/invoiceOrderMessage'
 import { arrayToMapField } from '@/utils/public'
 import { selectUserOrgList } from '@/api/system/user'
@@ -181,7 +182,7 @@ export default {
       checkedList: [],
       currentPage: 1,
       pageSize: 25,
-      total: 1000,
+      total: 0,
       dialogVisible: false,
       dialogType: '',
       poplist: {},
@@ -213,11 +214,14 @@ export default {
     }
   },
   mounted() {
+    this.$store.getters.isAutoLoadData ? this.initTable() : ''
     selectUserOrgList().then(res => {
       this.orgList = res.data
     }).catch(err => {
       this.$message.error(err)
     })
+    // 纳税主体默认值
+    this.searchParams.xfsh = this.org.taxNum
   },
   created() {
     // this.getTableList()
@@ -235,8 +239,8 @@ export default {
     },
     initTable() {
       this.searchParams.xsfNsrsbh = this.org.taxNum
-      getOrderList(this.searchParams).then(res => {
-        this.list = res.data.data.list
+      opeinvoiceList(this.searchParams).then(res => {
+        this.list = res.data.list
         this.total = res.data.count
       }).catch(err => {
         this.$message.error(err)
@@ -283,10 +287,12 @@ export default {
       this.dialogVisible2 = true
     },
     handleSizeChange(val) {
-      // console.log(`每页 ${val} 条`)
+      this.searchParams.pageSize = val
+      this.initTable()
     },
     handleCurrentChange(val) {
-      // console.log(`当前页: ${val}`)
+      this.searchParams.currentPage = val
+      this.initTable()
     },
     handleClose() { // 关闭弹窗
       this.dialogVisible = false

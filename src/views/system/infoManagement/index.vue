@@ -96,22 +96,22 @@
         </el-table-column>
         <el-table-column label="零税率标识" align="center" width="110">
           <template slot-scope="scope">
-            {{ scope.row.lslbs }}
+            {{ SYS_LSLBS[scope.row.lslbs] }}
           </template>
         </el-table-column>
         <el-table-column label="免税类型" align="center">
           <template slot-scope="scope">
-            {{ scope.row.mslx }}
+            {{ SYS_MSLX[scope.row.mslx] }}
           </template>
         </el-table-column>
         <el-table-column label="是否享受优惠政策" align="center">
           <template slot-scope="scope">
-            {{ scope.row.sfxsyhzc }}
+            {{ SYS_SFXSYHZC[scope.row.sfxsyhzc] }}
           </template>
         </el-table-column>
         <el-table-column label="优惠政策类型" align="center">
           <template slot-scope="scope">
-            {{ scope.row.yhzclx }}
+            {{ SYS_YHZCLX[scope.row.yhzclx] }}
           </template>
         </el-table-column>
         <el-table-column label="操作" align="center">
@@ -562,7 +562,7 @@ export default{
           })
           params.ids = params.ids.join(',')
           this.loading = true
-          editData(params).then(res => {
+          updateCommodityByShflbm(params).then(res => {
             this.$message({
               message: res.message,
               type: 'success'
@@ -614,7 +614,7 @@ export default{
       })
     },
     uploadPath() { // 上传地址
-      return apiPath.system.InfoManagement.importExcel
+      return apiPath.system.InfoManagement.importExcel + '?x-access-token=' + getToken()
     },
     handleRemove(file, fileList) { // 文件列表移除文件时的钩子
       console.log(file, fileList)

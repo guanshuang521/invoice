@@ -13,3 +13,9 @@ export function toMoney(num) {
   num = num.toLocaleString()
   return num
 }
+// 发票校验码格式化
+export function formatBillcheckNumber(num) {
+  num = parseFloat(num).toFixed(2)
+  num = num.toLocaleString()
+  return num
+}
