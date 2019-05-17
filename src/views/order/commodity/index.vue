@@ -23,6 +23,11 @@
             <el-option v-for="item in dictList['SYS_DDZT']" :key="item.id" :label="item.name" :value="item.code"/>
           </el-select>
         </el-form-item>
+        <el-form-item label="开票状态">
+          <el-select v-model="searchParams.kpzt" placeholder="请选择" size="small">
+            <el-option v-for="item in dictList['SYS_KPZT']" :key="item.id" :label="item.name" :value="item.code"/>
+          </el-select>
+        </el-form-item>
         <el-form-item label="单据起号">
           <el-input v-model="searchParams.startDjbh" placeholder="请输入" size="small"/>
         </el-form-item>
@@ -135,6 +140,13 @@
           </template>
         </el-table-column>
         <el-table-column
+          label="开票状态"
+          align="center">
+          <template slot-scope="scope">
+            {{ SYS_KPZT[scope.row.kpzt] }}
+          </template>
+        </el-table-column>
+        <el-table-column
           prop="bz"
           label="备注"
           align="center"/>
@@ -174,6 +186,7 @@ export default {
         spgsqc: '',
         ejgysbm: '',
         status: '',
+        kpzt: '',
         startDjbh: '',
         endDjbh: '',
         startDate: '',
@@ -206,6 +219,9 @@ export default {
     ...mapGetters(['name', 'roles', 'org', 'dictList']),
     SYS_DDZT() { // 状态
       return arrayToMapField(this.dictList['SYS_DDZT'], 'code', 'name')
+    },
+    SYS_KPZT() { // 开票状态
+      return arrayToMapField(this.dictList['SYS_KPZT'], 'code', 'name')
     }
   },
   mounted() {
@@ -240,6 +256,7 @@ export default {
         spgsqc: '',
         ejgysbm: '',
         status: '',
+        kpzt: '',
         startDjbh: '',
         endDjbh: '',
         startDate: '',
@@ -320,7 +337,7 @@ export default {
     },
     exportData() { // 导出数据
       const token = getToken()
-      const url = apiPath.order.list.exportCommidyErp + '?spgsqc=' + this.searchParams.spgsqc + '&ejgysbm=' + this.searchParams.ejgysbm + '&startDjbh=' + this.searchParams.startDjbh + '&endDjbh=' + this.searchParams.endDjbh + '&startDate=' + this.searchParams.startDate + '&endtDate=' + this.searchParams.endDate + '&status=' + this.searchParams.status + '&x-access-token=' + token
+      const url = apiPath.order.list.exportCommidyErp + '?spgsqc=' + this.searchParams.spgsqc + '&ejgysbm=' + this.searchParams.ejgysbm + '&startDjbh=' + this.searchParams.startDjbh + '&endDjbh=' + this.searchParams.endDjbh + '&startDate=' + this.searchParams.startDate + '&endtDate=' + this.searchParams.endDate + '&status=' + this.searchParams.status + '&kpzt=' + this.searchParams.kpzt + '&x-access-token=' + token
       window.open(url)
     },
     // 关闭弹窗

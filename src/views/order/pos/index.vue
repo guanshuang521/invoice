@@ -67,6 +67,13 @@
           </template>
         </el-table-column>
         <el-table-column
+          label="开票状态"
+          align="center">
+          <template slot-scope="scope">
+            {{ SYS_KPZT[scope.row.kpzt] }}
+          </template>
+        </el-table-column>
+        <el-table-column
           prop="rksj"
           label="下载时间"
           align="center"/>
@@ -252,6 +259,9 @@ export default {
     ...mapGetters(['name', 'roles', 'org', 'dictList']),
     SYS_DDZT() { // 税率
       return arrayToMapField(this.dictList['SYS_DDZT'], 'code', 'name')
+    },
+    SYS_KPZT() { // 开票状态
+      return arrayToMapField(this.dictList['SYS_KPZT'], 'code', 'name')
     }
   },
   mounted() {

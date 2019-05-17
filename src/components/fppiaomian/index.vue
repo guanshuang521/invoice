@@ -445,7 +445,7 @@ export default {
         this.formdata.hjje = totalHjje.toFixed(2)
         this.formdata.hjse = totalHjse.toFixed(2)
         this.formdata.jshjupper = getDx((totalHjje + totalHjse))
-        this.formdata.jshj = Math.round(totalHjje + totalHjse).toFixed(2)
+        this.formdata.jshj = Number(totalHjje + totalHjse).toFixed(2)
       }
     }
   },
@@ -727,17 +727,18 @@ export default {
     // 金额，税额计算
     calculateMoney(index, xmsl, xmdj, xmdjShow, hsxmdj, xmjeShow, xmje, hsxmje, sl, se, currentInput) {
       const _thisLines = this.formdata.lines
+      // 修改含税金额
       if (currentInput === 'xmje') {
-        _thisLines[index].hsxmdj = ''
-        _thisLines[index].xmdj = ''
-        _thisLines[index].xmsl = ''
+        _thisLines[index].hsxmdj = Number(hsxmje / xmsl).toFixed(2)
+        _thisLines[index].xmsl = Number(hsxmje / _thisLines[index].hsxmdj).toFixed(2)
         _thisLines[index].se = Number(_thisLines[index].hsxmje * sl / (1 + sl)).toFixed(2)
         _thisLines[index].xmje = _thisLines[index].hsxmje - _thisLines[index].se
+        _thisLines[index].xmdj = _thisLines[index].hsxmdj - Number(_thisLines[index].hsxmdj * sl / (1 + sl)).toFixed(2)
       } else {
         // 0510添加
         _thisLines[index].xmsl === '0' ? _thisLines[index].xmsl = '' : _thisLines[index].xmsl
         // 含税金额
-        _thisLines[index].hsxmje = hsxmdj * xmsl
+        _thisLines[index].hsxmje = Number(hsxmdj * xmsl).toFixed(2)
         // 税额
         _thisLines[index].se = Number(_thisLines[index].hsxmje * sl / (1 + sl)).toFixed(2)
         // 不含税金额
@@ -792,10 +793,8 @@ export default {
         xsfNsrsbh: this.org.taxNum
       }
       getNotInvoiceYetDmHm(args).then(res => {
-        if (res.code === '0000') {
-          this.fpdmShow = res.data.dqfpdm
-          this.fphmShow = res.data.dqfphm
-        }
+        this.fpdmShow = res.data.dqfpdm
+        this.fphmShow = res.data.dqfphm
       }).catch(err => {
         this.$message.error(err)
       })

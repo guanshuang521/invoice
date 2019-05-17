@@ -736,17 +736,18 @@ export default {
     // 金额，税额计算
     calculateMoney(index, xmsl, xmdj, xmdjShow, hsxmdj, xmjeShow, xmje, hsxmje, sl, se, currentInput) {
       const _thisLines = this.formdata.lines
+      // 修改含税金额
       if (currentInput === 'xmje') {
-        _thisLines[index].hsxmdj = ''
-        _thisLines[index].xmdj = ''
-        _thisLines[index].xmsl = ''
+        _thisLines[index].hsxmdj = Number(hsxmje / xmsl).toFixed(2)
+        _thisLines[index].xmsl = Number(hsxmje / _thisLines[index].hsxmdj).toFixed(2)
         _thisLines[index].se = Number(_thisLines[index].hsxmje * sl / (1 + sl)).toFixed(2)
         _thisLines[index].xmje = _thisLines[index].hsxmje - _thisLines[index].se
+        _thisLines[index].xmdj = _thisLines[index].hsxmdj - Number(_thisLines[index].hsxmdj * sl / (1 + sl)).toFixed(2)
       } else {
         // 0510添加
         _thisLines[index].xmsl === '0' ? _thisLines[index].xmsl = '' : _thisLines[index].xmsl
         // 含税金额
-        _thisLines[index].hsxmje = hsxmdj * xmsl
+        _thisLines[index].hsxmje = Number(hsxmdj * xmsl).toFixed(2)
         // 税额
         _thisLines[index].se = Number(_thisLines[index].hsxmje * sl / (1 + sl)).toFixed(2)
         // 不含税金额

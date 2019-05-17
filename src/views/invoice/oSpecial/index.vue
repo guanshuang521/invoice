@@ -403,8 +403,10 @@ export default {
     checkFP(val) {
       if (val.tzpz === '02') {
         this.isFarmBill = true
+      } else {
+        this.isFarmBill = false
       }
-      fpDetail({ fpDm: val.fpDm, fpHm: val.fpHm }).then(res => {
+      fpDetail({ id: val.id }).then(res => {
         console.log(res)
         this.fpckDialogVisible = true
         this.fppmShowData = res.data
@@ -416,6 +418,8 @@ export default {
     reInvoice(val) {
       if (val.tzpz === '02') {
         this.isFarmBill = true
+      } else {
+        this.isFarmBill = false
       }
       fpDetail({ fpDm: val.fpDm, fpHm: val.fpHm }).then(res => {
         this.zfckDialogVisible = true
@@ -449,6 +453,8 @@ export default {
     hcInvoice(val) {
       if (val.tzpz === '02') {
         this.isFarmBill = true
+      } else {
+        this.isFarmBill = false
       }
       fpDetail({ fpDm: val.fpDm, fpHm: val.fpHm }).then(res => {
         this.hckpDialogVisible = true

@@ -48,7 +48,7 @@
         </div>
       </div>
       <div class="fpTable">
-        <div :class="{readonly: readonly}" class="tableTop">
+        <div class="tableTop">
           <div class="tbT gmfText">购<br>买<br>方</div>
           <div class="tbT gmfTable">
             <div class="tbmc">
@@ -57,6 +57,7 @@
                 v-model="formdata.gmfMc"
                 :remote-method="remoteSearch"
                 :clearable="!readonly"
+                :class="{readonly: readonly}"
                 filterable
                 remote
                 reserve-keyword
@@ -74,7 +75,7 @@
             </div>
             <div class="tbnsrsbh">
               <span class="gmftitle">纳税人识别号：</span>
-              <input v-model="formdata.gmfNsrsbh" class="gmfcontent">
+              <input v-model="formdata.gmfNsrsbh" :class="{readonly: readonly}" class="gmfcontent">
             </div>
             <div class="tbdzdh">
               <span class="gmftitle">地址  、  电话：</span>
@@ -732,7 +733,7 @@ export default {
     calculateMoney(index, xmsl, xmdj, xmdjShow, hsxmdj, xmjeShow, xmje, hsxmje, sl, se, currentInput) {
       const _thisLines = this.formdata.lines
       // 含税金额
-      _thisLines[index].hsxmje = hsxmdj * xmsl
+      _thisLines[index].hsxmje = Number(hsxmdj * xmsl).toFixed(2)
       // 税额
       _thisLines[index].se = Number(_thisLines[index].hsxmje * sl / (1 + sl)).toFixed(2)
       // 不含税金额
