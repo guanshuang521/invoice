@@ -163,7 +163,7 @@
             </div>
             <div class="tbnsrsbh">
               <span class="xsftitle">纳税人识别号：</span>
-              <input v-model="formdata.gmfNsrsbh" class="xsfcontent">
+              <input v-model="formdata.gmfNsrsbh" class="xsfcontent" @input="toUpperCase()">
             </div>
             <div class="tbdzdh">
               <span class="xsftitle">地址  、  电话：</span>
@@ -559,7 +559,7 @@ export default {
     remoteChange(val) {
       this.gfList.forEach(item => {
         if (item.id === val) {
-          this.formdata.gmfNsrsbh = item.khsh
+          this.formdata.gmfNsrsbh = item.khsh.toUpperCase()
           this.formdata.gmfDzdh = item.khdz
           this.formdata.gmfYhzh = item.khh
         }
@@ -736,18 +736,38 @@ export default {
     // 金额，税额计算
     calculateMoney(index, xmsl, xmdj, xmdjShow, hsxmdj, xmjeShow, xmje, hsxmje, sl, se, currentInput) {
       const _thisLines = this.formdata.lines
-      // 修改含税金额
-      if (currentInput === 'xmje') {
-        _thisLines[index].hsxmdj = Number(hsxmje / xmsl).toFixed(2)
-        _thisLines[index].xmsl = Number(hsxmje / _thisLines[index].hsxmdj).toFixed(2)
+      if (currentInput === 'xmje') { // 修改含税金额
+        if (_thisLines[index].hsxmje === '0') {
+          _thisLines[index].hsxmje = ''
+          _thisLines[index].hsxmdj = ''
+        } else {
+          // 如果项目数量不为空
+          if (xmsl) {
+            _thisLines[index].hsxmdj = Number(Number(hsxmje / xmsl).toFixed(6)) === Number(hsxmje / xmsl) ? Number(hsxmje / xmsl) : Number(hsxmje / xmsl).toFixed(6)
+          } else if (hsxmdj) {
+            _thisLines[index].xmsl = Number(hsxmje / hsxmdj).toFixed(2)
+          }
+          _thisLines[index].se = Number(_thisLines[index].hsxmje * sl / (1 + sl)).toFixed(2)
+          _thisLines[index].xmje = _thisLines[index].hsxmje - _thisLines[index].se
+          _thisLines[index].xmdj = _thisLines[index].hsxmdj - Number(_thisLines[index].hsxmdj * sl / (1 + sl)).toFixed(2)
+        }
+      } else if (currentInput === 'xmdj') { // 如果修改的是含税单价
+        if (xmsl) {
+          // 如果项目数量不为空
+          _thisLines[index].hsxmje = Number(hsxmdj * xmsl).toFixed(2)
+        } else if (hsxmje) {
+          _thisLines[index].hsxmdj = Number(Number(hsxmje / xmsl).toFixed(6)) === Number(hsxmje / xmsl) ? Number(hsxmje / xmsl) : Number(hsxmje / xmsl).toFixed(6)
+        }
         _thisLines[index].se = Number(_thisLines[index].hsxmje * sl / (1 + sl)).toFixed(2)
         _thisLines[index].xmje = _thisLines[index].hsxmje - _thisLines[index].se
         _thisLines[index].xmdj = _thisLines[index].hsxmdj - Number(_thisLines[index].hsxmdj * sl / (1 + sl)).toFixed(2)
-      } else {
-        // 0510添加
+      } else { // 修改的是数量
         _thisLines[index].xmsl === '0' ? _thisLines[index].xmsl = '' : _thisLines[index].xmsl
-        // 含税金额
-        _thisLines[index].hsxmje = Number(hsxmdj * xmsl).toFixed(2)
+        if (hsxmdj) {
+          _thisLines[index].hsxmje = Number(hsxmdj * xmsl).toFixed(2)
+        } else if (hsxmje) {
+          _thisLines[index].hsxmdj = Number(hsxmje / xmsl).toFixed(2)
+        }
         // 税额
         _thisLines[index].se = Number(_thisLines[index].hsxmje * sl / (1 + sl)).toFixed(2)
         // 不含税金额
@@ -809,6 +829,10 @@ export default {
       }).catch(err => {
         this.$message.error(err)
       })
+    },
+    // 字符串小写英文转大写
+    toUpperCase() {
+      this.formdata.gmfNsrsbh = this.formdata.gmfNsrsbh.toUpperCase()
     }
   }
 }

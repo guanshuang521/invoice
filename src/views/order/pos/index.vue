@@ -147,7 +147,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="购方税号" prop="gmfNsrsbh">
-          <el-input v-model="dynamicValidateForm.gmfNsrsbh"/>
+          <el-input v-model="dynamicValidateForm.gmfNsrsbh" @input="toUpperCase()"/>
         </el-form-item>
         <el-form-item label="购方地址电话">
           <el-input v-model="dynamicValidateForm.gmfDzdh" />
@@ -301,8 +301,11 @@ export default {
       this.initTable()
     },
     exportPos() {
-      const token = getToken()
-      const url = apiPath.order.pos.exportPosOrder + '?djbh=' + this.searchParams.djbh + '&x-access-token=' + token
+      const params = ['x-access-token=' + getToken()]
+      for (const key in this.searchParams) {
+        params.push(key + '=' + this.searchParams[key])
+      }
+      const url = apiPath.order.pos.exportPosOrder + '?' + params.join('&')
       window.open(url)
     },
     delList() { // 删除数据
@@ -395,9 +398,9 @@ export default {
     },
     remoteChange(val) {
       this.gfmcData.forEach(item => {
-        if (item.id === val) {
-          this.dynamicValidateForm.gmfNsrsbh = item.khsh
-          this.dynamicValidateForm.gmfDzdh = item.khdz + ' ' + item.lxdh
+        if (item.khmc === val) {
+          this.dynamicValidateForm.gmfNsrsbh = item.khsh.toUpperCase()
+          this.dynamicValidateForm.gmfDzdh = (item.khdz === null ? '' : item.khdz) + ' ' + (item.lxdh === null ? '' : item.lxdh)
           this.dynamicValidateForm.gmfYhzh = item.yhzh
         }
       })
@@ -492,6 +495,9 @@ export default {
           return false
         }
       })
+    },
+    toUpperCase() {
+      this.dynamicValidateForm.gmfNsrsbh = this.dynamicValidateForm.gmfNsrsbh.toUpperCase()
     }
   }
 }

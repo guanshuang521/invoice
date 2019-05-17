@@ -277,7 +277,7 @@ export default {
     },
     // 查看发票
     checkFP(val) {
-      fpSeeDetail({ fpDm: val.fpDm, fpHm: val.fpHm, fplx: val.fplx }).then(res => {
+      fpSeeDetail({ id: val.id }).then(res => {
         console.log(res)
         this.fpckDialogVisible = true
         this.fppmShowData = res.data

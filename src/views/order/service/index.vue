@@ -23,11 +23,6 @@
             <el-option v-for="item in dictList['SYS_DDZT']" :key="item.id" :label="item.name" :value="item.code"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="开票状态">
-          <el-select v-model="searchParams.kpzt" placeholder="请选择" size="small">
-            <el-option v-for="item in dictList['SYS_KPZT']" :key="item.id" :label="item.name" :value="item.code"/>
-          </el-select>
-        </el-form-item>
         <el-form-item label="单据起号">
           <el-input v-model="searchParams.startDjbh" placeholder="请输入" size="small"/>
         </el-form-item>
@@ -201,7 +196,6 @@ export default {
         ejgysbm: '',
         fydjbh: '',
         status: '',
-        kpzt: '',
         startDjbh: '',
         endDjbh: '',
         startDate: '',
@@ -274,7 +268,6 @@ export default {
         ejgysbm: '',
         fydjbh: '',
         status: '',
-        kpzt: '',
         startDjbh: '',
         endDjbh: '',
         startDate: '',
@@ -353,8 +346,11 @@ export default {
       })
     },
     exportData() { // 导出数据
-      const token = getToken()
-      const url = apiPath.order.list.exportErp + '?spgsqc=' + this.searchParams.spgsqc + '&ejgysbm=' + this.searchParams.ejgysbm + '&startDjbh=' + this.searchParams.startDjbh + '&endDjbh=' + this.searchParams.endDjbh + '&startDate=' + this.searchParams.startDate + '&endtDate=' + this.searchParams.endDate + '&status=' + this.searchParams.status + '&kpzt=' + this.searchParams.kpzt + '&fydjbh=' + this.searchParams.fydjbh + '&x-access-token=' + token
+      const params = ['x-access-token=' + getToken()]
+      for (const key in this.searchParams) {
+        params.push(key + '=' + this.searchParams[key])
+      }
+      const url = apiPath.order.list.exportErp + '?' + params.join('&')
       window.open(url)
     },
     // 关闭弹窗

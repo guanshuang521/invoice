@@ -81,6 +81,9 @@ export default {
           this.$message.error('第' + (key + 1) + '行金额不能为空')
           checked = false
         }
+        if (item.xmdj === 0) {
+          item.xmdj = null
+        }
       })
       if (checked) {
         this.loading = true
