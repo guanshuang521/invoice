@@ -15,6 +15,9 @@
         <el-form-item label="购方名称">
           <el-input v-model="listQuery.gmfMc" placeholder="请输入" size="small"/>
         </el-form-item>
+        <el-form-item label="购方税号">
+          <el-input v-model="listQuery.gmfNsrsbh" placeholder="请输入" size="small"/>
+        </el-form-item>
         <el-form-item label="商品名称">
           <el-input v-model="listQuery.xmmc" placeholder="请输入" size="small"/>
         </el-form-item>

@@ -15,6 +15,9 @@
         <el-form-item label="购方名称">
           <el-input v-model="listQuery.gmfMc" placeholder="请输入" size="small"/>
         </el-form-item>
+        <el-form-item label="购方税号">
+          <el-input v-model="listQuery.gmfNsrsbh" placeholder="请输入" size="small"/>
+        </el-form-item>
         <el-form-item label="商品名称">
           <el-input v-model="listQuery.xmmc" placeholder="请输入" size="small"/>
         </el-form-item>
@@ -101,8 +104,18 @@
         @selection-change="handleSelectionChange">
         style="width: 100%;">
         <el-table-column type="selection" width="35"/>
-        <el-table-column label="发票代码" prop="fpDm" align="center" width="100"/>
-        <el-table-column label="发票号码" prop="fpHm" align="center" width="100"/>
+        <el-table-column label="发票代码" align="center" width="120">
+          <template slot-scope="scope">
+            <span v-if="scope.row.fpDm">{{ scope.row.fpDm }}</span>
+            <span v-else>888888888888</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="发票号码" align="center" width="100">
+          <template slot-scope="scope">
+            <span v-if="scope.row.fpHm">{{ scope.row.fpHm }}</span>
+            <span v-else>88888888</span>
+          </template>
+        </el-table-column>
         <el-table-column label="发票类型" prop="fplx" align="center">
           <template slot-scope="scope">
             <span>{{ SYS_FPLX[scope.row.fplx] }}</span>

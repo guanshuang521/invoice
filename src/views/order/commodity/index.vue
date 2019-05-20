@@ -263,11 +263,11 @@ export default {
     // 同一购方订单生成预制发票
     createPreInvoice() {
       if (this.checkedList.length === 0) {
-        this.$message.warning('请先选择表格中的一条数据')
+        this.$message.warning('必须选择一个订单')
         return false
       }
       if (this.checkedList.length !== 1) {
-        this.$message.warning('请选择表格中的一条数据')
+        this.$message.warning('只能选择一个订单')
         return false
       }
       this.$confirm('确定要同一购方订单生成预制发票吗?', '提示', {
