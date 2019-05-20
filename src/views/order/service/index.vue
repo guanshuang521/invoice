@@ -150,6 +150,13 @@
           </template>
         </el-table-column>
         <el-table-column
+          label="开票状态"
+          align="center">
+          <template slot-scope="scope">
+            {{ SYS_KPZT[scope.row.kpzt] }}
+          </template>
+        </el-table-column>
+        <el-table-column
           prop="bz"
           label="备注"
           align="center"/>
@@ -222,6 +229,9 @@ export default {
     ...mapGetters(['name', 'roles', 'org', 'dictList']),
     SYS_DDZT() { // 状态
       return arrayToMapField(this.dictList['SYS_DDZT'], 'code', 'name')
+    },
+    SYS_KPZT() { // 开票状态
+      return arrayToMapField(this.dictList['SYS_KPZT'], 'code', 'name')
     }
   },
   mounted() {
@@ -336,8 +346,11 @@ export default {
       })
     },
     exportData() { // 导出数据
-      const token = getToken()
-      const url = apiPath.order.list.exportErp + '?spgsqc=' + this.searchParams.spgsqc + '&ejgysbm=' + this.searchParams.ejgysbm + '&startDjbh=' + this.searchParams.startDjbh + '&endDjbh=' + this.searchParams.endDjbh + '&startDate=' + this.searchParams.startDate + '&endtDate=' + this.searchParams.endDate + '&status=' + this.searchParams.status + '&fydjbh=' + this.searchParams.fydjbh + '&x-access-token=' + token
+      const params = ['x-access-token=' + getToken()]
+      for (const key in this.searchParams) {
+        params.push(key + '=' + this.searchParams[key])
+      }
+      const url = apiPath.order.list.exportErp + '?' + params.join('&')
       window.open(url)
     },
     // 关闭弹窗

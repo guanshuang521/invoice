@@ -53,7 +53,7 @@
           <div class="tbT gmfTable">
             <div class="tbmc">
               <span class="gmftitle">名      称：</span>
-              <span class="gmfcontent" v-html="xsfMc" style="line-height: 24px;padding-left: 5px" />
+              <span class="gmfcontent" style="line-height: 24px;padding-left: 5px" v-html="xsfMc"/>
             </div>
             <div class="tbnsrsbh">
               <span class="gmftitle">纳税人识别号：</span>
@@ -131,7 +131,7 @@
             <li style="width:30%">￥{{ formdata.jshj }}</li>
           </ul>
         </div>
-        <div :class="{readonly: readonly}" class="tableBottom">
+        <div class="tableBottom">
           <div class="tbB xsfText">销<br>售<br>方</div>
           <div class="tbB xsfTable">
             <div class="tbmc">
@@ -140,6 +140,7 @@
                 v-model="formdata.gmfMc"
                 :remote-method="remoteSearch"
                 :clearable="!readonly"
+                :class="{readonly: readonly}"
                 filterable
                 remote
                 reserve-keyword
@@ -157,7 +158,7 @@
             </div>
             <div class="tbnsrsbh">
               <span class="xsftitle">纳税人识别号：</span>
-              <input v-model="formdata.gmfNsrsbh" class="xsfcontent">
+              <input v-model="formdata.gmfNsrsbh" :class="{readonly: readonly}" class="xsfcontent">
             </div>
             <div class="tbdzdh">
               <span class="xsftitle">地址  、  电话：</span>
@@ -732,6 +733,7 @@ export default {
     calculateMoney(index, xmsl, xmdj, xmdjShow, hsxmdj, xmjeShow, xmje, hsxmje, sl, se, currentInput) {
       const _thisLines = this.formdata.lines
       // 含税金额
+      _thisLines[index].hsxmje = Number(hsxmdj * xmsl).toFixed(2)
       _thisLines[index].hsxmje = hsxmdj * xmsl
       // 税额
       _thisLines[index].se = Number(_thisLines[index].hsxmje * sl / (1 + sl)).toFixed(2)

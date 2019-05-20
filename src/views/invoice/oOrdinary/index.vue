@@ -234,7 +234,7 @@
     <!--作废重开弹窗-->
     <el-dialog :close-on-click-modal="closeOnClickModal" :visible.sync="zfckDialogVisible" title="作废重开" width="1280px">
       <fppmShow v-if="zfckDialogVisible && !isFarmBill" :readonly="true" :formdata="fppmZfckData" :is-sph-readonly="false"/>
-      <fppmShowFarm v-if="isFarmBill" :formdata="fppmZfckData" :readonly="false"/>
+      <fppmShowFarm v-if="isFarmBill" :formdata="fppmZfckData" :readonly="true"/>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button type="primary" size="mini" @click="reInvoiceSubmit">开具</el-button>
       </div>
@@ -387,8 +387,10 @@ export default {
     checkFP(val) {
       if (val.tzpz === '02') {
         this.isFarmBill = true
+      } else {
+        this.isFarmBill = false
       }
-      fpDetail({ fpDm: val.fpDm, fpHm: val.fpHm }).then(res => {
+      fpDetail({ id: val.id }).then(res => {
         console.log(res)
         this.fpckDialogVisible = true
         this.fppmShowData = res.data
@@ -398,10 +400,16 @@ export default {
     },
     // 作废重开
     reInvoice(val) {
+      if (!val.fpDm && !val.fpHm) {
+        this.$message.warning('提示虚拟发票不能进行作废')
+        return false
+      }
       if (val.tzpz === '02') {
         this.isFarmBill = true
+      } else {
+        this.isFarmBill = false
       }
-      fpDetail({ fpDm: val.fpDm, fpHm: val.fpHm }).then(res => {
+      fpDetail({ id: val.id }).then(res => {
         this.zfckDialogVisible = true
         this.fppmZfckData = JSON.parse(JSON.stringify(res.data))
         this.fppmZfckDataBefore = JSON.parse(JSON.stringify(res.data))
@@ -433,8 +441,10 @@ export default {
     hcInvoice(val) {
       if (val.tzpz === '02') {
         this.isFarmBill = true
+      } else {
+        this.isFarmBill = false
       }
-      fpDetail({ fpDm: val.fpDm, fpHm: val.fpHm }).then(res => {
+      fpDetail({ id: val.id }).then(res => {
         this.hckpDialogVisible = true
         res.data.lines.forEach(item => {
           item.hjje = -item.hjje

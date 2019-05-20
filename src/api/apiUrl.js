@@ -181,7 +181,7 @@ const apiPath = {
       exportInvoiceSelected: '/invoice/invoice/exportInvoiceSelected', // 发票勾选导出
       validate: '/invoice/invoice/validateInvoice', // 发票验证
       passBackInvoice: '/invoice/invoice/passBackInvoice', // 数据回传
-      fpDetail: '/invoice/invoice/getInvoiceByHmDm', // 获取发票详情
+      fpDetail: '/invoice/invoice/getInvoiceById', // 获取发票详情
       reInvoice: '/invoice/invoice/voidedCheckAndReInvoice', // 发票作废重开
       sendMsg: '/invoice/invoice/sendEInoviceEmail' // 发票推送
     },
@@ -209,7 +209,7 @@ const apiPath = {
     openInvoice: {
       opeinvoiceList: '/invoice/queryAndCount/queryIssuedInvoice', // 已开发票查询
       exportIssuedInvoice: '/invoice/queryAndCount/exportIssuedInvoice',
-      fpSeeDetail: '/invoice/queryAndCount/getInvoiceByHmDm'
+      fpSeeDetail: '/invoice/invoice/getInvoiceById'
     }
   },
   // 数据同步

@@ -403,8 +403,10 @@ export default {
     checkFP(val) {
       if (val.tzpz === '02') {
         this.isFarmBill = true
+      } else {
+        this.isFarmBill = false
       }
-      fpDetail({ fpDm: val.fpDm, fpHm: val.fpHm }).then(res => {
+      fpDetail({ id: val.id }).then(res => {
         console.log(res)
         this.fpckDialogVisible = true
         this.fppmShowData = res.data
@@ -414,10 +416,16 @@ export default {
     },
     // 作废重开
     reInvoice(val) {
+      if (!val.fpDm && !val.fpHm) {
+        this.$message.warning('提示虚拟发票不能进行作废')
+        return false
+      }
       if (val.tzpz === '02') {
         this.isFarmBill = true
+      } else {
+        this.isFarmBill = false
       }
-      fpDetail({ fpDm: val.fpDm, fpHm: val.fpHm }).then(res => {
+      fpDetail({ id: val.id }).then(res => {
         this.zfckDialogVisible = true
         this.fppmZfckDataBefore = JSON.parse(JSON.stringify(res.data))
         this.fppmZfckData = JSON.parse(JSON.stringify(res.data))
@@ -449,8 +457,10 @@ export default {
     hcInvoice(val) {
       if (val.tzpz === '02') {
         this.isFarmBill = true
+      } else {
+        this.isFarmBill = false
       }
-      fpDetail({ fpDm: val.fpDm, fpHm: val.fpHm }).then(res => {
+      fpDetail({ id: val.id }).then(res => {
         this.hckpDialogVisible = true
         res.data.lines.forEach(item => {
           item.hjje = -item.hjje
