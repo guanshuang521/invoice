@@ -41,6 +41,7 @@
         <el-form-item label="传输日期止">
           <el-date-picker
             v-model="searchParams.endDate"
+            value-format="yyyy-MM-dd"
             type="date"
             size="small"
             class="filter-item"
