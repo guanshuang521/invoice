@@ -31,6 +31,7 @@
         </el-form-item>
         <el-form-item label="传输日期起">
           <el-date-picker
+            value-format="yyyy-MM-dd"
             v-model="searchParams.startDate"
             type="date"
             size="small"
@@ -39,6 +40,7 @@
         </el-form-item>
         <el-form-item label="传输日期止">
           <el-date-picker
+            value-format="yyyy-MM-dd"
             v-model="searchParams.endDate"
             type="date"
             size="small"

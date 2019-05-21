@@ -50,6 +50,7 @@
         <el-form-item label="开票日期起">
           <el-date-picker
             v-model="listQuery.kprq_start"
+            value-format="yyyy-MM-dd"
             type="date"
             size="small"
             class="filter-item"
@@ -58,6 +59,7 @@
         <el-form-item label="开票日期止">
           <el-date-picker
             v-model="listQuery.kprq_end"
+            value-format="yyyy-MM-dd"
             type="date"
             size="small"
             class="filter-item"
@@ -102,7 +104,7 @@
         <el-table-column label="购方名称" prop="gmfMc" align="center" width="220"/>
         <el-table-column label="购方税号" prop="gmfNsrsbh" align="center" width="160"/>
         <el-table-column label="金额（不含税）" align="center" width="120">
-          <template slot-scope="scope">
+          <template slot-scope="scope">`
             <span>{{ scope.row.hjje | toMoney }}</span>
           </template>
         </el-table-column>
