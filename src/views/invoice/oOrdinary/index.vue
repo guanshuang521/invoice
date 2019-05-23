@@ -457,7 +457,9 @@ export default {
       } else {
         this.isFarmBill = false
       }
+      this.listLoading = true
       fpDetail({ id: val.id }).then(res => {
+        this.listLoading = false
         this.hckpDialogVisible = true
         res.data.lines.forEach(item => {
           item.hjje = -item.hjje
@@ -466,6 +468,9 @@ export default {
           item.se = -item.se
           item.hsxmje = -item.hsxmje
           item.xmje = -item.xmje
+          if (item.xmsl) {
+            item.xmsl = -item.xmsl
+          }
           // item.xmsl = (item.xmsl === null || item.xmsl === '' ? '' : -item.xmsl)
         })
         this.fppmHckpData = res.data
@@ -474,6 +479,7 @@ export default {
         this.fppmHckpData.hjse = -this.fppmHckpData.hjse
         this.fppmHckpData.jshj = -this.fppmHckpData.jshj
       }).catch(err => {
+        this.listLoading = false
         this.$message.error(err)
       })
     },
